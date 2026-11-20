@@ -15,7 +15,7 @@ const {
 
 // #553: every enabled key was probed in raw DB order behind a concurrency-8
 // pool every 5 minutes with no spacing, so a fleet with many keys on one
-// provider fired them all back to back from one IP — which reads as abuse to
+// provider fired them all back to back from one IP - which reads as abuse to
 // the provider. The pass now interleaves providers, spaces same-provider
 // probes, skips keys validated recently, and jitters its own interval.
 

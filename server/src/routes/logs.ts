@@ -11,7 +11,7 @@ import {
 } from '../lib/server-logs.js';
 
 // The dashboard's server-log viewer. Mounted under /api/logs behind the
-// dashboard session gate like every other admin route — the unified /v1 key
+// dashboard session gate like every other admin route - the unified /v1 key
 // opens the inference surface, never this one: these lines name providers,
 // models, key ids and failure reasons.
 //
@@ -31,7 +31,7 @@ function badRequest(res: Response, message: string): void {
   res.status(400).json({ error: { message } });
 }
 
-/** First value only — Express hands back an array for a repeated param, and a
+/** First value only - Express hands back an array for a repeated param, and a
  *  repeated cursor is a client bug, not two cursors. */
 function firstParam(value: unknown): string | undefined {
   if (typeof value === 'string') return value;

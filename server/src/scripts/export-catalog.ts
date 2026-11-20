@@ -1,11 +1,11 @@
 /**
- * export-catalog — build the signed catalog product from the live freeapi DB.
+ * export-catalog - build the signed catalog product from the live freeapi DB.
  *
  * This is the single source of truth pipeline: every model and its resolved
  * quirks come straight out of the same SQLite DB the router uses, so the
  * published catalog can never drift from what the gateway actually serves.
  * The output JSON is what the standalone catalog server (../../catalog) hands
- * to clients — fresh ("live") to Premium, a monthly snapshot to free users.
+ * to clients - fresh ("live") to Premium, a monthly snapshot to free users.
  *
  * Usage:
  *   tsx src/scripts/export-catalog.ts [--db <path>] [--out <path>]
@@ -86,7 +86,7 @@ function main() {
   const quirkDefs = listQuirkDefinitions(db);
 
   // Only platforms that actually have a registered provider AND a model in the
-  // catalog — skip 'custom' (user-supplied endpoint, nothing to publish).
+  // catalog - skip 'custom' (user-supplied endpoint, nothing to publish).
   const livePlatforms = new Set(models.map((m) => m.platform));
   const platforms = getAllProviders()
     .filter((p) => p.platform !== 'custom' && livePlatforms.has(p.platform))

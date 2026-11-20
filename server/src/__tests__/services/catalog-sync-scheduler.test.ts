@@ -44,7 +44,7 @@ describe('startCatalogSync / stopCatalogSync', () => {
     expect(every[0].ms).toBe(12 * 60 * 60 * 1000);
   });
 
-  it('is idempotent — double-start registers only one set of jobs', () => {
+  it('is idempotent - double-start registers only one set of jobs', () => {
     const { scheduler, every, after } = makeScheduler();
     startCatalogSync(scheduler);
     startCatalogSync(scheduler);

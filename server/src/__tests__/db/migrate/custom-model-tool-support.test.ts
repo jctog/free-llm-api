@@ -45,7 +45,7 @@ describe('custom_model_tool_support migration (#470)', () => {
     });
   });
 
-  it('is idempotent — a second up() produces the identical result', () => {
+  it('is idempotent - a second up() produces the identical result', () => {
     const db = makeDb();
     dbs.push(db);
 

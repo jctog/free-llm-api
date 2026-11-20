@@ -8,7 +8,7 @@
 // an answer it already got. This table lets callers opt in to idempotent
 // retries via the `Idempotency-Key` header (see services/idempotency.ts):
 //
-//   - Only a SHA-256 hash of the caller's key is stored — never the raw key,
+//   - Only a SHA-256 hash of the caller's key is stored - never the raw key,
 //     mirroring how the runtime treats admin/runtime tokens.
 //   - request_fingerprint is a canonical SHA-256 of the (model, messages,
 //     sampling params) that produced the response, so the same key reused

@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom'
 import { useI18n } from '@/i18n'
 
 // Segmented modality switcher shared by the Models pages.
-// Industry-standard layout: one "Models" section, modality as a tab — chat
+// Industry-standard layout: one "Models" section, modality as a tab - chat
 // routing (cross-model fallback), embeddings routing (same-model,
 // cross-provider fallback), and fusion (multi-model synthesis) are different
 // machines behind one roof.

@@ -6,7 +6,7 @@ import { getSetting } from '../db/index.js';
 // caller declared for that tool.
 //
 // lib/tool-args.ts repairs what it can prove is repairable, and deliberately
-// invents nothing. What it cannot do is say "this is still wrong" — so a call
+// invents nothing. What it cannot do is say "this is still wrong" - so a call
 // that violates its schema flows on unchallenged, and the Anthropic surface
 // turns it into `input: {}` (routes/anthropic.ts parseToolInput does
 // `try { JSON.parse } catch { return {} }`). The client then gets a tool_use
@@ -20,11 +20,11 @@ import { getSetting } from '../db/index.js';
 //
 // OFF by default. A false positive here costs a failover hop, and schemas in
 // the wild are strange enough that the honest default is to look before
-// leaping — enable it, watch the trail, then decide.
+// leaping - enable it, watch the trail, then decide.
 
 /** 2020-12, because that is what zod-to-json-schema and Pydantic v2 emit; a
  *  draft-07-only Ajv throws on their `$schema`. `strict: false` keeps an
- *  unknown keyword from being fatal — plenty of real schemas carry vendor
+ *  unknown keyword from being fatal - plenty of real schemas carry vendor
  *  extensions, and rejecting the schema would fail calls that are fine. */
 const ajv = new (Ajv2020 as unknown as typeof import('ajv').default)({
   strict: false,
@@ -39,7 +39,7 @@ export function isToolArgumentValidationEnabled(): boolean {
   try {
     stored = getSetting(TOOL_ARGUMENT_VALIDATION_SETTING);
   } catch {
-    stored = undefined; // DB not ready — never throw on the proxy hot path.
+    stored = undefined; // DB not ready - never throw on the proxy hot path.
   }
   for (const raw of [stored, process.env.VALIDATE_TOOL_ARGUMENTS]) {
     if (raw === undefined || raw.trim() === '') continue;
@@ -91,7 +91,7 @@ function compiledFor(schema: object): ValidateFunction | null {
     void $schema;
     fn = ajv.compile(rest);
   } catch {
-    fn = null; // Unusable schema — see validateToolArguments, which fails OPEN.
+    fn = null; // Unusable schema - see validateToolArguments, which fails OPEN.
   }
   compiled.set(key, fn);
   return fn;
@@ -144,7 +144,7 @@ export function validateToolArguments(
  * marker `invalid tool arguments`, which `isRetryableError` recognises, so the
  * loop fails over exactly as it does for a dead dialect turn.
  *
- * `skipBench` because the PROVIDER is healthy — the model misbehaved, so no
+ * `skipBench` because the PROVIDER is healthy - the model misbehaved, so no
  * cooldown or score penalty. `skipModelForRequest` because a sibling key would
  * misbehave identically, so the whole model is ruled out for this request.
  */

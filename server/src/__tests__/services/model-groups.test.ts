@@ -164,8 +164,8 @@ describe('resolveRequestedIdToMembers', () => {
 });
 
 // A canonical id is a SLUG of a display name, so it can coincide with some other
-// model's literal model_id. Resolution unions both matches — grouping must never
-// shrink what an id reaches (#651) — but the two are not equally intended: an id
+// model's literal model_id. Resolution unions both matches - grouping must never
+// shrink what an id reaches (#651) - but the two are not equally intended: an id
 // typed literally must be tried literally first, and a coincidental slug sibling
 // is only a fallback. Anything else is a silent substitution.
 describe('slug / model_id collisions resolve as an ordered union', () => {
@@ -209,7 +209,7 @@ describe('slug / model_id collisions resolve as an ordered union', () => {
   it('keeps a plain slug request unaffected when nothing collides', () => {
     const groups = groupRows(catalog(), NO_OVERRIDES);
     // "Llama 3.3 70B" slugs to `llama-3.3-70b`, which no member carries as its
-    // literal model_id — so the whole group is reached through the slug, and
+    // literal model_id - so the whole group is reached through the slug, and
     // with nothing above it the tier changes nothing about what serves first.
     const g = groups.find(gr => gr.canonicalId === 'llama-3.3-70b')!;
     const ids = resolveRequestedIdToMembers(g.canonicalId, groups)!;
@@ -221,7 +221,7 @@ describe('slug / model_id collisions resolve as an ordered union', () => {
   it('treats a slug that a member also carries literally as a literal match', () => {
     const groups = groupRows(catalog(), NO_OVERRIDES);
     // `gpt-oss-120b` is both this group's slug and row 1's own model_id, so
-    // nothing is demoted — the common case where the two agree.
+    // nothing is demoted - the common case where the two agree.
     const tiered = resolveRequestedIdToTieredMembers('gpt-oss-120b', groups)!;
     expect(demotedMemberIds(tiered).size).toBe(0);
     expect(tiered.some(t => t.modelDbId === 1)).toBe(true);

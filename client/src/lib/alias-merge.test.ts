@@ -65,7 +65,7 @@ describe('removeAlias (#790)', () => {
 
   it('never touches another group that sits at the same visible index', () => {
     // The page renders only this group's aliases, so the first row on screen is
-    // entry #1 in the full list — removing by row index used to delete GPT-4.1's.
+    // entry #1 in the full list - removing by row index used to delete GPT-4.1's.
     const next = removeAlias(merges, 'Llama 3.3 70B', 'custom:llama-relay')
     expect(aliasesFor(next, 'GPT-4.1')).toEqual(['custom:gpt41-relay'])
   })

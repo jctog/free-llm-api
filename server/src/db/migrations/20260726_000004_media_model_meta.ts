@@ -1,4 +1,4 @@
-// Migration: media_models.meta_json — per-model adapter metadata from the catalog
+// Migration: media_models.meta_json - per-model adapter metadata from the catalog
 // Created: 2026-07-26
 //
 // DOWN: reversible

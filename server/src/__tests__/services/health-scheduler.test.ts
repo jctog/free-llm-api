@@ -41,7 +41,7 @@ describe('startHealthChecker / stopHealthChecker', () => {
     expect(after[0].ms).toBeLessThanOrEqual(HEALTH_CHECK_INTERVAL_MS * 1.2);
   });
 
-  it('is idempotent — double-start registers only one job', () => {
+  it('is idempotent - double-start registers only one job', () => {
     const { scheduler, after } = makeScheduler();
     startHealthChecker(scheduler);
     startHealthChecker(scheduler);

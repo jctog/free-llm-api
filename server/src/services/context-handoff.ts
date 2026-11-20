@@ -17,7 +17,7 @@ const MAX_CONTENT_PER_MSG = 500;
 const SESSION_TTL_MS = 3 * 60 * 60 * 1000;
 const MAX_STORE_SIZE = 500;
 
-// (MAX_HANDOFF_CHARS chars + ~400 overhead chars) / 4 chars-per-token — conservative upper bound.
+// (MAX_HANDOFF_CHARS chars + ~400 overhead chars) / 4 chars-per-token - conservative upper bound.
 // Exported so proxy.ts can pad the routing token estimate to account for the injected message
 // before routeRequest() runs its context-window and TPM checks.
 export const HANDOFF_MAX_TOKENS = Math.ceil((MAX_HANDOFF_CHARS + 400) / 4);
@@ -32,7 +32,7 @@ export function getContextHandoffMode(): ContextHandoffMode {
 // Slice without cutting through a surrogate pair. A bare String.slice can
 // leave a lone high surrogate when it lands mid astral-plane char (emoji etc.),
 // and some providers 400 on a lone surrogate. Trim that trailing half-char off.
-// (Lib-agnostic — String.prototype.toWellFormed needs the es2024 lib target.)
+// (Lib-agnostic - String.prototype.toWellFormed needs the es2024 lib target.)
 function safeSlice(text: string, max: number): string {
   if (text.length <= max) return text;
   const lastCode = text.charCodeAt(max - 1);
@@ -65,7 +65,7 @@ export function recordIncomingMessages(sessionKey: string, messages: ChatMessage
   // Mutate in place to preserve lastModelKey written by recordSuccessfulModel
   // on concurrent/overlapping requests without replacing the whole entry.
   // If the incoming payload has no assistant turns, treat it as a fresh conversation
-  // and clear lastModelKey — prevents spurious handoffs when a session ID is reused
+  // and clear lastModelKey - prevents spurious handoffs when a session ID is reused
   // after the sticky-session (30 min) TTL expires but before the handoff TTL (3 h).
   const hasAssistant = messages.some(m => m.role === 'assistant');
   const existing = store.get(sessionKey);
@@ -122,7 +122,7 @@ export function maybeInjectContextHandoff(params: {
     return { messages, injected: false, injectedTokens: 0 };
   }
 
-  // Skip if a handoff message is already present — handles both plain strings
+  // Skip if a handoff message is already present - handles both plain strings
   // and the array-content format that OpenCode/Continue.dev send.
   const alreadyPresent = messages.some(m => {
     if (m.role !== 'system') return false;

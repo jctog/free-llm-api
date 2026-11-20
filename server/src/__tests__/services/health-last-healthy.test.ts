@@ -19,7 +19,7 @@ const {
 
 /**
  * #1493: a key can sit at status='healthy' with a fresh last_checked_at while
- * never actually working — the transport-error path refreshes last_checked_at
+ * never actually working - the transport-error path refreshes last_checked_at
  * but proves nothing. last_healthy_at is the success-only timestamp: written on
  * a VALID probe verdict and on a served live request, never on a transport
  * error or an invalid verdict.
@@ -84,7 +84,7 @@ describe('last_healthy_at (#1493)', () => {
 
   it('a served request stamps last_healthy_at even on an already-healthy key', async () => {
     // The probe path never touched this key's last_healthy_at (transport-error
-    // streak), and its status is healthy — the stamp must fire regardless of
+    // streak), and its status is healthy - the stamp must fire regardless of
     // current status, or the #1459 providers (no probes at all) never get one.
     const id = seedKey('healthy');
     expect(row(id).last_healthy_at).toBeNull();

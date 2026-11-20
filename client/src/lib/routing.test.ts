@@ -18,7 +18,7 @@ import {
 
 // Per-endpoint identity must be INVISIBLE until two endpoints actually serve the
 // same model id (#651). The server sends `endpointScope` / `qualifiedModelId` on
-// every custom row — including the only relay of a one-endpoint install — so any
+// every custom row - including the only relay of a one-endpoint install - so any
 // gate written against those fields alone leaks the user's own base URL. These
 // cases pin the gate to the collision itself.
 
@@ -94,7 +94,7 @@ describe('two endpoints serving one model id', () => {
 
 // Display name is presentation, never identity (#651). Renaming one relay's copy
 // moves it into a different display-name group, but the two rows still share
-// (platform, model_id) — so the disambiguation must key on that pair and nothing
+// (platform, model_id) - so the disambiguation must key on that pair and nothing
 // else, and the split/merge override must name ONE relay's row.
 describe('two endpoints whose copies were renamed apart', () => {
   const renamedA: R = { ...relayA, displayName: 'DeepSeek via A' }
@@ -351,7 +351,7 @@ describe('depleted rows (#1015)', () => {
       [1, exhaustedUsage(1)],
       [2, exhaustedUsage(2)],
     ]))).toBe(true)
-    // One healthy provider keeps the group routable — same rule as the badge.
+    // One healthy provider keeps the group routable - same rule as the badge.
     expect(isGroupDepleted(members, new Map([
       [1, exhaustedUsage(1)],
       [2, healthyUsage(2)],

@@ -10,18 +10,18 @@ import { resolveScopeUpdate, type ScopeCandidate } from '@/lib/model-scope-selec
 
 // Post-add model picker. A key pasted for a platform with a large catalog is
 // assumed to serve all of it (#657: modelScope null), which is wrong for relay
-// keys sold per model group — and the symptom is a run of 401s at routing time
+// keys sold per model group - and the symptom is a run of 401s at routing time
 // rather than anything the Keys page shows. So once, right after the add, show
 // what this key is about to be asked to serve.
 //
 // Everything is ticked on arrival because "all" is both the current behaviour
 // and the right default; confirming untouched therefore sends NO request at
-// all (see resolveScopeUpdate — a stored full list would freeze the key at
+// all (see resolveScopeUpdate - a stored full list would freeze the key at
 // today's catalog). Only a genuine subset costs one PATCH. Dismissing costs
 // nothing: the key is already added and already works.
 //
 // The list is handed in by the add flow, which reads it from the ['fallback']
-// model list the dashboard already holds — this dialog fetches nothing.
+// model list the dashboard already holds - this dialog fetches nothing.
 export function ModelSelectDialog({
   keyId,
   platformLabel,
@@ -50,7 +50,7 @@ export function ModelSelectDialog({
     onSuccess: (_data, modelScope) => {
       queryClient.invalidateQueries({ queryKey: ['keys'] })
       // Singular/plural as separate keys, the way keys.modelScopeBadgeOne/Other
-      // already do it — this i18n layer has no plural rules of its own.
+      // already do it - this i18n layer has no plural rules of its own.
       toast.success(t(
         modelScope.length === 1 ? 'keys.modelPicker.scopedOne' : 'keys.modelPicker.scopedOther',
         { count: modelScope.length },

@@ -6,7 +6,7 @@ import type { Platform } from '@freellmapi/shared/types.js';
 // Chinese domestic providers (#922/#923/#924). The failure this file guards
 // against is a HALF-registered platform: the original PRs registered the
 // provider and the Platform type but skipped the key-parser and the Keys page,
-// so the provider existed on the server and was unreachable for a user — no way
+// so the provider existed on the server and was unreachable for a user - no way
 // to add a key through the dashboard, and no way to import one from a .env.
 // Registration is only useful when every entry point agrees, so assert them
 // together.

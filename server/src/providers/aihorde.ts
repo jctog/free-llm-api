@@ -11,7 +11,7 @@ import { providerTimeoutMs } from '../lib/provider-timeout.js';
 import { resolveMaxTokens } from '../lib/sampling-params.js';
 
 /**
- * AI Horde — free, community-powered inference served by volunteer workers and
+ * AI Horde - free, community-powered inference served by volunteer workers and
  * exposed through an OpenAI-compatible proxy at https://oai.aihorde.net/v1
  * (issue #345).
  *
@@ -21,7 +21,7 @@ import { resolveMaxTokens } from '../lib/sampling-params.js';
  *
  *  - QUEUED execution. A request waits for whatever volunteer workers are
  *    online, so a single call can take tens of seconds to minutes. Hence the
- *    120s timeout and the no-upstream-streaming design — one queued generation,
+ *    120s timeout and the no-upstream-streaming design - one queued generation,
  *    surfaced whole (streamChatCompletion emits it as a single delta).
  *  - `max_tokens` must be >= 16 or the proxy 422s. We floor it, and default it
  *    when the caller omits it so a worker doesn't run to its own (often large)
@@ -82,14 +82,14 @@ export class AIHordeProvider extends BaseProvider {
   }
 
   /** Build the upstream body, normalizing the OpenAI params the proxy rejects
-   * (see class doc). No `stream` — we never stream upstream. */
+   * (see class doc). No `stream` - we never stream upstream. */
   private buildBody(messages: ChatMessage[], modelId: string, options?: CompletionOptions): Record<string, unknown> {
     const body: Record<string, unknown> = {
       model: modelId,
       messages,
       // Floor at 16 (proxy 422s below it); default when omitted. Our own
       // default goes through resolveMaxTokens too, so the unified output cap
-      // applies to it as well — it can only ever lower what we send.
+      // applies to it as well - it can only ever lower what we send.
       max_tokens: Math.max(
         MIN_MAX_TOKENS,
         resolveMaxTokens(this.platform, options?.max_tokens ?? DEFAULT_MAX_TOKENS, options?.contextBudget) ?? DEFAULT_MAX_TOKENS,

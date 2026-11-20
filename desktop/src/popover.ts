@@ -11,7 +11,7 @@ let popover: BrowserWindow | null = null;
 
 // A Control-Center-style glass panel anchored under the tray icon.
 // Real macOS material: frameless window with SYSTEM rounded corners +
-// NSVisualEffectView vibrancy + native shadow. No `transparent: true` —
+// NSVisualEffectView vibrancy + native shadow. No `transparent: true` -
 // that path composites the window itself and defeats the vibrancy blur;
 // instead the page background stays transparent and the material shows
 // through. Created once, then shown/hidden; hides on blur like a menu.
@@ -32,7 +32,7 @@ function createPopover(): BrowserWindow {
     ...(process.platform === 'darwin'
       ? {
           // 'popover' follows the app appearance, which main.ts pins via
-          // nativeTheme.themeSource to the DASHBOARD's theme choice — so the
+          // nativeTheme.themeSource to the DASHBOARD's theme choice - so the
           // glass flips dark/light together with the dashboard. The dark
           // variant is deepened toward black by the panel's CSS tint.
           vibrancy: 'popover' as const,
@@ -53,8 +53,8 @@ function createPopover(): BrowserWindow {
 
   // Follow the user across Spaces. `visibleOnFullScreen` is what lets the
   // popover appear over another app's fullscreen Space, but Electron delivers
-  // it by transforming the process into a UI-element app — its own source says
-  // it "functionally mimics app.dock.hide()" — which silently removed the Dock
+  // it by transforming the process into a UI-element app - its own source says
+  // it "functionally mimics app.dock.hide()" - which silently removed the Dock
   // icon the first time the popover opened. `skipTransformProcessType` keeps
   // the collection behaviour and leaves the Dock icon to main.ts' showInDock.
   // The cost: with the icon shown, macOS will not float the popover over

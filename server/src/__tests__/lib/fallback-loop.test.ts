@@ -268,7 +268,7 @@ describe('recordRetryableFailure skipBench exemption (reasoning truncation)', ()
 
   it('classifyAttemptError buckets format-ignore and truncated-JSON as format_ignored', () => {
     expect(classifyAttemptError(new Error('X ignored response_format (returned non-JSON despite json_object)'))).toBe('format_ignored');
-    expect(classifyAttemptError(new Error('truncated JSON from X (finish_reason=length — raise max_tokens for this json_schema request)'))).toBe('format_ignored');
+    expect(classifyAttemptError(new Error('truncated JSON from X (finish_reason=length - raise max_tokens for this json_schema request)'))).toBe('format_ignored');
   });
 });
 
@@ -308,7 +308,7 @@ describe('empty-completion streak lifts the skipBench exemption (#751)', () => {
     for (let i = 1; i < EMPTY_COMPLETION_STREAK_LIMIT; i++) {
       recordRetryableFailure(route, emptyLengthErr(route), newFallbackState());
     }
-    // A plain 429 takes the cooldown ladder — and breaks the streak.
+    // A plain 429 takes the cooldown ladder - and breaks the streak.
     recordRetryableFailure(route, Object.assign(new Error('429 Too Many Requests'), { status: 429 }), newFallbackState());
     getDb().prepare('DELETE FROM rate_limit_cooldowns').run();
     for (let i = 1; i < EMPTY_COMPLETION_STREAK_LIMIT; i++) {
@@ -348,7 +348,7 @@ describe('empty-completion streak lifts the skipBench exemption (#751)', () => {
 
 describe('truncated-stream streak benches a sick route (#1218)', () => {
   const truncErr = (name: string) =>
-    new Error(`${name} stream ended unexpectedly (no [DONE], no finish_reason) — connection reset or truncated upstream`);
+    new Error(`${name} stream ended unexpectedly (no [DONE], no finish_reason) - connection reset or truncated upstream`);
   const cooldownExpiry = (route: RouteResult): number | undefined => {
     const row = getDb().prepare(
       'SELECT expires_at_ms FROM rate_limit_cooldowns WHERE platform = ? AND key_id = ?',
@@ -394,7 +394,7 @@ describe('truncated-stream streak benches a sick route (#1218)', () => {
     for (let i = 1; i < TRUNCATION_STREAK_LIMIT; i++) {
       recordRetryableFailure(route, truncErr(route.displayName), newFallbackState());
     }
-    // A 429 takes the cooldown ladder — and breaks the truncation streak.
+    // A 429 takes the cooldown ladder - and breaks the truncation streak.
     recordRetryableFailure(route, Object.assign(new Error('429 Too Many Requests'), { status: 429 }), newFallbackState());
     getDb().prepare('DELETE FROM rate_limit_cooldowns').run();
     for (let i = 1; i < TRUNCATION_STREAK_LIMIT; i++) {
@@ -503,7 +503,7 @@ describe('runFallbackLoop: wall-clock retry budget', () => {
       onExhausted,
     }));
 
-    // Attempt 0 alone consumed the budget, but attempt 1 still starts — a
+    // Attempt 0 alone consumed the budget, but attempt 1 still starts - a
     // slow-failing model must never make failover structurally impossible.
     // Attempt 2 is where the spent budget stops the chain.
     expect(dispatch).toHaveBeenCalledTimes(2);
@@ -643,7 +643,7 @@ describe('runFallbackLoop: circuit-breaker guardrail (max_consecutive_upstream_f
 
   it('skipBench failures (format ignored, hidden reasoning) never trip the breaker', async () => {
     // Three prose answers to a json_schema request say nothing about pool
-    // health — candidate four must still get its shot. (#511 x #516)
+    // health - candidate four must still get its shot. (#511 x #516)
     const onExhausted = vi.fn();
     let calls = 0;
     const dispatch = vi.fn(async () => {
@@ -767,7 +767,7 @@ describe('runFallbackLoop: a provider-level failure skips the whole platform (#7
   const platformsTried = (dispatch: ReturnType<typeof vi.fn>): string[] =>
     dispatch.mock.calls.map(call => (call[0] as RouteResult).platform);
 
-  it('a 503 on alpha key1 rules out alpha entirely — every key AND every model', async () => {
+  it('a 503 on alpha key1 rules out alpha entirely - every key AND every model', async () => {
     const state = newFallbackState();
     const dispatch = vi.fn(async () => {
       throw Object.assign(new Error('Alpha API error 503: Service Unavailable'), { status: 503 });
@@ -811,7 +811,7 @@ describe('runFallbackLoop: a provider-level failure skips the whole platform (#7
   it('invalid tool arguments rule out the MODEL, never the platform', async () => {
     // The provider served the turn perfectly; the model wrote a bad call. The
     // sibling key would write the same one (skipModelForRequest), but alpha's
-    // OTHER model is still a fine next hop — skipping the platform here would
+    // OTHER model is still a fine next hop - skipping the platform here would
     // strand it, and the tool name in the message carries a timeout marker
     // precisely to prove the text does not drive the decision.
     const state = newFallbackState();
@@ -886,7 +886,7 @@ describe('runFallbackLoop: client disconnect + attempt log', () => {
 });
 
 // The diagnostics line used to live in each surface's onRoutingExhausted hook,
-// and only routes/proxy.ts ever implemented it — so an opaque routing_error on
+// and only routes/proxy.ts ever implemented it - so an opaque routing_error on
 // /v1/messages, /v1/responses or an inbound wire recorded nothing about WHY the
 // pool was empty. It belongs to the loop: these tests pin it there, for every
 // surface, including one that supplies no identity at all.
@@ -949,7 +949,7 @@ describe('runFallbackLoop: routing-exhaustion diagnostics belong to the loop', (
     }
   });
 
-  it('stays silent when attempts already ran — the attempt trail explains those', async () => {
+  it('stays silent when attempts already ran - the attempt trail explains those', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     try {
       let call = 0;

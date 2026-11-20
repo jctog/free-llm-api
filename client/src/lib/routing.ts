@@ -20,7 +20,7 @@ export interface FallbackEntry {
   tpmLimit?: number | null
   tpdLimit?: number | null
   monthlyTokenBudget: string
-  // Parsed token count from the server (single source of truth — see
+  // Parsed token count from the server (single source of truth - see
   // server/src/lib/budget.ts). Optional only because the dev mock omits it.
   monthlyTokenBudgetTokens?: number
   // Max context length in tokens (catalog value), or null when unrecorded.
@@ -34,7 +34,7 @@ export interface FallbackEntry {
   // Which custom endpoint this row belongs to (its base URL), and the model id
   // that names this endpoint's copy on its own. Null for catalog models only:
   // EVERY custom row bound to an endpoint carries both, including the single
-  // relay of a one-endpoint install. Neither may be rendered directly —
+  // relay of a one-endpoint install. Neither may be rendered directly -
   // go through memberProviderLabel / providerPinId / memberEndpointTitle, which
   // reveal them only once two endpoints actually collide (#651).
   endpointScope?: string | null
@@ -44,7 +44,7 @@ export interface FallbackEntry {
   // individual inputs that no longer show the catalog default (#551).
   overrideFields?: string[]
   // The provider reported this model as permanently gone (410 / end of life),
-  // so the gateway disabled it by itself — distinct from a switch the user
+  // so the gateway disabled it by itself - distinct from a switch the user
   // flipped off. `retiredReason` is the upstream wording. See #634.
   retiredUpstream?: boolean
   retiredReason?: string | null
@@ -108,7 +108,7 @@ export interface RoutingData {
    *  the server always sends it, and the checkbox renders straight from it. */
   exploreEnabled: boolean
   /** Peak-hours adjustment (#760): opt-in, off by default. `peakAdjusted` says
-   *  whether `weights` above is the raw preset or a peak-hours variant of it —
+   *  whether `weights` above is the raw preset or a peak-hours variant of it -
    *  the weight summary is labelled from that flag so the numbers never change
    *  under the operator without an explanation. */
   peakHoursAdjust: boolean
@@ -155,9 +155,9 @@ export function endpointShortLabel(scope: string): string {
 /**
  * The provider label for one row of a group, disambiguated ONLY when it has to
  * be: another row in the same group serves the same model id from a DIFFERENT
- * endpoint. Then the endpoint's URL is appended, because that — not the key
+ * endpoint. Then the endpoint's URL is appended, because that - not the key
  * label, which defaults to a generic "Custom" and is not required to be unique
- * — is what actually tells the two relays apart. Every catalog model, and every
+ * - is what actually tells the two relays apart. Every catalog model, and every
  * install with a single custom endpoint, gets exactly the label it got before,
  * so there is nothing new to notice until a real collision exists.
  */
@@ -194,7 +194,7 @@ function hasEndpointCollision<T extends {
 /**
  * The full endpoint URL to reveal on hover, or undefined when there is nothing
  * to disambiguate. Gated on the SAME collision test as the visible label rather
- * than on `endpointScope` alone — every custom row carries a scope, so gating on
+ * than on `endpointScope` alone - every custom row carries a scope, so gating on
  * the field itself would pop a tooltip with the user's own base URL on a
  * single-endpoint install, which is exactly what #651 must not do.
  */
@@ -208,7 +208,7 @@ export function memberEndpointTitle<T extends {
 
 /**
  * The id to send when you want THIS provider's copy. The bare model id, as
- * always — except when two custom endpoints in the group serve it, where only
+ * always - except when two custom endpoints in the group serve it, where only
  * the endpoint-qualified id the server computed names one of them.
  */
 export function providerPinId<T extends {
@@ -238,7 +238,7 @@ type SplitEntry = { member: string; groupKey?: string }
 /**
  * Every persisted form that names this row: the qualified id written since #651,
  * and the plain "platform:modelId" that overrides saved before it use. Matching
- * both is what keeps an existing split undoable — the alternative, rewriting
+ * both is what keeps an existing split undoable - the alternative, rewriting
  * stored keys on read, is a silent data migration for a cosmetic gain.
  */
 function overrideKeyAliases(row: OverrideRow): string[] {
@@ -355,7 +355,7 @@ export type RateLimitKind = 'RPM' | 'RPD' | 'TPM'
 
 // The badge answers one question: how close is this logical model to being
 // unusable? A group is unusable only when EVERY provider serving it is out of
-// headroom, so the group-level number is the BEST member, not the worst — a
+// headroom, so the group-level number is the BEST member, not the worst - a
 // five-provider group with one exhausted provider and four idle ones routes
 // perfectly well and must not show red.
 //
@@ -395,7 +395,7 @@ export function tightestRateLimit(
 }
 
 // ── Depleted rows (#1015) ────────────────────────────────────────────────────
-// A member is depleted when its tightest time-window quota (#876) is used up —
+// A member is depleted when its tightest time-window quota (#876) is used up -
 // exactly the state that turns its RateLimitBadge red. A member with no usage
 // data is never depleted: an idle provider may simply not have been polled
 // yet, and there is no evidence it cannot serve.
@@ -404,7 +404,7 @@ export function isMemberDepleted(usage: RateLimitUsageRow | undefined): boolean 
   return tightest !== null && tightest.used >= tightest.limit
 }
 
-// A group is depleted only when EVERY member is — the group stays routable
+// A group is depleted only when EVERY member is - the group stays routable
 // while any single provider has headroom, the same rule the group badge reads
 // from the best member. Members without usage data count as healthy here, so
 // the table only folds a row it can prove is exhausted across the board.
@@ -501,8 +501,8 @@ export interface ModelGroupRow {
 }
 
 // Group merged rows by their server-assigned groupKey (or a per-row "solo" key
-// when ungrouped). Members are ordered like the flat chain — by manual priority
-// under the priority strategy, by live score otherwise — and groups inherit the
+// when ungrouped). Members are ordered like the flat chain - by manual priority
+// under the priority strategy, by live score otherwise - and groups inherit the
 // best member's position so the unified order matches the flat order.
 //
 // With rate-limit usage supplied (#1015) and the table ordering itself (score
@@ -554,7 +554,7 @@ export function clampRankToIndex(toRank: number, length: number): number {
 /**
  * Whether a search query matches a logical-model group (#1056). The hay covers
  * everything the table can DISPLAY for the group: its label, canonical id, and
- * every member's platform, display name and model id — plus, for custom rows,
+ * every member's platform, display name and model id - plus, for custom rows,
  * the key label and endpoint host the row is actually rendered with. Those last
  * two are the fix: a relay added as a custom endpoint (UnoRouter, say) carries
  * platform 'custom', so searching the provider's name found nothing even

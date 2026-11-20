@@ -54,7 +54,7 @@ describe('Router model scope (#657)', () => {
     insertKey('google', 'scoped-away', ['some-model-this-platform-does-not-have']);
     insertKey('groq', 'groq-key', null);
     // Google outranks Groq in the manual order, but its only key cannot serve
-    // any Google model — the router must fall through instead of burning an
+    // any Google model - the router must fall through instead of burning an
     // attempt on a guaranteed 403.
     const result = routeRequest();
     expect(result.platform).toBe('groq');

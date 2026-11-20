@@ -10,8 +10,8 @@
 // silently deleted or clobbered on the next sync as soon as its size_label
 // stopped matching the 'User'/'Custom' convention. `source` records who
 // created the row at insert time:
-//   'catalog' — catalog sync or the bundled baseline migrations
-//   'user'    — dashboard, custom endpoints, declarative config
+//   'catalog' - catalog sync or the bundled baseline migrations
+//   'user'    - dashboard, custom endpoints, declarative config
 //
 // The column DEFAULT is 'catalog' on purpose: the baseline migration's
 // INSERT OR IGNORE re-seeds (run on every fresh migrations table) must stay
@@ -42,8 +42,8 @@ export function up(db: Db): void {
 
   // Then consult the currently-applied catalog (the signed document cached by
   // catalog-sync in settings.catalog_applied_json). A surviving row that the
-  // applied catalog does not list — and that the heuristics above did not
-  // claim — can only have been added locally: sync prunes catalog-owned
+  // applied catalog does not list - and that the heuristics above did not
+  // claim - can only have been added locally: sync prunes catalog-owned
   // leftovers on every apply, so catalog rows absent from the catalog do not
   // linger. With no applied catalog (fresh install, never synced) every
   // remaining row came from the bundled baseline, so the 'catalog' default

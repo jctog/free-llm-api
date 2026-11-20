@@ -12,7 +12,7 @@ import type { Db } from '../types.js';
  *
  * On upgrade we backfill from the still-present `requests` rows so the hourly
  * table picks up any traffic that landed between the last raw-row prune and
- * this migration. Lifetime counters start counting from "now" — rows pruned
+ * this migration. Lifetime counters start counting from "now" - rows pruned
  * before this migration are unrecoverable from the aggregate.
  */
 function tableExists(db: Db, name: string): boolean {

@@ -5,13 +5,13 @@ import { describe, expect, it } from 'vitest';
 
 // A handful of lib modules are pure by design: functions over their arguments,
 // no I/O, no DB, no config. error-classify.ts says so in its own header and
-// gives the reason — it is imported by the proxy, the responses path AND the
+// gives the reason - it is imported by the proxy, the responses path AND the
 // fusion panel, so a value import there is how the fusion ↔ proxy cycle comes
 // back. The others are the same shape: parsers and formatters that several
 // surfaces share precisely because they depend on nothing.
 //
 // Nothing enforces that today. Adding `import { getDb }` to one of them
-// compiles, passes every test, and quietly converts a leaf into a hub — the
+// compiles, passes every test, and quietly converts a leaf into a hub - the
 // damage (an import cycle, a DB read on a hot path that must never throw, a
 // unit test that suddenly needs a database) surfaces later and somewhere else.
 // Same rationale as registry-drift.test.ts: make the quiet no-op a failing
@@ -58,7 +58,7 @@ const PURE_MODULES = [
 // depends on these staying import-free, and freezing a module nobody has argued
 // should be frozen buys a false failure the first time one legitimately needs a
 // dependency. They are listed only so the classification check below has an
-// answer for them — moving one up to PURE_MODULES is the way to promote it.
+// answer for them - moving one up to PURE_MODULES is the way to promote it.
 const NOT_GUARDED = [
   'config.ts',
   'custom-provider-cleanup.ts',
@@ -88,7 +88,7 @@ function allSpecifiersAreTypes(specifiers: string): boolean {
  *  Three forms beyond a plain static import are load-bearing here, because each
  *  creates the same runtime dependency while looking nothing like `^import`:
  *  a dynamic `await import('./x.js')`, and re-exports of the form
- *  `export { x } from './x.js'` / `export * from './x.js'` — a re-export is an
+ *  `export { x } from './x.js'` / `export * from './x.js'` - a re-export is an
  *  import that also republishes, so it forms a cycle just as readily. */
 function valueImportsIn(source: string): string[] {
   const found: string[] = [];
@@ -96,7 +96,7 @@ function valueImportsIn(source: string): string[] {
     const line = raw.trim();
     if (line.startsWith('//') || line.startsWith('*')) continue;
 
-    // Dynamic import — `const m = await import('./x.js')` never starts with
+    // Dynamic import - `const m = await import('./x.js')` never starts with
     // `import`, so the anchored rules below cannot see it. `import.meta.url`
     // is not a call and does not match.
     if (/\bimport\s*\(/.test(line)) { found.push(line); continue; }
@@ -143,7 +143,7 @@ describe('pure lib modules stay pure', () => {
     // to. A new pure module now fails here until someone decides which list it
     // belongs on.
     //
-    // Impure modules need no bookkeeping — purity is computed from the source,
+    // Impure modules need no bookkeeping - purity is computed from the source,
     // so only a module that IS import-free has to be classified. Adding a
     // module with dependencies costs nothing.
     const unclassified = fs.readdirSync(LIB)
@@ -183,7 +183,7 @@ describe('pure lib modules stay pure', () => {
 
   it('catches the forms that do not begin with the import keyword', () => {
     // A dynamic import is a runtime dependency that defeats an anchored ^import
-    // rule completely — it is the obvious way to smuggle getDb into a pure
+    // rule completely - it is the obvious way to smuggle getDb into a pure
     // module without tripping this test.
     expect(valueImportsIn("const { getDb } = await import('../db/index.js');")).toHaveLength(1);
     expect(valueImportsIn("void import('./side-effect.js');")).toHaveLength(1);

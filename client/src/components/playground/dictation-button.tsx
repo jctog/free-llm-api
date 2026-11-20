@@ -6,7 +6,7 @@ import { toast } from '@/lib/toast'
 import { pickRecordingMimeType, recordingFilename } from '@/lib/transcription'
 
 // The mic in the composer. One click records, the next stops and sends the
-// clip to /v1/audio/transcriptions — the gateway's own speech-to-text route,
+// clip to /v1/audio/transcriptions - the gateway's own speech-to-text route,
 // so key scope, cooldowns and the Auto/pinned choice all behave exactly as
 // they do for an API client. The text comes back into the composer; nothing
 // is sent to the chat model until the user presses send.
@@ -27,7 +27,7 @@ export interface DictationButtonProps {
   /** Receives the transcript; the composer appends it to what is typed. */
   onText: (text: string) => void
   onPhaseChange?: (phase: DictationPhase) => void
-  /** The open microphone stream while recording, null otherwise — for the wave. */
+  /** The open microphone stream while recording, null otherwise - for the wave. */
   onStreamChange?: (stream: MediaStream | null) => void
   className?: string
 }

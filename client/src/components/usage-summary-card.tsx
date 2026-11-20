@@ -6,8 +6,8 @@ import { formatTokens, platformColors } from '@/lib/routing'
 //
 // It is deliberately NOT a budget bar. Chat can draw a percentage because
 // `models.monthly_token_budget` is a real number. `embedding_models` and
-// `media_models` only carry a free-text `quota_label` — "10K neurons/day
-// (shared)", "$0.10/mo credits", "MP3 output - multilingual" — and there is no
+// `media_models` only carry a free-text `quota_label` - "10K neurons/day
+// (shared)", "$0.10/mo credits", "MP3 output - multilingual" - and there is no
 // honest conversion from Neurons or dollar credits to tokens, nor is the last
 // one a quota at all. So the bar shows how spend is *distributed* across
 // providers (which is real), the total is what was actually spent, and each

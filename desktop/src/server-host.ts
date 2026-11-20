@@ -32,7 +32,7 @@ export { getDb, getUnifiedApiKey, isAutoUpdateCheckEnabled };
 
 // Desktop updater → a full dump before an update installs, listed on the
 // Backups page as "Pre-update". Returns the file it wrote.
-/** The forward proxy the server's own requests use right now, or '' — read
+/** The forward proxy the server's own requests use right now, or '' - read
  * by the updater before every check so it leaves through the same route
  * (#1432). A Fetch Relay is not a proxy Chromium can speak, so it is skipped. */
 export function outboundProxyUrl(): string {
@@ -65,7 +65,7 @@ export interface ServerHandle {
  * Windows/macOS store. Browsers trust it; Node's fetch only knows its bundled
  * list, so every provider call failed with a bare "fetch failed"
  * (SELF_SIGNED_CERT_IN_CHAIN). Desktop only: the server image keeps Node's
- * default and can opt in with NODE_USE_SYSTEM_CA=1. Best effort — a runtime
+ * default and can opt in with NODE_USE_SYSTEM_CA=1. Best effort - a runtime
  * without these APIs (Node < 22.19) keeps the default behaviour.
  */
 export function trustSystemCertificates(tlsModule: Pick<typeof tls, 'getCACertificates' | 'setDefaultCACertificates'> = tls): number {
@@ -83,7 +83,7 @@ export function trustSystemCertificates(tlsModule: Pick<typeof tls, 'getCACertif
   }
 }
 
-// This function mirrors the boot sequence of server/src/index.ts — every
+// This function mirrors the boot sequence of server/src/index.ts - every
 // startup step index.ts performs has to be repeated here by hand (#949), and
 // __tests__/server-host-boot.test.ts cross-checks this list against the
 // index.ts source so the next step added there fails a desktop test instead
@@ -98,7 +98,7 @@ export function trustSystemCertificates(tlsModule: Pick<typeof tls, 'getCACertif
 export async function startServer(opts: StartOptions): Promise<ServerHandle> {
   // After main.ts's installFileLogger (which already wrapped console.*), so
   // the redaction wrapper sits outermost and the tray-revealed log file gets
-  // the same credential-stripped lines a terminal would — users paste it into
+  // the same credential-stripped lines a terminal would - users paste it into
   // bug reports. This tap is also the ONLY feed of the dashboard's log viewer
   // (#993): without it the Logs page renders near-empty on desktop. Must not
   // run at module scope: main.ts imports this bundle before the file logger
@@ -110,7 +110,7 @@ export async function startServer(opts: StartOptions): Promise<ServerHandle> {
   // bundle-server.mjs stamps the build identity via esbuild `define`, which
   // rewrites only the exact `process.env.X` member expressions in this bundle.
   // routes/update.ts reads the values through a plain env object reference, so
-  // mirror the inlined literals into the real process.env — without this the
+  // mirror the inlined literals into the real process.env - without this the
   // packaged app's update check resolves {sha: null, installation: 'unknown'}
   // and reports 'unsupported'.
   const buildSha = process.env.FREELLMAPI_COMMIT_SHA;
@@ -126,11 +126,11 @@ export async function startServer(opts: StartOptions): Promise<ServerHandle> {
   // password is random and never shown), so password re-verification for
   // key reveal / export would lock the user out. Mark the process as the
   // desktop embedder; the server then skips re-auth for those two endpoints,
-  // and only for requests arriving over loopback — with LAN access on we bind
+  // and only for requests arriving over loopback - with LAN access on we bind
   // 0.0.0.0, and a remote viewer must still enter the password.
   process.env.FREEAPI_DESKTOP = '1';
   initDb(opts.dbPath);
-  // One sweep at boot, while the DB is quiet — expired cooldown rows are only
+  // One sweep at boot, while the DB is quiet - expired cooldown rows are only
   // collected lazily per route and would otherwise accumulate forever.
   const expiredCooldowns = cleanupExpiredCooldowns();
   if (expiredCooldowns > 0) {
@@ -159,14 +159,14 @@ export async function startServer(opts: StartOptions): Promise<ServerHandle> {
   startBackupScheduler(scheduler);
   startCustomModelSync(getDb(), scheduler);
   startBuiltinModelDiscovery(getDb(), scheduler);
-  // Post-sleep recovery — the menu-bar app on a laptop is the canonical
+  // Post-sleep recovery - the menu-bar app on a laptop is the canonical
   // lid-close case: flush pooled sockets and force-re-probe every key so the
   // first request after wake doesn't ride a dead connection or a pre-sleep
   // key status. Same hook as server/src/index.ts.
   startWakeDetect({
     async onWake(event) {
       const idle = Math.round(event.idleMs / 1000);
-      console.log(`[wake] resumed after ~${idle}s (${event.reason}${event.signal ? `:${event.signal}` : ''}) — flushing stale sockets, re-probing keys`);
+      console.log(`[wake] resumed after ~${idle}s (${event.reason}${event.signal ? `:${event.signal}` : ''}) - flushing stale sockets, re-probing keys`);
       flushProxyCache();
       try {
         await checkAllKeys({ force: true });
@@ -179,7 +179,7 @@ export async function startServer(opts: StartOptions): Promise<ServerHandle> {
 }
 
 // The dashboard window authenticates as a hidden machine user. The password
-// is random and never shown — sessions are minted directly against the DB.
+// is random and never shown - sessions are minted directly against the DB.
 export function ensureSessionToken(): string {
   return desktopSessionToken();
 }

@@ -17,7 +17,7 @@ Everything about getting FreeLLMAPI running: the one-liner, Docker Compose, loca
 
 ## Quick start (one-liner)
 
-Docker required — sets up `~/freellmapi`, generates an encryption key, pulls the image, and starts the container:
+Docker required - sets up `~/freellmapi`, generates an encryption key, pulls the image, and starts the container:
 
 ```bash
 curl -fsSL https://freellmapi.co/install.sh | bash
@@ -63,7 +63,7 @@ $ENCRYPTION_KEY = -join ($Bytes | ForEach-Object { "{0:x2}" -f $_ })
 docker compose up -d
 ```
 
-> **Reaching it from another machine?** By default the container is published only on `127.0.0.1`, so `http://<server-ip>:3001` won't load from another device (the page just hangs). To expose it on your LAN — e.g. a Raspberry Pi at `http://192.168.1.x:3001` — start it with `HOST_BIND=0.0.0.0`:
+> **Reaching it from another machine?** By default the container is published only on `127.0.0.1`, so `http://<server-ip>:3001` won't load from another device (the page just hangs). To expose it on your LAN - e.g. a Raspberry Pi at `http://192.168.1.x:3001` - start it with `HOST_BIND=0.0.0.0`:
 >
 > ```bash
 > HOST_BIND=0.0.0.0 docker compose up -d
@@ -115,7 +115,7 @@ boot. Do not rely on that fallback with real provider keys; set `ENCRYPTION_KEY`
 ### Rotating the encryption key
 
 Stored secrets are AES-256-GCM, so simply changing `ENCRYPTION_KEY` does not
-re-encrypt anything — it makes every provider key, per-key proxy override,
+re-encrypt anything - it makes every provider key, per-key proxy override,
 client-profile credential and saved Fetch Relay token fail to decrypt at once.
 Re-encrypt them first, with the server stopped:
 
@@ -148,7 +148,7 @@ whichever limit prunes first. Set `REQUEST_ANALYTICS_RETENTION_DAYS=0` or
 
 Open http://localhost:5173 (the Vite dev UI), add your provider keys on the **Keys** page, reorder the **Fallback Chain** to taste, and grab your unified API key from the **Keys** page header. That unified key is what you point your OpenAI SDK at.
 
-> **Reaching the dev UI from another device on your LAN?** Use `npm run dev:lan` — it passes `--host` through to Vite, which then prints a `Network: http://<your-ip>:5173` URL you can open from a phone or another machine. (Plain `npm run dev -- --host` does *not* work here: the root `dev` script is a `concurrently` wrapper, so the flag never reaches Vite.) API calls go through Vite's dev proxy, so no extra server config is needed.
+> **Reaching the dev UI from another device on your LAN?** Use `npm run dev:lan` - it passes `--host` through to Vite, which then prints a `Network: http://<your-ip>:5173` URL you can open from a phone or another machine. (Plain `npm run dev -- --host` does *not* work here: the root `dev` script is a `concurrently` wrapper, so the flag never reaches Vite.) API calls go through Vite's dev proxy, so no extra server config is needed.
 
 For a production build without Docker:
 
@@ -198,14 +198,14 @@ instead of duplicated.
 Two optional top-level fields cover first-run provisioning:
 
 - **`admin`** creates the first dashboard account, but only while no account
-  exists — a claimed install ignores the entry with a warning, so the config
+  exists - a claimed install ignores the entry with a warning, so the config
   can never take it over. Because the config is applied before the HTTP
   listener starts, an `admin` entry also closes the unauthenticated
   first-run setup window entirely: no setup code is minted and
   `POST /api/auth/setup` answers 409 from the first request on.
 - **`license`** is a Premium key from freellmapi.co. It is validated against
-  the license service before being stored — the same contract as the
-  dashboard's Premium page — then a live-tier catalog sync starts right away.
+  the license service before being stored - the same contract as the
+  dashboard's Premium page - then a live-tier catalog sync starts right away.
   Activation runs in the background so an unreachable license service never
   delays boot; a stored key identical to the configured one short-circuits
   before any network call, and a changed key re-activates (rotation).
@@ -214,7 +214,7 @@ The config carries plaintext secrets (provider keys, the admin password, the
 license key), so protect the file or env value exactly like `ENCRYPTION_KEY`.
 
 If two custom endpoints serve the same model id, add `"endpoint"` to a `models`
-or `fallback` entry to say which one you mean — the endpoint's URL, or the short
+or `fallback` entry to say which one you mean - the endpoint's URL, or the short
 handle the dashboard shows next to it. Without it, an entry that matches more
 than one endpoint is rejected rather than applied to an arbitrary one:
 
@@ -249,11 +249,11 @@ docker compose logs -f freellmapi
 docker compose --profile autoupdate up -d
 ```
 
-Settings → **Check for updates** then shows **Update now** when a newer release exists: a [Watchtower](https://github.com/nicholas-fedor/watchtower) sidecar pulls the image and recreates the `freellmapi` container, and the dashboard reloads when it is back. Watchtower runs with only its token-protected update endpoint, never updates on a schedule, publishes no port and only touches the `freellmapi` container — but it mounts the Docker socket, which is root-equivalent on the host, so the profile stays off unless you start it.
+Settings → **Check for updates** then shows **Update now** when a newer release exists: a [Watchtower](https://github.com/nicholas-fedor/watchtower) sidecar pulls the image and recreates the `freellmapi` container, and the dashboard reloads when it is back. Watchtower runs with only its token-protected update endpoint, never updates on a schedule, publishes no port and only touches the `freellmapi` container - but it mounts the Docker socket, which is root-equivalent on the host, so the profile stays off unless you start it.
 
-By default the container's port is bound to `127.0.0.1` (localhost only). To reach the dashboard/API from another machine on your network, publish it on all interfaces with `HOST_BIND=0.0.0.0 docker compose up -d` — only on a trusted LAN, since the proxy is single-user.
+By default the container's port is bound to `127.0.0.1` (localhost only). To reach the dashboard/API from another machine on your network, publish it on all interfaces with `HOST_BIND=0.0.0.0 docker compose up -d` - only on a trusted LAN, since the proxy is single-user.
 
-Plain HTTP over a LAN address works as-is: the security headers that only apply to HTTPS (`upgrade-insecure-requests`, `Cross-Origin-Opener-Policy`, `Origin-Agent-Cluster`) are emitted only when the request actually arrived over TLS — or over loopback, which browsers already treat as a secure context. Behind an HTTPS reverse proxy they come back on automatically, as long as the proxy forwards `X-Forwarded-Proto`. `CSP_UPGRADE_INSECURE_REQUESTS=true|false` overrides the upgrade directive if your setup needs it.
+Plain HTTP over a LAN address works as-is: the security headers that only apply to HTTPS (`upgrade-insecure-requests`, `Cross-Origin-Opener-Policy`, `Origin-Agent-Cluster`) are emitted only when the request actually arrived over TLS - or over loopback, which browsers already treat as a secure context. Behind an HTTPS reverse proxy they come back on automatically, as long as the proxy forwards `X-Forwarded-Proto`. `CSP_UPGRADE_INSECURE_REQUESTS=true|false` overrides the upgrade directive if your setup needs it.
 
 SQLite data is stored in the `freellmapi-data` volume at `/app/server/data`.
 Keep the same `.env` `ENCRYPTION_KEY` and volume when upgrading, because
@@ -286,7 +286,7 @@ request stats.
 
 ![FreeLLMAPI desktop app](../../../repo-assets/desktop.png)
 
-**[Download from Releases](https://github.com/tashfeenahmed/freellmapi/releases/latest)** — the macOS `.dmg` and the Windows `.exe` installer are built and attached to every release by the [`desktop-release`](../../../.github/workflows/desktop-release.yml) workflow. Or build it from this repo in a few minutes:
+**[Download from Releases](https://github.com/tashfeenahmed/freellmapi/releases/latest)** - the macOS `.dmg` and the Windows `.exe` installer are built and attached to every release by the [`desktop-release`](../../../.github/workflows/desktop-release.yml) workflow. Or build it from this repo in a few minutes:
 
 **Mac downloads:** choose `arm64` for Apple Silicon or `x64` for Intel. Both require macOS 12 Monterey or later and include DMG and ZIP downloads.
 
@@ -313,10 +313,10 @@ The desktop app has **no username or password to set up**. Unlike the server
 build signs the dashboard in automatically with a hidden local account, so
 you're never prompted for credentials and never need one.
 
-The only credential you need is your **unified API key** — the
+The only credential you need is your **unified API key** - the
 `freellmapi-…` token your OpenAI/Anthropic client points at. Get it from:
 
-- the tray popover — click the tray icon, then **Copy Key**, or
+- the tray popover - click the tray icon, then **Copy Key**, or
 - the dashboard **Keys** page header (tray → **Open Dashboard**).
 
 You do not need to open or edit `freeapi.db` by hand.
@@ -341,7 +341,7 @@ install. For the server (non-desktop) deployment, the equivalent state is the
 
 ### I forgot my dashboard password
 
-**Desktop app — there is no password.** The dashboard signs itself in with a
+**Desktop app - there is no password.** The dashboard signs itself in with a
 hidden local account, so there is nothing to remember and nothing to reset. If
 you cannot see the dashboard, open it from the tray icon → **Open Dashboard**.
 A browser tab on the same computer (for example http://127.0.0.1:31415) signs in
@@ -374,18 +374,18 @@ rather than clicking repeatedly.
 | Plain Docker | `docker logs -f <container>` (`docker ps` lists the name) |
 | One-liner install | `cd ~/freellmapi && docker compose logs -f freellmapi` |
 | `npm run dev` / `node server/dist/index.js` | the terminal the server is running in |
-| Desktop app | `<data dir>/logs/freeapi.log` — tray icon → right-click → **Open Logs Folder** |
+| Desktop app | `<data dir>/logs/freeapi.log` - tray icon → right-click → **Open Logs Folder** |
 
 The desktop app has no terminal attached, so it also tees everything it prints
 to a file: `freeapi.log` in the `logs` folder inside the data directory listed
-[above](#credentials-and-where-your-data-lives) — for example
+[above](#credentials-and-where-your-data-lives) - for example
 `~/Library/Application Support/FreeLLMAPI/logs/freeapi.log` on macOS. It keeps
 the current file plus one rotated `freeapi.log.1`, 1 MB each. Open it in any
 text editor; the reset code above appears there too.
 
 ### How do I uninstall?
 
-Removing the app never removes your data directory — deleting that is a
+Removing the app never removes your data directory - deleting that is a
 separate, deliberate step, which is also what makes it safe to reinstall over
 the top.
 
@@ -394,13 +394,13 @@ the top.
 1. Quit from the tray menu (**Quit FreeLLMAPI**). If you turned on *Start at
    login* in the popover, switch it off first so no stale login item is left.
 2. Remove the application:
-   - **macOS** — drag `FreeLLMAPI.app` from `/Applications` to the Trash.
-   - **Windows** — *Settings → Apps → Installed apps → FreeLLMAPI → Uninstall*.
-   - **Linux** — delete the AppImage, `sudo apt remove freellmapi` for the `.deb`, or `sudo dnf remove freellmapi` for the `.rpm`.
+   - **macOS** - drag `FreeLLMAPI.app` from `/Applications` to the Trash.
+   - **Windows** - *Settings → Apps → Installed apps → FreeLLMAPI → Uninstall*.
+   - **Linux** - delete the AppImage, `sudo apt remove freellmapi` for the `.deb`, or `sudo dnf remove freellmapi` for the `.rpm`.
 3. Delete the data directory to remove your keys, settings and logs for good:
-   - **Windows** — `%APPDATA%\FreeLLMAPI\`
-   - **macOS** — `~/Library/Application Support/FreeLLMAPI/`
-   - **Linux** — `~/.config/FreeLLMAPI/`
+   - **Windows** - `%APPDATA%\FreeLLMAPI\`
+   - **macOS** - `~/Library/Application Support/FreeLLMAPI/`
+   - **Linux** - `~/.config/FreeLLMAPI/`
 
 **Docker**
 
@@ -412,6 +412,6 @@ rm -rf ~/freellmapi               # the one-liner's directory: .env + compose fi
 
 Leave off `-v` if you want to keep the database for a later reinstall.
 
-**From source** — delete the checkout. The state that matters is `.env` and
+**From source** - delete the checkout. The state that matters is `.env` and
 `server/data/freeapi.db` (or wherever `FREEAPI_DB_PATH` points), so back those
 up first if you plan to come back.

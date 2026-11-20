@@ -5,7 +5,7 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 
 // node:sqlite ships in Node 22.13+. CI also tests Node 20, where the built-in
-// module (and therefore the Android fallback) does not exist — skip the tests
+// module (and therefore the Android fallback) does not exist - skip the tests
 // that open a database there; the factory-selection test still runs everywhere.
 const hasNodeSqlite = (() => {
   try {

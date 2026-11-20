@@ -77,7 +77,7 @@ export function frameData(frame: string): string | null {
  * Tolerant by design: unparseable frames are skipped rather than thrown,
  * choice-less frames (the trailing usage frame) are fine, and a stream that
  * simply ends without `[DONE]` still resolves with whatever it produced. Only
- * a reader failure — an aborted fetch, a dropped socket — rejects.
+ * a reader failure - an aborted fetch, a dropped socket - rejects.
  */
 export async function readChatStream(
   stream: ReadableStream<Uint8Array>,
@@ -115,7 +115,7 @@ export async function readChatStream(
     if (usage && typeof usage === 'object') result.usage = usage
 
     // A usage-only frame carries `choices: []`, and some providers omit the
-    // key entirely on keepalive frames — neither is an error.
+    // key entirely on keepalive frames - neither is an error.
     const choices = obj.choices as ChunkChoice[] | undefined
     if (!Array.isArray(choices) || choices.length === 0) return false
     const choice = choices[0]
@@ -178,7 +178,7 @@ export async function readChatStream(
     try {
       await reader.cancel()
     } catch {
-      // The stream is already errored or closed — nothing to clean up.
+      // The stream is already errored or closed - nothing to clean up.
     }
   }
 

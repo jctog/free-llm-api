@@ -475,7 +475,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   }, [refetch])
 
   // Desktop self-repair: one attempt at a time, and none after the shell has
-  // handed back a session the server still rejects — a broken install shows a
+  // handed back a session the server still rejects - a broken install shows a
   // message instead of looping.
   const desktopSession = desktopSessionBridge() ?? (data?.desktop ? browserDesktopSession : null)
   const desktopNeedsSession = !!desktopSession && !!data && (data.needsSetup || !data.authenticated)

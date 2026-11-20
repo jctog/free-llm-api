@@ -7,8 +7,8 @@
 // actually working: the transport-error path in services/health.ts refreshes
 // last_checked_at but records no success, so "checked recently" is
 // indistinguishable from "worked recently" (#1493). last_healthy_at is written
-// only on evidence that the key WORKED — a valid probe verdict or a served
-// live request — and never on a transport error, so "last worked N ago" is
+// only on evidence that the key WORKED - a valid probe verdict or a served
+// live request - and never on a transport error, so "last worked N ago" is
 // readable straight off the key row.
 //
 // Guarded like every other column add: catalog-sync re-runs migrations over a

@@ -20,7 +20,7 @@ describe('contentToString', () => {
     ])).toBe('hello world');
   });
 
-  it('drops non-text blocks (image_url etc.) — text-only providers flatten this way', () => {
+  it('drops non-text blocks (image_url etc.) - text-only providers flatten this way', () => {
     expect(contentToString([
       { type: 'text', text: 'describe ' },
       { type: 'image_url', image_url: { url: 'https://example.com/x.png' } },

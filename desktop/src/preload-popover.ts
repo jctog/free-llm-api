@@ -1,5 +1,5 @@
 // Built to build/preload-popover.cjs. Exposes the minimal IPC surface the
-// popover UI needs — no Node access in the renderer.
+// popover UI needs - no Node access in the renderer.
 import { contextBridge, ipcRenderer } from 'electron';
 
 contextBridge.exposeInMainWorld('freeapi', {

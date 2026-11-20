@@ -59,8 +59,8 @@ describe('encrypted SQLite backup', () => {
 
 describe('backup file permissions', () => {
   // The blob is AES-256-GCM encrypted and the restored file is a plain SQLite
-  // database, but both live on a host that also holds the key — usually in a
-  // .env in the same tree — so neither may be left world-readable.
+  // database, but both live on a host that also holds the key - usually in a
+  // .env in the same tree - so neither may be left world-readable.
   //
   // As elsewhere, each platform asserts what it can actually enforce: Node
   // synthesizes a 0o666 mode on Windows regardless of the ACL, so a POSIX-mode
@@ -212,7 +212,7 @@ describe('Hugging Face backup target', () => {
     expect(header).toEqual({ key: 'header', value: { summary: 'chore: update backups/freeapi.db.enc' } });
     expect(file.key).toBe('file');
     expect(file.value.path).toBe('backups/freeapi.db.enc');
-    // Base64 text, not bytes — 'base64' here would make HF write the binary back.
+    // Base64 text, not bytes - 'base64' here would make HF write the binary back.
     expect(file.value.encoding).toBe('utf-8');
     expect(file.value.content).toMatch(/^[A-Za-z0-9+/]+={0,2}$/);
     expect(file.value.content).not.toContain('survived');
@@ -279,7 +279,7 @@ describe('Hugging Face backup target', () => {
     vi.stubGlobal('fetch', vi.fn(async () => new Response('repo not found', { status: 404 })));
 
     const db = new Database(dbPath);
-    await expect(backupDbNow(db, dbPath)).rejects.toThrow(/HF commit HTTP 404 — repo not found/);
+    await expect(backupDbNow(db, dbPath)).rejects.toThrow(/HF commit HTTP 404 - repo not found/);
     db.close();
   });
 

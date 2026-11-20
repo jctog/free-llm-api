@@ -8,7 +8,7 @@ import {
 
 /** Build `new Error(message)` with an undici-style `code`, wrapped in `depth`
  * generic wrappers whose own messages match NONE of the top-level substring
- * rules — the exact shape that used to slip through as fatal. */
+ * rules - the exact shape that used to slip through as fatal. */
 function wrapped(depth: number, inner: Error): Error {
   let cur: Error = inner;
   for (let i = 0; i < depth; i++) {
@@ -111,8 +111,8 @@ describe('transport errors carried in err.cause', () => {
       expect(isRetryableError(err)).toBe(false);
     });
 
-    // undici labels an aborted socket UND_ERR_ABORTED — the same family a real
-    // mid-flight socket death carries — so the marked abort errors must win.
+    // undici labels an aborted socket UND_ERR_ABORTED - the same family a real
+    // mid-flight socket death carries - so the marked abort errors must win.
     it('a client abort wrapped in an undici UND_ERR_ABORTED stays non-retryable', () => {
       const abort = newClientAbortError();
       const err = new Error('Provider request failed', { cause: abort });

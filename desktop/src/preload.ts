@@ -1,4 +1,4 @@
-// Built to build/preload.cjs (CommonJS — the reliable preload format).
+// Built to build/preload.cjs (CommonJS - the reliable preload format).
 // Runs in the renderer before any page script: seeds the dashboard session
 // token into localStorage so AuthGate's very first /api/auth/status call is
 // authenticated. The token arrives via additionalArguments (process.argv),
@@ -11,7 +11,7 @@ if (arg) {
   try {
     window.localStorage.setItem(TOKEN_KEY, arg.slice('--freeapi-token='.length));
   } catch {
-    // localStorage unavailable — the dashboard will show its login screen.
+    // localStorage unavailable - the dashboard will show its login screen.
   }
 }
 
@@ -25,7 +25,7 @@ contextBridge.exposeInMainWorld('__FREEAPI_PLATFORM__', process.platform);
 // seeded session is gone (expired after 30 days of uptime, or cleared by a 401)
 // AuthGate asks the main process for a fresh one instead. Exposed as a bare
 // function rather than a broader bridge: the renderer loads http://127.0.0.1,
-// and every extra capability handed to that world is one an XSS could use —
+// and every extra capability handed to that world is one an XSS could use -
 // this one only ever hands back a session for the account the window already
 // runs as.
 contextBridge.exposeInMainWorld('__FREEAPI_SESSION__', () => ipcRenderer.invoke('freeapi:session-token'));
@@ -42,7 +42,7 @@ contextBridge.exposeInMainWorld(
 
 // The in-app updater (the Settings update dialog and the update reminder). Like the session bridge above, deliberately
 // narrow: it can only check for, download and install the release published at
-// tashfeenahmed/freellmapi — the feed URL and signature checks live in the main
+// tashfeenahmed/freellmapi - the feed URL and signature checks live in the main
 // process and nothing here can point them anywhere else.
 contextBridge.exposeInMainWorld('__FREEAPI_UPDATER__', {
   state: () => ipcRenderer.invoke('freeapi:update-state'),
@@ -69,13 +69,13 @@ function applyDesktopClass() {
 try {
   applyDesktopClass();
 } catch {
-  // Document not ready — DOMContentLoaded below covers it.
+  // Document not ready - DOMContentLoaded below covers it.
 }
 
 // Mirror the dashboard's theme to the main process so the tray popover
 // matches. The dashboard expresses its resolved theme as the `dark` class
 // and the underlying choice (dark/light/system) as `data-theme-choice`,
-// both on documentElement — observe those rather than reaching across
+// both on documentElement - observe those rather than reaching across
 // worlds into localStorage. The choice lets the main process hand
 // nativeTheme.themeSource back to the OS when the user picks System.
 function reportTheme() {

@@ -61,7 +61,7 @@ function completion(model: string, content: string) {
   }), { status: 200, headers: { 'Content-Type': 'application/json' } });
 }
 
-// "Test Unify Model" served by both Groq and Cerebras — distinct model_ids that
+// "Test Unify Model" served by both Groq and Cerebras - distinct model_ids that
 // normalize to the same group key. (Groq priority 1, so it's tried first under
 // the 'priority' strategy, which lets us exercise cross-provider failover.)
 describe('Model unification (group the same model across providers)', () => {
@@ -134,7 +134,7 @@ describe('Model unification (group the same model across providers)', () => {
     const setPriority = (modelDbId: number, p: number) =>
       db.prepare('UPDATE fallback_config SET priority = ? WHERE model_db_id = ?').run(p, modelDbId);
     // Both providers stay healthy throughout, so the only thing that can move the
-    // route between turns is stickiness — never a cooldown.
+    // route between turns is stickiness - never a cooldown.
     vi.spyOn(global, 'fetch').mockImplementation(async (url: any, init?: any) => {
       const u = String(url);
       if (u.includes('api.groq.com')) return completion('tum-groq', 'from groq');
@@ -152,7 +152,7 @@ describe('Model unification (group the same model across providers)', () => {
     expect(turn1.status).toBe(200);
     expect(turn1.headers.get('x-routed-via')).toContain('cerebras');
 
-    // Flip priority so plain routing would now prefer Groq — sticky must override.
+    // Flip priority so plain routing would now prefer Groq - sticky must override.
     setPriority(groqId.id, 1);
     setPriority(cerebrasId.id, 2);
 
@@ -183,7 +183,7 @@ describe('Model unification (group the same model across providers)', () => {
       return orig(url, init);
     });
 
-    // Client sends Groq's raw id — it resolves to the whole group.
+    // Client sends Groq's raw id - it resolves to the whole group.
     const { status, headers } = await request(app, 'POST', '/v1/chat/completions', {
       model: 'tum-groq',
       messages: [{ role: 'user', content: 'hi' }],
@@ -212,7 +212,7 @@ describe('Model unification (group the same model across providers)', () => {
     expect(body.choices).toBeUndefined(); // no answer from any model
   });
 
-  it('pinning "platform:model_id" hard-pins that provider — no cross-provider failover (#580)', async () => {
+  it('pinning "platform:model_id" hard-pins that provider - no cross-provider failover (#580)', async () => {
     const orig = global.fetch;
     vi.spyOn(global, 'fetch').mockImplementation(async (url: any, init?: any) => {
       const u = String(url);
@@ -221,7 +221,7 @@ describe('Model unification (group the same model across providers)', () => {
       return orig(url, init);
     });
 
-    // The fully-qualified id routes to exactly that provider (priority 2 —
+    // The fully-qualified id routes to exactly that provider (priority 2 -
     // priority 1 Groq must NOT be used even though it would sort first).
     const pinned = await request(app, 'POST', '/v1/chat/completions', {
       model: 'cerebras:tum-cerebras',

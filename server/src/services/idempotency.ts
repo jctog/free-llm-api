@@ -10,7 +10,7 @@
 //     params) is bound to the key, so reusing the same key with different
 //     content is a 409 conflict, not a silent wrong answer.
 //   - On success the original HTTP status + body are persisted to SQLite and
-//     replayed for later requests with the same key + fingerprint — zero
+//     replayed for later requests with the same key + fingerprint - zero
 //     provider cost, mirroring what the response cache does for exact-match
 //     hits, but scoped per caller (key) instead of per request content.
 //   - A duplicate that arrives while the original request is still running is
@@ -83,11 +83,11 @@ export type IdempotencyClaimResult =
  *
  * Returns:
  *   - { kind: 'replay', ... } when a completed claim with the SAME fingerprint
- *     exists and is still inside the replay window — the caller should replay
+ *     exists and is still inside the replay window - the caller should replay
  *     it verbatim without touching a provider.
  *   - { kind: 'conflict' } when a completed claim exists but its fingerprint
- *     differs — the caller must return 409 idempotency_key_conflict.
- *   - { kind: 'miss' } when there is no usable claim — proceed normally and
+ *     differs - the caller must return 409 idempotency_key_conflict.
+ *   - { kind: 'miss' } when there is no usable claim - proceed normally and
  *     persist the result on success.
  */
 export function lookupIdempotencyReplay(
@@ -110,7 +110,7 @@ export function lookupIdempotencyReplay(
     try {
       body = JSON.parse(row.response_body);
     } catch {
-      // Corrupt stored body — treat as a miss and let the caller regenerate.
+      // Corrupt stored body - treat as a miss and let the caller regenerate.
       return { kind: 'miss' };
     }
     return { kind: 'replay', status: row.response_status, body };

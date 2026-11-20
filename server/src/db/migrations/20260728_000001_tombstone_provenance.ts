@@ -1,7 +1,7 @@
 // Migration: record WHY a catalog model was tombstoned
 // Created: 2026-07-28
 //
-// DOWN: reversible — drops the two added columns (every existing tombstone is
+// DOWN: reversible - drops the two added columns (every existing tombstone is
 // a user deletion, which is the default the columns backfill to).
 
 import type { Db } from '../types.js';
@@ -14,7 +14,7 @@ function hasColumn(db: Db, table: string, column: string): boolean {
 /**
  * Tombstones used to mean exactly one thing: "the user deleted this catalog
  * model, keep it deleted across syncs". Issue #634 adds a second, machine-made
- * kind — "the provider retired this model upstream (410 / end of life)" — which
+ * kind - "the provider retired this model upstream (410 / end of life)" - which
  * disables the row instead of deleting it and carries the upstream wording so
  * the dashboard can say why. `source` keeps the two apart ('user' is the
  * backfill for every pre-existing row); `reason` is the redacted provider text.

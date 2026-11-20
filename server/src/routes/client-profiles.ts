@@ -7,14 +7,14 @@ import { mintClientProfileKey, hashClientProfileKey } from '../lib/system-prompt
 
 // Client-profile CRUD (#411), mounted under /api/client-profiles behind the
 // dashboard session gate like every other admin route. The full `sk-cp-...`
-// key is returned exactly once — from create and rotate; the list endpoint
+// key is returned exactly once - from create and rotate; the list endpoint
 // only ever shows the masked form (rendered from the encrypted copy, since
 // the auth path stores nothing but a hash).
 
 export const clientProfilesRouter = Router();
 
 const MAX_NAME_LEN = 100;
-// Generous ceiling — a system prompt is configuration, not a document.
+// Generous ceiling - a system prompt is configuration, not a document.
 const MAX_PROMPT_LEN = 32_000;
 
 const createSchema = z.object({

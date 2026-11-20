@@ -20,7 +20,7 @@ async function triggerError(message: string, status: number) {
   return { status: res.status, body: json };
 }
 
-describe('Error handler — production mode', () => {
+describe('Error handler - production mode', () => {
   const orig = process.env.NODE_ENV;
 
   beforeAll(() => {

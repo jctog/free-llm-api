@@ -30,11 +30,11 @@ async function request(app: Express, method: string, path: string, body?: any) {
 
 const PROXY_WITH_CREDS = 'socks5h://alice:hunter2@proxy.internal:1080';
 
-// Per-key proxy override (#590). The URL is a credential in its own right —
-// `user:pass@` is the norm for commercial proxies — so it is stored with the
+// Per-key proxy override (#590). The URL is a credential in its own right -
+// `user:pass@` is the norm for commercial proxies - so it is stored with the
 // same AES-256-GCM treatment as the API key on the row, never echoed back in
 // the clear, and only accepted on schemes the proxy layer can dispatch through.
-describe('Keys API — per-key proxy override (#590)', () => {
+describe('Keys API - per-key proxy override (#590)', () => {
   let app: Express;
 
   beforeAll(() => {
@@ -76,7 +76,7 @@ describe('Keys API — per-key proxy override (#590)', () => {
       // username, not the host, not even the scheme. Every string here must
       // contain at least one non-hex character: the column is lowercase hex,
       // so a pure-digit fragment like the port "1080" can appear in the
-      // ciphertext by chance (~1 in 700 runs) without being a leak — asserting
+      // ciphertext by chance (~1 in 700 runs) without being a leak - asserting
       // it made this test flaky (CI reroll on PR #1601).
       const stored = String(row.proxy_encrypted);
       for (const secret of ['hunter2', 'alice', 'proxy.internal', 'socks5h']) {

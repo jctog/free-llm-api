@@ -9,7 +9,7 @@ import { seedSearchEngines } from '../helpers/search-engines.js';
 // POST /v1/search spends real provider quota (credits per query on Tavily,
 // credits on Exa et al.), but logSearch only wrote search_requests. The
 // per-key monthly caps (#1158) and GET /v1/usage read key_monthly_usage,
-// which the requests_key_monthly_usage trigger feeds from `requests` — so a
+// which the requests_key_monthly_usage trigger feeds from `requests` - so a
 // capped key never accrued search spend and served searches forever past its
 // cap. This is the rerank gap (#1621/#1627) on the search surface.
 

@@ -46,7 +46,7 @@ function googleHttpError(res: Response, body: any) {
 // opaque tool ids. Strictly additive: a cache miss yields exactly the previous
 // behavior (the request may 400 and fail over, as before). Bounded with a TTL so
 // it can't grow unbounded.
-const THOUGHT_SIG_TTL_MS = 30 * 60 * 1000; // 30 min — longer than any single tool loop
+const THOUGHT_SIG_TTL_MS = 30 * 60 * 1000; // 30 min - longer than any single tool loop
 const THOUGHT_SIG_MAX = 5000;
 const thoughtSigCache = new Map<string, { sig: string; exp: number }>();
 
@@ -65,15 +65,15 @@ function thoughtSigCallKey(name: string | undefined, args: unknown): string | un
 // Fallback for functionCall parts that have neither a client-preserved nor a
 // cached signature (replayed history after a restart, TTL expiry, calls first
 // produced by another provider). Gemini 3 strictly validates the field, but
-// the signature is an encrypted blob the server checks — a fabricated value
+// the signature is an encrypted blob the server checks - a fabricated value
 // (e.g. a hash) is NOT accepted. Google documents exactly two sentinel
 // strings for calls the API didn't produce; either tells the server to skip
 // signature validation (at the cost of some reasoning quality), which is the
 // official last resort for signature-less history.
 const DUMMY_THOUGHT_SIGNATURE = 'context_engineering_is_the_way_to_go';
 
-// The sentinel is a silent quality trade — Gemini stops validating and loses
-// the reasoning thread for that call — so say so once per process. A steady
+// The sentinel is a silent quality trade - Gemini stops validating and loses
+// the reasoning thread for that call - so say so once per process. A steady
 // stream of these means the cache is missing (restart loop, TTL too short, or
 // history minted by another provider) rather than a one-off replay, and
 // without a log there is nothing to correlate degraded tool-calling against.
@@ -84,7 +84,7 @@ function noteDummyThoughtSignature(name: string | undefined): void {
   warnedDummyThoughtSig = true;
   console.warn(
     `[Google] no thought_signature for a replayed tool call (${name ?? 'unknown'}); ` +
-    'falling back to the documented skip-validation sentinel — Gemini will not ' +
+    'falling back to the documented skip-validation sentinel - Gemini will not ' +
     'validate the signature for these turns, at some reasoning-quality cost. ' +
     '(Logged once per process.)',
   );
@@ -260,7 +260,7 @@ export function toGeminiExtendedConfig(options?: CompletionOptions): Record<stri
   const rf = options?.response_format;
   // Count only real function declarations, mirroring hasFunctionDeclarations:
   // grounding pseudo-tools (google_search etc.) are converted to a grounding
-  // block by toGeminiTools and never conflict with responseMimeType — raw
+  // block by toGeminiTools and never conflict with responseMimeType - raw
   // tools.length was silently dropping structured output for grounding-only
   // requests.
   const hasTools = (options?.tools ?? []).some(t => !GROUNDING_TOOL_NAMES.has(t.function.name.toLowerCase()));
@@ -270,7 +270,7 @@ export function toGeminiExtendedConfig(options?: CompletionOptions): Record<stri
     if (schema) out.responseSchema = sanitizeForGemini(schema);
   }
   // Request-side reasoning control: reasoning_effort → thinkingConfig. Only
-  // set when the client asked — a request without the knob keeps Gemini's
+  // set when the client asked - a request without the knob keeps Gemini's
   // model-default thinking behavior unchanged. includeThoughts surfaces
   // thought summaries so reasoning_content flows back out (see
   // extractReasoningContent).
@@ -361,7 +361,7 @@ async function imageUrlToInlineData(url: string): Promise<{ mimeType: string; da
   if (/^https?:\/\//i.test(url)) {
     try {
       // Internal helper that turns an image URL into inline data for the
-      // Gemini request body. No formal timeout — relies on the platform's
+      // Gemini request body. No formal timeout - relies on the platform's
       // own default. Use a 30s cap to avoid hanging the whole request when
       // an image host stalls; classify as `image` for triage.
       const res = await proxyFetch(url, { signal: AbortSignal.timeout(30_000) }, 'google', 'image', 30_000);
@@ -436,7 +436,7 @@ async function toGeminiContents(messages: ChatMessage[]): Promise<{
           // drop the field, so this is the common path for Gemini multi-turn).
           // If neither is available, fall back to Google's documented dummy
           // sentinel so a signature-less replay still passes the strict 400
-          // check (parallel calls get it on every part — harmless, since the
+          // check (parallel calls get it on every part - harmless, since the
           // sentinel means "skip validation").
           const known = call.thought_signature ?? recallThoughtSig(call.id, call.function.name, call.function.arguments);
           if (!known) noteDummyThoughtSignature(call.function.name);
@@ -812,14 +812,14 @@ export class GoogleProvider extends BaseProvider {
       // Runs on normal completion, on the early returns above, AND when the
       // consumer abandons the generator mid-stream (a client disconnect breaks
       // the route pump's for-await, which calls gen.return() at the yield
-      // point). Without it the Gemini generation kept running upstream —
-      // quota burning with nobody reading — because this adapter reads the
+      // point). Without it the Gemini generation kept running upstream -
+      // quota burning with nobody reading - because this adapter reads the
       // body itself instead of going through readSseStream's shared cleanup.
       reader.cancel().catch(() => { /* upstream already gone */ });
     }
 
     // Reaching here means the body ended with neither `[DONE]` nor any
-    // `finishReason` — both legitimate terminators `return` from inside the
+    // `finishReason` - both legitimate terminators `return` from inside the
     // loop above, so the only way out to this point is the `if (done) break`
     // on an abrupt EOF (an h2 END_STREAM from an edge, or the backend cutting
     // the generation mid-answer).
@@ -827,20 +827,20 @@ export class GoogleProvider extends BaseProvider {
     // This used to synthesize `finish_reason: 'stop'`, which told the client a
     // half-written answer had completed normally: no failover, the request row
     // logged 'success', and the route never benched. base.ts:392-397 states the
-    // opposite contract for every adapter that goes through readSseStream —
+    // opposite contract for every adapter that goes through readSseStream -
     // "a stream that ends without [DONE] AND without any finish_reason is a
-    // truncated generation, not a completion" — and throws (base.ts:471). This
+    // truncated generation, not a completion" - and throws (base.ts:471). This
     // adapter parses Gemini's own frame format and reads the body itself, so it
     // never inherited that. Throw the same message: isStreamTruncatedError
     // (lib/error-classify.ts:685) matches on it, and the fallback loop already
     // fails over and bench-counts the streak (lib/fallback-loop.ts:485).
     if (!emittedFinish) {
-      throw new Error(`${this.name} stream ended unexpectedly (no [DONE], no finish_reason) — connection reset or truncated upstream`);
+      throw new Error(`${this.name} stream ended unexpectedly (no [DONE], no finish_reason) - connection reset or truncated upstream`);
     }
   }
 
   async validateKey(apiKey: string, quotaContext?: QuotaObservationContext): Promise<KeyValidationResult> {
-    // Transport errors propagate — health.ts marks status='error' without
+    // Transport errors propagate - health.ts marks status='error' without
     // counting toward auto-disable.
     const res = await this.fetchWithTimeout(
       `${API_BASE}/models`,
@@ -893,7 +893,7 @@ export class GoogleProvider extends BaseProvider {
 
     console.warn(
       `[Google] validateKey: inconclusive HTTP ${res.status} (${gStatus ?? 'UNKNOWN'}${reason ? `/${reason}` : ''}): ${message.slice(0, 200)} ` +
-      `— treating as 'error', not auto-disabling (the key may be valid but blocked by region/permission/restriction on this host).`,
+      `- treating as 'error', not auto-disabling (the key may be valid but blocked by region/permission/restriction on this host).`,
     );
     throw new Error(
       `Google key validation inconclusive (HTTP ${res.status}${gStatus ? ` ${gStatus}` : ''}${reason ? ` ${reason}` : ''})` +

@@ -9,7 +9,7 @@
 // dashboard poll:
 //
 //   - getQuotaStateForKeys() needs the NEWEST observation per
-//     (platform, key_id, quota_pool_key, metric) — one row for each of the few
+//     (platform, key_id, quota_pool_key, metric) - one row for each of the few
 //     dozen provider_quota_state rows. The baseline index
 //     (platform, key_id, observed_at) cannot answer that per pool+metric, so
 //     the query window-functioned the whole log (raw_json included) and held

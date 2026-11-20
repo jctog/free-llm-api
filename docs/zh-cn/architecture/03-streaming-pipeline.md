@@ -1,15 +1,15 @@
 [English](../../en/architecture/03-streaming-pipeline.md) · **简体中文**
 
-# 流式管线 —— 深度剖析
+# 流式管线 -- 深度剖析
 
 > **源码：** `server/src/routes/proxy.ts`、`server/src/routes/responses.ts`、`server/src/routes/anthropic.ts`、`server/src/lib/fallback-loop.ts`
 
 ## 1. 设计原则
 
-- **纯 SSE** —— 零 WebSocket。每个面（`/v1/chat/completions`、`/v1/responses`、`/v1/messages`、旧版 `/completions`）都经 Server-Sent Events 流式。
-- **轮次完整性** —— 流作为**轮次**校验，不是传输。头部拿到首个真实载荷前保留；在此之前挂掉的隐式回退。
-- **流中回退** —— 错误帧在头部刷出前到达则可重试；刷出后则诚实浮出（stream_error）。
-- **统一回退循环** —— 所有面共享 `lib/fallback-loop.ts` 做重试预算、冷却、尝试轨迹、耗尽渲染。
+- **纯 SSE** -- 零 WebSocket。每个面（`/v1/chat/completions`、`/v1/responses`、`/v1/messages`、旧版 `/completions`）都经 Server-Sent Events 流式。
+- **轮次完整性** -- 流作为**轮次**校验，不是传输。头部拿到首个真实载荷前保留；在此之前挂掉的隐式回退。
+- **流中回退** -- 错误帧在头部刷出前到达则可重试；刷出后则诚实浮出（stream_error）。
+- **统一回退循环** -- 所有面共享 `lib/fallback-loop.ts` 做重试预算、冷却、尝试轨迹、耗尽渲染。
 
 ---
 
@@ -84,7 +84,7 @@ headerSent = false
 
 ### 词元核算（流式）
 
-- **输出词元**：`ceil((text.length + reasoning.length) / 4)` 每块——推理词元是真实消耗（#764）。
+- **输出词元**：`ceil((text.length + reasoning.length) / 4)` 每块--推理词元是真实消耗（#764）。
 - **TTFB**：到首个内容**或**推理词元的挂钟。
 - **非流对账**：提供方的 `usage` 块覆盖估算。
 
@@ -163,7 +163,7 @@ Codex CLI 和 Agents SDK 说 **Responses API**（有状态、`previous_response_
 
 ### 回退
 
-- 共享 `runFallbackLoop()` —— 同重试预算、冷却、尝试轨迹。
+- 共享 `runFallbackLoop()` -- 同重试预算、冷却、尝试轨迹。
 - 耗尽渲染映射到 Responses API 错误形状。
 
 ---
@@ -254,6 +254,6 @@ Codex CLI 和 Agents SDK 说 **Responses API**（有状态、`previous_response_
 
 - **范围**：流式与非流式皆可、可缓存温度（`temperature ≤ 1` 或未设）、`X-FreeLLM-Cache: on` 或 `RESPONSE_CACHE=1`。
 - **键**：规范化请求（模型、消息、所有采样参数、工具、stop、response_format、n、seed、惩罚、logit_bias、logprobs、top_logprobs、reasoning_effort、压缩）的 SHA-256。
-- **存储**：内存 LRU、TTL + 温度闸门。分两个存储 —— JSON 正文（持久化到 SQLite）与流式 SSE（仅内存），共用同一个 `RESPONSE_CACHE_MAX_ENTRIES` 上限；统计中的 `entries` 同时计入两者。
+- **存储**：内存 LRU、TTL + 温度闸门。分两个存储 -- JSON 正文（持久化到 SQLite）与流式 SSE（仅内存），共用同一个 `RESPONSE_CACHE_MAX_ENTRIES` 上限；统计中的 `entries` 同时计入两者。
 - **命中**：返回缓存体、`X-Routed-Via: cache`、`X-FreeLLM-Cache: HIT`，**零提供方额度消耗**。流式命中会逐字节重放存储的 SSE。
 - **流式存储**：仅在请求可缓存时才缓冲帧（缓存关闭时不保留任何内容），超过 2 MB 重放上限即丢弃。被截断（`finish_reason: length`）、出错或中断的流永不存储。

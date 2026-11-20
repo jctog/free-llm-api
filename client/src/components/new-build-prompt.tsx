@@ -9,11 +9,11 @@ const MIN_GAP_MS = 60 * 1000
 const POLL_MS = 5 * 60 * 1000
 
 /**
- * "A newer dashboard is installed — Reload." The server can be replaced under
+ * "A newer dashboard is installed - Reload." The server can be replaced under
  * an open tab (docker compose pull, a source rebuild, a demo-box deploy); the
  * tab keeps running the old bundle and fails the moment it lazy-loads a chunk
  * the new build deleted. This only ever asks this server for its own
- * index.html — nothing leaves the install.
+ * index.html - nothing leaves the install.
  */
 export function NewBuildPrompt() {
   const { t } = useI18n()
@@ -32,7 +32,7 @@ export function NewBuildPrompt() {
       try {
         const html = await fetchLatestIndex()
         if (!cancelled && isNewBuild(loaded, html)) setStale(true)
-      } catch { /* server restarting — try again on the next focus */ }
+      } catch { /* server restarting - try again on the next focus */ }
     }
 
     const onWake = () => { void check() }

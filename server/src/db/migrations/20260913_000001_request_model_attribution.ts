@@ -12,10 +12,10 @@
 // concrete `models.id` that served it. Catalog requests resolve by
 // (platform, model_id); custom requests resolve through the request's key
 // (its normalized base_url is the row's endpoint_scope). Custom requests
-// whose key never reached routing (key_id IS NULL) stay NULL — an
+// whose key never reached routing (key_id IS NULL) stay NULL - an
 // unattributable request must not land on the wrong relay.
 //
-// No foreign key on models(id) — request history must survive the user
+// No foreign key on models(id) - request history must survive the user
 // deleting the model row that once served it.
 
 import type { Db } from '../types.js';
@@ -28,14 +28,14 @@ function hasColumn(db: Db, table: string, column: string): boolean {
 export function up(db: Db): void {
   if (hasColumn(db, 'requests', 'model_db_id')) return;
 
-  // Add the column (nullable — unattributed requests keep NULL).
+  // Add the column (nullable - unattributed requests keep NULL).
   db.prepare('ALTER TABLE requests ADD COLUMN model_db_id INTEGER').run();
 
   // Non-unique index for backfill scans and future analytics queries.
   db.prepare('CREATE INDEX IF NOT EXISTS idx_requests_model_db_id ON requests(model_db_id)').run();
 
   // Backfill catalog requests: (platform, model_id) → models.id
-  // These are unambiguous — catalog rows are unique on (platform, model_id).
+  // These are unambiguous - catalog rows are unique on (platform, model_id).
   // SQLite UPDATE has no table alias; correlate via the full table name.
   db.prepare(`
     UPDATE requests
@@ -62,7 +62,7 @@ export function up(db: Db): void {
     WHERE requests.platform = 'custom' AND requests.key_id IS NOT NULL
   `).run();
 
-  // Orphaned custom history stays NULL — better than being attributed to the
+  // Orphaned custom history stays NULL - better than being attributed to the
   // wrong relay. The two UPDATEs above are best-effort: if a custom key was
   // deleted or its base_url changed, the JOIN drops out and model_db_id stays
   // NULL (which is exactly the "unattributable" semantics we want).

@@ -1,15 +1,15 @@
 // Request-level guardrails: two hard limits, both OFF by default so an
 // unconfigured install behaves exactly as before.
 //
-//  1. request_max_tokens_budget — a per-request token-cost ceiling. Pre-flight:
+//  1. request_max_tokens_budget - a per-request token-cost ceiling. Pre-flight:
 //     estimated input (plus the flat per-image estimate) plus the requested
 //     max_tokens must fit the budget, else the request is rejected with a 413
 //     before any provider is tried. A request that sent NO max_tokens has its
-//     output capped to the budget remainder instead of being rejected — with
+//     output capped to the budget remainder instead of being rejected - with
 //     the cap forwarded upstream, the provider's own max_tokens enforcement
 //     bounds the spend, so no mid-stream truncation machinery is needed.
 //
-//  2. max_consecutive_upstream_fails — a per-request circuit breaker. When the
+//  2. max_consecutive_upstream_fails - a per-request circuit breaker. When the
 //     Nth consecutive upstream attempt fails, the whole failover chain stops
 //     with a 503 instead of grinding through the remaining candidates of a
 //     pool that is failing across the board (the observed worst case for a
@@ -35,7 +35,7 @@ function readGuardrailValue(settingKey: string, envKey: string): number {
   try {
     stored = getSetting(settingKey);
   } catch {
-    stored = undefined; // DB not ready — never throw on the proxy hot path
+    stored = undefined; // DB not ready - never throw on the proxy hot path
   }
   for (const raw of [stored, process.env[envKey]]) {
     if (raw === undefined || raw.trim() === '') continue;
@@ -72,7 +72,7 @@ export interface TokenBudgetResult {
 // Ceiling on the max_tokens the budget gate INJECTS when the client sent none.
 // Without it, a generous budget (say 100000) minus a small prompt forwarded
 // max_tokens≈99000 verbatim, and providers that validate max_tokens against
-// the model's context/completion limit 400'd a request that previously worked —
+// the model's context/completion limit 400'd a request that previously worked -
 // on every candidate in the chain, since the same value rode every retry.
 // Routing only reserves a capped ~2000 tokens for output (routingReserveTokens,
 // #470), so it never protects against this. A client that genuinely wants a

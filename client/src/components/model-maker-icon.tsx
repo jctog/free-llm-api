@@ -8,7 +8,7 @@ import { modelMakerOf, type ModelMakerId } from '@/lib/model-maker'
 // The mark of the company that MADE a model, drawn at favicon size under a
 // Playground reply. Path data comes from simple-icons (CC0); each mark stays
 // the trademark of its owner and identifies the model's origin, nothing more.
-// Makers we have no mark for — and ids we cannot place at all — get the same
+// Makers we have no mark for - and ids we cannot place at all - get the same
 // neutral default, so the line always carries one glyph in the same spot.
 const MARKS: Partial<Record<ModelMakerId, SimpleIcon>> = {
   google: siGooglegemini,

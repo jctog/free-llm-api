@@ -2,7 +2,7 @@
 //
 // PROVIDER_TIMEOUT_<PLATFORM>=<milliseconds> overrides the platform's built-in
 // chat timeout (e.g. PROVIDER_TIMEOUT_NVIDIA=300000). 0 disables the timeout
-// entirely. Values are read when the provider is constructed — for the built-in
+// entirely. Values are read when the provider is constructed - for the built-in
 // platforms that means process start, so a change requires a restart.
 //
 // PROVIDER_STREAM_STALL_TIMEOUT_MS is the streaming counterpart for the
@@ -13,7 +13,7 @@
 //
 // The stall watchdog does NOT bound time-to-first-byte: the FIRST read of a
 // stream gets a grace budget derived from the platform's chat timeout (the
-// PROVIDER_TIMEOUT_<PLATFORM> knob above), floored at the stall budget — see
+// PROVIDER_TIMEOUT_<PLATFORM> knob above), floored at the stall budget - see
 // BaseProvider.readSseStream. Before #584 the stall budget also bounded the
 // first byte, which killed healthy long prefills (NVIDIA NIM sends SSE headers
 // instantly, then prefills 100k-token prompts for minutes) at 90s.
@@ -46,7 +46,7 @@ export function providerTimeoutEnvName(platform: string): string {
 
 /** Effective chat timeout for a platform: the PROVIDER_TIMEOUT_<PLATFORM> env
  * override when set and valid, else the built-in default. Returns 0 to mean
- * "no timeout" — callers must skip their abort timer for 0, never schedule
+ * "no timeout" - callers must skip their abort timer for 0, never schedule
  * setTimeout(0). */
 export function providerTimeoutMs(platform: string, defaultMs: number): number {
   return parseTimeoutEnv(providerTimeoutEnvName(platform), defaultMs);

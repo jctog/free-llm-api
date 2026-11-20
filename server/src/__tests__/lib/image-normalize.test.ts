@@ -97,7 +97,7 @@ describe('inbound image normalization', () => {
   });
 
   it('flattens opaque RGBA screenshots to JPEG (the macOS-screenshot shape)', async () => {
-    // RGBA PNG, fully opaque, already under the dimension cap — exactly the
+    // RGBA PNG, fully opaque, already under the dimension cap - exactly the
     // shape that used to stay on PNG and "compress" 2.0MB → 1.9MB.
     const url = await solidPng(1920, 1080, 1.0);
     const messages: ChatMessage[] = [{
@@ -125,7 +125,7 @@ describe('inbound image normalization', () => {
     if (summary.normalized === 1) {
       expect(summary.bytesAfter).toBeLessThan(summary.bytesBefore);
     } else {
-      // The never-grow guard kept the original — it must be byte-identical.
+      // The never-grow guard kept the original - it must be byte-identical.
       expect(next).toBe(url);
     }
   });

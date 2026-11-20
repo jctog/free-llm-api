@@ -247,7 +247,7 @@ describe('Responses → chat translation (#96)', () => {
     expect(responsesInputHasFileIdImage({
       input: [{ type: 'message', role: 'user', content: [{ type: 'input_image', file_id: 'file_abc' }] }],
     } as any)).toBe(true);
-    // No url at all — the lenient schema lets this through validation, so the
+    // No url at all - the lenient schema lets this through validation, so the
     // pre-check is the only thing standing between it and a blind answer.
     expect(responsesInputHasFileIdImage({
       input: [{ type: 'message', role: 'user', content: [{ type: 'input_image' }] }],

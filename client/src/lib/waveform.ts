@@ -9,8 +9,8 @@ export const WAVE_BAR_COUNT = 31
  * `data` is a getByteFrequencyData buffer (0..255 per bin). The bins are
  * bucketed evenly into `bars`, each bucket's mean drives one bar, and the
  * result is scaled into [min, max] px. Speech energy lives in the low bins,
- * so the buckets are laid out from the centre outwards — the middle bars
- * carry the voice, the edges the hiss — which reads as a wave rather than a
+ * so the buckets are laid out from the centre outwards - the middle bars
+ * carry the voice, the edges the hiss - which reads as a wave rather than a
  * left-heavy staircase.
  */
 export function barHeights(data: ArrayLike<number>, bars: number = WAVE_BAR_COUNT, min = 3, max = 22): number[] {

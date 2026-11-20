@@ -322,7 +322,7 @@ describe('custom provider modalities', () => {
     });
     expect(named.body.displayName).toBe('My Embedder');
 
-    // Re-submit with the name field left blank — e.g. to change the family.
+    // Re-submit with the name field left blank - e.g. to change the family.
     const again = await post(app, '/api/embeddings/custom', {
       baseUrl: 'http://127.0.0.1:8585/v1',
       model: 'named-embed',

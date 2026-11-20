@@ -10,10 +10,10 @@ import { cn } from '@/lib/utils'
 // The marks identify tools this server is compatible with. They remain the
 // trademarks of their respective owners and imply no affiliation or endorsement.
 //
-// COLOUR RULE — one rule for the whole set, applied in this order:
+// COLOUR RULE - one rule for the whole set, applied in this order:
 //   1. Use the brand's own artwork colour. Where a brand publishes separate
 //      artwork for light and dark backgrounds (most of these do) the matching
-//      variant is used verbatim on each tile — that is the `published pair`
+//      variant is used verbatim on each tile - that is the `published pair`
 //      treatment below.
 //   2. Where a brand publishes one value only and it falls under 3:1 against
 //      the tile it has to sit on, that value is moved in OKLCH lightness only:
@@ -22,7 +22,7 @@ import { cn } from '@/lib/utils'
 //      as that brand's colour. Only claude, aider, kilo and reasonix need this,
 //      and only on one tile each; the untouched brand hex is kept on the other
 //      tile.
-//   3. `generic` is not a brand — it stays `currentColor`.
+//   3. `generic` is not a brand - it stays `currentColor`.
 //
 // Contrast is measured against the tile itself, `bg-muted`, which resolves to
 // #F5F5F5 in light and #1B1B1B in dark. Ratios are in the second table.
@@ -75,14 +75,14 @@ import { cn } from '@/lib/utils'
 //   opencode  #17181C + #E6E5E6 16.27  #FFFFFF + #5A5858 17.22  published pair; the second value is the
 //                                                               mark's own inner block, a depth fill that is
 //                                                               deliberately near-invisible in the brand's
-//                                                               own artwork too (1.15 / 2.44) — the frame
+//                                                               own artwork too (1.15 / 2.44) - the frame
 //                                                               carries the legibility
 //   goose     #101010           17.45  #FFFFFF           17.22  published pair (black mark / white logo)
 //   qwen      #6950EF            4.82  #6950EF            3.28  brand hex unchanged; it clears 3:1 on both
 //                                                               tiles, so no tuning is applied
 //   roo       #000000           19.26  #FFFFFF           17.22  published pair (logo-dark.svg/logo-white.svg)
 //   kilo      #949107            3.05  #FAF74F           15.16  brand yellow on dark; light tile is the same
-//                                                               hue tuned down (rule 2, 1.04→3.05) — #FAF74F
+//                                                               hue tuned down (rule 2, 1.04→3.05) - #FAF74F
 //                                                               is oklch(0.95 0.18 108.4) and the tuned value
 //                                                               is oklch(0.638 0.136 108.4), the most
 //                                                               saturated yellow that clears 3:1 there
@@ -104,7 +104,7 @@ import { cn } from '@/lib/utils'
 //                                                               light tile is the same hue tuned down (rule 2,
 //                                                               1.65→3.02): oklch(0.809 0.096 251.8) →
 //                                                               oklch(0.645 0.096 251.8)
-//   generic   currentColor         —   currentColor         —   not a brand mark
+//   generic   currentColor         -   currentColor         -   not a brand mark
 //
 // Cursor also publishes a 2.5D cube in five warm greys (#43413c #55544f #72716d
 // #d6d5d2 #fff). It is not used: at 20px the facets stop resolving, and its
@@ -112,7 +112,7 @@ import { cn } from '@/lib/utils'
 // The 2D cube is an official mark in its own right, not a flattening of that one.
 //
 // OpenCode's mark is the only two-tone one. Its inner block was dropped while
-// the set was monochrome — it would have merged with the frame — and is restored
+// the set was monochrome - it would have merged with the frame - and is restored
 // here from the same published artwork, so the mark keeps both of its layers.
 //
 // Aider's and Kilo Code's logos are published as light artwork knocked out of a
@@ -128,13 +128,13 @@ import { cn } from '@/lib/utils'
 type Brand = {
   // Tailwind arbitrary properties set `--mk` (and `--mk2` for the one two-tone
   // mark) on the tile. The `dark:` half swaps in the dark-tile value, so the
-  // whole colour scheme is CSS — no theme hook, no flash on first paint.
+  // whole colour scheme is CSS - no theme hook, no flash on first paint.
   tint: string
   // Optical size correction, applied about the centre on top of the geometry
   // already fitted to the grid; omitted means the mark is used at its fitted
   // size. A bright saturated fill blooms next to a near-black or white one, so
-  // aider's #02F191 and kilo's #FAF74F — the two most luminous colours in the
-  // set, both on blocky marks — are pulled in slightly. Measured on the
+  // aider's #02F191 and kilo's #FAF74F - the two most luminous colours in the
+  // set, both on blocky marks - are pulled in slightly. Measured on the
   // rendered tile as perceptual ink coverage, both sat ~1.5 points above the
   // set's median and land on it at these values. Nothing is scaled up: every
   // other mark already fills 21–24 of the 24-unit grid, so there is no room.
@@ -234,7 +234,7 @@ const brands: Record<string, Brand> = {
       />
     ),
   },
-  // No vector mark exists, so the lettermark fallback stands in — tinted with
+  // No vector mark exists, so the lettermark fallback stands in - tinted with
   // Charm's own purple so the tile still carries the brand.
   crush: {
     tint: '[--mk:#6B50FF] dark:[--mk:#6B50FF]',
@@ -244,8 +244,8 @@ const brands: Record<string, Brand> = {
   dsh: {
     tint: '[--mk:#4D6BFE] dark:[--mk:#4D6BFE]',
   },
-  // Xiaomi publishes no vector mark for MiMo Code — the only artwork on
-  // mimo.xiaomi.com is the 32px favicon — so the lettermark stands in. That
+  // Xiaomi publishes no vector mark for MiMo Code - the only artwork on
+  // mimo.xiaomi.com is the 32px favicon - so the lettermark stands in. That
   // favicon is drawn in flat black on transparent, which is the published
   // pair treatment: black on the light tile, white on the dark one.
   mimo: {
@@ -294,7 +294,7 @@ const brands: Record<string, Brand> = {
     ),
   },
   // esengine/DeepSeek-Reasonix docs/logo.svg: the ◈ mark is three concentric
-  // diamonds on a 92-unit box — two stroked, the inner one filled. Scaled
+  // diamonds on a 92-unit box - two stroked, the inner one filled. Scaled
   // 0.21 about the centre, so it spans 19.3 units. The published artwork
   // pulses the strokes between 3.5 and 5.5; the peak width is used so the
   // outlines survive at 20px. The cyan-to-violet gradient becomes one flat

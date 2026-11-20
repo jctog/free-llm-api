@@ -1,5 +1,5 @@
 /**
- * Moderation service — proxy /v1/moderations requests to providers that
+ * Moderation service - proxy /v1/moderations requests to providers that
  * expose OpenAI-compatible moderation endpoints.
  *
  * Supported platforms (first key per platform wins):
@@ -8,7 +8,7 @@
  *   - nvidia        → https://integrate.api.nvidia.com/v1/moderations
  *
  * The failover walks the first available key for each platform in order.
- * No separate `moderation_models` table is needed for v1 — the set of
+ * No separate `moderation_models` table is needed for v1 - the set of
  * platforms is small and the endpoint is always /v1/moderations.
  */
 import { getDb } from '../db/index.js';
@@ -86,7 +86,7 @@ export function listModerationModels(): ModerationModelRow[] {
        ORDER BY id
     `).all(platform) as { id: number; encrypted_key: string; iv: string; auth_tag: string; model_scope_json: string | null }[];
     // Per-key model scope (#657): a relay key scoped to a chat model group must
-    // never be picked to serve the moderation model — the same wall the chat
+    // never be picked to serve the moderation model - the same wall the chat
     // router and search pools honour. Walk the platform's keys in the old
     // first-key order and take the first one the scope admits.
     const key = keys.find(k => scopeAllows(parseModelScope(k.model_scope_json), ep.modelId));
@@ -192,7 +192,7 @@ export async function runModerations(
   }
 
   const models = listModerationModels();
-  // A default/legacy request walks EVERY available platform in order — each
+  // A default/legacy request walks EVERY available platform in order - each
   // provider calls its own catalog model, which is what makes the cross-
   // platform failover below real (OpenRouter's omni-moderation id carries an
   // `openai/` prefix, so an exact-modelId filter would silently drop it).

@@ -3,7 +3,7 @@ import type { ChatMessage } from '@freellmapi/shared/types.js';
 
 // sharp is a NATIVE module. It is loaded with a dynamic import precisely so a
 // missing or mismatched prebuilt libvips cannot take the gateway down at
-// import time — the desktop build only electron-rebuilds better-sqlite3, and
+// import time - the desktop build only electron-rebuilds better-sqlite3, and
 // slim/musl containers routinely ship without the matching binary. This is the
 // degraded path: images must ride through untouched and the request must still
 // be served.
@@ -21,7 +21,7 @@ vi.mock('sharp', () => ({
 
 const { normalizeMessageImages } = await import('../../lib/image-normalize.js');
 
-// A data URL big enough to clear every threshold — it must survive byte-for-byte.
+// A data URL big enough to clear every threshold - it must survive byte-for-byte.
 const BIG_IMAGE = `data:image/png;base64,${'A'.repeat(2_000_000)}`;
 
 function imageTurn(url: string): ChatMessage[] {

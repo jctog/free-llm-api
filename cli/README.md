@@ -101,7 +101,7 @@ Every generator is non-destructive: it merges into your existing configuration
 rather than replacing it, and takes a timestamped backup before touching a file
 that already exists. `--dry-run` shows the exact diff first.
 
-The two `launch` commands never write credentials to disk at all — they inject
+The two `launch` commands never write credentials to disk at all - they inject
 them into the child process environment for that run only.
 
 ## Requirements

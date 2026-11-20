@@ -7,14 +7,14 @@ import { fileURLToPath } from 'node:url';
 // Deliberately not `server/package.json`: that version tracks the server
 // workspace and has sat at 0.2.1 across many releases, as has the OpenAPI
 // spec's 0.4.1. The number users know the app by lives in desktop/package.json
-// — it is what the release recipe bumps and what the installers are named for.
+// - it is what the release recipe bumps and what the installers are named for.
 //
 // Order:
-//   1. FREEAPI_VERSION — the desktop shell sets it from app.getVersion(); a
+//   1. FREEAPI_VERSION - the desktop shell sets it from app.getVersion(); a
 //      packaged/self-hosted deployment can set it too.
 //   2. desktop/package.json, found by walking up from this module. Present in a
 //      source checkout, and the Docker runtime image copies it in for this.
-//   3. null — say nothing rather than state a version that isn't the release.
+//   3. null - say nothing rather than state a version that isn't the release.
 //      The dashboard omits the row entirely when this is null.
 
 const MAX_WALK_UP = 6;
@@ -55,7 +55,7 @@ export function getAppVersion(): string | null {
   return cached;
 }
 
-/** Test seam — the resolver caches, and env changes must be able to take effect. */
+/** Test seam - the resolver caches, and env changes must be able to take effect. */
 export function resetAppVersionCache(): void {
   cached = undefined;
 }

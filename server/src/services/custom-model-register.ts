@@ -53,7 +53,7 @@ export interface RegisterCustomModelsResult {
  * Capability flags: an unset flag binds NULL so COALESCE picks the insert
  * default (tools 1, vision 0) on a new row and preserves the existing value
  * on re-registration (#470). An omitted display name binds NULL the same way
- * — it falls back to the model id on a new row and leaves a name already on
+ * - it falls back to the model id on a new row and leaves a name already on
  * the row alone, so the bulk re-registration behind "Fetch models" (which
  * posts bare ids) can't wipe names the operator set.
  */
@@ -75,8 +75,8 @@ export function registerCustomModels(
 /**
  * The registration loop itself, against an ALREADY-resolved endpoint key and
  * inside the caller's transaction. Split out from registerCustomModels so the
- * bulk key importer (#382) — which resolves its own key and owns a wider
- * transaction — shares this exact write path instead of keeping a second copy.
+ * bulk key importer (#382) - which resolves its own key and owns a wider
+ * transaction - shares this exact write path instead of keeping a second copy.
  */
 export function registerCustomChatModels(
   db: Db,
@@ -96,7 +96,7 @@ export function registerCustomChatModels(
     // #926: this is an EXPLICIT registration (POST /custom, bulk importer or
     // the dashboard's "Fetch models" submit), so it overrides a previous
     // deletion. The scheduled sync never reaches this loop for a tombstoned
-    // model — it filters them out in custom-model-sync.ts — so the tombstone
+    // model - it filters them out in custom-model-sync.ts - so the tombstone
     // can only be lifted here by a human choosing to re-add the model.
     clearCustomModelTombstone(db, endpointScope, modelId);
     const bound = db.prepare(

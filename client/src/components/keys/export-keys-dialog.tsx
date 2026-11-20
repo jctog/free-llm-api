@@ -59,7 +59,7 @@ export function ExportKeysDialog({ open, onOpenChange }: { open: boolean; onOpen
   const [format, setFormat] = useState<ExportFormat>('json')
   const [healthyOnly, setHealthyOnly] = useState(false)
   // The password is asked for in a second step, once the export is actually
-  // requested — not up front. Nothing about picking a format or a filter needs
+  // requested - not up front. Nothing about picking a format or a filter needs
   // re-authentication, so the prompt only appears at the point it guards.
   //
   // KeysPage mounts this dialog only while open, so every open starts on the
@@ -76,7 +76,7 @@ export function ExportKeysDialog({ open, onOpenChange }: { open: boolean; onOpen
   })
 
   // The server flags what the export will really write. Counting `!keyless`
-  // here instead promised keys the export then dropped — a no-auth custom
+  // here instead promised keys the export then dropped - a no-auth custom
   // endpoint is not a "keyless provider", so it was counted and skipped (#687).
   const exportableKeys = keys.filter(k => k.exportable)
   const exportCount = healthyOnly
@@ -93,7 +93,7 @@ export function ExportKeysDialog({ open, onOpenChange }: { open: boolean; onOpen
       onOpenChange(false)
     } catch (err) {
       // A rejected password keeps the user on this step with the field cleared
-      // and the reason shown inline — a toast alone would leave the dialog
+      // and the reason shown inline - a toast alone would leave the dialog
       // looking unchanged and give no hint of what to correct.
       setError((err as Error).message)
       setPassword('')

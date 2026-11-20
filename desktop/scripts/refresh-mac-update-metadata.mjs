@@ -6,7 +6,7 @@
 // count and checksum in that manifest is stale the moment the ticket lands.
 //
 // electron-updater verifies the sha512 from this manifest against the file it
-// downloaded, so a stale hash doesn't degrade gracefully — it fails the update
+// downloaded, so a stale hash doesn't degrade gracefully - it fails the update
 // for every existing install. Recomputing here keeps the manifest describing
 // the file users actually receive.
 //
@@ -15,7 +15,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync, statSync } from 'node:fs';
 import { basename } from 'node:path';
 
-/** sha512, base64 — the encoding electron-updater compares against. */
+/** sha512, base64 - the encoding electron-updater compares against. */
 export function hashFile(path) {
   return createHash('sha512').update(readFileSync(path)).digest('base64');
 }
@@ -47,7 +47,7 @@ function escapeRegExp(s) {
  * reads. Only the numbers that actually changed are touched.
  *
  * Both the `files:` entry and the legacy top-level `path`/`sha512` pair are
- * updated — old electron-updater builds read the top-level pair, current ones
+ * updated - old electron-updater builds read the top-level pair, current ones
  * read `files:`, and a release has to satisfy whichever one an installed copy
  * happens to use.
  */

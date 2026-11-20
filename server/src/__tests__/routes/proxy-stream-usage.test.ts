@@ -239,7 +239,7 @@ describe('Streaming usage-frame fallback injection', () => {
               message: { role: 'assistant', content: 'hi there' },
               finish_reason: 'stop',
             }],
-            // No `usage` block — the #1084 scenario.
+            // No `usage` block - the #1084 scenario.
           }),
         } as any;
       }
@@ -305,7 +305,7 @@ describe('Streaming usage-frame fallback injection', () => {
     }, authHeaders());
 
     expect(status).toBe(200);
-    // The upstream's real mid-stream frame must be the ONLY usage frame —
+    // The upstream's real mid-stream frame must be the ONLY usage frame -
     // no estimate injected on top of it.
     const frames = usageFrames(raw);
     expect(frames).toHaveLength(1);

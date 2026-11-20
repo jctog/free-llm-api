@@ -179,7 +179,7 @@ describe('PUT /api/settings/proxy scheme validation', () => {
   });
 
   // A body that decides neither the URL nor the mode must not be validated
-  // against whatever getProxyUrl() currently reports — that may be an ambient
+  // against whatever getProxyUrl() currently reports - that may be an ambient
   // ALL_PROXY the dashboard never set and cannot correct, which would leave
   // the enabled switch and the bypass list permanently 400ing.
   it('does not validate the ambient proxy URL on an unrelated partial update', async () => {

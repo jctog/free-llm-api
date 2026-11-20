@@ -3,8 +3,8 @@ import type { Express } from 'express';
 
 // Follow-up to the opt-in tool-argument schema verdict: it shipped wired at
 // /v1/chat/completions (both paths) and Anthropic non-streaming only. These
-// tests pin the remaining surfaces — /v1/responses non-streaming, the Anthropic
-// stream, and the shared inbound-chat lane behind the Gemini/Ollama emulations —
+// tests pin the remaining surfaces - /v1/responses non-streaming, the Anthropic
+// stream, and the shared inbound-chat lane behind the Gemini/Ollama emulations -
 // plus the one surface that deliberately stays unwired, so the gap is a pinned
 // decision rather than something to rediscover.
 //
@@ -43,7 +43,7 @@ async function post(app: Express, path: string, body: any, headers: Record<strin
   return { status: res.status, body: json, raw };
 }
 
-// `path` is required and absent. Nothing tool-args can repair — the value is
+// `path` is required and absent. Nothing tool-args can repair - the value is
 // not a mis-encoded anything, it is simply not the argument the tool declared.
 const INVALID_ARGS = JSON.stringify({ nope: 'README.md' });
 const VALID_ARGS = JSON.stringify({ path: 'README.md' });
@@ -76,7 +76,7 @@ function streamToolTurn(args: string) {
   };
 }
 
-describe('tool-argument schema verdict — remaining surfaces', () => {
+describe('tool-argument schema verdict - remaining surfaces', () => {
   let app: Express;
   let key: string;
 
@@ -150,7 +150,7 @@ describe('tool-argument schema verdict — remaining surfaces', () => {
   });
 
   describe('/v1/responses, streaming', () => {
-    // Deliberately NOT wired — this route commits on the first tool-call delta,
+    // Deliberately NOT wired - this route commits on the first tool-call delta,
     // long before the arguments are complete. A verdict could only turn a
     // delivered call into a response.failed on a stream the client is already
     // reading. Pinned so the asymmetry with the non-streaming path above reads

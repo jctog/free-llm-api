@@ -4,12 +4,12 @@ import path from 'node:path';
 // Client detection for the Codex CLI integration. `setup-codex` only WRITES a
 // config; this module tells the user WHICH client they actually have so the
 // setup note can say something true about their machine instead of a generic
-// "install X" line. Purely filesystem/PATH based — no network, no spawning
-// processes — so it stays fast and testable.
+// "install X" line. Purely filesystem/PATH based - no network, no spawning
+// processes - so it stays fast and testable.
 
 export interface DetectedClient {
-  /** `cli` — the `codex` binary is on PATH; `desktop` — the ChatGPT desktop
-   *  app is installed (macOS); `both` — self-explanatory. */
+  /** `cli` - the `codex` binary is on PATH; `desktop` - the ChatGPT desktop
+   *  app is installed (macOS); `both` - self-explanatory. */
   kind: 'cli' | 'desktop' | 'both';
   /** Absolute path of the first `codex` binary found on PATH, when present. */
   cliPath?: string;
@@ -20,7 +20,7 @@ export interface DetectedClient {
 /** Where the ChatGPT desktop app lives per platform. Only macOS ships a
  *  well-known .app bundle; Windows/Linux register no stable path we can
  *  probe cheaply, so those return nothing (a UI integration there would need
- *  registry/freedesktop lookups — out of scope). */
+ *  registry/freedesktop lookups - out of scope). */
 export function desktopAppPath(platform: string = process.platform): string | undefined {
   if (platform !== 'darwin') return undefined;
   return '/Applications/ChatGPT.app';
@@ -70,7 +70,7 @@ export function clientNotes(client: DetectedClient | undefined): string[] {
   if (client.kind === 'desktop') {
     return [
       `ChatGPT desktop app detected at ${client.desktopPath}; this setup configures the Codex CLI.`,
-      'The generated configuration targets the Codex CLI — install it with: npm install -g @openai/codex',
+      'The generated configuration targets the Codex CLI - install it with: npm install -g @openai/codex',
     ];
   }
   if (client.kind === 'both') {

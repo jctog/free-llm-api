@@ -7,14 +7,14 @@ import type { Express } from 'express';
 // 1. The rescue ran on turns that declared NO tools. Every non-streaming path
 //    (proxy.ts, anthropic.ts, responses.ts) and the shared inbound-chat lane
 //    already gated on `wantsTools`, and openai-compat's failed-generation
-//    rescue guards `toolNames.size === 0` explicitly — the three STREAMING
+//    rescue guards `toolNames.size === 0` explicitly - the three STREAMING
 //    paths did not. An ordinary answer that happened to contain `<function=…>`
 //    was stripped out of the prose and re-emitted as a fabricated tool_calls
 //    entry the client never asked for and cannot interpret.
 //
 // 2. The opt-in schema verdict ran BEFORE the rescue appended its calls, so
-//    the calls reconstructed from prose — the ones most likely to be malformed
-//    — were the only ones the validator never saw.
+//    the calls reconstructed from prose - the ones most likely to be malformed
+//    - were the only ones the validator never saw.
 //
 // Same scripted-provider mock pattern as tool-validate-surfaces.test.ts.
 const chatCompletion = vi.fn();

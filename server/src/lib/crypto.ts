@@ -37,7 +37,7 @@ function parseHexKey(value: string, source: 'env' | 'db' | 'file'): Buffer {
 }
 
 // Outside production we auto-generate and persist a key so a fresh clone
-// (`npm run dev`) boots without manual setup — the placeholder ENCRYPTION_KEY
+// (`npm run dev`) boots without manual setup - the placeholder ENCRYPTION_KEY
 // in .env.example would otherwise crash the server on boot, which surfaces in
 // the client as "Can't reach the server". Production still requires an explicit
 // env key: a generated key lives only on the local disk and silently losing it
@@ -79,7 +79,7 @@ function writeKeyFileAtomic(keyFile: string, hex: string): void {
   restrictToOwner(tmp);
   fs.renameSync(tmp, keyFile);
   if (!restrictToOwner(keyFile)) {
-    console.warn(`[crypto] could not restrict permissions on ${KEY_FILE_NAME} — it may be readable by other local accounts`);
+    console.warn(`[crypto] could not restrict permissions on ${KEY_FILE_NAME} - it may be readable by other local accounts`);
   }
 }
 
@@ -111,12 +111,12 @@ export function initEncryptionKey(db: Db): void {
     const row = db.prepare("SELECT value FROM settings WHERE key = 'encryption_key'").get() as { value: string } | undefined;
     if (row) {
       cachedKey = parseHexKey(row.value, 'db');
-      console.warn('[crypto] No ENCRYPTION_KEY set — using an auto-generated in-memory key (dev only).');
+      console.warn('[crypto] No ENCRYPTION_KEY set - using an auto-generated in-memory key (dev only).');
       return;
     }
     cachedKey = crypto.randomBytes(KEY_BYTES);
     db.prepare("INSERT INTO settings (key, value) VALUES ('encryption_key', ?)").run(cachedKey.toString('hex'));
-    console.warn('[crypto] No ENCRYPTION_KEY set — generated an in-memory dev key. Set ENCRYPTION_KEY for production.');
+    console.warn('[crypto] No ENCRYPTION_KEY set - generated an in-memory dev key. Set ENCRYPTION_KEY for production.');
     return;
   }
 
@@ -124,7 +124,7 @@ export function initEncryptionKey(db: Db): void {
   if (fs.existsSync(keyFile)) {
     const value = fs.readFileSync(keyFile, 'utf8').trim();
     cachedKey = parseHexKey(value, 'file');
-    console.warn(`[crypto] No ENCRYPTION_KEY set — using the auto-generated key at ${keyFile} (dev only). Set ENCRYPTION_KEY for production.`);
+    console.warn(`[crypto] No ENCRYPTION_KEY set - using the auto-generated key at ${keyFile} (dev only). Set ENCRYPTION_KEY for production.`);
     return;
   }
 
@@ -149,7 +149,7 @@ export function initEncryptionKey(db: Db): void {
   // 4. Generate a fresh key and persist it to the file.
   cachedKey = crypto.randomBytes(KEY_BYTES);
   writeKeyFileAtomic(keyFile, cachedKey.toString('hex'));
-  console.warn(`[crypto] No ENCRYPTION_KEY set — generated a local dev key at ${keyFile}. Set ENCRYPTION_KEY for production.`);
+  console.warn(`[crypto] No ENCRYPTION_KEY set - generated a local dev key at ${keyFile}. Set ENCRYPTION_KEY for production.`);
 }
 
 function getEncryptionKey(): Buffer {
@@ -211,13 +211,13 @@ export function decrypt(encrypted: string, iv: string, authTag: string): string 
   return decrypted;
 }
 
-// A masked key is display-only — it feeds the `maskedKey` field every key,
-// media, embedding and client-profile route hands to the dashboard — so it must
+// A masked key is display-only - it feeds the `maskedKey` field every key,
+// media, embedding and client-profile route hands to the dashboard - so it must
 // never be enough to reconstruct the secret. The old short-key branch was
 // `'****' + key.slice(-4)`, and slice(-4) keeps the last four characters no
 // matter how short the input is: a 4-character key was echoed back IN FULL, and
 // a 5-character key gave away 4 of its 5 characters. Short keys are not
-// hypothetical — proxy credentials, self-hosted Ollama tokens and local dev
+// hypothetical - proxy credentials, self-hosted Ollama tokens and local dev
 // keys all land here.
 //
 // So reveal nothing at all below 5 characters, and at most the last TWO up to

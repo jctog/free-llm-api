@@ -9,8 +9,8 @@ import { getDb } from '../db/index.js';
 // bodies), loads one when you switch to it, and PUTs the whole transcript back
 // after each completed exchange.
 //
-// The transcript is stored as the client's own ChatMessage[] — `meta` routing
-// info and `reasoning` included — so a restored conversation renders exactly
+// The transcript is stored as the client's own ChatMessage[] - `meta` routing
+// info and `reasoning` included - so a restored conversation renders exactly
 // like the live one. Validation is therefore shape-checking, not
 // normalisation: unknown keys are stripped, everything the page draws survives.
 
@@ -62,7 +62,7 @@ const messageSchema = z.object({
 
 const messagesSchema = z.array(messageSchema);
 
-// 'auto', 'fusion', or a canonical model id — whatever the picker held. Not
+// 'auto', 'fusion', or a canonical model id - whatever the picker held. Not
 // enumerated: the catalog changes under us, and a conversation pinned to a
 // model that has since gone away should still load.
 const modelSchema = z.string().max(200).nullable();

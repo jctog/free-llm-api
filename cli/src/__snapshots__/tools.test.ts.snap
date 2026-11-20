@@ -336,7 +336,7 @@ exports[`tool generators > setup-dsh has stable golden output 1`] = `
     },
   ],
   "notes": [
-    "Start DeepSeek Harness with: npx @deepseek-ai/dsh web — freellmapi/fast-coder is the default model.",
+    "Start DeepSeek Harness with: npx @deepseek-ai/dsh web - freellmapi/fast-coder is the default model.",
     "One-shot check: npx @deepseek-ai/dsh --profile headless "Say hello"",
     "Settings are hot-reloaded, so a running dsh picks this up on its next request.",
     "Models are declared text-only; give a vision model \`input: [text, image]\` under freellmapi.models in settings.yaml to send it images.",
@@ -433,7 +433,7 @@ exports[`tool generators > setup-hermes has stable golden output 1`] = `
   ],
   "notes": [
     "Install Hermes Agent with: curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --skip-setup",
-    "Try it with: hermes -z "Say hello" — custom/fast-coder is the default model.",
+    "Try it with: hermes -z "Say hello" - custom/fast-coder is the default model.",
     "A running \`hermes gateway\` (Telegram, Discord, …) needs a restart to pick the change up.",
   ],
 }
@@ -479,7 +479,7 @@ exports[`tool generators > setup-kilo has stable golden output 1`] = `
   ],
   "notes": [
     "Export FREELLMAPI_API_KEY before starting Kilo; global config is trusted for {env:…} expansion.",
-    "One-shot check: kilo run "Say hello" — openai-compatible/fast-coder is the default model.",
+    "One-shot check: kilo run "Say hello" - openai-compatible/fast-coder is the default model.",
   ],
 }
 `;
@@ -525,7 +525,7 @@ exports[`tool generators > setup-mimo has stable golden output 1`] = `
   "notes": [
     "Install MiMo Code with: curl -fsSL https://mimo.xiaomi.com/install | bash",
     "Export FREELLMAPI_API_KEY before starting MiMo Code.",
-    "Start it with \`mimo\` — freellmapi/fast-coder is the default model.",
+    "Start it with \`mimo\` - freellmapi/fast-coder is the default model.",
     "One-shot check: mimo run "Say hello"",
   ],
 }
@@ -721,7 +721,7 @@ exports[`tool generators > setup-pi has stable golden output 1`] = `
   ],
   "notes": [
     "Install Pi with: npm install -g @earendil-works/pi-coding-agent (or curl -fsSL https://pi.dev/install.sh | sh)",
-    "Try it with: pi -p "Say hello" — freellmapi/fast-coder is the default model.",
+    "Try it with: pi -p "Say hello" - freellmapi/fast-coder is the default model.",
     "Every catalog model is in /model; a running Pi session picks the change up when /model is opened.",
     "Models are declared text-only; give a vision model \`input: ["text", "image"]\` under providers.freellmapi in models.json to send it images.",
   ],
@@ -813,7 +813,7 @@ price = { cache_hit = 0, input = 0, output = 0, currency = "$" }",
   ],
   "notes": [
     "Install Reasonix with: npm install -g reasonix (or brew install esengine/reasonix/reasonix)",
-    "Try it with: reasonix -p "Say hello" — freellmapi/fast-coder is the default model.",
+    "Try it with: reasonix -p "Say hello" - freellmapi/fast-coder is the default model.",
     "Every catalog model is in /model as freellmapi/<id>; other [[providers]] entries in config.toml are kept.",
     "Reasonix Studio lists only the providers in [desktop].provider_access when that list is set; add "freellmapi" there, or under Settings → Model → Access.",
   ],

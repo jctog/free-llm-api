@@ -109,7 +109,7 @@ npm run dev
 
 ### 轮换加密密钥
 
-存储的密文用的是 AES-256-GCM，所以直接改 `ENCRYPTION_KEY` 不会重新加密任何东西——它只会让所有提供方密钥、按密钥的代理覆盖、客户端配置档凭据以及已保存的 Fetch Relay 令牌同时解不开。请先停掉服务，把它们重新加密：
+存储的密文用的是 AES-256-GCM，所以直接改 `ENCRYPTION_KEY` 不会重新加密任何东西--它只会让所有提供方密钥、按密钥的代理覆盖、客户端配置档凭据以及已保存的 Fetch Relay 令牌同时解不开。请先停掉服务，把它们重新加密：
 
 ```bash
 # 1. 生成新密钥
@@ -235,7 +235,7 @@ FREEAPI_DB_BACKUP_INTERVAL_MS=300000
 
 ![FreeLLMAPI 桌面应用](../../../repo-assets/desktop.png)
 
-**[从 Releases 下载](https://github.com/tashfeenahmed/freellmapi/releases/latest)** —— macOS 的 `.dmg` 和 Windows 的 `.exe` 安装包由 [`desktop-release`](../../../.github/workflows/desktop-release.yml) 工作流在每个版本发布时构建并附带。你也可以花几分钟从本仓库自己构建：
+**[从 Releases 下载](https://github.com/tashfeenahmed/freellmapi/releases/latest)** -- macOS 的 `.dmg` 和 Windows 的 `.exe` 安装包由 [`desktop-release`](../../../.github/workflows/desktop-release.yml) 工作流在每个版本发布时构建并附带。你也可以花几分钟从本仓库自己构建：
 
 **Mac 下载：** Apple Silicon 请选择 `arm64`，Intel 请选择 `x64`。两者都要求 macOS 12 Monterey 或更高版本，并提供 DMG 和 ZIP 下载。
 

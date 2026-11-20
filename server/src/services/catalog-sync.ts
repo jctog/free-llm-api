@@ -23,11 +23,11 @@ import { ensureAllModelsInProfiles } from './profile-models.js';
 const MEDIA_MODALITIES = new Set(['image', 'audio']);
 
 /**
- * catalog-sync — keeps the local model catalog in step with the published one.
+ * catalog-sync - keeps the local model catalog in step with the published one.
  *
  * Twice a day (and on demand) the server pulls the signed catalog from the
  * catalog service. A valid Premium license key (Bearer) gets the live tier,
- * refreshed every 2-3 days; everyone else gets the monthly snapshot — so free
+ * refreshed every 2-3 days; everyone else gets the monthly snapshot - so free
  * installs still self-heal, just on a slower cadence. The response is verified
  * against a pinned Ed25519 public key over the exact bytes received; anything
  * unsigned or tampered with is discarded, which means a compromised CDN or
@@ -278,8 +278,8 @@ export interface SyncResult {
 
 /**
  * Why a payload is not a Catalog (#1566): the bare boolean behind isCatalog
- * made every rejected publish read as the same one-line warning — "catalog
- * payload has unexpected shape" — which told an operator nothing about WHICH
+ * made every rejected publish read as the same one-line warning - "catalog
+ * payload has unexpected shape" - which told an operator nothing about WHICH
  * section broke and made field reports impossible to triage. This runs the
  * same checks as isCatalog but collects a path-labeled reason per failed
  * check (e.g. `embeddings[3].dimensions is not a number`), capped so a
@@ -303,7 +303,7 @@ export function catalogShapeProblems(value: unknown): string[] {
   const bool = (v: unknown) => typeof v === 'boolean';
   // Optional fields split into two null-semantics families, mirroring the
   // original &&-chain exactly: `opt*` accepts only an absent field
-  // (null FAILS — e.g. `quotaLabel: null` is a shape error), while `nul*`
+  // (null FAILS - e.g. `quotaLabel: null` is a shape error), while `nul*`
   // tolerates an explicit null too (e.g. `maxBytes: null`).
   const optStr = (v: unknown) => v === undefined || str(v);
   const optNum = (v: unknown) => v === undefined || num(v);
@@ -408,7 +408,7 @@ export function catalogShapeProblems(value: unknown): string[] {
   return problems;
 }
 
-/** Minimal structural check — enough to fail loudly on a wrong/garbled body.
+/** Minimal structural check - enough to fail loudly on a wrong/garbled body.
  *  catalogShapeProblems is the diagnostic twin; keep them in lockstep. */
 function isCatalog(value: unknown): value is Catalog {
   return catalogShapeProblems(value).length === 0;
@@ -424,11 +424,11 @@ function isCatalog(value: unknown): value is Catalog {
  *    enabled=true never re-enables a model the user turned off themselves;
  *  - rows the user created (models.source = 'user': custom providers,
  *    declarative config, admin adds) are never updated, never deleted, and
- *    never adopted — on a platform:model_id collision the user row wins and
+ *    never adopted - on a platform:model_id collision the user row wins and
  *    the catalog entry is skipped outright;
  *  - catalog models the user deleted stay deleted via tombstones, while models
  *    auto-retired from an upstream 410/end-of-life response (#634) are only
- *    disabled — a catalog that still lists them lifts the retirement;
+ *    disabled - a catalog that still lists them lifts the retirement;
  *  - models that vanished from the catalog are deleted, exactly like the
  *    dead-model migrations do (fallback_config row first, FK order);
  *  - rows found by built-in model discovery (models.source = 'discovered',
@@ -482,8 +482,8 @@ export function applyCatalog(db: Db, catalog: Catalog): NonNullable<SyncResult['
   // One transaction for the whole apply (#1047): the body runs hundreds of
   // individual statements, and under WAL each one outside a transaction is its
   // own commit + fsync executed on the event loop. On slow storage that made
-  // the 12-hourly sync freeze every in-flight request — including the 3-query
-  // profile-activate POST — for minutes.
+  // the 12-hourly sync freeze every in-flight request - including the 3-query
+  // profile-activate POST - for minutes.
   return db.transaction(() => applyCatalogInner(db, catalog))();
 }
 
@@ -491,7 +491,7 @@ export function applyCatalog(db: Db, catalog: Catalog): NonNullable<SyncResult['
  * True when this document can say anything we have not already acted on.
  *
  * `reapplyCachedCatalog` deliberately re-applies the very document that is
- * already marked applied — its job is to undo the baseline drift that boot
+ * already marked applied - its job is to undo the baseline drift that boot
  * migrations reintroduce. A replay therefore re-presents stale data as if it
  * were a fresh verdict. The fetched path reaches `applyCatalog` only behind
  * `syncCatalog`'s own same-as-applied guard, so for that path the check is
@@ -615,13 +615,13 @@ function applyCatalogInner(db: Db, catalog: Catalog): NonNullable<SyncResult['co
 
       if (m.platform === 'custom' || !hasProvider(m.platform as Platform)) {
         // An older binary may receive models for providers it cannot route yet;
-        // skip them — they will appear after the user updates the app.
+        // skip them - they will appear after the user updates the app.
         counts.skippedUnknownPlatform++;
         continue;
       }
       if (isCatalogModelTombstoned(db, 'chat', m.platform, m.modelId)) continue;
       // A model auto-retired from a 410/end-of-life response (#634) is disabled,
-      // not deleted. A catalog that STILL lists it — and lists it enabled — is
+      // not deleted. A catalog that STILL lists it - and lists it enabled - is
       // newer evidence than that one provider response, so lift the retirement.
       // Only for a catalog we have not applied yet: `reapplyCachedCatalog`
       // replays the snapshot the retirement already came after, so replaying it
@@ -634,7 +634,7 @@ function applyCatalogInner(db: Db, catalog: Catalog): NonNullable<SyncResult['co
         | { id: number; enabled: number; source: string }
         | undefined;
       // Collision rule: if the user hand-added a model and the catalog later
-      // ships the same platform:model_id, the user row wins — the catalog
+      // ships the same platform:model_id, the user row wins - the catalog
       // neither clobbers its metadata nor adopts it (same spirit as the
       // never-touch rule for custom-provider models). The row also survives
       // the prune below because the delete pass only considers source='catalog'.
@@ -868,7 +868,7 @@ function applyCatalogInner(db: Db, catalog: Catalog): NonNullable<SyncResult['co
     // Ownership is decided by the `source` provenance column: only rows the
     // catalog itself created are prune candidates. Rows with source='user'
     // (declarative config, admin adds, custom endpoints) are never deleted
-    // here, no matter what their size_label or platform says — that replaces
+    // here, no matter what their size_label or platform says - that replaces
     // the old size_label NOT IN ('User','Custom') heuristic, which lost user
     // rows whose label didn't follow the convention. The platform/key_id
     // predicates stay as belt and braces.
@@ -913,7 +913,7 @@ function applyCatalogInner(db: Db, catalog: Catalog): NonNullable<SyncResult['co
     // #1516: sweep rows pinned to keys that no longer exist. The DELETE-key
     // cascade in routes/keys.ts removes these at delete time; this is the
     // backstop for orphans from older builds or manual DB edits. Shared rows
-    // (key_id NULL) are never touched — only key-bound rows whose key is gone.
+    // (key_id NULL) are never touched - only key-bound rows whose key is gone.
     const orphanChat = db
       .prepare('SELECT id FROM models WHERE key_id IS NOT NULL AND key_id NOT IN (SELECT id FROM api_keys)')
       .all() as { id: number }[];
@@ -1008,7 +1008,7 @@ function applyCatalogInner(db: Db, catalog: Catalog): NonNullable<SyncResult['co
 
     // Embeddings are their own full snapshot. Older catalogs omit this field,
     // AND catalogs may publish `embeddings: []` while still shipping model
-    // rows — both cases mean "retain the app's bundled embedding baseline
+    // rows - both cases mean "retain the app's bundled embedding baseline
     // untouched". The JS truthy check on a non-empty array object would
     // misfire on `[]`, wiping the seeded rows; gate on length instead.
     if (catalog.embeddings && catalog.embeddings.length > 0) {
@@ -1052,7 +1052,7 @@ function applyCatalogInner(db: Db, catalog: Catalog): NonNullable<SyncResult['co
 
 /**
  * Fetch the catalog, verify its signature, and apply it if it moves us forward.
- * `force` skips the `since` short-circuit — used right after a license key is
+ * `force` skips the `since` short-circuit - used right after a license key is
  * added or removed, where the tier can change without the version changing.
  */
 export async function syncCatalog(force = false): Promise<SyncResult> {
@@ -1079,7 +1079,7 @@ export async function syncCatalog(force = false): Promise<SyncResult> {
     if (!signature) throw new Error('catalog response missing signature');
     const bytes = Buffer.from(await res.arrayBuffer());
     const verified = crypto.verify(null, bytes, catalogPublicKey(), Buffer.from(signature, 'base64'));
-    if (!verified) throw new Error('catalog signature verification FAILED — discarding response');
+    if (!verified) throw new Error('catalog signature verification FAILED - discarding response');
 
     const parsed: unknown = JSON.parse(bytes.toString('utf8'));
     const shapeProblems = catalogShapeProblems(parsed);
@@ -1093,7 +1093,7 @@ export async function syncCatalog(force = false): Promise<SyncResult> {
 
     if (catalog.version < MIN_CATALOG_VERSION) {
       // Older than the bundled baseline (e.g. monthly snapshot lagging a fresh
-      // app release) — applying it would roll back migrations. Wait it out.
+      // app release) - applying it would roll back migrations. Wait it out.
       setSetting(SETTING_LAST_SYNC_MS, String(Date.now()));
       setSetting(SETTING_LAST_ERROR, '');
       return { ok: true, action: 'skipped_older', version: catalog.version, tier: catalog.tier };
@@ -1142,7 +1142,7 @@ export interface LicenseActivation {
 
 /**
  * Validate a key with the license service. Returns null when the service is
- * unreachable — distinguishable from a rejected key, so a transient outage can
+ * unreachable - distinguishable from a rejected key, so a transient outage can
  * be warned about instead of reported as a bad key. Shared by the dashboard's
  * POST /api/premium/key and declarative `license` config.
  */
@@ -1177,7 +1177,7 @@ export async function refreshLicenseStatus(): Promise<LicenseStatus | null> {
     return status;
   } catch (err) {
     // Offline or service down: keep the cached status. Entitlement is enforced
-    // server-side at /v1/latest anyway — this cache is informational UI state.
+    // server-side at /v1/latest anyway - this cache is informational UI state.
     console.warn(`[catalog-sync] license check unreachable: ${err instanceof Error ? err.message : err}`);
     return getCachedLicenseStatus();
   }
@@ -1214,9 +1214,9 @@ export function getSyncState(): CatalogSyncState {
 /**
  * Re-apply the cached (already signature-verified) catalog after boot.
  *
- * Migrations run on every boot and re-assert the bundled baseline — they
+ * Migrations run on every boot and re-assert the bundled baseline - they
  * INSERT OR IGNORE baseline models the catalog may have deleted and re-run
- * the family-rule resets — while the boot-time network sync 304s on an
+ * the family-rule resets - while the boot-time network sync 304s on an
  * unchanged version and so would NOT re-apply. Without this step every
  * restart drifts the DB back toward the baseline until the next catalog
  * version bump. Re-applying from the local cache is synchronous, needs no

@@ -6,7 +6,7 @@ import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest';
 //     is day-benched (MODEL_FORBIDDEN_COOLDOWN_MS), instead of the old flat 90s
 //     transient cooldown that fell through here before.
 //   - drift #1: the SSE skeleton commits on the first MEANINGFUL content, not the
-//     first raw chunk — so a role-only chunk followed by an error fails over
+//     first raw chunk - so a role-only chunk followed by an error fails over
 //     invisibly on the same connection instead of dead-ending as response.failed.
 
 // Mock only routeRequest so we can script the provider + exhaustion precisely;
@@ -77,7 +77,7 @@ describe('/v1/responses shared-loop convergence', () => {
     getDb().prepare('DELETE FROM rate_limit_usage').run();
   });
 
-  it('honors a provider Retry-After on the cooldown (drift #2 — was ignored on /v1/responses)', async () => {
+  it('honors a provider Retry-After on the cooldown (drift #2 - was ignored on /v1/responses)', async () => {
     const retryAfterMs = 5 * 60 * 1000; // 5 minutes, well over the 90s transient floor
     const err = Object.assign(new Error('Groq API error 429: rate limit'), { status: 429, retryAfterMs });
     mockRouteRequest.mockImplementation((_estimated: number, skipKeys?: Set<string>) => {
@@ -98,7 +98,7 @@ describe('/v1/responses shared-loop convergence', () => {
     expect(benchMs).toBeLessThan(10 * 60 * 1000);
   });
 
-  it('day-benches a 403 model-not-on-tier (drift #2 — fell through to 90s transient before)', async () => {
+  it('day-benches a 403 model-not-on-tier (drift #2 - fell through to 90s transient before)', async () => {
     const err = Object.assign(new Error('GitHub Models API error 403: Model not available on your plan'), { status: 403 });
     mockRouteRequest.mockImplementation((_estimated: number, skipKeys?: Set<string>) => {
       if (skipKeys?.size) throw Object.assign(new Error('All models exhausted'), { status: 429 });
@@ -118,7 +118,7 @@ describe('/v1/responses shared-loop convergence', () => {
 
   it('streams over a role-only chunk then an error, failing over invisibly (drift #1 commit point)', async () => {
     async function* roleThenError(): AsyncGenerator<any> {
-      // A role preamble is NOT meaningful content — the skeleton must stay held.
+      // A role preamble is NOT meaningful content - the skeleton must stay held.
       yield { id: 'c', object: 'chat.completion.chunk', created: 0, model: 'fake-model', choices: [{ index: 0, delta: { role: 'assistant' }, finish_reason: null }] };
       throw Object.assign(new Error('OpenRouter API error 503: Provider returned error'), { status: 503 });
     }

@@ -98,7 +98,7 @@ export function connectDb(
  * The sidecars can only be covered by the directory: SQLite creates `-wal` and
  * `-shm` on the first write and deletes them on the last clean close, so at
  * startup there is nothing there to chmod. But the directory is also shared
- * state — FREEAPI_DB_PATH may point anywhere — and locking down a directory
+ * state - FREEAPI_DB_PATH may point anywhere - and locking down a directory
  * that is not ours is a worse outage than the leak it prevents. Pointing the DB
  * at `/tmp/freeapi.db` must not chmod 0700 `/tmp`.
  *
@@ -174,12 +174,12 @@ function restrictDataDir(dataDir: string, created: boolean): void {
 /** Restrict the DB and its WAL sidecars to the owner. The file holds encrypted
  *  provider keys plus the dashboard password hash, so it must not be readable by
  *  other local users. Best-effort: a filesystem that cannot express the
- *  restriction must not stop startup — but it now says so instead of failing
+ *  restriction must not stop startup - but it now says so instead of failing
  *  silently, because a hardening step nobody can see failing is one nobody
  *  notices is absent.
  *
  *  This pass only ever finds the main file on a clean start; the sidecars do not
- *  exist yet. They are covered by the directory instead — see
+ *  exist yet. They are covered by the directory instead - see
  *  shouldHardenDataDir. It still runs for both, because a directory this server
  *  is not allowed to touch can still hold sidecars left behind by an unclean
  *  shutdown, and because the main file predates the directory pass on any

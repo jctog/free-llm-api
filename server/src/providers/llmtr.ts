@@ -10,7 +10,7 @@ const VALIDATION_MODEL = '__freellmapi_key_validation__';
 /**
  * Floor between the START of two key-validation probes (#1369).
  *
- * NOT a published LLMTR rate limit — their docs state none for this endpoint.
+ * NOT a published LLMTR rate limit - their docs state none for this endpoint.
  * It is the politeness floor for OUR probe traffic: the same nonexistent-model
  * POST, repeated back to back from one IP, is the burst pattern their security
  * system reads as automation, and an account flagged that way gets suspended.
@@ -94,7 +94,7 @@ export class LlmtrProvider extends OpenAICompatProvider {
    * validateKey, paced and coalesced. Returns the same promise to concurrent
    * callers asking about the same credential, so the shared verdict is the one
    * question answered once. The merged callers' quota contexts are not
-   * summed — quota observations are booked per platform+key, and a single
+   * summed - quota observations are booked per platform+key, and a single
    * response carries a single set of headers to book.
    */
   override validateKey(apiKey: string, quotaContext?: QuotaObservationContext): Promise<KeyValidationResult> {

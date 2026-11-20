@@ -4,7 +4,7 @@ import type { Express } from 'express';
 // Reasoning-only responses used to pass as success on the shared inbound-chat
 // lane (#1184): the empty-completion check required the turn to have no text,
 // no reasoning AND no tool calls, so a stream that spent the whole budget on a
-// thinking trace — then dropped or truncated the answer — was delivered as a
+// thinking trace - then dropped or truncated the answer - was delivered as a
 // blank success and the failover ladder never moved. Coding agents (the main
 // consumers) treat a reasoning-only turn as an empty assistant message and
 // stall.

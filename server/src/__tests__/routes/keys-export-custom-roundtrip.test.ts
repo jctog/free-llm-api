@@ -85,7 +85,7 @@ describe('#687 custom endpoints survive an export/import round trip', () => {
 
   beforeAll(() => {
     process.env.ENCRYPTION_KEY = '0'.repeat(64);
-    // Private addresses must stay importable — a custom endpoint is usually a
+    // Private addresses must stay importable - a custom endpoint is usually a
     // box on the LAN. The SSRF guard only blocks them when this is set.
     delete process.env.FREEAPI_BLOCK_PRIVATE_PROVIDER_URLS;
     initDb(':memory:');

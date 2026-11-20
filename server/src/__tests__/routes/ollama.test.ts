@@ -64,7 +64,7 @@ describe('Ollama emulation', () => {
     const tags = await request(app, 'GET', '/api/tags');
     expect(tags.status).toBe(200);
     expect(tags.body.models.length).toBeGreaterThan(0);
-    // Plain semver — a prerelease suffix compares below the base version for
+    // Plain semver - a prerelease suffix compares below the base version for
     // clients that gate features on a minimum Ollama version.
     expect((await request(app, 'GET', '/api/version')).body.version).toMatch(/^\d+\.\d+\.\d+$/);
   });
@@ -123,7 +123,7 @@ describe('Ollama emulation', () => {
   it('accepts the real legacy embeddings body ({model, prompt})', async () => {
     setSetting('ollama_emulation', 'open-loopback');
     const response = await request(app, 'POST', '/api/embeddings', { model: 'auto', prompt: 'embed me' });
-    // No embedding provider is seeded, so upstream fails — but the request
+    // No embedding provider is seeded, so upstream fails - but the request
     // must pass validation (not 400 invalid request).
     expect(response.status).not.toBe(400);
   });

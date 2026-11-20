@@ -79,7 +79,7 @@ describe('samplingRequestParams', () => {
     expect(samplingActiveCount(settings)).toBe(2)
   })
 
-  it('sends a deliberate zero — off and "0" are different requests', () => {
+  it('sends a deliberate zero - off and "0" are different requests', () => {
     const settings = on(DEFAULT_SAMPLING, 'temperature', 0)
     expect(samplingRequestParams(settings)).toEqual({ temperature: 0 })
     expect('temperature' in samplingRequestParams(settings)).toBe(true)

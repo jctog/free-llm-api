@@ -6,7 +6,7 @@ import { redactSecrets, installLogRedaction } from '../../lib/log-redaction.js';
  *
  * These patterns can only be exercised by strings that look like credentials, but
  * a source file holding such a literal is indistinguishable from a real leak to
- * GitHub push protection and to any other scanner — this file was rejected once
+ * GitHub push protection and to any other scanner - this file was rejected once
  * for exactly that. Building each value from a vendor prefix plus deterministic
  * filler keeps the coverage while guaranteeing the repo contains no credential,
  * synthetic or otherwise. The stride-based filler is also low-entropy on purpose,
@@ -22,7 +22,7 @@ function filler(length: number, charset: string = ALNUM): string {
   return out;
 }
 
-// [label, prefix, body length, charset] — lengths mirror each vendor's real format.
+// [label, prefix, body length, charset] - lengths mirror each vendor's real format.
 const SPECS: Array<[string, string, number, string]> = [
   ['Google', 'AIza', 35, ALNUM],
   ['Groq', 'gsk_', 52, ALNUM],
@@ -66,7 +66,7 @@ describe('redactSecrets', () => {
       `POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro:generateContent?key=${secret} 429`,
     );
     expect(out).not.toContain(secret);
-    // The URL itself must survive — it is the diagnostic value of the line.
+    // The URL itself must survive - it is the diagnostic value of the line.
     expect(out).toContain('generativelanguage.googleapis.com');
     expect(out).toContain('429');
   });
@@ -130,7 +130,7 @@ describe('redactSecrets', () => {
     expect(out).toContain('rejected');
   });
 
-  it('is idempotent — redacting twice changes nothing', () => {
+  it('is idempotent - redacting twice changes nothing', () => {
     const once = redactSecrets('Authorization: Bearer abc123def456ghi789jkl012');
     expect(redactSecrets(once)).toBe(once);
   });

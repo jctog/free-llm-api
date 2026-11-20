@@ -4,8 +4,8 @@ import { keyMatchesQuery } from './key-search'
 
 // The keys-page search box must be able to reach every string the row
 // renders. A custom endpoint row prints its baseUrl; before this the filter
-// only knew label and masked key, so searching a relay's host — the one
-// identifier visible for a keyless relay with no label — found nothing,
+// only knew label and masked key, so searching a relay's host - the one
+// identifier visible for a keyless relay with no label - found nothing,
 // which is exactly what #1056 fixed for the fallback table.
 
 const key = (over: Partial<ApiKey> = {}) =>

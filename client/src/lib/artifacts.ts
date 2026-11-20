@@ -1,5 +1,5 @@
 // Artifacts: runnable code a reply carries, shown in a side panel with a live
-// preview next to the source — the pattern Claude's Artifacts panel made
+// preview next to the source - the pattern Claude's Artifacts panel made
 // familiar (a sandboxed iframe for the preview, tabs for code and preview,
 // copy and download in the header). This module is the pure half: finding the
 // artifacts in a Markdown reply and building the document the iframe runs.

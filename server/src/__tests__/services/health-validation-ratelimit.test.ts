@@ -19,7 +19,7 @@ const {
 } = await import('../../services/health.js');
 
 // #1369: every validation of an LLMTR key is a POST to /chat/completions with
-// a nonexistent model — exactly shaped like the bot traffic their abuse
+// a nonexistent model - exactly shaped like the bot traffic their abuse
 // system hunts. The scheduled pass re-asked a 429ed key every ~5 minutes
 // forever, so validation traffic itself became the ban engine. A key whose
 // last validation was rate-limited must be skipped until the skip window
@@ -115,7 +115,7 @@ describe('validation rate-limit backoff (#1369)', () => {
 
     // Real clocks on both sides: the 429 mark is recorded with Date.now, so
     // the pass must read it with the same domain. (A fake clock here would
-    // skip for the wrong reason — negative time arithmetic, not the window.)
+    // skip for the wrong reason - negative time arithmetic, not the window.)
     const checked: number[] = [];
     const result = await checkAllKeys({
       concurrency: 1,

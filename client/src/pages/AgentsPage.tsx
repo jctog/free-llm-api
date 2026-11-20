@@ -123,7 +123,7 @@ export default function AgentsPage() {
           const traffic = seen.get(analyticsIds[tool.id] ?? tool.id)
           const command = `npx freellmapi ${tool.command} --url ${origin}`
           const endpoint = tool.baseUrlSupport === 'root' ? origin : `${origin}/v1`
-          // The copied snippet is pasted into config files — keep it
+          // The copied snippet is pasted into config files - keep it
           // locale-independent.
           const realConnection = `BASE_URL=${endpoint}\nAPI_KEY=${keyData?.apiKey ?? '<unified-key>'}`
           const shownConnection = `BASE_URL=${endpoint}\nAPI_KEY=${shownKey}`

@@ -2,7 +2,7 @@ import type { Server } from 'node:http';
 
 /**
  * In a container the server is PID 1, and PID 1 gets no default action for
- * SIGTERM: without a handler `docker stop` — and every Watchtower self-update —
+ * SIGTERM: without a handler `docker stop` - and every Watchtower self-update -
  * waits out its timeout and SIGKILLs the process mid-write. This stops taking
  * connections, lets in-flight requests finish, closes the database cleanly and
  * exits; a stuck request cannot hold the process past `graceMs`.
@@ -22,9 +22,9 @@ export function installGracefulShutdown(options: {
   const shutdown = (signal: string) => {
     if (stopping) return;
     stopping = true;
-    logger.log(`[server] ${signal} received — finishing in-flight requests and shutting down`);
+    logger.log(`[server] ${signal} received - finishing in-flight requests and shutting down`);
     const force = setTimeout(() => {
-      logger.error(`[server] still busy after ${graceMs} ms — exiting anyway`);
+      logger.error(`[server] still busy after ${graceMs} ms - exiting anyway`);
       proc.exit(1);
     }, graceMs);
     force.unref?.();

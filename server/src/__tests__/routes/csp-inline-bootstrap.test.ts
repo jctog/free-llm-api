@@ -9,7 +9,7 @@ import { initDb } from '../../db/index.js';
 
 // index.html ships one inline <script>: the theme/direction bootstrap that has
 // to run before first paint so dark-mode users do not get a white flash.
-// `script-src 'self'` blocked it on EVERY install, HTTPS included — the
+// `script-src 'self'` blocked it on EVERY install, HTTPS included - the
 // violation is visible in the console log pasted into #682, where it was read
 // as part of the LAN/HTTP problem. It is not: it reproduces on localhost too.
 //
@@ -48,7 +48,7 @@ describe('CSP allows the inline theme bootstrap (#682)', () => {
 
   it('the hash also matches the built client, when one is present', () => {
     // Vite copies index.html through, but a future plugin could rewrite the
-    // inline script — the browser enforces the hash against the BUILT file, so
+    // inline script - the browser enforces the hash against the BUILT file, so
     // that is the one that really has to match.
     const built = path.join(repoRoot, 'client/dist/index.html');
     if (!fs.existsSync(built)) return;
@@ -67,7 +67,7 @@ describe('CSP allows the inline theme bootstrap (#682)', () => {
     expect(csp).toContain(`script-src 'self' ${INLINE_BOOTSTRAP_SHA}`);
   });
 
-  it('still refuses inline scripts generally — no unsafe-inline for scripts', async () => {
+  it('still refuses inline scripts generally - no unsafe-inline for scripts', async () => {
     const server = app.listen(0, '127.0.0.1');
     if (!server.listening) await new Promise<void>(resolve => server.once('listening', () => resolve()));
     const addr = server.address() as { port: number };

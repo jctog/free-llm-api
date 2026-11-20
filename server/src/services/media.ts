@@ -6,7 +6,7 @@
 // token budget. Each platform has a small adapter here; routing fails over
 // across the providers serving the same modality. The rows are maintained in the
 // published catalog and arrive via catalog-sync (premium on the live tier within
-// ~12h, free once each model is 30 days old) — never seeded by migrations.
+// ~12h, free once each model is 30 days old) - never seeded by migrations.
 import { getDb } from '../db/index.js';
 import { parseRetryAfterMs } from '../providers/base.js';
 import { RetryHintTracker } from '../lib/retry-hint.js';
@@ -27,7 +27,7 @@ import { KENARI_BASE_URL, requireKenariFreeModel } from '../providers/kenari.js'
 import { PLUGSKY_BASE_URL } from '../providers/plugsky.js';
 
 /** Platforms with a media adapter below. catalog-sync gates media rows on this
- *  (decoupled from the chat provider registry — e.g. SiliconFlow is media-only). */
+ *  (decoupled from the chat provider registry - e.g. SiliconFlow is media-only). */
 export const MEDIA_PLATFORMS = new Set(['nvidia', 'pollinations', 'cloudflare', 'siliconflow', 'google', 'speechify', 'electronhub', 'freeai', 'kenari', 'plugsky']);
 
 /** Video uses a dedicated optional catalog registry so binaries that predate
@@ -47,7 +47,7 @@ export const TRANSCRIPTION_PLATFORMS = new Set(['groq', 'cloudflare', 'typhoon',
 // arrive via the catalog's dedicated `transcriptionModels` array (see
 // catalog-sync), never via migrations. Their per-model adapter metadata
 // (native subtitle formats, upload ceiling, request flavor) rides in the
-// meta_json column — see TranscriptionMeta below.
+// meta_json column - see TranscriptionMeta below.
 export type MediaModality = 'image' | 'video' | 'audio' | 'transcription';
 
 export interface MediaModelRow {
@@ -68,7 +68,7 @@ export class MediaError extends Error {
   /** Optional machine-readable error code surfaced in the OpenAI-shaped body. */
   code?: string;
   /** Back-off the upstream provider stated (`Retry-After` header), in
-   *  milliseconds — relayed to the client so an SDK sleeps the stated amount
+   *  milliseconds - relayed to the client so an SDK sleeps the stated amount
    *  instead of hammering the chain, mirroring the embeddings path. */
   retryAfterMs?: number;
   constructor(message: string, status: number, code?: string, retryAfterMs?: number) {
@@ -197,7 +197,7 @@ function geminiVoice(requested?: string): string {
     ?? 'Kore';
 }
 
-// Media generations are slower than chat — a cold FLUX/SDXL run can take 30-60s.
+// Media generations are slower than chat - a cold FLUX/SDXL run can take 30-60s.
 const FETCH_TIMEOUT_MS = 60_000;
 // Video providers submit long-running jobs and can legitimately need several
 // minutes before the MP4 is ready. This is still bounded end-to-end.
@@ -205,7 +205,7 @@ const VIDEO_FETCH_TIMEOUT_MS = 5 * 60_000;
 
 /** Bail out of a long-running media job whose API caller has hung up. Video is
  *  the only surface here that can poll for minutes, so without this a client
- *  that disconnects after two seconds still costs a full generation — and a
+ *  that disconnects after two seconds still costs a full generation - and a
  *  second one, when the chain fails over to the next provider. */
 function throwIfClientGone(signal?: AbortSignal): void {
   if (signal?.aborted) throw new MediaError('client closed the request', 499);
@@ -455,7 +455,7 @@ async function callImageProvider(
       // at '/' are 'multipart'"), so those rows opt in through catalog meta.
       let init: RequestInit;
       if (mediaRequestStyle(row) === 'multipart') {
-        // Never set Content-Type by hand — FormData supplies the boundary.
+        // Never set Content-Type by hand - FormData supplies the boundary.
         const form = new FormData();
         form.append('prompt', p.prompt);
         form.append('width', String(w));
@@ -569,7 +569,7 @@ async function callHuggingFaceVideo(
   // Every other URL this adapter contacts is built from constants; this one
   // comes out of an upstream JSON body, which is exactly the shape #440's
   // guard exists for. Refuse anything that is not plain http(s) on a routable
-  // address before spending a request on it — a result URL pointing at cloud
+  // address before spending a request on it - a result URL pointing at cloud
   // metadata or a link-local address would otherwise be fetched and streamed
   // straight back to the caller.
   const verdict = await assessProviderUrl(videoUrl);
@@ -874,7 +874,7 @@ function chainError(modality: MediaModality, lastError: MediaError | null, hints
   // the caller's own request, and 429 is the long-standing rate-limit signal.
   // An upstream 401 is deliberately NOT among them: it means the operator's
   // provider key was rejected, and forwarding it would tell an OpenAI client
-  // its own gateway key is bad — which sends SDKs into a credential error
+  // its own gateway key is bad - which sends SDKs into a credential error
   // instead of the retryable upstream failure this actually is.
   const status = lastError && [400, 413, 429].includes(lastError.status)
     ? lastError.status
@@ -885,7 +885,7 @@ function chainError(modality: MediaModality, lastError: MediaError | null, hints
     lastError?.code,
     // A 429 from one provider is failed over, so its Retry-After is only the
     // client's business when EVERY provider was rate limited with a stated
-    // delay — then the soonest one (same rule as the chat exhaustion path).
+    // delay - then the soonest one (same rule as the chat exhaustion path).
     status === 429 ? hints.retryAfterMs() : undefined,
   );
 }
@@ -976,7 +976,7 @@ export async function runVideoGeneration(
 //
 // STT models live in media_models with modality='transcription', maintained
 // by the published catalog's `transcriptionModels` array (see catalog-sync)
-// — never hardcoded here, never seeded by migrations. A user can also
+// - never hardcoded here, never seeded by migrations. A user can also
 // register their own OpenAI-compatible STT endpoint (platform 'custom') from
 // the Keys page; those rows are keyed to an api_keys row and are never touched
 // by catalog-sync. The per-platform
@@ -1161,7 +1161,7 @@ async function callTranscriptionProvider(
       // uniform; 'vtt' never reaches here (no native subtitle support is
       // declared for custom rows, so resolveTranscriptionChain filters them).
       form.append('response_format', p.responseFormat === 'verbose_json' ? 'verbose_json' : 'json');
-      // Never set Content-Type by hand — FormData supplies the boundary.
+      // Never set Content-Type by hand - FormData supplies the boundary.
       const r = await mediaFetch(`${credential.baseUrl}/audio/transcriptions`, 'custom', 'transcription', {
         method: 'POST',
         headers: { ...bearerAuthHeader(key) },
@@ -1173,7 +1173,7 @@ async function callTranscriptionProvider(
     }
     case 'groq': {
       // Groq's OpenAI-compatible audio endpoint takes multipart form data.
-      // Never set Content-Type by hand — FormData supplies the boundary.
+      // Never set Content-Type by hand - FormData supplies the boundary.
       const form = new FormData();
       form.append('file', new Blob([p.file], { type: p.mimeType || 'application/octet-stream' }), p.filename);
       form.append('model', m.modelId);

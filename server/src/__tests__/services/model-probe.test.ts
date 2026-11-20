@@ -165,7 +165,7 @@ describe('probe pass', () => {
     const chat = chatFail('403 quota');
     // Pass 1: first sighting only schedules.
     await runModelProbePass({ chat, jitter: noJitter, select: selectFrom(list) });
-    // Pass 2: the actual probe — fails, sets a 30m backoff.
+    // Pass 2: the actual probe - fails, sets a 30m backoff.
     const pass2 = await runModelProbePass({ chat, jitter: noJitter, select: selectFrom(list) });
     expect(pass2.probed).toHaveLength(1);
     // Pass 3 immediately after: still inside the backoff, nothing probed.

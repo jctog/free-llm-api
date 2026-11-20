@@ -7,11 +7,11 @@ const DEFAULT_RPM = 120;
 // several of them (an 11.85MB real-world request was observed). express.json
 // buffers the whole body in memory (2-3x transiently during the parse), so
 // this also bounds the per-request spike on small containers. Anything past
-// the ceiling 413s before routing — no fallback, no analytics row — so it
+// the ceiling 413s before routing - no fallback, no analytics row - so it
 // must sit above the largest payload we expect to serve. 25MB is the balance
 // point: it clears the observed 11.85MB replayed session with room to spare,
 // while keeping the worst case survivable on the small hosts this runs on (a
-// Pi or a 512MB VPS — the limit is PER REQUEST, so a handful of concurrent
+// Pi or a 512MB VPS - the limit is PER REQUEST, so a handful of concurrent
 // maximal bodies is the number that actually has to fit in RAM). Inbound
 // image normalization shrinks payloads ~6-10x right after the parse, so the
 // steady state sits far below this. Raise REQUEST_BODY_LIMIT_MB on a bigger
@@ -42,7 +42,7 @@ export interface Config {
   dashboardOrigins: string[];
   clientDist: string | null;
   proxyRateLimitRpm: number;
-  /** JSON body limit (bytes) for the LLM wire surfaces — see
+  /** JSON body limit (bytes) for the LLM wire surfaces - see
    *  parseRequestBodyLimitBytes. REQUEST_BODY_LIMIT_MB overrides. */
   requestBodyLimitBytes: number;
   nodeEnv: string;
@@ -59,7 +59,7 @@ export interface Config {
   trustProxy: boolean | number | string[];
   /**
    * Tri-state override for the CSP `upgrade-insecure-requests` directive (#682).
-   * - undefined: auto — emit the directive only when the request arrived over
+   * - undefined: auto - emit the directive only when the request arrived over
    *   TLS (or behind an HTTPS reverse proxy that forwarded X-Forwarded-Proto).
    * - true:      always emit (force HTTPS upgrade even on plain HTTP).
    * - false:     never emit (let HTTP LAN installs render the dashboard).
@@ -79,7 +79,7 @@ export function loadConfig(): Config {
   return {
     port: process.env.PORT ?? 3001,
     // Dual-stack ('::') by default so the dashboard is reachable over both IPv4
-    // and IPv6 (e.g. IPv6-enabled Docker networks — #180). Hosts with IPv6
+    // and IPv6 (e.g. IPv6-enabled Docker networks - #180). Hosts with IPv6
     // disabled fall back to IPv4-only below; HOST overrides the default outright.
     host: process.env.HOST ?? '::',
     dbPath: process.env.FREEAPI_DB_PATH?.trim() || null,
@@ -94,7 +94,7 @@ export function loadConfig(): Config {
     serveStaticAssets: true,
     trustProxy: parseTrustProxy(),
     // CSP_UPGRADE_INSECURE_REQUESTS: true|false forces the directive on/off;
-    // unset (the default) leaves it on auto — emit only when the request is
+    // unset (the default) leaves it on auto - emit only when the request is
     // already TLS or forwarded as https, so HTTP LAN installs still render.
     cspUpgradeInsecureRequests: parseCspUpgradeInsecureRequests(),
     allowedHosts: parseAllowedHosts(),
@@ -104,7 +104,7 @@ export function loadConfig(): Config {
 // Parse ALLOWED_HOSTS (#1637). unset/empty → [] (guard off).
 // Otherwise a comma-separated list of exact hostnames (case-insensitive) that
 // the Host header may name, on top of the loopback default. A single '*'
-// disables the guard entirely — the middleware reads that sentinel.
+// disables the guard entirely - the middleware reads that sentinel.
 function parseAllowedHosts(): string[] {
   const raw = process.env.ALLOWED_HOSTS;
   if (raw === undefined || raw.trim() === '') return [];

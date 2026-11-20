@@ -49,7 +49,7 @@ describe('classifyIp', () => {
 
   it('classifies IPv4-mapped IPv6 in hex form (what the WHATWG URL parser emits)', () => {
     // new URL('http://[::ffff:169.254.169.254]/').hostname === '[::ffff:a9fe:a9fe]'
-    // — the dotted form never reaches classifyIp from a URL, only this one.
+    // - the dotted form never reaches classifyIp from a URL, only this one.
     expect(classifyIp('::ffff:a9fe:a9fe')).toBe('metadata'); // 169.254.169.254
     expect(classifyIp('::ffff:7f00:1')).toBe('loopback'); // 127.0.0.1
     expect(classifyIp('::ffff:a00:1')).toBe('private'); // 10.0.0.1
@@ -78,7 +78,7 @@ describe('assessProviderUrl', () => {
   });
 
   it('blocks decimal-encoded metadata IPs (URL canonicalisation)', async () => {
-    // 2852039166 === 169.254.169.254 — WHATWG URL normalises integer hosts.
+    // 2852039166 === 169.254.169.254 - WHATWG URL normalises integer hosts.
     const verdict = await assessProviderUrl('http://2852039166/latest/meta-data/');
     expect(verdict.allowed).toBe(false);
     expect(verdict.reason).toMatch(/metadata/);
@@ -157,7 +157,7 @@ describe('isLoopbackOrPrivateUrl (#592 local-endpoint cooldown exemption)', () =
     expect(isLoopbackOrPrivateUrl('http://[fd12:3456::1]:8080/v1')).toBe(true);
   });
 
-  it('false for public addresses and hostnames (no DNS — pragmatically non-local)', () => {
+  it('false for public addresses and hostnames (no DNS - pragmatically non-local)', () => {
     expect(isLoopbackOrPrivateUrl('http://203.0.113.10/v1')).toBe(false);
     expect(isLoopbackOrPrivateUrl('https://api.example.com/v1')).toBe(false);
     expect(isLoopbackOrPrivateUrl('http://my-lan-box.local:11434/v1')).toBe(false); // mDNS: undecidable without DNS
@@ -172,7 +172,7 @@ describe('isLoopbackOrPrivateUrl (#592 local-endpoint cooldown exemption)', () =
   });
 
   // The FQDN spelling resolves exactly like the bare name, so it must not slip
-  // through as "some public host" (#951 — it would then get proxied).
+  // through as "some public host" (#951 - it would then get proxied).
   it('true for the trailing-dot FQDN spelling of localhost', () => {
     expect(isLoopbackOrPrivateUrl('http://localhost./v1')).toBe(true);
     expect(isLoopbackOrPrivateUrl('http://ollama.localhost./v1')).toBe(true);

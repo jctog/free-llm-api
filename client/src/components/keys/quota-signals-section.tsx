@@ -5,13 +5,13 @@ import { useI18n } from '@/i18n'
 import { QuotaOutlookSection } from './quota-outlook-section'
 
 function formatQuotaNumber(value: number | null): string {
-  return value == null ? '—' : new Intl.NumberFormat().format(value)
+  return value == null ? '-' : new Intl.NumberFormat().format(value)
 }
 
 function formatResetAt(value: string | null): string {
-  if (!value) return '—'
+  if (!value) return '-'
   const date = new Date(value)
-  return Number.isNaN(date.getTime()) ? '—' : date.toLocaleString()
+  return Number.isNaN(date.getTime()) ? '-' : date.toLocaleString()
 }
 
 export function QuotaSignalsSection({ states }: { states: ProviderQuotaState[] }) {

@@ -8,7 +8,7 @@ WORKDIR /app
 # better-sqlite3 is a native module; on slim images without a usable prebuilt
 # binary (notably the linux/arm64 leg under QEMU) it compiles from source via
 # node-gyp, which needs Python + a C++ toolchain. These live only in the build
-# stages — the runtime image copies the already-compiled node_modules.
+# stages - the runtime image copies the already-compiled node_modules.
 RUN apt-get update \
   && apt-get install -y --no-install-recommends python3 make g++ \
   && rm -rf /var/lib/apt/lists/*
@@ -41,7 +41,7 @@ COPY --from=build --chown=node:node /app/node_modules ./node_modules
 # npm nests some production packages under the workspace instead of hoisting
 # them (undici lives at server/node_modules/undici). Skipping this copy shipped
 # images where the HTTP(S) proxy dispatcher failed to load and every request
-# silently went direct — issue #550.
+# silently went direct - issue #550.
 COPY --from=build --chown=node:node /app/server/node_modules ./server/node_modules
 COPY --from=build --chown=node:node /app/shared ./shared
 COPY --from=build --chown=node:node /app/server/package.json ./server/package.json
@@ -73,7 +73,7 @@ ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 EXPOSE 3001
 
 # No VOLUME for /app/server/data on purpose. Persistence is the deployment's
-# job — docker-compose.yml maps the named `freellmapi-data` volume there, and a
+# job - docker-compose.yml maps the named `freellmapi-data` volume there, and a
 # plain `docker run` takes -v. Declaring it here instead creates an ANONYMOUS
 # volume on every container that doesn't override it: PaaS runtimes that build
 # from the Dockerfile (Railway, Render, Coolify, Dokploy, CapRover) then either

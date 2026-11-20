@@ -60,7 +60,7 @@ const readLifecycleEngine: CompressionEngine = {
       const content = textContent(message);
       if (!path || content == null || context.frozenMessageIndexes.has(index)) return message;
       readsSuperseded += 1;
-      return withTextContent(message, `[read superseded — "${path}" was re-read or modified later]`);
+      return withTextContent(message, `[read superseded - "${path}" was re-read or modified later]`);
     });
     return { messages: output, details: { readsSuperseded } };
   },

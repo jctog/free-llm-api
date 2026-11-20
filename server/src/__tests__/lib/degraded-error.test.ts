@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, vi } from 'vitest';
 
 // Issue #522: NVIDIA NIM reports a temporarily-degraded hosted deployment as
 // `400 {"detail":"Function id '...': DEGRADED function cannot be invoked"}`.
-// That is provider health, not request shape — it must stay retryable, must
+// That is provider health, not request shape - it must stay retryable, must
 // NOT classify as provider_bad_request, and an exhausted chain must render a
 // 503, never a client-blaming 400 invalid_request_error.
 

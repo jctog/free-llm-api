@@ -53,18 +53,18 @@ export interface ImportSelectedResponse {
   modelsRegistered: number;
 }
 
-// Active platforms — must match server/src/providers/index.ts and
+// Active platforms - must match server/src/providers/index.ts and
 // server/src/routes/keys.ts PLATFORMS allowlist.
 // Moonshot and MiniMax direct integrations were dropped in migrateModelsV4
 // (see server/src/db/index.ts). HuggingFace was dropped in V4 and re-added
 // in V13 via the router.huggingface.co Inference Providers meta-router.
-// SambaNova was dropped in V23 (free tier permanently retired — 402
+// SambaNova was dropped in V23 (free tier permanently retired - 402
 // "payment method required" once the one-time $5 trial credit lapses).
 export type Platform =
   | 'google'
   | 'groq'
   | 'cerebras'
-  // Sail Research — native Responses API provider. $5 in free credits refreshes
+  // Sail Research - native Responses API provider. $5 in free credits refreshes
   // monthly when a payment method is attached; usage beyond the grant is
   // pay-as-you-go. Background polling is required for its flex-only models.
   | 'sail'
@@ -121,15 +121,15 @@ export type Platform =
   | 'dreamprompting'
   | 'waterfall'
   | 'logfare'
-  // B.AI — OpenAI-compatible gateway. Its catalog row is a live-tested,
+  // B.AI - OpenAI-compatible gateway. Its catalog row is a live-tested,
   // limited-time 0-credit promotion, not a recurring free allowance.
   | 'bai'
-  // AnyAPI — OpenAI-compatible gateway. Free tier is $0/no card/recurring but
+  // AnyAPI - OpenAI-compatible gateway. Free tier is $0/no card/recurring but
   // capped at 100K tokens/day over "free and basic" models only; no RPM/RPD is
   // published. Catalog rows live in the hosted catalog (premium now, free after
   // 30 days).
   | 'anyapi'
-  // AMD Radeon Cloud TokenFactory — OpenAI-compatible shared inference. Its
+  // AMD Radeon Cloud TokenFactory - OpenAI-compatible shared inference. Its
   // rotating public-model roster is free without consuming instance credits,
   // with recurring account-level allowance and request/concurrency controls.
   | 'radeon'
@@ -157,58 +157,58 @@ export type Platform =
   | 'pollinations'
   | 'llm7'
   | 'huggingface'
-  // OpenCode Zen — OpenAI-compatible gateway. Free promotional models require a
+  // OpenCode Zen - OpenAI-compatible gateway. Free promotional models require a
   // free (no-card) account key from opencode.ai/auth; see migrateModelsV18.
   | 'opencode'
-  // OVHcloud AI Endpoints — OpenAI-compatible, keyless anonymous tier
+  // OVHcloud AI Endpoints - OpenAI-compatible, keyless anonymous tier
   // (2 req/min per IP per model); see migrateModelsV26.
   | 'ovh'
-  // Agnes AI (Sapiens AI) — OpenAI-compatible (LiteLLM + vLLM backend). Serves
+  // Agnes AI (Sapiens AI) - OpenAI-compatible (LiteLLM + vLLM backend). Serves
   // its own proprietary Agnes models; the free key comes from
   // platform.agnes-ai.com (no card).
   | 'agnes'
-  // Reka — OpenAI-compatible. Native multimodal models (reka-edge takes
+  // Reka - OpenAI-compatible. Native multimodal models (reka-edge takes
   // image/video). New accounts need prepaid credits (#1202); key from
   // platform.reka.ai.
   | 'reka'
-  // SiliconFlow — OpenAI-compatible. Registered for its FREE generative-media
+  // SiliconFlow - OpenAI-compatible. Registered for its FREE generative-media
   // models (FLUX.1-schnell image, CosyVoice2 TTS) routed via services/media.ts;
   // chat is supported too. Key from siliconflow.com (no card).
   | 'siliconflow'
-  // Routeway — OpenAI-compatible aggregator. Free ':free' models ($0) on a
+  // Routeway - OpenAI-compatible aggregator. Free ':free' models ($0) on a
   // rate-limited pool (~5 rpm observed); requires a browser User-Agent (CF
   // blocks others). Key from routeway.ai (no card).
   | 'routeway'
-  // BazaarLink — OpenAI-compatible aggregator. Free 'auto:free' route picks an
+  // BazaarLink - OpenAI-compatible aggregator. Free 'auto:free' route picks an
   // available zero-cost model. Key from bazaarlink.ai (no card).
   | 'bazaarlink'
-  // AINative Studio — OpenAI-compatible aggregator. Advertises a recurring
+  // AINative Studio - OpenAI-compatible aggregator. Advertises a recurring
   // ~10M tokens/month free allocation (no card); quota unverified. Key from
   // ainative.studio.
   | 'ainative'
-  // Aion Labs — OpenAI-compatible aggregator with a no-card free API key.
+  // Aion Labs - OpenAI-compatible aggregator with a no-card free API key.
   // Catalog rows live in the Oracle catalog (premium now, free after 30 days).
   | 'aion'
-  // Requesty — OpenAI-compatible router with no-card free models/credits.
+  // Requesty - OpenAI-compatible router with no-card free models/credits.
   // Catalog rows live in the Oracle catalog (premium now, free after 30 days).
   | 'requesty'
-  // NavyAI — OpenAI-compatible unified API. Free plan is 150K tokens/day and
+  // NavyAI - OpenAI-compatible unified API. Free plan is 150K tokens/day and
   // 20 RPM; catalog rows live in the Oracle catalog (premium now, free after 30 days).
   | 'navy'
-  // NaraRouter — OpenAI-compatible aggregator. Free account key from
+  // NaraRouter - OpenAI-compatible aggregator. Free account key from
   // router.bynara.id after Telegram channel/link verification; free-plan routes
   // reset daily and are catalog-managed (premium now, free after 30 days).
   | 'nara'
-  // SEA-LION (AI Singapore) — OpenAI-compatible first-party API. Free key
+  // SEA-LION (AI Singapore) - OpenAI-compatible first-party API. Free key
   // (Google sign-in, no card, no region wall) at 10 RPM; catalog rows live in
   // the Oracle catalog (premium now, free after 30 days).
   | 'sealion'
-  // OrcaRouter — OpenAI-compatible aggregator (api.orcarouter.ai/v1). Free key
+  // OrcaRouter - OpenAI-compatible aggregator (api.orcarouter.ai/v1). Free key
   // from orcarouter.ai (no card); recurring rate-limited free aliases at $0
   // (never fall back to paid). Catalog rows live in the Oracle catalog
   // (premium now, free after the 30-day model-age gate).
   | 'orcarouter'
-  // UnoRouter (unorouter.com) — OpenAI-compatible aggregator. The web app is a
+  // UnoRouter (unorouter.com) - OpenAI-compatible aggregator. The web app is a
   // Next.js site at unorouter.com; the API lives at api.unorouter.com/v1. Free
   // key from unorouter.com (no card); free models carry a `:free` suffix and a
   // per-minute rate limit (429 on cap, e.g. "1 request(s) every 1 min").
@@ -217,19 +217,19 @@ export type Platform =
   // validation works. Catalog rows live in the hosted catalog (premium now,
   // free after the 30-day model-age gate).
   | 'unorouter'
-  // xKiro (xkiro.com) — OpenAI-compatible gateway at api.xkiro.com/v1. Free key
+  // xKiro (xkiro.com) - OpenAI-compatible gateway at api.xkiro.com/v1. Free key
   // from xkiro.com (no card); free plan is 5M tokens/day on its free models,
   // paid models 403 on a free key.
   // /v1/models is public (200 with no key), so key validation must probe
   // /v1/usage, which 401s on a missing/invalid ClientApiKey. Catalog rows live
   // in the hosted catalog (premium now, free after the 30-day model-age gate).
   | 'xkiro'
-  // ModelScope (魔搭社区, Alibaba) — OpenAI-compatible inference API
+  // ModelScope (魔搭社区, Alibaba) - OpenAI-compatible inference API
   // (api-inference.modelscope.cn/v1). Free tier moved to magic-grain (魔粒)
   // metering in 2026-08: ~250 魔粒/day account-wide at ~2 魔粒 per request
   // (observed 2026-08-14) ≈ 125 requests/day, but calls only work after the
   // ModelScope account is bound to an Alibaba Cloud CHINA-site (cn) account
-  // with Chinese real-name verification — tokens mint without binding, then
+  // with Chinese real-name verification - tokens mint without binding, then
   // every call 401s. Catalog rows land after community testing confirms
   // per-model behavior (#581).
   | 'modelscope'
@@ -239,33 +239,33 @@ export type Platform =
   // LongCat is the exception worth knowing: its platform accepts an email
   // signup from outside mainland China.
   //
-  // Baidu Qianfan (百度千帆) — OpenAI-compatible (https://qianfan.baidubce.com/v2).
+  // Baidu Qianfan (百度千帆) - OpenAI-compatible (https://qianfan.baidubce.com/v2).
   // The ERNIE-Speed / ERNIE-Lite / ERNIE-Tiny series are free indefinitely via
   // pay-as-you-go billing rather than a token pool, so the ceiling is rate
   // limits, not a balance. Baidu calls the arrangement "long-term". Real-name
   // auth (individual or enterprise) required.
   | 'qianfan'
-  // Volcengine Ark (火山方舟, ByteDance) — OpenAI-compatible
+  // Volcengine Ark (火山方舟, ByteDance) - OpenAI-compatible
   // (https://ark.cn-beijing.volces.com/api/v3). Individual developers get a
   // RECURRING daily per-model free reward quota (raised from 500K to 2M
   // tokens/day/model), on top of a one-time 500K new-user grant. The strongest
   // recurring free tier of the four.
   | 'volcengine'
-  // LongCat (Meituan / 美团) — OpenAI-compatible
+  // LongCat (Meituan / 美团) - OpenAI-compatible
   // (https://api.longcat.chat/openai/v1); also exposes an Anthropic-compatible
   // surface at /anthropic. Free tier is daily; the figure quoted at platform
   // launch was 100K tokens/day. Meituan has ANNOUNCED a 50M tokens/day
   // Flash-Lite free tier but it was described as a future plan, so it is not
   // treated as live here.
   | 'longcat'
-  // iFlytek Spark (讯飞星火) — OpenAI-compatible
+  // iFlytek Spark (讯飞星火) - OpenAI-compatible
   // (https://spark-api-open.xf-yun.com/v1), Bearer auth using the console's
   // APIPassword (not the APIKey/APISecret pair the older WebSocket API used).
   // The Lite model (model id `lite`) is documented as free to call; iFlytek
   // does not publish a token ceiling or a QPS figure for it, so neither is
   // claimed here.
   | 'xfyun'
-  // AI Horde — free, community-powered inference (volunteer workers) via an
+  // AI Horde - free, community-powered inference (volunteer workers) via an
   // OpenAI-compatible proxy (https://oai.aihorde.net/v1). Queue-based, so calls
   // can take tens of seconds; no tool support; usage is reported as kudos, not
   // tokens. Anonymous key `0000000000` works (lowest priority); a registered
@@ -379,7 +379,7 @@ export interface ApiKey {
   exportable: boolean;
   createdAt: string;
   lastCheckedAt: string | null;
-  /** Last time the key was proven to work — a valid probe verdict or a served
+  /** Last time the key was proven to work - a valid probe verdict or a served
    *  live request (#1493). Unlike lastCheckedAt, a transport error does not
    *  refresh it, so "checked recently but never worked" is visible. */
   lastHealthyAt?: string | null;
@@ -425,7 +425,7 @@ export interface FallbackEntry {
   speedRank: number;
   priority: number;
   enabled: boolean;
-  // Present when model unification is enabled — identifies the logical model
+  // Present when model unification is enabled - identifies the logical model
   // this provider row belongs to so the dashboard can render grouped rows.
   groupKey?: string;
   canonicalId?: string;
@@ -437,7 +437,7 @@ export interface FallbackEntry {
 // table). When unification is enabled, those rows collapse into a single group
 // keyed by a normalized display name; see server/src/services/model-groups.ts.
 export interface ModelGroupInfo {
-  groupKey: string;     // normalized display name — the grouping identity
+  groupKey: string;     // normalized display name - the grouping identity
   canonicalId: string;  // stable slug advertised on /v1/models
   groupLabel: string;   // human label (suffix-stripped display name)
 }
@@ -495,7 +495,7 @@ export type ChatToolChoice =
 // OpenAI's multimodal envelope: clients like opencode / continue.dev send
 // content as an array of typed blocks even for text-only messages, and
 // Gemini-lineage agents (Qwen Code, AionUI) send part-style `{ text }` blocks
-// with no `type` — plus bare strings inside arrays. We accept all of it on
+// with no `type` - plus bare strings inside arrays. We accept all of it on
 // the wire and flatten to string for providers that don't support arrays
 // (Cohere, Cloudflare). See server/src/lib/content.ts. (#200)
 export type ChatContentBlock = string | { type?: string; text?: string; [key: string]: unknown };

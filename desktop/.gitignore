@@ -4,5 +4,5 @@ dist-electron/
 client-dist/
 .DS_Store
 
-# Monetization planning — private, never committed
+# Monetization planning - private, never committed
 monetization/

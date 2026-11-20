@@ -5,7 +5,7 @@ Shared vocabulary for working in this repo. Read this before touching
 `server/src/lib/fallback-loop.ts`, `server/src/providers/*`, or anything
 under `server/src/services/model-*` / `custom-model-*`.
 
-Deep dives live under `docs/en/` — this file defines terms, it does not
+Deep dives live under `docs/en/` - this file defines terms, it does not
 repeat implementation. When this file and a deep dive disagree, the deep
 dive wins; fix this file.
 
@@ -55,7 +55,7 @@ dive wins; fix this file.
 
 - **Router**: picks one `(platform, model, key)` per request. A
   Thompson-sampling bandit over reliability / speed / intelligence,
-  multiplied by headroom guardrails — not round-robin.
+  multiplied by headroom guardrails - not round-robin.
 - **Strategy**: the weight preset (`balanced`, `smartest`, `fastest`,
   `reliable`, `custom`, `priority`). Key selection (`auto` /
   `least-remaining`) is independent of it.
@@ -86,15 +86,15 @@ dive wins; fix this file.
 
 ## Repo map
 
-- `server/` — Express proxy (`:3001`), router, quota, providers, DB.
-- `client/` — React + Vite dashboard.
-- `shared/` — `types.ts`, notably the `Platform` union.
-- `cli/`, `desktop/` — CLIs and desktop shell, not the hot path.
-- `docs/en/architecture/` — router, quota/cooldown, streaming,
+- `server/` - Express proxy (`:3001`), router, quota, providers, DB.
+- `client/` - React + Vite dashboard.
+- `shared/` - `types.ts`, notably the `Platform` union.
+- `cli/`, `desktop/` - CLIs and desktop shell, not the hot path.
+- `docs/en/architecture/` - router, quota/cooldown, streaming,
   degraded mode, catalog sync, observability.
-- `docs/en/providers/` — per-platform quotas, adding a provider.
-- `docs/en/glossary/01-glossary.md` — deeper term table with code refs.
-- `server/src/__tests__/` — unit + integration + route tests.
+- `docs/en/providers/` - per-platform quotas, adding a provider.
+- `docs/en/glossary/01-glossary.md` - deeper term table with code refs.
+- `server/src/__tests__/` - unit + integration + route tests.
 
 ## Confusables
 
@@ -109,7 +109,7 @@ dive wins; fix this file.
 ## Contributing pointers
 
 - One change per PR; keep `npm test` green; add a test with the fix.
-- Never invent provider limits, model ids, or endpoints — verify
+- Never invent provider limits, model ids, or endpoints - verify
   against the provider.
 - Schema changes are file-per-migration under
   `server/src/db/migrations/`; never edit an applied migration.

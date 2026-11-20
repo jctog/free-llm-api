@@ -8,7 +8,7 @@ files:
   - assets/**/*
   - "!**/*.map"
 # Update metadata. With a publish provider configured, electron-builder emits
-# latest.yml / latest-mac.yml next to the installers — the manifest ANY updater
+# latest.yml / latest-mac.yml next to the installers - the manifest ANY updater
 # (electron-updater or otherwise) reads to learn what the newest version is and
 # where to fetch it. Releases up to v0.6.6 shipped installers only, so nothing
 # could tell an installed app that a newer one exists. Uploading stays OFF
@@ -55,7 +55,7 @@ mac:
 # The DMG is the file people actually download, so it is the file macOS
 # quarantines and assesses. electron-builder signs and notarizes the .app inside
 # but leaves the DMG itself unsigned, which leaves `spctl -t install` on the
-# download reporting "no usable signature" — #373's "damaged" report. Signing it
+# download reporting "no usable signature" - #373's "damaged" report. Signing it
 # here is also what makes it *eligible* for notarization; the release workflow
 # submits and staples it afterwards. This runs before the blockmap and
 # latest-mac.yml are computed, so those describe the signed file.
@@ -90,7 +90,7 @@ linux:
 nsis:
   # electron-builder's default NSIS name has spaces ("FreeLLMAPI Setup x.y.z.exe")
   # and latest.yml records it with dashes, while GitHub stores the upload with
-  # dots — so the updater asked for a file the release did not have. A name with
+  # dots - so the updater asked for a file the release did not have. A name with
   # no spaces is the same string in all three places.
   artifactName: "${productName}-Setup-${version}.${ext}"
   oneClick: true

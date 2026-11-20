@@ -52,7 +52,7 @@ Windows PowerShell variant and a curl one-liner bootstrap live in [docs/en/insta
 docker compose logs -f freellmapi
 ```
 
-Open http://localhost:3001, add provider keys on the **Keys** page, and grab your unified API key from that page's header — that key is what your OpenAI SDK points at.
+Open http://localhost:3001, add provider keys on the **Keys** page, and grab your unified API key from that page's header - that key is what your OpenAI SDK points at.
 
 ## Ports & LAN access
 
@@ -62,13 +62,13 @@ The compose file publishes `"${HOST_BIND:-127.0.0.1}:${PORT:-3001}:3001"`. By de
 HOST_BIND=0.0.0.0 docker compose up -d
 ```
 
-Only do this on a trusted network — the proxy is single-user and guarded only by the unified API key.
+Only do this on a trusted network - the proxy is single-user and guarded only by the unified API key.
 
 ## Volumes & persistence
 
 SQLite data lives in the named volume `freellmapi-data`, mounted at `/app/server/data`. Keep the same `.env` `ENCRYPTION_KEY` and the same volume when upgrading, because provider keys are encrypted at rest. If your host only persists one specific directory, point the database there with `FREEAPI_DB_PATH=/that/path/freellmapi.db`.
 
-The Dockerfile declares **no** `VOLUME` for `/app/server/data` on purpose. Persistence is the deployment's job — the compose file maps the named volume there, and plain `docker run` takes `-v`. Declaring it in the image instead would create an ANONYMOUS volume on every container that doesn't override it: PaaS runtimes that build from the Dockerfile (Railway, Render, Coolify, Dokploy, CapRover) would then either refuse the image or silently hand each redeploy a fresh empty volume, and the declaration would also shadow a bind mount made at the same path.
+The Dockerfile declares **no** `VOLUME` for `/app/server/data` on purpose. Persistence is the deployment's job - the compose file maps the named volume there, and plain `docker run` takes `-v`. Declaring it in the image instead would create an ANONYMOUS volume on every container that doesn't override it: PaaS runtimes that build from the Dockerfile (Railway, Render, Coolify, Dokploy, CapRover) would then either refuse the image or silently hand each redeploy a fresh empty volume, and the declaration would also shadow a bind mount made at the same path.
 
 See [02-updates-and-backup.md](02-updates-and-backup.md) for backups of this volume.
 
@@ -89,7 +89,7 @@ The runtime stage switches to `USER node` before `EXPOSE 3001`. The server data 
 
 ## Why better-sqlite3 is compiled from source
 
-`better-sqlite3` is a native module. On slim images without a usable prebuilt binary — notably the `linux/arm64` leg under QEMU — node-gyp compiles it from source, which needs Python and a C++ toolchain. The build stages therefore install `python3 make g++` via apt, and the runtime image copies the already-compiled `node_modules` instead, keeping the shipped image free of build tooling. (This toolchain was added by #143 after builds broke without it.)
+`better-sqlite3` is a native module. On slim images without a usable prebuilt binary - notably the `linux/arm64` leg under QEMU - node-gyp compiles it from source, which needs Python and a C++ toolchain. The build stages therefore install `python3 make g++` via apt, and the runtime image copies the already-compiled `node_modules` instead, keeping the shipped image free of build tooling. (This toolchain was added by #143 after builds broke without it.)
 
 A related packaging subtlety: npm nests some production packages under the workspace instead of hoisting them (`undici` lives at `server/node_modules/undici`). Skipping the `server/node_modules` copy shipped images where the HTTP(S) proxy dispatcher failed to load and every request silently went direct (#550, fixed in c6589ff).
 

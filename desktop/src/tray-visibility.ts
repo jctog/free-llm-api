@@ -1,13 +1,13 @@
 // macOS 26 (Tahoe) gave every user a per-app switch for menu-bar icons in
 // System Settings > Menu Bar. Switching ours off persists
 // `"NSStatusItem VisibleCC Item-0" = 0` in the app's own defaults domain, and
-// from then on `new Tray()` still succeeds — no throw, no log, no crash report
-// — while nothing is drawn. Since the tray is the only entry point into the UI,
+// from then on `new Tray()` still succeeds - no throw, no log, no crash report
+// - while nothing is drawn. Since the tray is the only entry point into the UI,
 // the app is then alive and serving the API with no way to reach it (#807).
 //
 // What does change is where macOS parks the item. Measured on macOS 26.5.2
 // (build 25F84): a real menu-bar item reports {x: 1281, y: 0}, a hidden one
-// {x: 0, y: 1117} — y is the screen height, i.e. off the bottom of the display.
+// {x: 0, y: 1117} - y is the screen height, i.e. off the bottom of the display.
 // The check is written against display bounds rather than a hardcoded y === 0
 // so that a menu bar living on a second display still counts as visible.
 

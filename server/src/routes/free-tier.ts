@@ -56,7 +56,7 @@ interface PoolQuota {
 
 // Which metric best describes a pool's headroom. A 429 or a Retry-After writes
 // a `requests` row with remaining=0, and it is almost always the newest row in
-// the pool — so "latest observation wins" would report a request counter (or a
+// the pool - so "latest observation wins" would report a request counter (or a
 // hard 0) under a column the user reads as tokens. Prefer the metric that
 // actually measures the budget, and fall back only when nothing better exists.
 const METRIC_PREFERENCE: QuotaMetric[] = ['tokens', 'credits', 'neurons', 'requests'];
@@ -106,7 +106,7 @@ function summarizeQuota(rows: ReturnType<typeof getQuotaStateForKeys>): PoolQuot
 freeTierRouter.get('/', (_req: Request, res: Response) => {
   const db = getDb();
 
-  // Only platforms with an enabled key have a free tier to speak of — same
+  // Only platforms with an enabled key have a free tier to speak of - same
   // filter the stacked bar uses for its per-model breakdown.
   const platformSet = new Set(
     (db.prepare('SELECT DISTINCT platform FROM api_keys WHERE enabled = 1').all() as { platform: string }[])
@@ -121,7 +121,7 @@ freeTierRouter.get('/', (_req: Request, res: Response) => {
 
   // Chain membership mirrors /token-usage: the active profile's chain when one
   // is active, the default fallback chain otherwise. `chain_enabled` is only a
-  // marker — a switched-off row still consumes the same provider allowance.
+  // marker - a switched-off row still consumes the same provider allowance.
   const activeProfileId = getActiveProfileId(db);
   const rows = (activeProfileId
     ? db.prepare(`

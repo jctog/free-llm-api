@@ -16,7 +16,7 @@ Sources: [`.env.example`](../../../.env.example) (key lifecycle comments), [`ser
 
 ## The encryption key at a glance
 
-`ENCRYPTION_KEY` is the server-side key for API-key storage. It must be 64 hex characters — a 32-byte AES-256-GCM key. Generate one with:
+`ENCRYPTION_KEY` is the server-side key for API-key storage. It must be 64 hex characters - a 32-byte AES-256-GCM key. Generate one with:
 
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
@@ -30,14 +30,14 @@ A typo'd or short key fails fast with an actionable error instead of being silen
 
 On boot, after the database is initialized, the key is resolved in this order:
 
-1. **`ENCRYPTION_KEY` env var** — always wins when set to a non-placeholder value.
-2. **Key file** — a `.encryption-key` file next to the SQLite database.
-3. **Legacy settings row** — older installs kept the key in a `settings` table row; it is migrated to the file on first boot, then deleted from the table.
-4. **Freshly generated key** — written to the key file (outside production only; see below).
+1. **`ENCRYPTION_KEY` env var** - always wins when set to a non-placeholder value.
+2. **Key file** - a `.encryption-key` file next to the SQLite database.
+3. **Legacy settings row** - older installs kept the key in a `settings` table row; it is migrated to the file on first boot, then deleted from the table.
+4. **Freshly generated key** - written to the key file (outside production only; see below).
 
 ## The dev auto-generated key file
 
-Outside production, `ENCRYPTION_KEY` is optional: when unset, a key is auto-generated and written to a file named `.encryption-key` next to the SQLite database — not inside it — with `0600` permissions. This exists so a fresh clone boots under `npm run dev` without manual setup; otherwise the placeholder in `.env.example` would crash the server on boot, which surfaces in the client as "Can't reach the server".
+Outside production, `ENCRYPTION_KEY` is optional: when unset, a key is auto-generated and written to a file named `.encryption-key` next to the SQLite database - not inside it - with `0600` permissions. This exists so a fresh clone boots under `npm run dev` without manual setup; otherwise the placeholder in `.env.example` would crash the server on boot, which surfaces in the client as "Can't reach the server".
 
 Production still requires an explicit env key: a generated key lives only on the local disk, and silently losing it would make every stored API key undecryptable.
 
@@ -62,7 +62,7 @@ Stored provider keys are encrypted with AES-256-GCM using the resolved key. Cons
 
 ## Data directory hardening (WAL sidecars)
 
-SQLite creates `-wal` and `-shm` sidecar files on the first write and deletes them on the last clean close — so at startup there may be nothing there to chmod, and the files' protection has to come from the directory they live in. FreeLLMAPI therefore restricts the directory holding the database to the owning account before opening the connection (on Windows the ACL is inherited, so hardening first means the database file is born protected rather than spending its first moments with whatever ACL the parent handed down).
+SQLite creates `-wal` and `-shm` sidecar files on the first write and deletes them on the last clean close - so at startup there may be nothing there to chmod, and the files' protection has to come from the directory they live in. FreeLLMAPI therefore restricts the directory holding the database to the owning account before opening the connection (on Windows the ACL is inherited, so hardening first means the database file is born protected rather than spending its first moments with whatever ACL the parent handed down).
 
 Because locking down a directory that is not ours would be a worse outage than the leak it prevents (pointing the DB at `/tmp/freeapi.db` must not chmod `0700` `/tmp`), hardening applies by ownership-by-construction:
 
@@ -73,4 +73,4 @@ An operator pointing `FREEAPI_DB_PATH` at a dedicated pre-existing directory can
 
 ## First-run setup code
 
-The first dashboard account is created through the UI. A browser on the same machine as the server can do this with no extra step. If the server is reachable from other devices, creating that first account also requires a one-time setup code, printed in the server logs at startup while no account exists — this stops a stranger from claiming a freshly exposed install.
+The first dashboard account is created through the UI. A browser on the same machine as the server can do this with no extra step. If the server is reachable from other devices, creating that first account also requires a one-time setup code, printed in the server logs at startup while no account exists - this stops a stranger from claiming a freshly exposed install.

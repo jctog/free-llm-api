@@ -10,8 +10,8 @@ import type { RouteResult } from '../../services/router.js';
  * the loop calls abortInFlight() so a stalled attempt is abandoned instead of
  * only refusing to start the next retry behind it. The surface aborts its
  * composed fetch signal with newHedgeAbortError(); the loop must render
- * timedOut exhaustion, and the provider-health bookkeeping — cooldown, skip
- * entry, logFailure row — depends on WHOSE silence spent the budget: an attempt
+ * timedOut exhaustion, and the provider-health bookkeeping - cooldown, skip
+ * entry, logFailure row - depends on WHOSE silence spent the budget: an attempt
  * handed only the scraps a ladder left is not benched, one that stayed silent
  * for most of the whole budget is.
  */
@@ -50,7 +50,7 @@ function hooks(state: FallbackState, overrides: Record<string, unknown>) {
 }
 
 // An upstream that hangs until the composed signal aborts, then rejects with
-// the marked hedge error — mirrors what a real fetch does when the surface
+// the marked hedge error - mirrors what a real fetch does when the surface
 // aborts its signal via abortInFlight().
 function stalledDispatch(hedgeAbort: AbortController) {
   return async (): Promise<never> => {
@@ -77,7 +77,7 @@ describe('fallback loop time-budget hedging', () => {
     expect(isHedgeAbortError(err)).toBe(true);
     // Must never enter the retryable ladder as a provider failure.
     expect(isRetryableError(err)).toBe(false);
-    // Distinct from the client-disconnect abort — different branch in the loop.
+    // Distinct from the client-disconnect abort - different branch in the loop.
     expect(isClientAbortError(err)).toBe(false);
   });
 
@@ -127,7 +127,7 @@ describe('fallback loop time-budget hedging', () => {
     // Same ladder shape as above: two quick retryable failures let the third
     // attempt start, then the budget expires mid-flight and the hedge abort
     // abandons it. Hedging only arms for attempt > 1 (the first attempt and
-    // the first retry always run — #751).
+    // the first retry always run - #751).
     const dispatch = vi.fn()
       .mockImplementationOnce(async () => {
         await new Promise(r => setTimeout(r, 30));
@@ -149,7 +149,7 @@ describe('fallback loop time-budget hedging', () => {
     await runFallbackLoop(h);
 
     // The two 429s each produced their normal failure bookkeeping (a cooldown
-    // row and a skip entry); the hedge abort must NOT add a third of either —
+    // row and a skip entry); the hedge abort must NOT add a third of either -
     // the budget expiring is not a provider-health signal.
     const cooldowns = getDb().prepare('SELECT COUNT(*) AS n FROM rate_limit_cooldowns').get() as { n: number };
     expect(cooldowns.n).toBe(2);
@@ -163,7 +163,7 @@ describe('fallback loop time-budget hedging', () => {
 
   it('benches the route when one attempt stayed silent for the whole budget', async () => {
     // The production shape behind this branch. Same ladder position as the two
-    // tests above — hedging only arms from the third attempt on (#751) — but
+    // tests above - hedging only arms from the third attempt on (#751) - but
     // here the two failures ahead of it are INSTANT, so the stalled attempt
     // inherits essentially the whole budget and then sends no first byte for
     // all of it. That is a stalled upstream, not a scheduling accident:
@@ -190,7 +190,7 @@ describe('fallback loop time-budget hedging', () => {
 
     await runFallbackLoop(h);
 
-    // Still a timedOut exhaustion — the render is unchanged.
+    // Still a timedOut exhaustion - the render is unchanged.
     expect(h.onExhausted).toHaveBeenCalledTimes(1);
     expect(h.onExhausted.mock.calls[0][1].timedOut).toBe(true);
     // But the stalled route now carries a cooldown and a skip entry of its own,
@@ -220,7 +220,7 @@ describe('fallback loop time-budget hedging', () => {
         throw Object.assign(new Error('fake API error 429: rate limit'), { status: 429 });
       })
       // Third attempt commits immediately, then keeps streaming well past the
-      // 100ms budget — exactly the slow-but-healthy generation that used to be
+      // 100ms budget - exactly the slow-but-healthy generation that used to be
       // truncated at the budget.
       .mockImplementation(async (_route: unknown, _attempt: number, ctx: { disarmHedge: () => void }) => {
         ctx.disarmHedge();

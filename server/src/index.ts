@@ -24,7 +24,7 @@ import { cleanupExpiredCooldowns } from './services/ratelimit.js';
 import { loadCacheFromDb } from './services/cache.js';
 import { installGracefulShutdown } from './lib/graceful-shutdown.js';
 
-// Before any other statement runs, so no provider key can reach stdout — users
+// Before any other statement runs, so no provider key can reach stdout - users
 // paste server output into bug reports. Module scope, not inside main(), so it
 // is active for the whole process lifetime including startup logging.
 installLogRedaction();
@@ -57,8 +57,8 @@ async function main() {
 
   // Cooldowns persist across restarts on purpose, but their expiry is collected
   // lazily (isOnCooldown, per model+key). Rows for routes nothing asks about
-  // again — retired models, deleted keys, a shutdown taken while everything was
-  // benched — would otherwise stay in the table forever and weigh down every
+  // again - retired models, deleted keys, a shutdown taken while everything was
+  // benched - would otherwise stay in the table forever and weigh down every
   // cooldown rollup. One sweep at boot, while the DB is quiet.
   const expiredCooldowns = cleanupExpiredCooldowns();
   if (expiredCooldowns > 0) {
@@ -100,7 +100,7 @@ async function main() {
     startWakeDetect({
       async onWake(event) {
         const idle = Math.round(event.idleMs / 1000);
-        console.log(`[wake] resumed after ~${idle}s (${event.reason}${event.signal ? `:${event.signal}` : ''}) — flushing stale sockets, re-probing keys`);
+        console.log(`[wake] resumed after ~${idle}s (${event.reason}${event.signal ? `:${event.signal}` : ''}) - flushing stale sockets, re-probing keys`);
         flushProxyCache();
         try {
           // Forced: every status predates the sleep, so the recency skip and
@@ -131,11 +131,11 @@ async function main() {
   installGracefulShutdown({ servers: () => servers.filter(s => s.listening), closeDb: () => getDb().close?.() });
   server.on('error', (err: NodeJS.ErrnoException) => {
     // The default '::' bind fails where IPv6 is disabled (kernel
-    // ipv6.disable=1 and the like) — retry IPv4-only rather than dying.
+    // ipv6.disable=1 and the like) - retry IPv4-only rather than dying.
     // Anything else (EADDRINUSE, an explicit HOST that can't bind) keeps the
     // fail-fast posture documented in main().catch below.
     if (!process.env.HOST && (err.code === 'EAFNOSUPPORT' || err.code === 'EADDRNOTAVAIL')) {
-      console.warn('[server] IPv6 unavailable on this host — falling back to 0.0.0.0 (IPv4-only)');
+      console.warn('[server] IPv6 unavailable on this host - falling back to 0.0.0.0 (IPv4-only)');
       const fallback = app.listen(Number(PORT), '0.0.0.0', onReady('0.0.0.0'));
       tuneKeepAlive(fallback);
       servers.push(fallback);
@@ -149,7 +149,7 @@ async function main() {
 main().catch((err) => {
   // A boot failure (e.g. a missing production ENCRYPTION_KEY) must exit
   // non-zero rather than leaving a half-initialized process that never starts
-  // listening — that silent state is what surfaces in the client as
+  // listening - that silent state is what surfaces in the client as
   // "Can't reach the server".
   console.error('\n[server] Failed to start:\n  ' + (err?.message ?? err) + '\n');
   process.exit(1);

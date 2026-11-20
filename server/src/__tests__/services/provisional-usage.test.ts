@@ -15,7 +15,7 @@ import {
  * The check-then-act race: routeRequest is synchronous, but usage is only written
  * after the awaited provider call. Without provisional accounting, N concurrent
  * requests all read the same pre-check, all pass, and collectively overshoot the
- * limit — which is exactly how a free tier gets 429ed by its own client.
+ * limit - which is exactly how a free tier gets 429ed by its own client.
  */
 describe('in-flight leases count against the quota gates', () => {
   let keyId: number;
@@ -78,7 +78,7 @@ describe('in-flight leases count against the quota gates', () => {
 
   it('counts in-flight requests against the provider-wide minute cap', () => {
     process.env.PROVIDER_MINUTE_REQUEST_CAP_NVIDIA = '2';
-    // Different models, one shared account budget — the whole point of that gate.
+    // Different models, one shared account budget - the whole point of that gate.
     acquireLease('nvidia', 'glm-4.7', keyId, 100);
     acquireLease('nvidia', 'minimax-m3', keyId, 100);
     expect(canUseProviderMinute('nvidia', keyId)).toBe(false);

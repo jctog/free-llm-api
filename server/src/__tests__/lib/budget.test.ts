@@ -75,7 +75,7 @@ describe('monthlyBudgetScore', () => {
 
   it('scores rate-limit labels as 0 instead of inflating them (the "40 RPM" bug)', () => {
     // The old per-route copy matched the bare 40 and applied the 'M' unit
-    // from "RPM", scoring 40,000,000 — above every real free-tier budget.
+    // from "RPM", scoring 40,000,000 - above every real free-tier budget.
     expect(score('free · 40 RPM')).toBe(0);
     expect(score('free · 200/hr per IP')).toBe(0);
     expect(score('credits-based')).toBe(0);

@@ -37,7 +37,7 @@ const createSchema = z.object({
   sourceProfileId: z.number().optional(),
   // Start the chain with nothing in it instead of a copy of the whole catalog
   // (#895). The point of a named chain is usually "these three models, in this
-  // order" — starting from 200 rows means deleting 197 of them by hand. An
+  // order" - starting from 200 rows means deleting 197 of them by hand. An
   // empty chain also opts out of the catalog-sync backfill, so it stays as
   // small as the user built it.
   empty: z.boolean().default(false),
@@ -73,7 +73,7 @@ profilesRouter.get('/', (_req: Request, res: Response) => {
   res.json(profiles);
 });
 
-// GET /api/profiles/active — get the currently active profile id
+// GET /api/profiles/active - get the currently active profile id
 profilesRouter.get('/active', (_req: Request, res: Response) => {
   const db = getDb();
   const row = db.prepare(`SELECT value FROM settings WHERE key = 'active_profile_id'`).get() as { value: string } | undefined;
@@ -81,7 +81,7 @@ profilesRouter.get('/active', (_req: Request, res: Response) => {
   res.json({ activeProfileId });
 });
 
-// POST /api/profiles/active — set or clear the active profile
+// POST /api/profiles/active - set or clear the active profile
 profilesRouter.post('/active', (req: Request, res: Response) => {
   const db = getDb();
   const profileId = req.body?.profileId;
@@ -105,7 +105,7 @@ profilesRouter.post('/active', (req: Request, res: Response) => {
   res.json({ activeProfileId: Number(profileId) });
 });
 
-// GET /api/profiles/:id/models — get profile model order
+// GET /api/profiles/:id/models - get profile model order
 profilesRouter.get('/:id/models', (req: Request, res: Response) => {
   const db = getDb();
   const profileId = getId(req);
@@ -203,7 +203,7 @@ function copyFromDefault(db: any, profileId: number) {
   `).run(profileId);
 }
 
-// PUT /api/profiles/:id — update profile metadata
+// PUT /api/profiles/:id - update profile metadata
 profilesRouter.put('/:id', (req: Request, res: Response) => {
   const db = getDb();
   const profileId = getId(req);
@@ -271,7 +271,7 @@ profilesRouter.put('/:id', (req: Request, res: Response) => {
   res.json(updated);
 });
 
-// PUT /api/profiles/:id/reorder — update model order + enabled for a profile
+// PUT /api/profiles/:id/reorder - update model order + enabled for a profile
 const reorderSchema = z.array(z.object({
   modelDbId: z.number(),
   priority: z.number(),
@@ -305,7 +305,7 @@ profilesRouter.put('/:id/reorder', (req: Request, res: Response) => {
   res.json({ success: true });
 });
 
-// POST /api/profiles/:id/reset — reset a profile to fallback baseline
+// POST /api/profiles/:id/reset - reset a profile to fallback baseline
 profilesRouter.post('/:id/reset', (req: Request, res: Response) => {
   const db = getDb();
   const profileId = getId(req);
@@ -344,7 +344,7 @@ profilesRouter.post('/:id/reset', (req: Request, res: Response) => {
   res.json(updated);
 });
 
-// DELETE /api/profiles/:id — delete a profile
+// DELETE /api/profiles/:id - delete a profile
 profilesRouter.delete('/:id', (req: Request, res: Response) => {
   const db = getDb();
   const profileId = getId(req);
@@ -380,7 +380,7 @@ profilesRouter.delete('/:id', (req: Request, res: Response) => {
   res.json({ success: true });
 });
 
-// POST /api/profiles/:id/sort/:preset — sort models in a profile by a preset
+// POST /api/profiles/:id/sort/:preset - sort models in a profile by a preset
 const SORT_PRESETS: Record<string, string> = {
   intelligence: 'm.intelligence_rank ASC',
   speed: 'm.speed_rank ASC',

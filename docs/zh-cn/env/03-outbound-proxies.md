@@ -53,7 +53,7 @@ NO_PROXY=localhost,127.0.0.1,.internal.corp
 
 ## Docker：`127.0.0.1` 指的是容器
 
-在容器内部，`127.0.0.1` 是容器自己——不是你的机器（#733）。如果你的代理客户端跑在宿主机上（Clash、v2rayN、sing-box 或公司代理），需要两处调整：
+在容器内部，`127.0.0.1` 是容器自己--不是你的机器（#733）。如果你的代理客户端跑在宿主机上（Clash、v2rayN、sing-box 或公司代理），需要两处调整：
 
 1. 让 FreeLLMAPI 指向宿主机的地址而不是环回地址：
 
@@ -70,7 +70,7 @@ extra_hosts:
   - "host.docker.internal:host-gateway"
 ```
 
-另一种与此无关、却同样会让容器失联而宿主机安然无恙的情况：在纯 IPv6 的宿主机上，默认桥接网络只有 IPv4，于是容器什么都够不着——DNS 也一样。在 `/etc/docker/daemon.json` 里启用 IPv6（`"ipv6": true`、`"ip6tables": true`，以及一段 `"fixed-cidr-v6"` 网段）并重启 Docker。
+另一种与此无关、却同样会让容器失联而宿主机安然无恙的情况：在纯 IPv6 的宿主机上，默认桥接网络只有 IPv4，于是容器什么都够不着--DNS 也一样。在 `/etc/docker/daemon.json` 里启用 IPv6（`"ipv6": true`、`"ip6tables": true`，以及一段 `"fixed-cidr-v6"` 网段）并重启 Docker。
 
 想分辨自己撞上的是哪种情况，直接问容器本身：
 
@@ -85,6 +85,6 @@ docker compose exec freellmapi node -e "fetch('https://generativelanguage.google
 | 变量 | 默认值 | 用途 |
 | --- | --- | --- |
 | `PROXY_RATE_LIMIT_RPM` | `120` | 每个客户端 IP 每分钟可发送的 `/v1` 代理请求上限。`0` 关闭。 |
-| `ADMIN_RATE_LIMIT_RPM` | `600` | 每个客户端 IP 每分钟可发送的 `/api` 仪表盘请求上限——一道防洪水闸；登录有自己的按邮箱锁定机制，密钥导出则有自己严格得多的上限。`0` 关闭。 |
+| `ADMIN_RATE_LIMIT_RPM` | `600` | 每个客户端 IP 每分钟可发送的 `/api` 仪表盘请求上限--一道防洪水闸；登录有自己的按邮箱锁定机制，密钥导出则有自己严格得多的上限。`0` 关闭。 |
 
 完整描述见 [01-variables.md](01-variables.md#限流)。

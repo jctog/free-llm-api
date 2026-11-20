@@ -131,7 +131,7 @@ describe('relativeTime', () => {
 })
 
 // The tests run in the default node environment (no jsdom), so localStorage is
-// stubbed by hand — enough of it for the three calls the helpers make.
+// stubbed by hand - enough of it for the three calls the helpers make.
 function stubStorage(): Map<string, string> {
   const store = new Map<string, string>()
   vi.stubGlobal('localStorage', {

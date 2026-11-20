@@ -5,7 +5,7 @@ import { initDb, getDb, getSetting } from '../../db/index.js';
 import { mintDashboardToken } from '../helpers/auth.js';
 import { PROVIDER_MOMENT_ATTRIBUTION_KEY } from '../../services/router.js';
 
-// #1347 (PR 1): GET/PUT /api/settings/provider-moment-attribution — the
+// #1347 (PR 1): GET/PUT /api/settings/provider-moment-attribution - the
 // dashboard toggle for rate-limit-aware failure attribution. Off by default;
 // the ROUTER_PROVIDER_MOMENT_ATTRIBUTION env var pins the behaviour.
 async function request(app: Express, method: string, path: string, body: any, token: string) {

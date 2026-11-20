@@ -1,6 +1,6 @@
 **English** · [简体中文](../../zh-cn/troubleshooting/OVERVIEW.md)
 
-# Troubleshooting Domain — Overview & File Index
+# Troubleshooting Domain - Overview & File Index
 
 ## Scope
 

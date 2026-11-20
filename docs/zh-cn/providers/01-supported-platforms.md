@@ -6,9 +6,9 @@
 
 - **39 个内置平台**，启动时注册为适配器；
 - 加上 **`custom`** 占位（一个按 API 密钥逐个构建的真实 OpenAI 兼容适配器，因为它的 base URL 由用户提供），注册表共 **40 个条目**；
-- 再加 **`sambanova`**——保留在类型联合中但不再注册：它在 V23（2026 年 6 月）被移除，当时它的免费额度被永久收回（一次性 $5 试用额度用完后，每次聊天调用都返回 402「需要绑定支付方式」）。
+- 再加 **`sambanova`**--保留在类型联合中但不再注册：它在 V23（2026 年 6 月）被移除，当时它的免费额度被永久收回（一次性 $5 试用额度用完后，每次聊天调用都返回 402「需要绑定支付方式」）。
 
-39 个内置平台中，**7 个使用专属原生适配器**，**32 个搭载 `OpenAICompatProvider`** 对着各自提供方专属的 base URL。三个平台以免密钥方式注册（`kilo`、`ovh`，以及 `aihorde`——它用文档记载的匿名哨兵密钥自动配置）。README 里的公开目录招牌数字约为 29 家免费提供方 / 251 个模型系列 / 358 个免费端点——比联合类型少，因为若干已注册的网关把免费名册放在托管目录里维护，而不是随每个二进制一起发布。
+39 个内置平台中，**7 个使用专属原生适配器**，**32 个搭载 `OpenAICompatProvider`** 对着各自提供方专属的 base URL。三个平台以免密钥方式注册（`kilo`、`ovh`，以及 `aihorde`--它用文档记载的匿名哨兵密钥自动配置）。README 里的公开目录招牌数字约为 29 家免费提供方 / 251 个模型系列 / 358 个免费端点--比联合类型少，因为若干已注册的网关把免费名册放在托管目录里维护，而不是随每个二进制一起发布。
 
 ## 目录
 
@@ -37,7 +37,7 @@
 | `reka` | Reka | 带密钥 | OpenAI 兼容 | 自 2026-09 起新账号不再免费：需预付额度（#1202）。仍有余额的账号可继续使用；余额只在仪表盘可见。 |
 | `siliconflow` | SiliconFlow | 带密钥 | OpenAI 兼容 | 主要为 FREE 生成媒体模型而注册（FLUX.1-schnell 图像、CosyVoice2 TTS），经由 `services/media.ts` 路由。 |
 | `routeway` | Routeway | 带密钥 | OpenAI 兼容 | 要求浏览器风格的 User-Agent（Cloudflare 对其他值报错误 1010）；实测免费池约 5 rpm，比文档写的 20 rpm / 200 rpd 更严。 |
-| `bazaarlink` | BazaarLink | 带密钥 | OpenAI 兼容 | 只有 `auto:free` 路由进了目录——直接指定模型 id 是付费的（#385）。 |
+| `bazaarlink` | BazaarLink | 带密钥 | OpenAI 兼容 | 只有 `auto:free` 路由进了目录--直接指定模型 id 是付费的（#385）。 |
 | `ainative` | AINative Studio | 带密钥 | OpenAI 兼容 | 宣称每月循环约 1000 万词元的免费配额；在真实账号确认之前按未核实处理。 |
 | `aion` | Aion Labs | 带密钥 | OpenAI 兼容 | 无需信用卡的免费密钥；可用性在 30 天观察期之后交由目录管理。 |
 | `requesty` | Requesty | 带密钥 | OpenAI 兼容 | 路由端点位于 `router.requesty.ai/v1`；免费行随月度目录逐步纳入；免费档为所有免费模型共享每天 200 次请求。 |
@@ -50,7 +50,7 @@
 | `modelscope` | ModelScope (Alibaba) | 带密钥 | 原生（`ModelScopeProvider`） | 调用需要绑定完成实名的阿里云中国站账号；`GET /v1/models` 接受任意垃圾令牌，所以校验采用单词元聊天探测；退役模型以 429「余额不足」回应（#581）。 |
 | `qianfan` | Baidu Qianfan | 带密钥 | OpenAI 兼容 | ERNIE-Speed/Lite/Tiny 以按量计费封顶于限流规则的方式长期免费；需要中国实名认证（#936）。 |
 | `volcengine` | Volcengine Ark (ByteDance) | 带密钥 | OpenAI 兼容 | 个人开发者在一次性 50 万词元新用户赠金之外，还有每模型每日 200 万词元的循环奖励额度；需要实名认证（#936）。 |
-| `longcat` | LongCat (Meituan) | 带密钥 | OpenAI 兼容 | 每日免费额度；是中国提供方中的例外——中国大陆之外也能用邮箱注册。同时在 `/anthropic` 提供 Anthropic 线上格式（此处未使用）（#936）。 |
+| `longcat` | LongCat (Meituan) | 带密钥 | OpenAI 兼容 | 每日免费额度；是中国提供方中的例外--中国大陆之外也能用邮箱注册。同时在 `/anthropic` 提供 Anthropic 线上格式（此处未使用）（#936）。 |
 | `xfyun` | iFlytek Spark | 带密钥 | OpenAI 兼容 | 鉴权是把控制台的 APIPassword 当作 Bearer 令牌使用；Lite 是文档记载的免费模型；未公布词元/QPS 上限（#936）。 |
 | `aihorde` | AI Horde | 免密钥（匿名哨兵 `0000000000`；注册密钥可提升队列优先级） | 原生（`AIHordeProvider`） | 社区志愿算力经队列代理接入：max_tokens >= 16、stop 必须是数组、不支持工具、用量以 kudos 计、120s 超时、无上游流式（#345）。 |
 | `custom` | 自定义（OpenAI 兼容） | 用户提供的 base URL 存于各 `api_keys` 行 | 经 `resolveProvider()` 按密钥构建的 OpenAI 兼容适配器 | 注册占位让 `getProvider('custom')`/`hasProvider('custom')` 行为良好；为缓慢的本地运行时（llama.cpp、vLLM、LM Studio）设 120s 超时（#145）。 |

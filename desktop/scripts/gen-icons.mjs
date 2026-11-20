@@ -1,5 +1,5 @@
 // Generates the desktop icons from the brand mark (client/public/favicon.svg
-// design: dot inside a broken routing ring) without any image dependencies —
+// design: dot inside a broken routing ring) without any image dependencies -
 // pure-Node PNG encoding (zlib IDAT + hand-rolled CRC32), 4x supersampled.
 //
 // Outputs:

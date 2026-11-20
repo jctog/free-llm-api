@@ -6,7 +6,7 @@ import { Tooltip } from '@/components/tooltip'
 
 // Minimum reliability floor (#filter): drop models whose observed success rate
 // falls below this decimal from routing. Independent of the routing-strategy
-// snapshot — it lives in settings, so it has its own query + mutation.
+// snapshot - it lives in settings, so it has its own query + mutation.
 async function fetchFloor(): Promise<number | null> {
   const data = await apiFetch<{ floor: number | null }>('/api/settings/min-reliability-floor')
   return data.floor

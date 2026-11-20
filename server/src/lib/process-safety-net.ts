@@ -4,8 +4,8 @@
 // The failure this guards against: undici resolves `fetch()` and we move on, but
 // the underlying HTTP/2 / TLS socket is later reset by a CDN edge (CloudFront,
 // Cloudflare) AFTER the response was handed off. undici emits that late error on
-// a stream with no listener, Node escalates it to an `uncaughtException`, and —
-// with no handler installed — the whole proxy exits 1. For a gateway whose entire
+// a stream with no listener, Node escalates it to an `uncaughtException`, and -
+// with no handler installed - the whole proxy exits 1. For a gateway whose entire
 // job is uptime in front of flaky free-tier providers, a third party closing a
 // socket must never take the process down.
 //
@@ -89,7 +89,7 @@ export function handleProcessError(
   const decision = classifyProcessError(err);
   // A write that hit a closed pipe is swallowed WITHOUT logging: when the pipe
   // is our own stdout/stderr, logging it writes to that same dead pipe, which
-  // raises the next EPIPE — and every one of those lines is also persisted to
+  // raises the next EPIPE - and every one of those lines is also persisted to
   // server_logs. That loop ran at thousands of rows a second.
   if (decision === 'swallow' && isBrokenPipeWrite(err)) return 'swallow';
   if (decision === 'swallow') {
@@ -111,8 +111,8 @@ export function isBrokenPipeWrite(err: unknown): boolean {
 const DEAD_STDIO_CODES = new Set(['EPIPE', 'EOF', 'ERR_STREAM_DESTROYED']);
 
 /**
- * Give stdout/stderr an 'error' listener. Without one, a stream error — the
- * terminal closed, or the process that started us with piped output exited —
+ * Give stdout/stderr an 'error' listener. Without one, a stream error - the
+ * terminal closed, or the process that started us with piped output exited -
  * is escalated to an uncaughtException on every later console write. A dead
  * console is not a reason to crash or to log, so those codes are dropped and
  * anything else is rethrown to keep the fail-fast contract.

@@ -107,7 +107,7 @@ describe('speed scoring: timeouts count against speed (#619)', () => {
     });
 
     refreshStatsCache(getDb(), true);
-    // Not the optimistic no-data prior (0.6) — it timed out every single time.
+    // Not the optimistic no-data prior (0.6) - it timed out every single time.
     expect(speedOf('dead')).toBeLessThan(0.05);
   });
 
@@ -145,7 +145,7 @@ describe('speed scoring: timeouts count against speed (#619)', () => {
     expect(refusing.reliability).toBeLessThan(fast.reliability);
   });
 
-  it("a 'canceled' row (#752 — client hung up) affects neither speed nor reliability", () => {
+  it("a 'canceled' row (#752 - client hung up) affects neither speed nor reliability", () => {
     addModel({ platform: 'google', modelId: 'steady', name: 'Steady', priority: 1 });
     addModel({ platform: 'groq', modelId: 'hungup', name: 'HungUp', priority: 2 });
     for (const [platform, modelId] of [['google', 'steady'], ['groq', 'hungup']] as const) {
@@ -246,7 +246,7 @@ describe('observed speed_rank writeback (#619)', () => {
     expect(speedRankOf('google', 'renamed')).toBe(1);
   });
 
-  it('is idempotent — a second pass writes nothing', () => {
+  it('is idempotent - a second pass writes nothing', () => {
     addModel({ platform: 'google', modelId: 'steady', name: 'Steady', speedRank: 9 });
     addRequests('google', 'steady', { count: 40, status: 'success', outTokens: 4000, latencyMs: 1000, ttfbMs: 100 });
 

@@ -66,8 +66,8 @@ context windows.
 
 The root-vs-`/v1` distinction matters: Claude Code expects the server root
 because it appends the Anthropic Messages path. OpenAI-compatible clients in
-this table—including Cline, Aider, Goose, Codex, Continue, OpenCode, Qwen,
-Roo, Kilo, Crush, MiMo Code, AtomCode, OpenClaw, Hermes Agent, Pi, Reasonix, ZCode, QwenPaw, and DeepSeek Harness—expect their configured
+this table-including Cline, Aider, Goose, Codex, Continue, OpenCode, Qwen,
+Roo, Kilo, Crush, MiMo Code, AtomCode, OpenClaw, Hermes Agent, Pi, Reasonix, ZCode, QwenPaw, and DeepSeek Harness-expect their configured
 base URL to include `/v1`.
 
 ### DeepSeek Harness (`dsh`)
@@ -75,9 +75,9 @@ base URL to include `/v1`.
 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) keeps
 every provider as a route under `llm-pi-ai.providers` in
 `$DSH_HOME/settings.yaml` (`~/.dsh` by default). `setup-dsh` adds a
-`freellmapi` route there — `api: openai-completions`, the gateway's `/v1`
+`freellmapi` route there - `api: openai-completions`, the gateway's `/v1`
 base URL, and the live catalog as the route's `models` list, which DSH
-requires for a provider its installed catalog does not ship — and makes
+requires for a provider its installed catalog does not ship - and makes
 `freellmapi/auto` the default model. The key goes into `$DSH_HOME/.env`
 (mode 0600) as `FREELLMAPI_API_KEY`, the environment layer DSH reads on its
 own, so nothing needs exporting. Both writes are structural merges: other
@@ -91,13 +91,13 @@ npx @deepseek-ai/dsh web
 Settings are hot-reloaded, so a running `dsh` uses the route on its next
 request. `--profile <name>` adds a second route (`freellmapi-<name>`) without
 changing the default model; `--model <id>` pins the default. Routes are
-declared text-only — add `input: [text, image]` to a model entry under
+declared text-only - add `input: [text, image]` to a model entry under
 `freellmapi.models` to send it images. `DSH_HOME` is honoured when set.
 
 ### MiMo Code (`mimo`)
 
 [MiMo Code](https://mimo.xiaomi.com/mimocode) is an OpenCode derivative, so it
-takes any OpenAI-compatible endpoint as a custom entry under `provider` — an
+takes any OpenAI-compatible endpoint as a custom entry under `provider` - an
 `npm` package to speak with (`@ai-sdk/openai-compatible`), the credentials in
 `options`, and a `models` map. `setup-mimo` writes that entry as `freellmapi`
 and names `freellmapi/<model>` as the default `model`.
@@ -129,9 +129,9 @@ requires, both taken from the live catalog.
 coding agent, written in Rust. It reads `~/.atomcode/config.toml`, where a
 root `default_provider` key names one `[providers.<id>]` table and
 `type = "openai"` makes that table speak the OpenAI-compatible wire.
-`setup-atomcode` writes a `[providers.freellmapi]` table — `base_url` on the
+`setup-atomcode` writes a `[providers.freellmapi]` table - `base_url` on the
 gateway's `/v1`, the unified key as `api_key`, the chosen model and its
-`context_window` from the live catalog — and sets `default_provider` to it.
+`context_window` from the live catalog - and sets `default_provider` to it.
 The write is a structural merge: the root key is placed above any existing
 tables, only the `freellmapi` table is replaced, and other `[providers.*]`
 tables and settings in the file are left as they were.
@@ -153,9 +153,9 @@ that answers on WhatsApp, Telegram, Discord and the other channels its
 gateway connects to. It reads one JSON5 document, `~/.openclaw/openclaw.json`,
 and every model endpoint is an entry under `models.providers`; a provider its
 bundled catalog does not know must spell out `baseUrl`, `api` and a non-empty
-`models` list. `setup-openclaw` writes a `freellmapi` provider there —
+`models` list. `setup-openclaw` writes a `freellmapi` provider there -
 `api: openai-completions`, the gateway's `/v1` base URL, the live catalog as
-its `models` list — and makes `freellmapi/auto` the default model under
+its `models` list - and makes `freellmapi/auto` the default model under
 `agents.defaults.model.primary`. The key is referenced as
 `${FREELLMAPI_API_KEY}`, OpenClaw's own substitution, and the value goes into
 `~/.openclaw/.env` (mode 0600), the global env file OpenClaw loads on its own,
@@ -173,7 +173,7 @@ A running `openclaw gateway` needs a restart to pick the change up.
 `--profile <name>` adds a second provider (`freellmapi-<name>`) without
 changing the default model; `--model <id>` pins the default. OpenClaw sends a
 bare SDK user agent to custom endpoints, so the provider carries a static
-`User-Agent: openclaw` header — that is what lights the "seen recently" badge
+`User-Agent: openclaw` header - that is what lights the "seen recently" badge
 on the Agents page. Models are declared text-only; add `input: ["text",
 "image"]` to a model entry under `models.providers.freellmapi.models` to send
 it images. `OPENCLAW_CONFIG_PATH`, `OPENCLAW_STATE_DIR` and `OPENCLAW_HOME` are
@@ -187,9 +187,9 @@ and the other messengers its gateway serves. `~/.hermes/config.yaml` is its
 single source of truth for the endpoint: `OPENAI_BASE_URL` is ignored for
 anything but api.openai.com and `OPENAI_API_KEY` is only sent to OpenAI hosts,
 so a custom endpoint has to be declared in the `model` block. `setup-hermes`
-writes that block — `provider: custom`, `api_mode: chat_completions`, the
+writes that block - `provider: custom`, `api_mode: chat_completions`, the
 gateway's `/v1` as `base_url`, the chosen model as `default` with its
-`context_length` from the live catalog — and references the key as
+`context_length` from the live catalog - and references the key as
 `api_key: "${FREELLMAPI_API_KEY}"`, Hermes's own substitution, with the value
 in `~/.hermes/.env` (mode 0600), which Hermes loads on its own. A fresh
 install ships `model: ""`, the "not configured" sentinel; replacing it is
@@ -203,8 +203,8 @@ hermes -z "Say hello"
 ```
 
 A running `hermes gateway` needs a restart to pick the change up.
-`--profile <name>` adds a `providers.freellmapi-<name>` entry instead —
-picked inside a chat with `/model custom:freellmapi-<name>:auto` — and leaves
+`--profile <name>` adds a `providers.freellmapi-<name>` entry instead -
+picked inside a chat with `/model custom:freellmapi-<name>:auto` - and leaves
 the default model alone; `--model <id>` pins the default. Hermes sends a bare
 SDK user agent to custom endpoints, so the block carries
 `default_headers: { User-Agent: hermes-agent }`, which is what the Agents
@@ -215,9 +215,9 @@ page's "seen recently" badge keys on. `HERMES_HOME` is honoured when set.
 [Pi](https://pi.dev) is a minimal terminal agent harness you extend with your
 own extensions, skills and prompt templates. Endpoints it does not ship are
 provider entries in `~/.pi/agent/models.json`. `setup-pi` adds a `freellmapi`
-provider there — `api: openai-completions`, the gateway's `/v1` as `baseUrl`,
+provider there - `api: openai-completions`, the gateway's `/v1` as `baseUrl`,
 and every model in the live catalog with its context window, the chosen model
-first — then sets `defaultProvider` and `defaultModel` in
+first - then sets `defaultProvider` and `defaultModel` in
 `~/.pi/agent/settings.json` so a fresh `pi` starts on it. Pi does not load a
 `.env` file of its own, so the key is written into `models.json`, which is
 created with mode 0600. Other providers and settings in both files are left
@@ -245,8 +245,8 @@ is what the Agents page's "seen recently" badge keys on.
 terminal coding agent built around prefix-cache stability. Every endpoint is a
 `[[providers]]` entry in `~/.reasonix/config.toml` (`%APPDATA%\reasonix` on
 Windows, `$REASONIX_HOME` when set). `setup-reasonix` adds one named
-`freellmapi` — `kind = "openai"`, the gateway's `/v1` as `base_url`, and every
-model in the live catalog, the chosen model first — and points `default_model`
+`freellmapi` - `kind = "openai"`, the gateway's `/v1` as `base_url`, and every
+model in the live catalog, the chosen model first - and points `default_model`
 at `freellmapi/<model>`. The entry names its key with
 `api_key_env = "FREELLMAPI_API_KEY"`; the value goes to `~/.reasonix/.env`
 (0600), which Reasonix loads itself, so nothing needs exporting. Your other
@@ -349,7 +349,7 @@ Ollama emulation is off by default. Enable one of these modes on
   `127.0.0.1`/`::1`; enabling desktop LAN access does not widen it.
   **Docker note:** inside a container the socket peer is the Docker bridge
   IP, not loopback, so this mode refuses even host-local traffic through a
-  published port — use `key-required` for Docker deployments.
+  published port - use `key-required` for Docker deployments.
 - `key-required`: clients must send `Authorization: Bearer <unified-key>`.
 
 The exact endpoints are `/api/tags`, `/api/chat`, `/api/generate`, `/api/show`,

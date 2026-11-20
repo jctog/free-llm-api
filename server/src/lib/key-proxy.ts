@@ -2,7 +2,7 @@ import { encrypt, decrypt } from './crypto.js';
 import { PROXY_SCHEMES } from './proxy.js';
 
 /**
- * Per-key proxy override (#590) — storage and presentation helpers.
+ * Per-key proxy override (#590) - storage and presentation helpers.
  *
  * A proxy URL routinely carries `user:pass@` credentials, so it is stored the
  * same way the API key on that row is: AES-256-GCM ciphertext + iv + auth tag
@@ -23,7 +23,7 @@ const SCHEME_LIST = 'http, https, socks4, socks4a, socks5 or socks5h';
 export const KEY_PROXY_URL_ERROR =
   `proxyUrl must be a valid proxy URL using ${SCHEME_LIST} (e.g. socks5://user:pass@host:1080), or '' to clear it`;
 
-/** Longest proxy URL accepted — generous for credentials, bounded for the DB. */
+/** Longest proxy URL accepted - generous for credentials, bounded for the DB. */
 export const KEY_PROXY_URL_MAX = 2048;
 
 /**
@@ -62,20 +62,20 @@ export function encryptProxyUrl(url: string): { encrypted: string | null; iv: st
  * Read a per-key proxy URL back off a row. Returns '' for "no override" and
  * also for a row that cannot be decrypted (a DB carried over to a different
  * ENCRYPTION_KEY): a failed decrypt must degrade to the global proxy, never
- * take the request down — the key itself fails loudly on the same row anyway.
+ * take the request down - the key itself fails loudly on the same row anyway.
  */
 export function decryptProxyUrl(row: Partial<EncryptedProxyColumns> | undefined | null): string {
   if (!row?.proxy_encrypted || !row.proxy_iv || !row.proxy_auth_tag) return '';
   try {
     return decrypt(row.proxy_encrypted, row.proxy_iv, row.proxy_auth_tag).trim();
   } catch {
-    console.warn('[proxy] A key\'s proxy override could not be decrypted — falling back to the global proxy.');
+    console.warn('[proxy] A key\'s proxy override could not be decrypted - falling back to the global proxy.');
     return '';
   }
 }
 
 /**
- * Render a proxy URL for the dashboard with any embedded password removed —
+ * Render a proxy URL for the dashboard with any embedded password removed -
  * the counterpart of maskKey() for this field. The username stays visible
  * (it identifies the account without being the secret):
  *   socks5://alice:hunter2@proxy.internal:1080 → socks5://alice:***@proxy.internal:1080

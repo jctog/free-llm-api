@@ -1,6 +1,6 @@
 [English](../../en/architecture/05-catalog-sync.md) · **简体中文**
 
-# 目录同步 —— 深度剖析
+# 目录同步 -- 深度剖析
 
 > **源码：** `server/src/services/catalog-sync.ts`、`server/src/services/model-state.ts`、`server/src/db/migrations/`
 
@@ -15,7 +15,7 @@
 | **Live** | 付费授权持有者 | 2–3 天 | Bearer `premium_license_key` |
 | **Monthly** | 免费安装 | ~30 天 | 无（公开） |
 
-免费安装仍能自愈，只是节奏慢。**打包迁移仍是基线**——抓到的目录只有在**比 `MIN_CATALOG_VERSION` 新**（每次模型迁移都会推这个版本）时才应用，所以陈旧的月度快照永远回滚不了更新版本加进来的模型。
+免费安装仍能自愈，只是节奏慢。**打包迁移仍是基线**--抓到的目录只有在**比 `MIN_CATALOG_VERSION` 新**（每次模型迁移都会推这个版本）时才应用，所以陈旧的月度快照永远回滚不了更新版本加进来的模型。
 
 ---
 
@@ -42,7 +42,7 @@ interface Catalog {
 | `intelligenceRank` | 1..1000（1 = 最强），提供方内部 |
 | `speedRank` | 1..11（目录手分，1 = 最快） |
 | `sizeLabel` | `Frontier` \| `Large` \| `Medium` \| `Small`（跨提供方层级） |
-| `limits` | `{rpm, rpd, tpm, tpd}` —— 按模型上限 |
+| `limits` | `{rpm, rpd, tpm, tpd}` -- 按模型上限 |
 | `monthlyTokenBudget` | 字符串标签（如 `"1M"`、`"2x"`）供余量护栏 |
 | `contextWindow` | 最大上下文（词元） |
 | `enabled` | 目录级启用（false 则强制禁用） |
@@ -88,18 +88,18 @@ const verified = crypto.verify(null, bytes, catalogPublicKey(), Buffer.from(sign
 | 元数据（名、秩、限额、上下文、能力） | 跟目录走，**除非**用户有显式本地覆盖 |
 | `enabled: false` | **强制禁用**（模型上游已死） |
 | `enabled: true` | **永不重启用**用户关掉的模型 |
-| 用户建行（`source = 'user'`） | **永不更新、永不删除、永不收养** —— `platform:model_id` 撞车时用户行胜、目录条目跳过 |
+| 用户建行（`source = 'user'`） | **永不更新、永不删除、永不收养** -- `platform:model_id` 撞车时用户行胜、目录条目跳过 |
 | 用户删过的目录模型 | 经**墓碑**（`catalog_model_tombstones` 表）保持删除 |
-| 自动退役（410/寿终） | **禁用、不删** —— 目录里再出现 enabled 就解除退役（#634） |
+| 自动退役（410/寿终） | **禁用、不删** -- 目录里再出现 enabled 就解除退役（#634） |
 | 目录里消失的模型 | **删除**（先 fallback_config、FK 顺序） |
 
 ### 来源列（`source`）
 
 替代旧 `size_label NOT IN ('User','Custom')` 启发式。取值：
 
-- `'catalog'` —— 目录同步建的
-- `'user'` —— 声明式配置、管理员添加、自定义端点
-- `'declarative'` —— 来自声明式配置文件
+- `'catalog'` -- 目录同步建的
+- `'user'` -- 声明式配置、管理员添加、自定义端点
+- `'declarative'` -- 来自声明式配置文件
 
 ---
 
@@ -153,7 +153,7 @@ interface LicenseStatus {
 ```
 
 - 缓存在设置里（`premium_license_status`），每次同步刷新。
-- 权利**服务端**在 `/v1/latest` 强制——本地缓存只是 UI 用的信息态。
+- 权利**服务端**在 `/v1/latest` 强制--本地缓存只是 UI 用的信息态。
 - 离线/服务挂了 → 保留缓存状态。
 
 ---
@@ -274,7 +274,7 @@ startCatalogSync(scheduler: Scheduler)
 | HTTP 304 | `up_to_date`、更新 `last_sync_ms` |
 | HTTP 非 2xx | 错误、保留上一版目录 |
 | 缺签名 | 丢弃、报错 |
-| 签名验证**失败** | 丢弃、**大声报错** —— "catalog signature verification FAILED — discarding response" |
+| 签名验证**失败** | 丢弃、**大声报错** -- "catalog signature verification FAILED - discarding response" |
 | 无效 JSON / 结构 | 丢弃、报错 |
 | 版本老于基线 | `skipped_older`、等更新版目录 |
 | 应用时 DB 不可用 | 事务回滚、报错、保留上一状态 |

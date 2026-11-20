@@ -9,7 +9,7 @@ const CATALOG_LAST_SYNC_SETTING = 'catalog_last_sync_ms';
 //
 // Operators who run a relay with several models sometimes want to keep a model
 // around (manual priority may still select it) while making the bandit far less
-// likely to pick it — a slow, poor-quality, or just less-preferred model should
+// likely to pick it - a slow, poor-quality, or just less-preferred model should
 // be demoted without being disabled outright. The routing strategies only offer
 // GLOBAL weight vectors (per-strategy presets or the user's 'custom' vector), so
 // there was no way to single out one model.
@@ -22,7 +22,7 @@ const CATALOG_LAST_SYNC_SETTING = 'catalog_last_sync_ms';
 // The multiplier is applied to a model's bandit score AFTER combineScore:
 //   1.0  → unchanged (explicit no-op)
 //   <1.0 → demoted (0.0 is the extreme: never picked by the bandit, but a
-//          manual 'priority' chain can still route to it — "not disabled")
+//          manual 'priority' chain can still route to it - "not disabled")
 //   >1.0 → promoted
 // Out-of-range (negative, >2) or non-finite values are dropped, never applied;
 // an empty or malformed variable is ignored entirely. Matching is by model_id
@@ -30,7 +30,7 @@ const CATALOG_LAST_SYNC_SETTING = 'catalog_last_sync_ms';
 //
 // The override is orthogonal to the strategy's weight vector: it multiplies the
 // final score rather than replacing any weight, so it composes with every
-// strategy (except 'priority', which has no score — the bandit branch only).
+// strategy (except 'priority', which has no score - the bandit branch only).
 
 export type ModelWeightOverrides = ReadonlyMap<string, number>;
 
@@ -59,7 +59,7 @@ export function parseModelWeightOverrides(raw: string | undefined): Map<string, 
   return out;
 }
 
-/** The active overrides — parsed lazily from the environment on first use and
+/** The active overrides - parsed lazily from the environment on first use and
  *  cached for the life of the process (the env is fixed at boot). */
 export function getModelWeightOverrides(): ModelWeightOverrides {
   if (cache === null) cache = parseModelWeightOverrides(process.env.MODEL_ROUTING_OVERRIDES);
@@ -90,7 +90,7 @@ export interface RoutingOverrideDrift {
   /** Keys present in the JSON but dropped: not a finite number in [0, 2]. */
   rejectedValues: string[];
   /** Keys that parsed fine but match no model_id in the catalog. Always empty
-   *  when the catalog has not synced yet — see `warnOnRoutingOverrideDrift`. */
+   *  when the catalog has not synced yet - see `warnOnRoutingOverrideDrift`. */
   unknownModels: string[];
 }
 
@@ -98,7 +98,7 @@ export interface RoutingOverrideDrift {
  * Report `MODEL_ROUTING_OVERRIDES` entries that will never do anything.
  *
  * Every rejection path in this module is deliberately silent so a bad variable
- * can never break boot — but silence is the wrong answer for an operator who
+ * can never break boot - but silence is the wrong answer for an operator who
  * has just written one. A typo in a model id, a value of 5, or a stray trailing
  * comma all produce exactly the same observable result as not setting the
  * variable at all: the model keeps its normal score and nothing says why.
@@ -139,7 +139,7 @@ export function warnOnRoutingOverrideDrift(
     drift.malformed = true;
     logger.warn(
       '[config] MODEL_ROUTING_OVERRIDES must be a JSON object mapping model ids to multipliers, '
-      + 'e.g. {"gpt-4o": 0.2} — the current value is being ignored entirely.',
+      + 'e.g. {"gpt-4o": 0.2} - the current value is being ignored entirely.',
     );
     return drift;
   }

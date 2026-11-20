@@ -10,7 +10,7 @@ const CACHE_TTL_MS = 60_000;
 const DEFAULT_MIN_SAMPLES = 5;
 // Logged TTFB runs from request start, so it includes the hops that failed
 // before the endpoint was reached. A widened budget admits later successes,
-// which log a larger TTFB, which widens the budget again — without a ceiling
+// which log a larger TTFB, which widens the budget again - without a ceiling
 // the allowance ratchets up by one buffer per refresh. Cap it at a multiple of
 // the operator's base budget, which stays the declared unit of patience.
 const MAX_BUDGET_MULTIPLIER = 3;

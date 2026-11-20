@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest';
 
 // Characterization tests for the drifts the shared fallback loop
 // (lib/fallback-loop.ts) converged on the Anthropic /v1/messages surface:
-//   - drift #3: exhaustion now uses the shared body — a 400 invalid_request_error
+//   - drift #3: exhaustion now uses the shared body - a 400 invalid_request_error
 //     when every routed provider rejected the request as invalid, not always a
 //     429 rate_limit_error, and the message matches the other surfaces.
 //   - drift #4: the inline tool-call dialect rescue (a model that serialized its
@@ -208,7 +208,7 @@ describe('/v1/messages shared-loop convergence', () => {
     mockRouteRequest
       .mockReturnValueOnce(fakeRoute(streamProvider(async function* () {
         yield chunk({ role: 'assistant' });
-        // Detected-but-unparseable dialect (degraded id token) — must not commit.
+        // Detected-but-unparseable dialect (degraded id token) - must not commit.
         yield chunk({ content: '<|tool_call_begin|> chatcmpl-tool-bde5 <|tool_call_argument_begin|> {"city": "X"}' });
         yield chunk({}, 'stop');
       })))
@@ -225,7 +225,7 @@ describe('/v1/messages shared-loop convergence', () => {
 
     expect(status).toBe(200);
     const events = sseEvents(text);
-    // Exactly one message_start — the first (unparseable) attempt never committed.
+    // Exactly one message_start - the first (unparseable) attempt never committed.
     expect(events.filter(e => e.event === 'message_start')).toHaveLength(1);
     const deltas = events.filter(e => e.event === 'content_block_delta' && e.data.delta?.type === 'text_delta').map(e => e.data.delta.text).join('');
     expect(deltas).toBe('Recovered by the next model.');

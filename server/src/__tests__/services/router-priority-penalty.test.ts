@@ -26,7 +26,7 @@ const ORIGINAL_NODE_ENV = process.env.NODE_ENV;
 
 // Track every model we penalize so afterEach can drain it: the penalty map is
 // module-level state that outlives the in-memory db, and ids restart at 1 for
-// each fresh db — a leaked penalty would land on an unrelated model next test.
+// each fresh db - a leaked penalty would land on an unrelated model next test.
 const penalized: number[] = [];
 
 function penalize(modelDbId: number, hits: number) {
@@ -125,7 +125,7 @@ describe('priority-mode routing penalty under spaced priorities', () => {
 
     penalize(a, 1);  // rank 1 + 3 = 4
     penalize(b, 3);  // rank 2 + 9 = 11
-    // c is unpenalized at rank 3 — the cheapest of the three.
+    // c is unpenalized at rank 3 - the cheapest of the three.
     expect(routeRequest(100).modelId).toBe('c');
   });
 });

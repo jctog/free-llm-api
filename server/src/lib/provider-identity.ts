@@ -5,13 +5,13 @@
 // the operator can no longer tell which endpoint did what (#889).
 //
 // The canonical identity of a custom endpoint is the serving key's `base_url`
-// — custom-endpoint.ts already groups its credential pool by base_url, and the
+// - custom-endpoint.ts already groups its credential pool by base_url, and the
 // router treats every key sharing a base_url as the same endpoint. Grouping by
 // base_url therefore splits one endpoint's pooled keys back into a single row
 // while keeping distinct endpoints apart.
 //
 // These helpers produce the stable id + display name the analytics endpoints
-// attach to each row. They are pure so they can be unit-tested without a DB —
+// attach to each row. They are pure so they can be unit-tested without a DB -
 // module-purity.test.ts enforces that, which is also why they do not import
 // endpoint-scope.ts to normalize their input. The base_url they are handed is
 // expected to ALREADY be the normalized endpoint identity: keys.ts stores it
@@ -21,7 +21,7 @@
 // second one hidden in here.
 
 /**
- * The host (and port) of a custom endpoint's base_url — the short identifier
+ * The host (and port) of a custom endpoint's base_url - the short identifier
  * that actually tells two endpoints apart. Mirrors the default label
  * convention in services/custom-endpoint.ts (`new URL(baseUrl).host`) but
  * returns null instead of a literal when the URL is unparseable, so callers
@@ -52,13 +52,13 @@ export function providerIdFor(platform: string, baseUrl: string | null | undefin
 }
 
 /**
- * The part of a base_url's path that carries identity of its own — '' when the
+ * The part of a base_url's path that carries identity of its own - '' when the
  * path says nothing a second endpoint on the same host would not also say.
  *
  * The root ('/') and a lone API-version segment ('/v1', '/v1beta', '/v2') are
  * trivial: every relay repeats them, so including them would only add noise to
- * the common one-endpoint-per-host case. Anything else — a tenant, a project,
- * a mount point — is exactly what tells two endpoints on one host apart, so it
+ * the common one-endpoint-per-host case. Anything else - a tenant, a project,
+ * a mount point - is exactly what tells two endpoints on one host apart, so it
  * is kept VERBATIM, version suffix included. Trimming the '/v1' off a kept
  * path would make '…/tenant-a' and '…/tenant-a/v1' display the same, which is
  * the collision this exists to prevent.
@@ -83,7 +83,7 @@ function endpointPathLabel(baseUrl: string): string {
  * Host alone is not an identity: a single gateway commonly fronts several
  * endpoints ('https://gw.example.com/tenant-a/v1' and '…/tenant-b/v1'), and
  * naming both of them 'gw.example.com' re-creates the #889 collision one level
- * down — two rows the operator cannot tell apart. Appending the path makes the
+ * down - two rows the operator cannot tell apart. Appending the path makes the
  * name injective on (host, path), while a bare '…/v1' endpoint still reads as
  * the plain host it is.
  *

@@ -83,9 +83,9 @@ X-FreeLLM-Compress: standard; saved~=1840
 
 认证的管理端可用：
 
-- `GET /api/settings/compression` —— 读取生效配置。
-- `PUT /api/settings/compression` —— 更新模式、引擎、限制、信任控制。
-- `POST /api/compression/preview` —— 检查压缩输出和各引擎结果，不影响实时统计。
-- `GET /api/compression/stats` —— 读取滚动聚合和各引擎的节省与保真度闸门丢弃。
+- `GET /api/settings/compression` -- 读取生效配置。
+- `PUT /api/settings/compression` -- 更新模式、引擎、限制、信任控制。
+- `POST /api/compression/preview` -- 检查压缩输出和各引擎结果，不影响实时统计。
+- `GET /api/compression/stats` -- 读取滚动聚合和各引擎的节省与保真度闸门丢弃。
 
 MCP 客户端可用 `compression_stats` 工具读取相同的实时聚合。统计只含计数、耗时、估算节省；请求正文绝不保留。

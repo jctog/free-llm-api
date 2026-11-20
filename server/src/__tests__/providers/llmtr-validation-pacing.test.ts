@@ -8,7 +8,7 @@ import {
 
 // #1369: every key-validation probe is the same nonexistent-model POST, and a
 // burst of them from one IP is the pattern LLMTR's security system reads as
-// automation — an account flagged that way gets suspended. validateKey is the
+// automation - an account flagged that way gets suspended. validateKey is the
 // only door to the network, so pacing there covers every caller: the 5-minute
 // health pass, the forced pass behind the dashboard's "check all" button, the
 // post-wake re-probe, the cooldown-probe job and the 401-triggered revalidation.
@@ -202,7 +202,7 @@ describe('LLMTR key-validation probe pacing', () => {
     expect(warn.mock.calls[0]![0]).toContain(LLMTR_VALIDATION_GAP_ENV);
   });
 
-  it('leaves chat traffic unpaced — real requests must not queue behind probes', async () => {
+  it('leaves chat traffic unpaced - real requests must not queue behind probes', async () => {
     const clock = fakeClock();
     const bodies: any[] = [];
     vi.spyOn(global, 'fetch').mockImplementation(async (_url, init) => {

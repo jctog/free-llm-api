@@ -26,7 +26,7 @@ function checkIdentity(requested: string, returned: unknown): void {
   }
 }
 
-/** https://kiosapi.id/docs — 50 shared free requests/day without a top-up.
+/** https://kiosapi.id/docs - 50 shared free requests/day without a top-up.
  * Catalog-only: no bundled rows or automatic discovery that bypasses tiers. */
 export class KiosAPIProvider extends OpenAICompatProvider {
   constructor() {

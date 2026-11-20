@@ -6,7 +6,7 @@ export interface TodayStats {
   lastModel: string;
 }
 
-// Direct SQL on the server bundle's own connection — no HTTP, no auth, no
+// Direct SQL on the server bundle's own connection - no HTTP, no auth, no
 // second better-sqlite3 handle (avoids WAL writer contention). `created_at`
 // is stored as UTC text; compare in localtime so "today" matches the menu
 // bar's wall clock.
@@ -22,9 +22,9 @@ export function todayStats(): TodayStats {
     const last = db.prepare(
       'SELECT model_id FROM requests ORDER BY id DESC LIMIT 1',
     ).get() as { model_id?: string } | undefined;
-    return { requests: row.requests, tokens: row.tokens, lastModel: last?.model_id ?? '—' };
+    return { requests: row.requests, tokens: row.tokens, lastModel: last?.model_id ?? '-' };
   } catch {
-    return { requests: 0, tokens: 0, lastModel: '—' };
+    return { requests: 0, tokens: 0, lastModel: '-' };
   }
 }
 
@@ -35,7 +35,7 @@ export function formatTokens(n: number): string {
 }
 
 // 24 hourly buckets, oldest → newest, for the popover chart. created_at is
-// UTC "YYYY-MM-DD HH:MM:SS" text — parse with an explicit Z.
+// UTC "YYYY-MM-DD HH:MM:SS" text - parse with an explicit Z.
 export function hourlyRequests(): number[] {
   const buckets = new Array<number>(24).fill(0);
   try {
@@ -50,7 +50,7 @@ export function hourlyRequests(): number[] {
       if (hoursAgo >= 0 && hoursAgo < 24) buckets[23 - hoursAgo]++;
     }
   } catch {
-    // fresh DB / no requests table content — all zeros is fine
+    // fresh DB / no requests table content - all zeros is fine
   }
   return buckets;
 }

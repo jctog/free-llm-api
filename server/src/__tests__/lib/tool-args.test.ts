@@ -88,7 +88,7 @@ const NESTED_SCHEMA = {
   },
 };
 
-describe('repairToolArguments — nested values', () => {
+describe('repairToolArguments - nested values', () => {
   it('decodes an array nested inside an object parameter', () => {
     const broken = JSON.stringify({ config: { tags: '["a","b"]' } });
     const repaired = JSON.parse(repairToolArguments(broken, NESTED_SCHEMA));
@@ -131,7 +131,7 @@ describe('repairToolArguments — nested values', () => {
   });
 
   it('leaves array elements alone when the schema has no items', () => {
-    // PLAN_SCHEMA's `plan` is a bare {type:'array'} — nothing describes an
+    // PLAN_SCHEMA's `plan` is a bare {type:'array'} - nothing describes an
     // element, so nothing justifies decoding one.
     const args = JSON.stringify({ plan: [{ steps: '["one"]' }] });
     expect(repairToolArguments(args, PLAN_SCHEMA)).toBe(args);
@@ -232,7 +232,7 @@ describe('stripSchemaKeys', () => {
     // only object KEYS named additionalProperties are removed.
     const input = { type: 'object', properties: { additionalProperties: { type: 'boolean' } } };
     // Here `additionalProperties` is a property NAME nested under `properties`,
-    // so it is a schema key and gets stripped — documenting the known limitation.
+    // so it is a schema key and gets stripped - documenting the known limitation.
     expect(stripSchemaKeys(input, keys)).toEqual({ type: 'object', properties: {} });
   });
 });

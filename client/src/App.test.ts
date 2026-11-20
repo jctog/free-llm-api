@@ -19,7 +19,7 @@ describe('app shell heights', () => {
     // h-dvh gives the shell a definite height so the flex chain below can
     // constrain the transcript; overflow-hidden stops the document itself
     // from scrolling. Padded routes keep plain min-height and scroll as a
-    // document — clipping them under h-dvh would leave long pages with no
+    // document - clipping them under h-dvh would leave long pages with no
     // scrollbar at all.
     expect(app).toMatch(/fullBleed \? 'h-dvh overflow-hidden' : 'min-h-screen'/)
   })

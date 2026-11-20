@@ -63,7 +63,7 @@ See what it would say without enabling anything:
 node .claude/hooks/contributing-check.mjs --preview
 ```
 
-To turn it on, add this to your own `.claude/settings.local.json` — nothing is wired up for you:
+To turn it on, add this to your own `.claude/settings.local.json` - nothing is wired up for you:
 
 ```json
 {
@@ -108,10 +108,10 @@ Bug reports are most useful with: your version (or commit), the provider involve
 
 Some useful fixes and experiments live in community forks and branches. If you are looking for prior art before starting, these are worth a read:
 
-- `fix-loopback-only` — restrict admin API access to localhost to avoid external exposure.
-- `fix-35-admin-security` — optional `ADMIN_PASSWORD` HMAC auth for remote admin API access.
-- `fix-101-markdown` — Markdown rendering in the Playground UI.
-- `fix-119-atomic-ratelimits` — atomic SQLite `BEGIN IMMEDIATE` transactions to fix rate-limit race conditions.
-- `feature-122-auto-routing` — per-request `smart` / `fast` / `cheap` routing strategies.
+- `fix-loopback-only` - restrict admin API access to localhost to avoid external exposure.
+- `fix-35-admin-security` - optional `ADMIN_PASSWORD` HMAC auth for remote admin API access.
+- `fix-101-markdown` - Markdown rendering in the Playground UI.
+- `fix-119-atomic-ratelimits` - atomic SQLite `BEGIN IMMEDIATE` transactions to fix rate-limit race conditions.
+- `feature-122-auto-routing` - per-request `smart` / `fast` / `cheap` routing strategies.
 
 If you port one of these into a PR, credit the original author in the PR description so they land in the Contributors list.

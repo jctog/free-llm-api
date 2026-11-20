@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest';
 
 // Unit tests for cooldown-probe early recovery: which cooldowns are eligible
-// (heuristic only — authoritative/credit/tier are provider-stated facts and are
+// (heuristic only - authoritative/credit/tier are provider-stated facts and are
 // never probed), the half-bench ripeness gate, the restart stagger, the failed-
 // probe backoff progression, the per-pass probe budget, and early clearing on a
 // successful probe. Plus the provenance classification the whole feature keys
@@ -91,13 +91,13 @@ describe('probe eligibility', () => {
   it('does not probe before half the bench has elapsed', async () => {
     bench('heuristic', { durationMs: 10 * MINUTE });
     const probe = probeReturning('valid');
-    const early = Date.now() + 2 * MINUTE; // 20% served — not ripe
+    const early = Date.now() + 2 * MINUTE; // 20% served - not ripe
 
     await runCooldownProbePass({ now: early, probe, jitter: noJitter });
     await runCooldownProbePass({ now: early, probe, jitter: noJitter });
     expect(probe).not.toHaveBeenCalled();
 
-    const ripe = Date.now() + 6 * MINUTE; // 60% served — ripe
+    const ripe = Date.now() + 6 * MINUTE; // 60% served - ripe
     await runCooldownProbePass({ now: ripe, probe, jitter: noJitter }); // seed
     const result = await runCooldownProbePass({ now: ripe, probe, jitter: noJitter });
     expect(result.probedKeyIds).toHaveLength(1);
@@ -107,7 +107,7 @@ describe('probe eligibility', () => {
     bench('heuristic', { durationMs: 10 * MINUTE });
     const probe = probeReturning('valid');
     // 9.5 minutes in: past half-bench, but the remaining 30s is less than a
-    // scan interval — the probe would cost more than the idle time it saves.
+    // scan interval - the probe would cost more than the idle time it saves.
     const now = Date.now() + 9 * MINUTE + 30_000;
 
     await runCooldownProbePass({ now, probe, jitter: noJitter });
@@ -146,7 +146,7 @@ describe('failed probe', () => {
     return row.expires_at_ms;
   }
 
-  it('leaves the cooldown exactly as it was — never extends it', async () => {
+  it('leaves the cooldown exactly as it was - never extends it', async () => {
     const keyId = bench('heuristic', { durationMs: 30 * MINUTE });
     const expiryBefore = expiryOf(keyId);
     const probe = probeReturning('invalid');
@@ -178,7 +178,7 @@ describe('failed probe', () => {
     await runCooldownProbePass({ now: t0 + 2 * MINUTE, probe, jitter: noJitter });
     expect(probe).toHaveBeenCalledTimes(2);
 
-    // 3 minutes after probe #2 — still inside the 4-minute backoff.
+    // 3 minutes after probe #2 - still inside the 4-minute backoff.
     await runCooldownProbePass({ now: t0 + 5 * MINUTE, probe, jitter: noJitter });
     expect(probe).toHaveBeenCalledTimes(2);
 
@@ -257,7 +257,7 @@ describe('cooldown provenance (cooldownDecisionForError)', () => {
     expect(cooldownDecisionForError(fakeRoute(), err).source).toBe('tier');
   });
 
-  it('tags a daily-quota bench as authoritative — the expiry is a reset time, not a guess', () => {
+  it('tags a daily-quota bench as authoritative - the expiry is a reset time, not a guess', () => {
     const err = new Error('You have used up your daily free allocation');
     const decision = cooldownDecisionForError(fakeRoute(), err);
     expect(decision.source).toBe('authoritative');
@@ -318,7 +318,7 @@ describe('startCooldownProbe / stopCooldownProbe', () => {
     expect(every[0].ms).toBe(60_000);
   });
 
-  it('is idempotent — double-start registers only one job', () => {
+  it('is idempotent - double-start registers only one job', () => {
     const { scheduler, every } = makeScheduler();
     startCooldownProbe(scheduler);
     startCooldownProbe(scheduler);

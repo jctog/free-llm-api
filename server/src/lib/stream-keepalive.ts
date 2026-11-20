@@ -1,6 +1,6 @@
 // SSE keep-alive pings for the uncommitted streaming window (#1642).
 //
-// The streaming routes hold every byte — headers included — until the first
+// The streaming routes hold every byte - headers included - until the first
 // real text token, so a reasoning model can leave the wire silent for 30-180s
 // while it thinks. Clients with a time-to-first-byte watchdog (Claude Code's
 // stream-idle timeout is the reference case) abort during that window, the
@@ -14,7 +14,7 @@
 //
 // The invariant this preserves: the ping carries NO content, so nothing the
 // client can act on has been sent. What it necessarily gives up when enabled
-// is invisible failover FOR THAT ATTEMPT — a ping flushes the SSE headers, so
+// is invisible failover FOR THAT ATTEMPT - a ping flushes the SSE headers, so
 // a stream that then dies ends the response with an error frame instead of
 // retrying another provider behind the scenes. That trade is exactly what an
 // operator opts into; the default is OFF, keeping the current behavior for
@@ -49,7 +49,7 @@ export function streamKeepaliveMs(env: NodeJS.ProcessEnv = process.env): number 
  *   ended, failed over, or errored), the timer stops itself.
  * - `keepalive` runs on each tick and must write a content-free frame. It is
  *   expected to commit the response first if it has not been committed yet.
- *   Throwing (dead socket) stops the timer without surfacing anything —
+ *   Throwing (dead socket) stops the timer without surfacing anything -
  *   the pump's own error paths notice the broken connection.
  *
  * Returns the stop function; call it when the stream ends. Idempotent.

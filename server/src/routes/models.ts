@@ -348,7 +348,7 @@ modelsRouter.delete('/:id', (req: Request, res: Response) => {
     if (isCatalogManagedModel(row)) {
       recordCatalogModelTombstone(db, 'chat', row.platform, row.model_id);
     } else if (row.platform === 'custom') {
-      // #926: same "keep it deleted" contract for custom relay models — the
+      // #926: same "keep it deleted" contract for custom relay models - the
       // scheduled custom-model sync must not resurrect this row.
       recordCustomModelTombstone(db, endpointScopeOfKey(db, row.key_id), row.model_id);
     }
@@ -482,7 +482,7 @@ modelsRouter.get('/', (_req: Request, res: Response) => {
     priority: m.priority,
     fallbackEnabled: m.fallback_enabled === 1,
     // Real provenance from models.source ('catalog' | 'user'). The dashboard's
-    // existing vocabulary for user-added rows is 'custom', so map 1:1 here —
+    // existing vocabulary for user-added rows is 'custom', so map 1:1 here -
     // this now also flags user models on native platforms (declarative
     // config / admin adds), which the old platform/key_id heuristic missed.
     // 'discovered' (#1348) marks rows fetched from a built-in provider's own

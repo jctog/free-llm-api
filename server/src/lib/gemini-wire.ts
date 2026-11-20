@@ -111,7 +111,7 @@ const VENDOR_EXTENSION_SCHEMA_KEY = /^x-/i;
 // clients emit JSON Schema unions (`.nullable()` builders produce
 // `"type": ["number", "null"]`), which 400s with "Proto field is not
 // repeating, cannot start list". Collapse the union to its first concrete
-// member plus Gemini's own `nullable` flag — the inverse of what
+// member plus Gemini's own `nullable` flag - the inverse of what
 // normalizeGeminiSchema does on the inbound direction.
 interface CollapsedType {
   type?: string;
@@ -197,7 +197,7 @@ function sanitizeSchema(schema: unknown, insidePropertiesMap: boolean, ctx: Sani
 
 // Gemini's Schema proto models `items` as a single Schema message and requires
 // it on every ARRAY: an array without `items` 400s with "…items: missing
-// field" (#1334 — Claude Code's nested tuple params lose their element schema
+// field" (#1334 - Claude Code's nested tuple params lose their element schema
 // once `prefixItems` is stripped), and a JSON Schema tuple (`items: [...]`)
 // 400s with "Proto field is not repeating". Tuples become an `anyOf` over their
 // members, and an array with no usable element schema gets `items: {}`, which
@@ -394,7 +394,7 @@ export function effortFromGeminiThinking(
   const budget = config?.thinkingConfig?.thinkingBudget;
   if (budget == null) return undefined;
   // -1 is the API's "dynamic thinking" (model-managed budget) and is Gemini
-  // CLI's default — leave the provider default in place rather than disabling.
+  // CLI's default - leave the provider default in place rather than disabling.
   if (budget < 0) return undefined;
   if (budget === 0) return 'none';
   if (budget < 4096) return 'low';

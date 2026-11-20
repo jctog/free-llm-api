@@ -7,7 +7,7 @@ import type { Db } from '../types.js';
  *
  * The URL is stored ENCRYPTED, not as plain text: a proxy URL routinely
  * embeds `user:pass@` credentials, which are exactly as sensitive as the API
- * key sitting in the same row — storing them in the clear next to an
+ * key sitting in the same row - storing them in the clear next to an
  * AES-encrypted key would hand anyone who copied the DB a working set of
  * proxy credentials. So it mirrors the key's own storage: ciphertext + iv +
  * auth tag from lib/crypto.ts (AES-256-GCM). All three columns NULL = no

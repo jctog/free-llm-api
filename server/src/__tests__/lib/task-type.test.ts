@@ -85,7 +85,7 @@ describe('deriveTaskType', () => {
 
   it('falls back to chat for plain text, even with earlier code messages', () => {
     expect(deriveTaskType(undefined, [{ role: 'user', content: 'what is the weather in Berlin?' }])).toBe('chat');
-    // Only the LAST user message counts — a stale code block from a previous turn is not intent.
+    // Only the LAST user message counts - a stale code block from a previous turn is not intent.
     expect(deriveTaskType(undefined, [
       { role: 'user', content: '```js\nconst a = 1;\n```' },
       { role: 'assistant', content: 'done' },

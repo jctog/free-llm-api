@@ -28,7 +28,7 @@ async function request(app: Express, method: string, path: string, body?: any) {
 }
 
 // PATCH /api/keys/:id modelScope handling (#657).
-describe('Keys API — model scope', () => {
+describe('Keys API - model scope', () => {
   let app: Express;
 
   beforeAll(() => {

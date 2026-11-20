@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest';
 
 // Model-level failure benching: a model that keeps failing upstream must sink
 // out of routing on EVERY key that can serve it, not only on the key that
-// happened to fail last — the failure window counts across keys, so a per-key
+// happened to fail last - the failure window counts across keys, so a per-key
 // bench would leave the siblings feeding the same sick model.
 
 vi.mock('../../services/health.js', () => ({
@@ -59,7 +59,7 @@ function routeFor(model: { id: number; model_id: string }, keyId: number): Route
 }
 
 // A plain 5xx: retryable, no quota signal, so the per-key bench is the short
-// transient one (90s) — far below the model bench, which is what makes the
+// transient one (90s) - far below the model bench, which is what makes the
 // assertions below able to tell the two apart.
 const upstream500 = () => Object.assign(new Error('Groq API error 500: upstream'), { status: 500 });
 

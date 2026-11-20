@@ -40,7 +40,7 @@ export interface Chain {
   auto_sort: string | null
   layout_config: string | null
   // 0 once the chain opts out of the catalog-sync backfill (#895), which is
-  // what an empty-created chain does — it stays exactly as hand-built.
+  // what an empty-created chain does - it stays exactly as hand-built.
   auto_include_new_models: number
   created_at: string
 }
@@ -53,8 +53,8 @@ export function ChainManager() {
   const [createError, setCreateError] = useState('')
   const [collapsed, setCollapsed] = useState<boolean>(readCollapsed)
   // Inline rename (#1179): one row is editable at a time, like the Playground
-  // conversation list. Renaming is safe mid-flight — routing resolves the name
-  // at request time — but in-flight auto:<old-name> requests fail, so the
+  // conversation list. Renaming is safe mid-flight - routing resolves the name
+  // at request time - but in-flight auto:<old-name> requests fail, so the
   // confirm step says so.
   const [renamingId, setRenamingId] = useState<number | null>(null)
   const [renameDraft, setRenameDraft] = useState('')
@@ -72,7 +72,7 @@ export function ChainManager() {
   const invalidate = async () => {
     // Resolve WHICH chain is active before refreshing anything keyed on it
     // (#1047): invalidating ['fallback'] first refetched the chain table under
-    // the old profile id — a wasted full-catalog round trip, and the write that
+    // the old profile id - a wasted full-catalog round trip, and the write that
     // poisoned the old chain's cache entry with the new chain's rows.
     await queryClient.refetchQueries({ queryKey: ['profiles', 'active'], exact: true })
     queryClient.invalidateQueries({ queryKey: ['profiles'] })

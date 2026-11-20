@@ -10,7 +10,7 @@ import { parseStatedRetryMs, providerHttpError } from '../../providers/base.js';
 const response = (status: number, headers: Record<string, string> = {}) =>
   new Response(null, { status, headers });
 
-describe('parseStatedRetryMs — google.rpc.RetryInfo', () => {
+describe('parseStatedRetryMs - google.rpc.RetryInfo', () => {
   // The shape Gemini actually returns on a free-tier 429.
   const geminiQuotaBody = {
     error: {
@@ -34,7 +34,7 @@ describe('parseStatedRetryMs — google.rpc.RetryInfo', () => {
   });
 });
 
-describe('parseStatedRetryMs — other stated shapes', () => {
+describe('parseStatedRetryMs - other stated shapes', () => {
   it('accepts snake_case and camelCase spellings', () => {
     expect(parseStatedRetryMs({ retry_after: 30 })).toBe(30_000);
     expect(parseStatedRetryMs({ retryAfter: 30 })).toBe(30_000);
@@ -50,7 +50,7 @@ describe('parseStatedRetryMs — other stated shapes', () => {
   });
 });
 
-describe('parseStatedRetryMs — prose', () => {
+describe('parseStatedRetryMs - prose', () => {
   it('reads the Groq-style sentence', () => {
     const body = { error: { message: 'Rate limit reached for model X. Please try again in 7.66s.' } };
     expect(parseStatedRetryMs(body)).toBe(7_660);
@@ -83,7 +83,7 @@ describe('parseStatedRetryMs — prose', () => {
   });
 });
 
-describe('parseStatedRetryMs — refusals', () => {
+describe('parseStatedRetryMs - refusals', () => {
   it('returns undefined for nothing, and never throws', () => {
     expect(parseStatedRetryMs(undefined)).toBeUndefined();
     expect(parseStatedRetryMs(null)).toBeUndefined();
@@ -144,7 +144,7 @@ describe('providerHttpError', () => {
     expect(err.retryAfterMs).toBe(5_000);
   });
 
-  it('keeps only the number — the body itself is never retained', () => {
+  it('keeps only the number - the body itself is never retained', () => {
     // Nothing from the payload should be able to reach a log or the trace
     // through this object.
     const err = providerHttpError(response(429), 'rate limited', {

@@ -86,7 +86,7 @@ const OMISSION_MARKER_RE = /^\[… \d+ (?:lines|identical lines) omitted …\]$/
 function enforceMaxChars(lines: string[], maxChars: number): string[] {
   let total = lines.reduce((sum, line) => sum + line.length + 1, -1);
   if (lines.length <= 2 || total <= maxChars) return lines;
-  // Rank removable lines center-out once, then delete in a single pass —
+  // Rank removable lines center-out once, then delete in a single pass -
   // recomputing joined length per removal is quadratic on large outputs.
   const middle = (lines.length - 1) / 2;
   const removable = lines

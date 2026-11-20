@@ -32,13 +32,13 @@ function statusPayload() {
   };
 }
 
-/** GET /api/premium — everything the Premium page renders. */
+/** GET /api/premium - everything the Premium page renders. */
 premiumRouter.get('/', (_req: Request, res: Response) => {
   res.json(statusPayload());
 });
 
 /**
- * POST /api/premium/key { key } — activate a license key.
+ * POST /api/premium/key { key } - activate a license key.
  * Validates against the catalog service first; only a key the service accepts
  * is stored. A live-tier sync is kicked off right away so the upgrade is
  * visible within seconds, not at the next 12h poll.
@@ -73,7 +73,7 @@ premiumRouter.post('/key', async (req: Request, res: Response) => {
   res.json({ ...statusPayload(), sync });
 });
 
-/** DELETE /api/premium/key — deactivate locally (the purchase itself is untouched). */
+/** DELETE /api/premium/key - deactivate locally (the purchase itself is untouched). */
 premiumRouter.delete('/key', async (_req: Request, res: Response) => {
   const db = getDb();
   db.prepare('DELETE FROM settings WHERE key IN (?, ?)').run(SETTING_LICENSE_KEY, SETTING_LICENSE_STATUS);
@@ -83,7 +83,7 @@ premiumRouter.delete('/key', async (_req: Request, res: Response) => {
   res.json(statusPayload());
 });
 
-/** POST /api/premium/sync — manual "check for updates now". */
+/** POST /api/premium/sync - manual "check for updates now". */
 premiumRouter.post('/sync', async (_req: Request, res: Response) => {
   await refreshLicenseStatus();
   const sync = await syncCatalog(true);
@@ -91,7 +91,7 @@ premiumRouter.post('/sync', async (_req: Request, res: Response) => {
 });
 
 /**
- * POST /api/premium/portal — Stripe Billing Portal session for the stored key.
+ * POST /api/premium/portal - Stripe Billing Portal session for the stored key.
  * This is how an annual subscriber cancels, updates a card, or pulls invoices,
  * entirely self-serve.
  */

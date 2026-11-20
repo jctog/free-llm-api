@@ -24,7 +24,7 @@ export function platformChrome(platform: NodeJS.Platform | string): PlatformChro
   if (platform === 'darwin') {
     // Traffic lights float over the app's own header (the client adds a drag
     // region + left padding when it detects the desktop shell), and the window
-    // carries a sidebar vibrancy — the strong, Finder-style material — so the
+    // carries a sidebar vibrancy - the strong, Finder-style material - so the
     // client's translucent desktop backdrop (html.desktop in index.css) shows
     // real glass, matching the tray popover. The material follows
     // nativeTheme.themeSource, i.e. the dashboard's own theme.
@@ -38,7 +38,7 @@ export function platformChrome(platform: NodeJS.Platform | string): PlatformChro
   return {
     backgroundColor: '#09090b',
     // Windows and Linux otherwise carry Electron's stock File/Edit/View menu
-    // permanently — none of it does anything this app needs, and it cannot be
+    // permanently - none of it does anything this app needs, and it cannot be
     // dismissed (#703). Hidden rather than removed so the menu's clipboard
     // accelerators keep working; Alt still reveals it.
     autoHideMenuBar: true,

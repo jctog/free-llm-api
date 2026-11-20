@@ -66,7 +66,7 @@ describe('provider-identity', () => {
     it('keeps the path when it, not the host, is what tells endpoints apart', () => {
       // One gateway fronting two tenants: the host is identical, so a
       // host-only name would collide and the operator could not tell the rows
-      // apart — #889 all over again, one level down.
+      // apart - #889 all over again, one level down.
       const a = providerDisplayName('custom', 'https://gw.example.com/tenant-a/v1');
       const b = providerDisplayName('custom', 'https://gw.example.com/tenant-b/v1');
       expect(a).toBe('gw.example.com/tenant-a/v1');

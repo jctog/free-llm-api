@@ -1,6 +1,6 @@
 **English** · [简体中文](../../zh-cn/architecture/04-degraded-mode-and-failover.md)
 
-# Degraded Mode & Failover — Deep Dive
+# Degraded Mode & Failover - Deep Dive
 
 > **Source:** `server/src/services/degradation.ts`, `server/src/lib/fallback-loop.ts`, `server/src/routes/proxy.ts`, `server/src/services/ratelimit.ts`, `server/src/services/idempotency.ts`
 
@@ -49,10 +49,10 @@ interface HealthSnapshot {
 
 | Aspect | Normal | Degraded |
 |--------|--------|----------|
-| Bandit exploration | 10% floor (if enabled) | **Disabled** — sticks to scored order of remaining healthy providers |
+| Bandit exploration | 10% floor (if enabled) | **Disabled** - sticks to scored order of remaining healthy providers |
 | Router | `isDegraded()` checked at route time | Same |
 | Health endpoint | Reports `state: 'normal'` | Reports `state: 'degraded', degradedAt: timestamp` |
-| Logging | — | `console.warn` on entry, `console.log` on exit |
+| Logging | - | `console.warn` on entry, `console.log` on exit |
 
 ### API
 
@@ -71,7 +71,7 @@ resetDegradationState()                  // tests, post-start re-probe
 
 - **Default**: 45 s (`FALLBACK_TIME_BUDGET_MS`, setting `fallback_time_budget_ms`, 0 = disabled).
 - **Checked BEFORE starting each retry** (attempt ≥ 1). Attempt 0 always runs; attempt 1 always runs (so failover is structurally possible even when attempt 0 consumes the whole budget).
-- **Exhaustion rendering**: `timedOut: true` + `budgetMs` in `ExhaustionContext` → message includes "stopped early: retry time budget 45s exceeded — one failover hop is always allowed, and past that the budget stops starting further retries and cancels an attempt still waiting on its first byte".
+- **Exhaustion rendering**: `timedOut: true` + `budgetMs` in `ExhaustionContext` → message includes "stopped early: retry time budget 45s exceeded - one failover hop is always allowed, and past that the budget stops starting further retries and cancels an attempt still waiting on its first byte".
 
 ### Hedging (Abort In-Flight)
 
@@ -86,7 +86,7 @@ abortInFlight: () => hedgeAbort.abort(newHedgeAbortError())
 
 - `HedgeAbortError` is **non-provider-health** → no cooldown, no penalty, no limit learning.
 - Renders `timedOut` exhaustion (not a provider failure).
-- Streaming surfaces call `ctx.disarmHedge()` on first byte / header flush — past that point the answer is on its way, killing it would truncate a healthy response for no failover benefit.
+- Streaming surfaces call `ctx.disarmHedge()` on first byte / header flush - past that point the answer is on its way, killing it would truncate a healthy response for no failover benefit.
 
 ### Circuit Breaker Guardrail
 
@@ -101,7 +101,7 @@ abortInFlight: () => hedgeAbort.abort(newHedgeAbortError())
 
 ### Purpose
 
-`X-Fallback-Trail` tells **which hops burned and why**. `X-Fallback-Detail` adds **how long they cost** — the part an agent cannot reconstruct (a 40s response: one provider stalled 39s vs four failed fast).
+`X-Fallback-Trail` tells **which hops burned and why**. `X-Fallback-Detail` adds **how long they cost** - the part an agent cannot reconstruct (a 40s response: one provider stalled 39s vs four failed fast).
 
 ### Format
 
@@ -205,9 +205,9 @@ interface FallbackHooks {
 | 429 transient (rpm/tpm) | key | 90s / ladder | light (1) | yes |
 | 5xx / timeout / transport | **platform** (#788) | 90s / ladder | light (1) | no |
 | empty completion (reasoning) | key | exempt (streak ≤3) | no | no |
-| context too large | model | — | no | no |
-| response_format ignored | model | — | no | no |
-| invalid tool arguments | key | — | no | no |
+| context too large | model | - | no | no |
+| response_format ignored | model | - | no | no |
+| invalid tool arguments | key | - | no | no |
 
 ### Model-Level Failure Benching (#806)
 
@@ -222,20 +222,20 @@ interface FallbackHooks {
 ### Provider-Level Skip (#788)
 
 - 5xx / timeout / transport / degraded → `skipPlatforms.add(platform)`.
-- Whole provider ruled out for this request — loop moves to next provider instead of burning one hop per key.
+- Whole provider ruled out for this request - loop moves to next provider instead of burning one hop per key.
 
 ### Exhaustion Rendering (exhaustedRetryError)
 
 **Most-specific-first aggregation over attempt classes:**
 
-1. **All auth** → 502 `provider_error` (`provider_authentication_failed`) — distinct from rate-limit, never blames client key.
+1. **All auth** → 502 `provider_error` (`provider_authentication_failed`) - distinct from rate-limit, never blames client key.
 2. **All context_too_large** → 413 `invalid_request_error` (`context_length_exceeded`).
 3. **All model_not_found** → 404 `invalid_request_error` (`model_not_found`).
 4. **Last error = degraded 400** (NVIDIA NIM) → 503 `service_unavailable` (`provider_degraded`).
-5. **All provider_bad_request** (or legacy no-trail, last error = provider bad request) → 400 `invalid_request_error` (`provider_rejected_request`). A mixed trail with only some bad-request hops falls through to 8 — the last hop's shape alone never blames the caller's request (#1239).
+5. **All provider_bad_request** (or legacy no-trail, last error = provider bad request) → 400 `invalid_request_error` (`provider_rejected_request`). A mixed trail with only some bad-request hops falls through to 8 - the last hop's shape alone never blames the caller's request (#1239).
 6. **Circuit breaker** → 503 `service_unavailable` (`upstream_unhealthy`).
 7. **All UNAVAILABLE_UNTIL_KNOWN_TIME** (rate_limited, daily_quota_exhausted, out_of_credits, forbidden) → 429 `rate_limit_error` with `retryAtMs` + `Retry-After`.
-8. **Mixed/other** → 502 `provider_error` (`upstream_failed`) — never 500 (our bugs). The message carries a per-class tally (`provider_bad_request ×5, out_of_credits ×3`) and only says "not a problem with your request" when no hop was a provider-side request rejection.
+8. **Mixed/other** → 502 `provider_error` (`upstream_failed`) - never 500 (our bugs). The message carries a per-class tally (`provider_bad_request ×5, out_of_credits ×3`) and only says "not a problem with your request" when no hop was a provider-side request rejection.
 
 **Synchronous exhaustion (zero attempts):** `routingExhaustionBody(routeErr)` maps diagnostics to same taxonomy:
 - All config (no key, no provider) → 503 `no_providers_configured`
@@ -322,7 +322,7 @@ request → /v1/chat/completions
 
 ---
 
-## 10. Idempotency-Key Replay — Failover Interaction
+## 10. Idempotency-Key Replay - Failover Interaction
 
 > Full client contract: [`../api/02-idempotency.md`](../api/02-idempotency.md). This section is the architecture cross-ref.
 
@@ -338,17 +338,17 @@ request → /v1/chat/completions
       └─ storeIdempotencyResult(keyHash, fingerprint, 200, body)  (proxy.ts:2644-2656)
 ```
 
-The lookup happens **before** response-cache lookup (the cache is keyed by request content; idempotency is caller-scoped per key hash) and **before** `newFallbackState()` — a replay never enters the fallback loop, never touches `routeRequest`, and never consumes a quota lease.
+The lookup happens **before** response-cache lookup (the cache is keyed by request content; idempotency is caller-scoped per key hash) and **before** `newFallbackState()` - a replay never enters the fallback loop, never touches `routeRequest`, and never consumes a quota lease.
 
 ### What is stored / replayed
 
 - Only a `SHA-256(key)` + `SHA-256(canonical model+messages+temperature/top_p/max_tokens/tools/tool_choice)` fingerprint are persisted; the raw key is never stored (`hashIdempotencyKey`, `computeIdempotencyFingerprint` in `server/src/services/idempotency.ts:46-70`).
-- `response_status` + `response_body` (the sanitized `outboundBody` that the client received) are replayed verbatim. Replays carry no `X-Fallback-*` headers and do not write analytics rows — same zero-cost semantics as a cache `HIT`.
-- Streaming (`stream: true`) and truncated turns (`finish_reason === 'length'`) are never stored — consistent with the response cache.
+- `response_status` + `response_body` (the sanitized `outboundBody` that the client received) are replayed verbatim. Replays carry no `X-Fallback-*` headers and do not write analytics rows - same zero-cost semantics as a cache `HIT`.
+- Streaming (`stream: true`) and truncated turns (`finish_reason === 'length'`) are never stored - consistent with the response cache.
 
 ### In-flight NOT deduplicated (95bc46f)
 
-A second request with the same `Idempotency-Key` arriving **while the first is still in flight** does **not** coalesce: only **completed** claims are claimable, so both execute. The second `storeIdempotencyResult` replaces the first. Guarding the window would require a `pending` claim with a short TTL so a crash cannot wedge a key for 24 h — deliberately out of scope (`idempotency.ts:17-20`).
+A second request with the same `Idempotency-Key` arriving **while the first is still in flight** does **not** coalesce: only **completed** claims are claimable, so both execute. The second `storeIdempotencyResult` replaces the first. Guarding the window would require a `pending` claim with a short TTL so a crash cannot wedge a key for 24 h - deliberately out of scope (`idempotency.ts:17-20`).
 
 ### TTL & expiry
 
@@ -357,8 +357,8 @@ A second request with the same `Idempotency-Key` arriving **while the first is s
 
 ### Interaction with degraded mode & hedging
 
-- An `idempotency` replay bypasses `isDegraded()` entirely — it is already a success and does not consult the router's exploration gate.
+- An `idempotency` replay bypasses `isDegraded()` entirely - it is already a success and does not consult the router's exploration gate.
 - A `miss` that then enters the fallback loop is subject to the normal degraded-mode rules (exploration disabled, retry budget, hedging via `abortInFlight`). The `409` path never enters the loop.
-- `HedgeAbortError` and other non-provider-health failures that cause `timedOut` exhaustion do not persist a claim for that `Idempotency-Key` — the attempt did not succeed.
+- `HedgeAbortError` and other non-provider-health failures that cause `timedOut` exhaustion do not persist a claim for that `Idempotency-Key` - the attempt did not succeed.
 
 See [`../api/02-idempotency.md`](../api/02-idempotency.md) for the header contract, fingerprint details, `409` body, per-field TDD, and a full `curl` retry example.

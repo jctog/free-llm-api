@@ -48,7 +48,7 @@ function addKey(platform: string, label = 'routing-test'): number {
 }
 
 // A key on a custom endpoint, identified by its base_url (the endpoint IS the
-// url; several credentials may share it — see services/custom-endpoint.ts).
+// url; several credentials may share it - see services/custom-endpoint.ts).
 function addCustomKey(baseUrl: string, label: string): number {
   const secret = encrypt(`${label}-custom-secret`);
   const inserted = getDb().prepare(`
@@ -186,7 +186,7 @@ describe('routing semantics', () => {
   it('refuses model:"auto" on an empty active chain instead of routing the catalog (#1021)', () => {
     const db = getDb();
     addKey('groq');
-    // The chain the operator is on holds nothing — a chain created with
+    // The chain the operator is on holds nothing - a chain created with
     // "start empty", or one pruned by hand. fallback_config still lists the
     // whole seeded catalog, which is exactly what must NOT be routed over.
     db.prepare('DELETE FROM profile_models WHERE profile_id = ?').run(activeProfileId());
@@ -239,7 +239,7 @@ describe('key selection by remaining quota (#919)', () => {
   // is what makes "which key has more left" a question with an answer.
   const CEREBRAS_POOL = 'cerebras::shared';
 
-  /** Two cerebras keys — the drained one FIRST, so rowid order (and the
+  /** Two cerebras keys - the drained one FIRST, so rowid order (and the
    *  round-robin cursor that starts on it) would pick exactly the wrong key.
    *  The model id is per-test because the rotation cursor is keyed on it and
    *  outlives the in-memory DB. */

@@ -1,4 +1,4 @@
-// Translations for the desktop's NATIVE chrome — the tray menu and the
+// Translations for the desktop's NATIVE chrome - the tray menu and the
 // Control-Center popover. These live outside the React dashboard (the menu is
 // built in the main process; the popover is a file:// page), so they can't read
 // the dashboard's i18n. The active locale is mirrored from the dashboard via the
@@ -25,7 +25,7 @@ type Strings = Record<string, string>;
 
 const STRINGS: Record<NativeLocale, Strings> = {
   en: {
-    tooltip: 'FreeLLMAPI — local LLM router',
+    tooltip: 'FreeLLMAPI - local LLM router',
     runningOn: 'Running on {addr}',
     openDashboard: 'Open Dashboard',
     showCompactPanel: 'Show Compact Panel',
@@ -61,7 +61,7 @@ const STRINGS: Record<NativeLocale, Strings> = {
     restartToUpdate: "Restart Now",
   },
   'zh-CN': {
-    tooltip: 'FreeLLMAPI — 本地 LLM 路由器',
+    tooltip: 'FreeLLMAPI - 本地 LLM 路由器',
     runningOn: '运行于 {addr}',
     openDashboard: '打开仪表板',
     showCompactPanel: '显示紧凑面板',
@@ -97,7 +97,7 @@ const STRINGS: Record<NativeLocale, Strings> = {
     restartToUpdate: "立即重启",
   },
   fr: {
-    tooltip: 'FreeLLMAPI — routeur LLM local',
+    tooltip: 'FreeLLMAPI - routeur LLM local',
     runningOn: 'En cours sur {addr}',
     openDashboard: 'Ouvrir le tableau de bord',
     showCompactPanel: 'Afficher la fenêtre compacte',
@@ -133,7 +133,7 @@ const STRINGS: Record<NativeLocale, Strings> = {
     restartToUpdate: "Redémarrer maintenant",
   },
   es: {
-    tooltip: 'FreeLLMAPI — enrutador LLM local',
+    tooltip: 'FreeLLMAPI - enrutador LLM local',
     runningOn: 'En ejecución en {addr}',
     openDashboard: 'Abrir el panel',
     showCompactPanel: 'Mostrar ventana compacta',
@@ -169,7 +169,7 @@ const STRINGS: Record<NativeLocale, Strings> = {
     restartToUpdate: "Reiniciar ahora",
   },
   'pt-BR': {
-    tooltip: 'FreeLLMAPI — roteador LLM local',
+    tooltip: 'FreeLLMAPI - roteador LLM local',
     runningOn: 'Em execução em {addr}',
     openDashboard: 'Abrir o painel',
     showCompactPanel: 'Mostrar janela compacta',
@@ -205,7 +205,7 @@ const STRINGS: Record<NativeLocale, Strings> = {
     restartToUpdate: "Reiniciar agora",
   },
   it: {
-    tooltip: 'FreeLLMAPI — router LLM locale',
+    tooltip: 'FreeLLMAPI - router LLM locale',
     runningOn: 'In esecuzione su {addr}',
     openDashboard: 'Apri il pannello',
     showCompactPanel: 'Mostra finestra compatta',

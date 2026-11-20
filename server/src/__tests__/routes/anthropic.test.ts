@@ -12,7 +12,7 @@ import { mintDashboardToken } from '../helpers/auth.js';
 // the route end-to-end through a mocked Groq upstream and assert the Anthropic
 // wire format both inbound (system / content blocks / tool_use / tool_result /
 // images) and outbound (message envelope, tool_use blocks, SSE event sequence)
-// — i.e. what Claude Code actually sends and parses.
+// - i.e. what Claude Code actually sends and parses.
 
 let dashToken = '';
 
@@ -575,7 +575,7 @@ describe('Anthropic-compatible /v1/messages', () => {
         addModel('groq', SHARED, 'Shared Fallback Model', 10),
         addModel('cerebras', SHARED, 'Shared Fallback Model', 20),
         // A different model on the healthy platform, with the BEST priority in
-        // the catalog — before the fix this is what answered the request.
+        // the catalog - before the fix this is what answered the request.
         addModel('cerebras', UNRELATED, 'Unrelated Test Model', 1),
       ];
       addKey('cerebras'); // the groq key is created by the outer beforeEach
@@ -625,7 +625,7 @@ describe('Anthropic-compatible /v1/messages', () => {
       }, anthropicHeaders());
 
       expect(status).toBe(200);
-      // Same model, second provider — not the better-priority unrelated model.
+      // Same model, second provider - not the better-priority unrelated model.
       expect(headers.get('x-routed-via')).toBe(`cerebras/${SHARED}`);
       expect(body.content[0].text).toBe(`answer from cerebras ${SHARED}`);
       expect(seen).toEqual([`groq/${SHARED}`, `cerebras/${SHARED}`]);
@@ -656,7 +656,7 @@ describe('Anthropic-compatible /v1/messages', () => {
 
     it('leaves an auto-routed Claude alias on the full chain', async () => {
       // opus/sonnet/haiku/default all map to 'auto' by default, so nothing is
-      // pinned and the router is free to pick any model — including the
+      // pinned and the router is free to pick any model - including the
       // unrelated one, which is exactly the pre-existing behaviour.
       const seen: string[] = [];
       mockTwoPlatforms(seen);

@@ -1,6 +1,6 @@
 [English](../../en/architecture/06-observability.md) · **简体中文**
 
-# 可观测性 —— 深度剖析
+# 可观测性 -- 深度剖析
 
 > **源码：** `server/src/lib/server-logs.ts`、`server/src/routes/logs.ts`、`server/src/lib/request-log.ts`、`server/src/lib/log-redaction.ts`、`server/src/lib/attempt-trace.ts`
 
@@ -16,7 +16,7 @@
 - **单一 ID 空间**：`id` 在入口分配（不是 SQLite），启动时从 `MAX(id)` 种子，所以 ID 跨重启单调递增。仪表盘用 `sinceId` 游标轮询，两层通用。
 - **噪音过滤**：`NOISE_RE` 丢弃 `GET /api/logs` 和 `GET /api/ping` 的访问日志行（防自喂缓冲）。
 - **消息上限**：6000 字符，超出截断并加 `… [truncated]` 后缀。
-- **来源提取**：从消息里的 `[Tag]` 前缀推导（如 `[Health]`、`[CooldownProbe]`、`[Proxy]`）——无需调用点标注。
+- **来源提取**：从消息里的 `[Tag]` 前缀推导（如 `[Health]`、`[CooldownProbe]`、`[Proxy]`）--无需调用点标注。
 
 ### 入口路径
 
@@ -35,9 +35,9 @@ server-logs.ts.recordConsoleLine(level, args)
 ```
 
 **重入守卫**：
-- `mirroring` —— `providerLog()` 经包装过的 console 镜像回 stdout；防二次入口。
-- `persisting` —— DB 层会记日志（忙超时、权限）；跳过持久化写但环仍收。
-- `seeding` —— 启动种子探 DB，那也能记日志。
+- `mirroring` -- `providerLog()` 经包装过的 console 镜像回 stdout；防二次入口。
+- `persisting` -- DB 层会记日志（忙超时、权限）；跳过持久化写但环仍收。
+- `seeding` -- 启动种子探 DB，那也能记日志。
 
 ### 结构化提供方日志
 
@@ -81,8 +81,8 @@ levelCounts(): { debug: number; info: number; warn: number; error: number }
 
 ### 清空 / 重置
 
-- `clearLogs()` —— 清环 + `DELETE FROM server_logs`。**ID 计数器不重置**（不然仪表盘游标会收到重复 ID）。
-- `resetServerLogsForTest()` —— 测试缝：全清 + 计数器 + 种子态。
+- `clearLogs()` -- 清环 + `DELETE FROM server_logs`。**ID 计数器不重置**（不然仪表盘游标会收到重复 ID）。
+- `resetServerLogsForTest()` -- 测试缝：全清 + 计数器 + 种子态。
 
 ---
 
@@ -107,7 +107,7 @@ levelCounts(): { debug: number; info: number; warn: number; error: number }
 
 ### `execution_id` 与 `caller` 维度
 
-聊天补全路由发出的每个 JSON 响应体——成功、缓存/幂等重放、错误一律——都带一个
+聊天补全路由发出的每个 JSON 响应体--成功、缓存/幂等重放、错误一律--都带一个
 顶层 `execution_id`，其值与 `X-Request-ID` 头相同，于是只留下响应体的客户端也能
 找回对应行及其尝试轨迹。它盖在**出站副本**上，因此重放的缓存命中报的是*本次*请求
 的 id，而不是当初填充缓存那次的。流式帧不带它（那里由头部承载）。

@@ -8,7 +8,7 @@ Add a key in the dashboard or import `ONOMEO_API_KEY` from an environment file.
   `401 {error: {code: "bad_key"}}` (verified live 2026-10-20), so it is a real
   credential probe; a valid key gets `{data: [...]}`.
 - A `403` with `account_quota` or `network_quota`, and a `429` with `site_busy`
-  or `too_fast`, are quota/throttle verdicts on a VALID key — validation treats
+  or `too_fast`, are quota/throttle verdicts on a VALID key - validation treats
   them as inconclusive so the health pass can never auto-disable a good key
   whose 5-hour calls ran out.
 - Other endpoints on the same key (not routed by this adapter): `/v1/messages`
@@ -24,7 +24,7 @@ counts as several calls (one per 50,000 counted characters). A payment grants
 90 calls/5h for 35 days. Quota responses name themselves: `account_quota`
 (403), `network_quota` (403), `site_busy` (429), `too_fast` (429).
 `bad_key` (401) is the only authentication verdict. Answers to balance-less
-accounts end with an "— via onomeo.com" signature line (tool-call,
+accounts end with an "- via onomeo.com" signature line (tool-call,
 structured-output and pure-JSON answers are exempt). The adapter strips it from
 completions and streams (live 2026-10-21 it arrives as its own final delta), so
 clients and agents never see it.

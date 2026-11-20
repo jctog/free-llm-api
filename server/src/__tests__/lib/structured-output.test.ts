@@ -47,7 +47,7 @@ describe('enforceJsonContent', () => {
   });
 
   it('a citation marker in leading prose does not shadow the real object', () => {
-    // Regression: first-bracket-wins sliced this to `[1]` — a valid parse of
+    // Regression: first-bracket-wins sliced this to `[1]` - a valid parse of
     // the WRONG value, delivered silently as the structured output.
     const r = enforceJsonContent('According to source [1], here is the JSON: {"city":"Paris"}');
     expect(r).toEqual({ ok: true, content: '{"city":"Paris"}', healed: true });
@@ -60,7 +60,7 @@ describe('enforceJsonContent', () => {
 
   it('markdown links around a JSON array still heal to the array', () => {
     const r = enforceJsonContent('See [docs](https://x) first. ["a","b","c"] covers it.');
-    expect(r).toEqual({ ok: false }); // first-[ to last-] spans the link — unparseable, honest reject
+    expect(r).toEqual({ ok: false }); // first-[ to last-] spans the link - unparseable, honest reject
   });
 
   it('prose-wrapped array with no other brackets heals', () => {

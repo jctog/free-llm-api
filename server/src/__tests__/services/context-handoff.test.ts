@@ -40,7 +40,7 @@ describe('getContextHandoffMode', () => {
   });
 });
 
-describe('maybeInjectContextHandoff — off mode', () => {
+describe('maybeInjectContextHandoff - off mode', () => {
   it('returns original messages unchanged when mode is off', () => {
     const result = maybeInjectContextHandoff({
       mode: 'off',
@@ -53,7 +53,7 @@ describe('maybeInjectContextHandoff — off mode', () => {
   });
 });
 
-describe('maybeInjectContextHandoff — on_model_switch', () => {
+describe('maybeInjectContextHandoff - on_model_switch', () => {
   const mode = 'on_model_switch';
 
   it('no handoff on first request (no prior model recorded)', () => {
@@ -255,7 +255,7 @@ describe('recordIncomingMessages', () => {
   });
 
   it('store hard-evicts oldest entries when all sessions are active and over MAX_STORE_SIZE', () => {
-    // Fill 510 entries — all within TTL so TTL-prune removes nothing.
+    // Fill 510 entries - all within TTL so TTL-prune removes nothing.
     // The LRU eviction path must still bring it back to MAX_STORE_SIZE (500).
     for (let i = 0; i < 510; i++) {
       recordIncomingMessages(`sess-fill-${i}`, [msg('user', `hello ${i}`)]);
@@ -273,10 +273,10 @@ describe('recordIncomingMessages', () => {
     recordIncomingMessages('sess1', messages);
     recordSuccessfulModel({ sessionKey: 'sess1', modelKey: 'groq:llama-3' });
 
-    // New conversation starts — only a user message, no assistant
+    // New conversation starts - only a user message, no assistant
     recordIncomingMessages('sess1', [msg('user', 'brand new question')]);
 
-    // Should NOT inject — lastModelKey was cleared by fresh-convo heuristic
+    // Should NOT inject - lastModelKey was cleared by fresh-convo heuristic
     const result = maybeInjectContextHandoff({
       mode: 'on_model_switch',
       sessionKey: 'sess1',

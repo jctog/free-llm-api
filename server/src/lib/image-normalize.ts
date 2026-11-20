@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import type { ChatMessage } from '@freellmapi/shared/types.js';
 
 // Inbound image normalization. Vision payloads ride inline as base64 data
-// URLs, and agents replay their ENTIRE history every turn — one real Codex
+// URLs, and agents replay their ENTIRE history every turn - one real Codex
 // session accumulated 11.85MB of duplicated screenshots. Every upstream
 // resizes internally anyway (OpenAI scales the long edge to 2048, Anthropic
 // to 1568), so pixels beyond that cap are pure transport waste that still
@@ -12,11 +12,11 @@ import type { ChatMessage } from '@freellmapi/shared/types.js';
 // Runs after body parsing on every chat-shaped surface (proxy, responses,
 // anthropic, and the inbound-chat funnel behind Ollama/Gemini wire): data-URL
 // images over the size threshold are decoded, downscaled to fit
-// IMAGE_NORMALIZE_MAX_DIMENSION, and re-encoded — JPEG q<quality>, or PNG
+// IMAGE_NORMALIZE_MAX_DIMENSION, and re-encoded - JPEG q<quality>, or PNG
 // only when the alpha channel ACTUALLY carries transparency. Screenshots are
 // the gotcha: macOS ships them as RGBA PNGs that are fully opaque, and
 // honoring the bare hasAlpha flag kept them on PNG, "compressing" 2.0MB →
-// 1.9MB. http(s) URLs are left alone — providers that need the bytes fetch
+// 1.9MB. http(s) URLs are left alone - providers that need the bytes fetch
 // them themselves (see google.ts). Failures anywhere in the pipeline keep the
 // original image: a vision request must never be lost to a transcoding
 // hiccup.
@@ -25,11 +25,11 @@ import type { ChatMessage } from '@freellmapi/shared/types.js';
 //   IMAGE_NORMALIZE                 off/false/0 disables entirely (default on)
 //   IMAGE_NORMALIZE_MAX_DIMENSION   long-edge cap in px (default 2048)
 //   IMAGE_NORMALIZE_THRESHOLD_KB    raw-bytes floor before touching an image
-//                                   (default 1024 — small images decode-free)
+//                                   (default 1024 - small images decode-free)
 //   IMAGE_NORMALIZE_QUALITY         JPEG quality, 1-100 (default 90)
 //
-// Input formats: anything libvips decodes — jpeg, png, webp, gif (first
-// frame only — animation is dropped), tiff (first page), bmp, svg (rasterized
+// Input formats: anything libvips decodes - jpeg, png, webp, gif (first
+// frame only - animation is dropped), tiff (first page), bmp, svg (rasterized
 // at native size), avif. Formats it can't decode (notably HEIC on standard
 // builds) and any corrupt payload fall through untouched: the provider sees
 // the original and decides.
@@ -40,7 +40,7 @@ const DEFAULT_QUALITY = 90;
 
 // sharp is a NATIVE module: it ships a prebuilt libvips per platform+arch, and
 // a static `import sharp from 'sharp'` makes a missing or mismatched binary an
-// import-time crash — the whole gateway would fail to boot over an optional
+// import-time crash - the whole gateway would fail to boot over an optional
 // image optimization. The desktop build only runs electron-rebuild for
 // better-sqlite3, and slim/musl containers routinely lack the matching
 // prebuild, so load it on first use instead and degrade to pass-through when
@@ -190,7 +190,7 @@ function candidateOf(url: string, opts: ResolvedOptions): Candidate | null {
   const alreadyCompact = mime === 'image/jpeg' || mime === 'image/webp';
 
   // Cheap pre-filter: under the threshold AND already a lossy format means
-  // there is nothing to win — skip the decode entirely. Oversized-dimension
+  // there is nothing to win - skip the decode entirely. Oversized-dimension
   // images under the threshold are rare enough (pixels ≈ bytes) that this
   // trade stays worth it.
   if (rawBytes < opts.thresholdBytes && alreadyCompact) return null;
@@ -215,7 +215,7 @@ async function normalizeDataUrl(sharp: Sharp, candidate: Candidate, opts: Resolv
     const width = meta.width ?? 0;
     const height = meta.height ?? 0;
     const needsResize = width > opts.maxDimension || height > opts.maxDimension;
-    // Small, right-sized, already-compact: nothing to win — skip the decode.
+    // Small, right-sized, already-compact: nothing to win - skip the decode.
     if (!needsResize && alreadyCompact && rawBytes < opts.thresholdBytes) return null;
     // An over-threshold JPEG/WebP at the right size still gets re-encoded at
     // the target quality below (the never-grow guard keeps the original when

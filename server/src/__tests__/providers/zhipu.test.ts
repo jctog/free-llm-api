@@ -106,7 +106,7 @@ describe('ZhipuProvider console autodetect', () => {
     expect(urls.at(-1)).toBe(`${GLOBAL}/chat/completions`);
   });
 
-  it('caches per key — a domestic key is unaffected by a global one', async () => {
+  it('caches per key - a domestic key is unaffected by a global one', async () => {
     const provider = new ZhipuProvider();
     // Only 'zai-key' gets a cache entry; 'cn-key' is never validated here, so
     // it must still take the pinned domestic default.
@@ -148,7 +148,7 @@ describe('ZhipuProvider console autodetect', () => {
     ]);
 
     // An unreachable api.z.ai must not turn a plainly invalid key into a
-    // transport error — the domestic verdict still stands.
+    // transport error - the domestic verdict still stands.
     const result = await provider.validateKey('bad-key');
     expect(result).not.toBe(true);
     expect((result as { valid: false; error: string }).error).toContain('domestic says no');
@@ -164,7 +164,7 @@ describe('ZhipuProvider console autodetect', () => {
     urls.length = 0;
 
     // The cached global verdict must not make the second validation skip the
-    // domestic probe — a key can be swapped in place for a domestic one.
+    // domestic probe - a key can be swapped in place for a domestic one.
     await provider.validateKey('key');
     expect(urls[0]).toBe(`${DOMESTIC}/models`);
   });

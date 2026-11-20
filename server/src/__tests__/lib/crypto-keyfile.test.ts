@@ -33,7 +33,7 @@ function restoreEnv() {
   else process.env.ENCRYPTION_KEY = ORIGINAL_ENCRYPTION_KEY;
 }
 
-describe('initEncryptionKey — key file (dev fallback)', () => {
+describe('initEncryptionKey - key file (dev fallback)', () => {
   beforeEach(() => {
     restoreEnv();
     delete process.env.ENCRYPTION_KEY;

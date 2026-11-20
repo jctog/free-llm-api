@@ -49,7 +49,7 @@ describe('custom_endpoint_host_labels migration (#704)', () => {
     ]);
   });
 
-  it('is idempotent — a second up() produces the identical result', () => {
+  it('is idempotent - a second up() produces the identical result', () => {
     const db = makeDb();
     dbs.push(db);
 

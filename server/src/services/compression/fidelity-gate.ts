@@ -44,7 +44,7 @@ export function checkFidelity(before: ChatMessage[], after: ChatMessage[]): Fide
     };
   }
 
-  // Only messages the pipeline actually rewrote can lose protected content —
+  // Only messages the pipeline actually rewrote can lose protected content -
   // an unchanged message preserves its spans by definition. Scanning just the
   // changed slices keeps the gate linear on large conversations where an
   // engine touched one tool result. Removed/deduplicated messages count as

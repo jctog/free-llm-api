@@ -8,7 +8,7 @@ import { ARTIFACT_SANDBOX, artifactMimeType, artifactSrcDoc, type Artifact } fro
 import { ARTIFACT_KEY_STEP, clampArtifactWidth, draggedArtifactWidth } from '@/lib/artifact-panel-size'
 
 // The artifact side panel: what a reply built, running. Preview is a
-// sandboxed iframe fed by srcdoc — scripts run, but the frame is an opaque
+// sandboxed iframe fed by srcdoc - scripts run, but the frame is an opaque
 // origin with no reach into the dashboard, its token or its session. Code is
 // the source, highlighted. Header: title, the two tabs on the centre line,
 // and reload / copy / download / close.
@@ -27,7 +27,7 @@ export interface ArtifactPanelProps {
   open: boolean
   width: number
   onWidthChange: (width: number) => void
-  /** Called once the user lets go of the handle — the moment to persist. */
+  /** Called once the user lets go of the handle - the moment to persist. */
   onWidthCommit?: (width: number) => void
   onClose: () => void
 }
@@ -41,7 +41,7 @@ export function ArtifactPanel({ artifact, open, width, onWidthChange, onWidthCom
   const [run, setRun] = useState(0)
   const [dragging, setDragging] = useState(false)
   const drag = useRef<{ startX: number; startWidth: number } | null>(null)
-  // First paint at width 0, then the transition carries it to `width` — that
+  // First paint at width 0, then the transition carries it to `width` - that
   // is the slide-in. A rAF callback runs BEFORE that frame paints, so flipping
   // there would skip the 0 state entirely; the width is forced through layout
   // first (reading offsetWidth) and the flip waits one more frame.
@@ -103,7 +103,7 @@ export function ArtifactPanel({ artifact, open, width, onWidthChange, onWidthCom
   return (
     // The outer box is what animates: its width goes 0 → width → 0. The inner
     // panel is pinned to the right at the full width, so the content never
-    // reflows mid-slide — it is revealed, not resized.
+    // reflows mid-slide - it is revealed, not resized.
     <div
       ref={boxRef}
       className={`relative shrink-0 overflow-hidden ${dragging ? '' : 'transition-[width] ease-out motion-reduce:transition-none'}`}

@@ -15,7 +15,7 @@ import {
 import { useI18n } from '@/i18n'
 
 // The Playground's right-hand settings rail: everything that shapes the NEXT
-// request but is not the request itself — which model answers, the system
+// request but is not the request itself - which model answers, the system
 // prompt it answers under, and the sampling knobs.
 //
 // It mirrors the conversation sidebar on the other edge: same collapse-to-a-
@@ -219,7 +219,7 @@ export function SettingsRail({
               footer={
                 noModels ? (
                   // Models only appear once a platform has an enabled key. Without
-                  // one, the list is just Auto/Fusion and looks broken — say why. (#269)
+                  // one, the list is just Auto/Fusion and looks broken - say why. (#269)
                   <div className="px-2 py-1.5 text-xs text-muted-foreground">{t('playground.noModels')}</div>
                 ) : undefined
               }

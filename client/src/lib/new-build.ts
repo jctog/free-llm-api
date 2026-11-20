@@ -1,8 +1,8 @@
 // Vite fingerprints the entry bundle (/assets/index-<hash>.js) and the server
 // sends index.html with no-cache, so the entry <script> in a fresh copy of
 // index.html names the build the server is serving now. A tab whose own entry
-// script differs is running a build that has since been replaced — after a
-// Docker pull, a source rebuild or a desktop update — and its lazy chunks may
+// script differs is running a build that has since been replaced - after a
+// Docker pull, a source rebuild or a desktop update - and its lazy chunks may
 // already be gone from disk.
 
 const ENTRY_SCRIPT = /<script\b[^>]*\btype=["']module["'][^>]*\bsrc=["']([^"']+)["']|<script\b[^>]*\bsrc=["']([^"']+)["'][^>]*\btype=["']module["']/i

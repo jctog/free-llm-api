@@ -2,14 +2,14 @@ import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vite
 import type { Express } from 'express';
 
 // Route-level characterization tests for the fallback hardening pack:
-//   item 3 — a daily-allocation 429 (Cloudflare "used up your daily free
+//   item 3 - a daily-allocation 429 (Cloudflare "used up your daily free
 //            allocation") benches until the next UTC midnight, not 90s;
-//   item 4 — an empty completion with finish_reason 'length' (reasoning model
+//   item 4 - an empty completion with finish_reason 'length' (reasoning model
 //            spent the whole output budget on hidden reasoning) fails over
 //            WITHOUT a cooldown or model penalty;
-//   item 5 — the wall-clock retry budget stops new attempts and returns the
+//   item 5 - the wall-clock retry budget stops new attempts and returns the
 //            rich exhaustion error;
-//   item 6 — a provider response without a `usage` block no longer logs 0
+//   item 6 - a provider response without a `usage` block no longer logs 0
 //            tokens (chars/4 estimation, matching the streaming path).
 
 const chatCompletion = vi.fn();
@@ -219,7 +219,7 @@ describe('fallback hardening (items 3, 4, 5, 6)', () => {
 
     expect(status).toBe(429);
     // The first attempt always runs, and so does the first RETRY even on a
-    // spent budget (#751) — attempt 2 is where the chain stops.
+    // spent budget (#751) - attempt 2 is where the chain stops.
     expect(chatCompletion).toHaveBeenCalledTimes(2);
     expect(body.error.message).toContain('retry time budget');
     expect(body.error.message).toContain('Attempt trail:');

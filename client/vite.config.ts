@@ -21,7 +21,7 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       proxy: {
-        // Force IPv4 — on Windows + Node 17+, `localhost` resolves to ::1 first,
+        // Force IPv4 - on Windows + Node 17+, `localhost` resolves to ::1 first,
         // which can collide with wslrelay / Docker Desktop listeners on the same port.
         '/api': `http://127.0.0.1:${serverPort}`,
         '/v1': `http://127.0.0.1:${serverPort}`,

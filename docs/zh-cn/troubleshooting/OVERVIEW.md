@@ -1,6 +1,6 @@
 [English](../../en/troubleshooting/OVERVIEW.md) · **简体中文**
 
-# 故障排查域 —— 概览与文件索引
+# 故障排查域 -- 概览与文件索引
 
 ## 范围
 

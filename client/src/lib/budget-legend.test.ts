@@ -8,7 +8,7 @@ function model(platform: string, modelId: string, intelligenceRank: number | und
 describe('sortByIntelligence', () => {
   it('orders smartest first regardless of the incoming (chain-priority) order', () => {
     // Chain priority is seeded provider by provider, so the server used to hand
-    // the legend groq, groq, google, google… — the "arranged by provider" look.
+    // the legend groq, groq, google, google… - the "arranged by provider" look.
     const chainOrder = [
       model('groq', 'llama-8b', 40, 1),
       model('groq', 'llama-70b', 12, 1),
@@ -50,7 +50,7 @@ describe('buildBudgetLegend', () => {
       model('groq', 'llama-8b', 40, 500_000),
     ], 3_500_000)
     expect(legend.rows.map(r => r.modelId)).toEqual(['gemini-flash', 'llama-70b', 'llama-8b'])
-    // Only model rows — nothing in the shape names a pool or a provider header.
+    // Only model rows - nothing in the shape names a pool or a provider header.
     for (const row of legend.rows) expect(Object.keys(row)).not.toContain('pool')
   })
 

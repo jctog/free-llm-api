@@ -4,7 +4,7 @@
 
 [← Back to README](../README.md) · [Documentation index](../README.md)
 
-Any OpenAI-compatible client works (Anthropic / Claude clients too — see [Anthropic / Claude clients](#anthropic--claude-clients)). Base URL `http://localhost:3001/v1`, unified key from the dashboard's Keys page. An interactive OpenAPI viewer covering every proxy endpoint is served at `GET /v1/docs`; the spec itself lives at `GET /v1/openapi.json`.
+Any OpenAI-compatible client works (Anthropic / Claude clients too - see [Anthropic / Claude clients](#anthropic--claude-clients)). Base URL `http://localhost:3001/v1`, unified key from the dashboard's Keys page. An interactive OpenAPI viewer covering every proxy endpoint is served at `GET /v1/docs`; the spec itself lives at `GET /v1/openapi.json`.
 
 - [Chat completions](#chat-completions)
 - [Routing strategies (`auto:*`)](#routing-strategies-auto)
@@ -60,13 +60,13 @@ curl http://localhost:3001/v1/chat/completions \
 
 ## Routing strategies (`auto:*`)
 
-Plain `auto` follows your active fallback chain. Add a suffix to steer a single request instead — no dashboard changes needed:
+Plain `auto` follows your active fallback chain. Add a suffix to steer a single request instead - no dashboard changes needed:
 
-- `auto:smart` — favor the highest-intelligence models
-- `auto:fast` — favor measured speed (throughput and time-to-first-byte)
-- `auto:cheap` — budget-leaning; currently the same blend as `balanced` (everything in the pool is already free)
-- `auto:reliable` — favor recent success rate
-- `auto:balanced` — the default blend (reliability first, speed and intelligence split the rest)
+- `auto:smart` - favor the highest-intelligence models
+- `auto:fast` - favor measured speed (throughput and time-to-first-byte)
+- `auto:cheap` - budget-leaning; currently the same blend as `balanced` (everything in the pool is already free)
+- `auto:reliable` - favor recent success rate
+- `auto:balanced` - the default blend (reliability first, speed and intelligence split the rest)
 
 These rank **every enabled model**, ignoring your chain order. Common synonyms resolve too (`auto:fastest`, `auto:speed`, `auto:smartest`, `auto:cheapest`, `auto:budget`, …), and the whole model string is case-insensitive.
 
@@ -92,7 +92,7 @@ curl http://localhost:3001/v1/chat/completions \
   }'
 ```
 
-An unknown profile name returns a clear `400` rather than silently falling back. Profiles are named fallback chains (see [Features](../../../README.md#features)) — create and switch them from the dashboard; whichever is active is what plain `auto` uses.
+An unknown profile name returns a clear `400` rather than silently falling back. Profiles are named fallback chains (see [Features](../../../README.md#features)) - create and switch them from the dashboard; whichever is active is what plain `auto` uses.
 
 ## Model listing
 
@@ -100,9 +100,9 @@ An unknown profile name returns a clear `400` rather than silently falling back.
 
 Each catalog entry also carries `execution_status`, a live answer to "would a request work right now":
 
-- `ready` — at least one key can actually serve it: enabled, healthy or not yet probed, not scoped away from this model, not on a rate-limit cooldown, and inside its rate and token windows. A key whose `status` is still `unknown` counts as ready, because probing is lazy and a fresh key is usable until something says otherwise.
-- `needsKey` — the model is disabled, or no enabled key matches it at all.
-- `exhausted` — keys match the model but every one of them is blocked at this moment, so a request would fail immediately. This is the state a burst of 429s produces, and it clears on its own when the cooldowns expire.
+- `ready` - at least one key can actually serve it: enabled, healthy or not yet probed, not scoped away from this model, not on a rate-limit cooldown, and inside its rate and token windows. A key whose `status` is still `unknown` counts as ready, because probing is lazy and a fresh key is usable until something says otherwise.
+- `needsKey` - the model is disabled, or no enabled key matches it at all.
+- `exhausted` - keys match the model but every one of them is blocked at this moment, so a request would fail immediately. This is the state a burst of 429s produces, and it clears on its own when the cooldowns expire.
 
 `?execution_status=ready` (also `needsKey`, `exhausted`; matched case-insensitively) narrows the catalog rows to one status, so an agent can ask for models it can call without reading the whole list. An unrecognised value filters nothing. Like `?available=`, the filter applies only to catalog rows: `auto`, `fusion` and the `auto:<profile>` chains are router entries rather than models with keys of their own, and are always listed.
 
@@ -163,7 +163,7 @@ final = client.chat.completions.create(
 print(final.choices[0].message.content)
 ```
 
-Works with `stream=True` as well — you'll get `delta.tool_calls` chunks followed by a `finish_reason: "tool_calls"` close. Under the hood, OpenAI-compatible providers (Groq, Cerebras, Mistral, OpenRouter, HuggingFace, Cloudflare, Cohere compat) get the request passed through; Gemini requests get translated into Google's `functionDeclarations` / `functionResponse` shape and the response is translated back.
+Works with `stream=True` as well - you'll get `delta.tool_calls` chunks followed by a `finish_reason: "tool_calls"` close. Under the hood, OpenAI-compatible providers (Groq, Cerebras, Mistral, OpenRouter, HuggingFace, Cloudflare, Cohere compat) get the request passed through; Gemini requests get translated into Google's `functionDeclarations` / `functionResponse` shape and the response is translated back.
 
 ## Gemini Google Search grounding
 
@@ -246,7 +246,7 @@ resp = client.chat.completions.create(
 print(resp.choices[0].message.content)
 ```
 
-If no vision-capable model is enabled in your Fallback Chain, an image request returns a clear `422` (`code: "no_vision_model"`) rather than silently dropping the image. (Image input on `/v1/responses` isn't supported yet — use `/v1/chat/completions`.)
+If no vision-capable model is enabled in your Fallback Chain, an image request returns a clear `422` (`code: "no_vision_model"`) rather than silently dropping the image. (Image input on `/v1/responses` isn't supported yet - use `/v1/chat/completions`.)
 
 ## Document attachments
 
@@ -259,7 +259,7 @@ Anthropic's `document` content blocks are accepted on `/v1/messages` when their 
 
 `text` and `content` sources are inlined into the prompt, wrapped in a fence tagged with a hash of the document body so the model can tell quoted material from your instructions. The tag is derived from the content rather than randomized, so a repeated attachment keeps the prompt prefix stable and stays cacheable.
 
-**Binary sources — `base64` (PDF, DOCX, XLSX…) and `url` — return a `400`.** No provider in the pool accepts them, and there is no local converter, so the honest answer is to refuse: forwarding the request would drop the attachment and produce a confident answer about a document the model never saw. The rejection happens before routing, so it spends no provider quota. Send the extracted text instead.
+**Binary sources - `base64` (PDF, DOCX, XLSX…) and `url` - return a `400`.** No provider in the pool accepts them, and there is no local converter, so the honest answer is to refuse: forwarding the request would drop the attachment and produce a confident answer about a document the model never saw. The rejection happens before routing, so it spends no provider quota. Send the extracted text instead.
 
 `url` sources are refused rather than fetched on your behalf; making the proxy retrieve arbitrary URLs would turn it into a request forwarder for whatever a client names.
 
@@ -267,7 +267,7 @@ Anthropic's `document` content blocks are accepted on `/v1/messages` when their 
 
 `POST /v1/images/generations`, `POST /v1/videos/generations`, and `POST /v1/audio/speech` route across the providers that serve media models. Images and speech also accept custom OpenAI-compatible media endpoints; video does not. Browse and toggle them on the dashboard's **Models → Image / Video / Audio** tabs.
 
-Video generation is served by two platforms — **`pollinations`** and **`huggingface`** (`VIDEO_PLATFORMS`). It accepts a JSON body with `prompt`, optional `model` (`auto` by default), and provider-dependent `duration`, `aspect_ratio`, `image`, `seed`, and `audio` options. A video job runs for minutes, so the whole surface is **bounded to a 5-minute timeout** (`VIDEO_FETCH_TIMEOUT_MS`); if the provider hasn't finished by then the request returns `504`. A client that hangs up mid-generation is detected via the socket `close` event, which aborts the work so the gateway does not keep polling (and fail over to a second provider) for a response nobody is waiting for.
+Video generation is served by two platforms - **`pollinations`** and **`huggingface`** (`VIDEO_PLATFORMS`). It accepts a JSON body with `prompt`, optional `model` (`auto` by default), and provider-dependent `duration`, `aspect_ratio`, `image`, `seed`, and `audio` options. A video job runs for minutes, so the whole surface is **bounded to a 5-minute timeout** (`VIDEO_FETCH_TIMEOUT_MS`); if the provider hasn't finished by then the request returns `504`. A client that hangs up mid-generation is detected via the socket `close` event, which aborts the work so the gateway does not keep polling (and fail over to a second provider) for a response nobody is waiting for.
 
 HuggingFace models route through the **fal queue** (`router.huggingface.co/fal-ai/…`): the request is submitted as a queued job, polled every 500 ms until `COMPLETED`, and the resulting video URL is fetched and streamed back. Pollinations models are requested directly. Both return the generated video as binary MP4 data with `X-Provider` and `X-Model` response headers:
 
@@ -292,7 +292,7 @@ X-Fallback-Attempts: 2
 X-Fallback-Trail: groq/llama-3.3-70b key1=rate_limited; google/gemini-2.5-flash key2=timeout
 ```
 
-`X-Fallback-Detail` adds what each of those hops **cost**, which is the part you cannot reconstruct from the trail — a request answered in 40s reads identically whether one provider stalled for 39 seconds or four failed fast:
+`X-Fallback-Detail` adds what each of those hops **cost**, which is the part you cannot reconstruct from the trail - a request answered in 40s reads identically whether one provider stalled for 39 seconds or four failed fast:
 
 ```
 X-Fallback-Detail: groq/llama-3.3-70b key1=rate_limited t=0+39000ms msg=Groq API error 429: rate limit; google/gemini-2.5-flash key2=timeout t=39000+12ms
@@ -300,23 +300,23 @@ X-Fallback-Detail: groq/llama-3.3-70b key1=rate_limited t=0+39000ms msg=Groq API
 
 `t=<start>+<duration>ms` is the offset from the start of the failover chain and how long that hop ran. `msg=` is the provider's error, redacted and truncated; it is last in each record, and any semicolon inside it becomes a comma so `; ` stays an unambiguous record separator.
 
-The detail header is **off by default** — it puts hop timings and provider error text on the response. Turn it on with `FALLBACK_DETAIL_HEADER=1` or the `expose_fallback_detail_header` settings key, which takes precedence. Both headers list at most ten hops and then a `; +N more` marker.
+The detail header is **off by default** - it puts hop timings and provider error text on the response. Turn it on with `FALLBACK_DETAIL_HEADER=1` or the `expose_fallback_detail_header` settings key, which takes precedence. Both headers list at most ten hops and then a `; +N more` marker.
 
-Only hops that already **failed** can appear. The hop actually serving your request is recorded after its response finishes — after the JSON is sent, or after the stream closes — so its duration does not exist while the headers are still open. Use `X-Routed-Via` to see which provider that was.
+Only hops that already **failed** can appear. The hop actually serving your request is recorded after its response finishes - after the JSON is sent, or after the stream closes - so its duration does not exist while the headers are still open. Use `X-Routed-Via` to see which provider that was.
 
-HTTP headers only carry printable ASCII, so a model id with characters outside that range (a Chinese name from a relay catalog, for example) is percent-encoded in the header — run the value through `decodeURIComponent` (or `urllib.parse.unquote`) to read it back.
+HTTP headers only carry printable ASCII, so a model id with characters outside that range (a Chinese name from a relay catalog, for example) is percent-encoded in the header - run the value through `decodeURIComponent` (or `urllib.parse.unquote`) to read it back.
 
-The opt-in response cache can be toggled per request with `X-FreeLLM-Cache: on|off` — an exact-match in-memory LRU for identical requests, streaming included (a streamed hit replays the stored SSE verbatim) (canonical SHA-256 keys over the full request, TTL and temperature gates, saved-token stats on the dashboard). Off by default; cache hits consume zero provider quota.
+The opt-in response cache can be toggled per request with `X-FreeLLM-Cache: on|off` - an exact-match in-memory LRU for identical requests, streaming included (a streamed hit replays the stored SSE verbatim) (canonical SHA-256 keys over the full request, TTL and temperature gates, saved-token stats on the dashboard). Off by default; cache hits consume zero provider quota.
 
 When [prompt compression](../compression/01-compression-pipeline.md) is enabled, `X-FreeLLM-Compress: off|on|lossless|standard|aggressive` can disable or lower the configured mode for one request. It cannot raise the operator's configured mode. The response reports the effective mode and estimated savings, for example `X-FreeLLM-Compress: standard; saved~=1840`.
 
-`X-FreeLLM-Task-Type: code|chat|auto` tells the router what kind of turn this is, so it can bias the routing weights: `code` trades some of the speed weight for intelligence (a wrong answer costs more than a slow one), `chat` does the reverse. It is a soft preference only — capability gates, the failover chain and the model catalog are untouched, and the shift is 30% of one axis by default. The default is `auto`: tool-bearing requests and messages carrying unambiguous code markers (a fenced block, a declaration, a stack frame, a `file.ts:214` reference) are treated as `code`, and everything else keeps the preset weights exactly as configured. The `fastest`, `reliable` and `custom` routing strategies ignore the header — those are an explicit operator choice about where on the axis to sit.
+`X-FreeLLM-Task-Type: code|chat|auto` tells the router what kind of turn this is, so it can bias the routing weights: `code` trades some of the speed weight for intelligence (a wrong answer costs more than a slow one), `chat` does the reverse. It is a soft preference only - capability gates, the failover chain and the model catalog are untouched, and the shift is 30% of one axis by default. The default is `auto`: tool-bearing requests and messages carrying unambiguous code markers (a fenced block, a declaration, a stack frame, a `file.ts:214` reference) are treated as `code`, and everything else keeps the preset weights exactly as configured. The `fastest`, `reliable` and `custom` routing strategies ignore the header - those are an explicit operator choice about where on the axis to sit.
 
 How far the shift goes is operator-tunable: `GET /api/settings/task-weight-share` reads the current fraction and `PUT /api/settings/task-weight-share` with `{"share": 0..1}` sets it (default `0.3`). `0` disables the bias while leaving the header itself accepted, and `null` clears the setting back to the default. It takes effect on the next request, with no restart.
 
 ## Embeddings
 
-`/v1/embeddings` is OpenAI-compatible, with one deliberate difference from chat routing: **failover never crosses models.** Vectors from different models live in incompatible spaces — silently switching models would corrupt any vector store built on top of the proxy. So embeddings route by **family** (one model identity + dimension), and failover only walks the providers serving that same family.
+`/v1/embeddings` is OpenAI-compatible, with one deliberate difference from chat routing: **failover never crosses models.** Vectors from different models live in incompatible spaces - silently switching models would corrupt any vector store built on top of the proxy. So embeddings route by **family** (one model identity + dimension), and failover only walks the providers serving that same family.
 
 ```python
 resp = client.embeddings.create(
@@ -346,11 +346,11 @@ curl http://localhost:3001/v1/embeddings \
 | `llama-nemotron-embed-vl-1b-v2` | 2048 | NVIDIA → OpenRouter |
 | `embeddinggemma-300m` | 768 | Cloudflare |
 
-The default family, per-provider toggles, and priorities live on the dashboard's **Models → Embeddings** page. Pick your family once and stick with it for a given vector store — that's the whole point of the family model.
+The default family, per-provider toggles, and priorities live on the dashboard's **Models → Embeddings** page. Pick your family once and stick with it for a given vector store - that's the whole point of the family model.
 
 ## Anthropic / Claude clients
 
-FreeLLMAPI also speaks Anthropic's Messages API, so anything built for Claude — including **Claude Code** and the official Anthropic SDKs — can run against your free pool. Point the client at your server's **origin** (Anthropic clients append `/v1/messages` themselves) and authenticate with your unified key. Both `x-api-key` and `Authorization: Bearer` are accepted.
+FreeLLMAPI also speaks Anthropic's Messages API, so anything built for Claude - including **Claude Code** and the official Anthropic SDKs - can run against your free pool. Point the client at your server's **origin** (Anthropic clients append `/v1/messages` themselves) and authenticate with your unified key. Both `x-api-key` and `Authorization: Bearer` are accepted.
 
 ```bash
 curl http://localhost:3001/v1/messages \
@@ -370,7 +370,7 @@ caller's `system` turn, exactly as on `/v1/chat/completions`.
 
 Claude model names map to your free pool on the **Keys → Anthropic** tab: each family (`default`, `opus`, `sonnet`, `haiku`) routes to `auto` (the router picks a free model) or a model you pin. `POST /v1/messages/count_tokens` and a content-negotiated `GET /v1/models` (Anthropic shape when `anthropic-version` is sent) are implemented too. Streaming, system prompts, tool use, and image input all translate across the same router as the OpenAI endpoints.
 
-**Claude Code** — point it at your server and start it:
+**Claude Code** - point it at your server and start it:
 
 *On macOS / Linux (Bash):*
 ```bash
@@ -386,12 +386,12 @@ $env:ANTHROPIC_AUTH_TOKEN="freellmapi-your-unified-key"
 claude
 ```
 
-> Use `ANTHROPIC_AUTH_TOKEN` (sent as a Bearer token), **not** `ANTHROPIC_API_KEY` — Claude Code treats a set `ANTHROPIC_API_KEY` as a conflicting first-party credential and refuses to start.
+> Use `ANTHROPIC_AUTH_TOKEN` (sent as a Bearer token), **not** `ANTHROPIC_API_KEY` - Claude Code treats a set `ANTHROPIC_API_KEY` as a conflicting first-party credential and refuses to start.
 
 ## Usage API (`GET /v1/usage`)
 
 `GET /v1/usage` answers "what has this gateway actually burned this month?" from
-the durable `key_monthly_usage` ledger — the same numbers the monthly key caps
+the durable `key_monthly_usage` ledger - the same numbers the monthly key caps
 enforce, so it never drifts from what a `429 quota_exceeded` was computed from.
 Authenticate with your unified proxy key (the same `Authorization: Bearer`
 every `/v1` route takes).
@@ -414,17 +414,17 @@ curl http://localhost:3001/v1/usage -H "Authorization: Bearer $FREELLMAPI_KEY"
 }
 ```
 
-`byKey` is the per-provider-key breakdown — the row you need when one machine's
+`byKey` is the per-provider-key breakdown - the row you need when one machine's
 agent config ate the month while the rest of the pool is untouched. `requestCap`
 / `tokenCap` are the caps from [Monthly provider-key budgets](#monthly-provider-key-budgets)
 (`null` = unlimited); spend is **not** clamped at the cap, so a key can report
-above it — that is what trips the next request to `429`. Keys deleted since the
+above it - that is what trips the next request to `429`. Keys deleted since the
 month began report under platform `removed` with no caps. Only the **unified**
 proxy key may call this route; client-profile keys get `403`.
 
 ## Free-tier budget API
 
-`GET /api/free-tier` returns the operator's free-tier budget as a **pool-deduped** monthly overview. Many models on one platform share the same free pool, so summing every model's label would double-count; the endpoint collapses models into quota pools (`inferQuotaPoolKey`) and reports **one documented budget per pool** (the largest `parseBudget` value seen in it), scaled by the number of usable (enabled + healthy/unknown) keys for the platform. Chain-disabled rows still contribute to a pool — they share the same provider allowance — and are only marked, never dropped, so the totals match the dashboard's stacked per-model bar.
+`GET /api/free-tier` returns the operator's free-tier budget as a **pool-deduped** monthly overview. Many models on one platform share the same free pool, so summing every model's label would double-count; the endpoint collapses models into quota pools (`inferQuotaPoolKey`) and reports **one documented budget per pool** (the largest `parseBudget` value seen in it), scaled by the number of usable (enabled + healthy/unknown) keys for the platform. Chain-disabled rows still contribute to a pool - they share the same provider allowance - and are only marked, never dropped, so the totals match the dashboard's stacked per-model bar.
 
 ```json
 {
@@ -458,7 +458,7 @@ proxy key may call this route; client-profile keys get `403`.
 
 ## Backups API
 
-`GET /api/backups` lists the encrypted database snapshots the gateway has taken (scheduled or manual via `POST /api/backups`). Each backup is an SQL dump with a header carrying its **sha256 key fingerprint** — `restore` refuses a dump written under a different `ENCRYPTION_KEY` (reports `backup: <fingerprint>; server: <fingerprint>`). The on-disk layout is versioned with `DUMP_FORMAT = 1`; a dump of a different format is rejected with `409`.
+`GET /api/backups` lists the encrypted database snapshots the gateway has taken (scheduled or manual via `POST /api/backups`). Each backup is an SQL dump with a header carrying its **sha256 key fingerprint** - `restore` refuses a dump written under a different `ENCRYPTION_KEY` (reports `backup: <fingerprint>; server: <fingerprint>`). The on-disk layout is versioned with `DUMP_FORMAT = 1`; a dump of a different format is rejected with `409`.
 
 ```json
 {
@@ -517,7 +517,7 @@ pointing to the next UTC month. OpenAI-compatible endpoints also return
 error format. Fusion subcalls obey the caps but retain Fusion's aggregate error
 format. If another key has capacity, normal fallback can use it.
 
-Crossing 80% and again 100% of either cap logs a soft budget alert — a
+Crossing 80% and again 100% of either cap logs a soft budget alert - a
 structured `key_budget_threshold` event in the dashboard's Logs page (the same
 viewer as provider logs), naming the key, the cap kind, the usage and the reset
 time. Each threshold fires once per key per UTC month, so a key cannot flood the

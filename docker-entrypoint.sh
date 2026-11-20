@@ -7,7 +7,7 @@ set -e
 # there, then drop back to the unprivileged user.
 
 # Best effort by design: chown fails legitimately under --cap-drop=CHOWN and on
-# CIFS/NFS mounts that pin ownership. Startup must not abort over it — the app
+# CIFS/NFS mounts that pin ownership. Startup must not abort over it - the app
 # may still be able to write, and if it cannot it says so itself.
 ensure_owned() {
   dir="$1"

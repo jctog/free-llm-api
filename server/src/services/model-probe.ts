@@ -1,4 +1,4 @@
-// model-probe — proactive per-model probes with explicit labels (#1438 PR 1).
+// model-probe - proactive per-model probes with explicit labels (#1438 PR 1).
 //
 // Key-level health says a credential works; it says nothing about whether a
 // specific MODEL behind that key actually answers. Free-tier aggregators
@@ -8,14 +8,14 @@
 //
 // This job sends a minimal real chat request ("Reply with OK") to routable
 // model+key pairs that have not been observed recently, and writes an explicit
-// status row: 'working' | 'unavailable'. PR 1 is OBSERVATION ONLY — nothing in
+// status row: 'working' | 'unavailable'. PR 1 is OBSERVATION ONLY - nothing in
 // routing, scoring or fallback reads the table yet; a follow-up consumes the
 // labels (tool-call variant, chat_only classification, dashboard badges).
 //
 // What it will never do:
 //   - probe a model that just served real traffic successfully (serving is
 //     stronger evidence than any probe, and probes cost free-tier quota);
-//   - feed the health checker, cooldowns or the failure counters — a probe is
+//   - feed the health checker, cooldowns or the failure counters - a probe is
 //     a question, never a verdict (same principle as probeKeyValidity);
 //   - use the fallback/healing machinery: the probe measures the model as-is,
 //     not the pipeline, so a probe never retries and never repairs;
@@ -171,7 +171,7 @@ async function probeChat(candidate: ProbeCandidate): Promise<void> {
 
 /**
  * Run the probe against one candidate: does this model answer at all?
- * A transport error is 'error' (inconclusive — the network, not the model,
+ * A transport error is 'error' (inconclusive - the network, not the model,
  * failed); any provider rejection (quota, 403/404 on the model) is
  * 'unavailable'. A success is 'working'.
  *
@@ -223,7 +223,7 @@ export function recordProbeResult(db: Db, candidate: ProbeCandidate, outcome: Pr
 // ── The pass ─────────────────────────────────────────────────────────────────
 
 // Failed-probe backoff per candidate: 30m, 1h, 2h, capped at 6h. A model that
-// stays unavailable converges to one probe per staleness window — re-probing
+// stays unavailable converges to one probe per staleness window - re-probing
 // it harder only burns the free quota the probe is meant to conserve.
 const PROBE_BACKOFF_BASE_MS = 30 * 60 * 1000;
 const PROBE_BACKOFF_MAX_MS = 6 * 60 * 60 * 1000;

@@ -12,7 +12,7 @@ export interface ParsedKey {
   prefix: string;
   platform: string | null;
   /** Custom OpenAI-compatible endpoints are identified by their base_url, so a
-   *  'custom' key is meaningless without one — the importer refuses those. Set
+   *  'custom' key is meaningless without one - the importer refuses those. Set
    *  by the formats that can carry it (export JSON, CSV, and the paired
    *  CUSTOM_<n>_BASE_URL / CUSTOM_<n>_KEY convention in .env). */
   baseUrl?: string;
@@ -21,7 +21,7 @@ export interface ParsedKey {
   models?: ParsedModelEntry[];
   /** Display name carried by a format that has one (CSV column 3, export
    *  JSON `label`). The import route stores it when present instead of
-   *  falling back to the generated env-var-style name — without it a CSV
+   *  falling back to the generated env-var-style name - without it a CSV
    *  round trip renamed every key. */
   label?: string;
 }
@@ -474,7 +474,7 @@ export function parseExportJson(content: string): ParseResult | null {
  * Split one CSV line into fields honouring RFC 4180 quoting: a quoted field
  * may contain commas and `""` escapes. Our own CSV export quotes every cell
  * and escapes quotes in labels, so a label like `work, primary` or `say "hi"`
- * is routine — the previous single regex could not represent those lines and
+ * is routine - the previous single regex could not represent those lines and
  * silently dropped the whole row on re-import.
  */
 function splitCsvLine(line: string): string[] {
@@ -529,7 +529,7 @@ function splitCsvRecords(content: string): string[] {
 
 /**
  * Parse CSV format: platform,key,label[,base_url] (with optional header row).
- * The trailing base_url column is what makes a 'custom' row importable — an
+ * The trailing base_url column is what makes a 'custom' row importable - an
  * endpoint is identified by its URL, so a custom key without one is orphaned.
  */
 export function parseCsv(content: string): KeyPair[] {
@@ -624,7 +624,7 @@ export function parseAuthJson(content: string): ParseResult {
 
 /**
  * Parse a comma-separated model list (#382). Trailing `-TOOLS` / `-VISION`
- * suffixes — either order, possibly both — strip off the stored id and set the
+ * suffixes - either order, possibly both - strip off the stored id and set the
  * matching capability flag. Trailing ONLY: a TOOLS/VISION inside the id is
  * part of the id, and the suffixes are uppercase by convention so a real model
  * id ending in `-tools` is never mangled.
@@ -667,7 +667,7 @@ interface CustomEnvFold {
  * to the CUSTOM_<n> pair, and `<PREFIX>_CUSTOM_MODELS=` turns a
  * `<PREFIX>_BASE_URL` + `<PREFIX>_API_KEY` (or `<PREFIX>_KEY`) pair in the
  * same paste into a custom endpoint carrying those models. A bare
- * `<PREFIX>_BASE_URL` without a models line beside it keeps its old meaning —
+ * `<PREFIX>_BASE_URL` without a models line beside it keeps its old meaning -
  * only the explicit models declaration makes the trio endpoint-defining.
  * A models line that pairs with nothing is consumed and reported, never
  * imported as if its value were a key.
@@ -775,8 +775,8 @@ function toParsedKeys(pairs: KeyPair[]): ParseResult {
     const prefix = extractPrefix(key);
     const platform = statedPlatform ?? detectPlatform(prefix);
     // The name before `=` becomes the stored label (splitRawKey in the import
-    // route). Formats that carry a display name — export JSON and CSV column 3
-    // — use it here, exactly as parseExportJson does, so an export/import
+    // route). Formats that carry a display name - export JSON and CSV column 3
+    // - use it here, exactly as parseExportJson does, so an export/import
     // round trip does not rename every key to the generated <PLATFORM>_KEY.
     const name = label?.trim() || key;
 

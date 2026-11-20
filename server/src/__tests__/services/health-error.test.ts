@@ -63,7 +63,7 @@ describe('persisted key health diagnostics', () => {
     const error = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     // Seeded as 'unknown', and a transport error preserves that rather than
-    // demoting to 'error' — the diagnostic is still recorded either way.
+    // demoting to 'error' - the diagnostic is still recorded either way.
     expect(await checkKeyHealth(id)).toBe('unknown');
     expect(row(id)).toMatchObject({
       status: 'unknown',

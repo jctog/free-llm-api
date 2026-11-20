@@ -94,7 +94,7 @@ describe('scoring: intelligence_rank is visible on the axis (#673)', () => {
 
   it('a rank 6 → 1 edit moves the displayed axis by at least 2 points', () => {
     // Under the old linear `tier*1000 - rank` term this move was ~0.25 points,
-    // i.e. the same rendered integer — the edit looked like it did nothing.
+    // i.e. the same rendered integer - the edit looked like it did nothing.
     expect(shown(1) - shown(6)).toBeGreaterThanOrEqual(2);
   });
 
@@ -195,7 +195,7 @@ describe('scoring: combineScore', () => {
     expect(combineScore({ reliability: 0, speed: 0, intelligence: 0, headroom: 1, rateLimit: 1 }, BANDIT_PRESETS.balanced)).toBe(0);
   });
 
-  it('a 100%-reliable slow model beats a 0%-reliable fast one under balanced — no hand-cap needed', () => {
+  it('a 100%-reliable slow model beats a 0%-reliable fast one under balanced - no hand-cap needed', () => {
     const reliable = combineScore({ reliability: 1, speed: 0.1, intelligence: 0.5, headroom: 1, rateLimit: 1 }, BANDIT_PRESETS.balanced);
     const flaky = combineScore({ reliability: 0, speed: 1, intelligence: 0.5, headroom: 1, rateLimit: 1 }, BANDIT_PRESETS.balanced);
     expect(reliable).toBeGreaterThan(flaky);
@@ -243,7 +243,7 @@ describe('scoring: Beta sampler (Thompson exploration)', () => {
   });
 
   it('explores: a strong model does NOT win every single draw vs a decent one', () => {
-    // Beta(20,2) ≈ 0.91 vs Beta(12,4) ≈ 0.75 — overlapping tails mean the
+    // Beta(20,2) ≈ 0.91 vs Beta(12,4) ≈ 0.75 - overlapping tails mean the
     // weaker model should still sometimes sample higher. That overlap is what
     // keeps the router from freezing onto a single model.
     let weakerWonAtLeastOnce = false;
@@ -256,7 +256,7 @@ describe('scoring: Beta sampler (Thompson exploration)', () => {
 
 describe('scoring: time-of-day dynamic ranking (#760)', () => {
   // Every timestamp below is an absolute instant (Z), so the timezone under
-  // test — not the machine running the suite — decides which hour it is.
+  // test - not the machine running the suite - decides which hour it is.
   const cfg = (patch: Partial<PeakHoursConfig> = {}): PeakHoursConfig =>
     ({ ...DEFAULT_PEAK_HOURS, enabled: true, ...patch });
 

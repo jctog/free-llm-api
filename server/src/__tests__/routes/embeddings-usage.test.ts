@@ -7,7 +7,7 @@ import { mintDashboardToken, isGatedApiPath } from '../helpers/auth.js';
 // GET /api/embeddings/usage backs the month-to-date card on the Embeddings tab.
 // The response gained `platform`, `quotaLabel` and the two totals; the three
 // original per-family fields are load-bearing for the family rows and must keep
-// their shape. There is deliberately no budget field — embedding_models carries
+// their shape. There is deliberately no budget field - embedding_models carries
 // only a free-text quota_label, so a percentage would have to be invented.
 
 let dashToken = '';
@@ -94,7 +94,7 @@ describe('GET /api/embeddings/usage', () => {
     expect(body.totalTokensMonth).toBe(0);
   });
 
-  it('exposes no budget field — quota labels are not token budgets', async () => {
+  it('exposes no budget field - quota labels are not token budgets', async () => {
     seedFamily('bge-m3', 'cloudflare', '@cf/baai/bge-m3', 1, '10K neurons/day (shared)');
 
     const { body } = await get(app, '/api/embeddings/usage');

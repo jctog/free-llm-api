@@ -7,8 +7,8 @@ import { routePinnedModel } from '../../services/router.js';
 import { mintDashboardToken, isGatedApiPath } from '../helpers/auth.js';
 
 // #619(b): a custom endpoint can hold SEVERAL credentials. Adding a second key
-// for a base_url that already has one used to UPDATE the existing row — the
-// first key vanished with no warning — and the models upsert re-bound every
+// for a base_url that already has one used to UPDATE the existing row - the
+// first key vanished with no warning - and the models upsert re-bound every
 // model of that endpoint to whichever key was submitted last.
 
 const ENDPOINT = 'http://127.0.0.1:18080/v1';
@@ -117,7 +117,7 @@ describe('multiple keys per custom endpoint (#619)', () => {
     await post(app, '/api/keys/custom', { baseUrl: ENDPOINT, model: 'relay-model' });
     await post(app, '/api/keys/custom', { baseUrl: ENDPOINT, model: 'relay-model', apiKey: 'first-secret' });
 
-    // 'no-key' is a placeholder, not a credential — replacing it loses nothing.
+    // 'no-key' is a placeholder, not a credential - replacing it loses nothing.
     expect(secrets()).toEqual(['first-secret']);
   });
 

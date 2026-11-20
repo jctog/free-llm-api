@@ -15,7 +15,7 @@ import { toast } from '@/lib/toast'
 // lock desktop users out of copying a full key. The desktop server skips
 // re-auth (FREEAPI_DESKTOP) for local requests, so here we just hide the
 // password field. Only the Electron preload sets this flag, so a browser
-// reaching the same desktop server over LAN still gets the field — and the
+// reaching the same desktop server over LAN still gets the field - and the
 // server still demands the password from it.
 const isDesktopApp = typeof window !== 'undefined'
   && (window as Window & { __FREEAPI_DESKTOP__?: boolean }).__FREEAPI_DESKTOP__ === true
@@ -57,7 +57,7 @@ export function CopyKeyDialog({
       })
       // A plain-HTTP LAN origin has no Clipboard API at all, so this falls back
       // to execCommand rather than throwing (#734). If even that fails the key
-      // has already been revealed — show it instead of discarding it, or the
+      // has already been revealed - show it instead of discarding it, or the
       // password round trip was for nothing.
       if (!await copyText(key)) {
         setRevealed(key)

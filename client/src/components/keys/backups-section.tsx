@@ -35,7 +35,7 @@ function formatBytes(bytes: number): string {
 }
 
 // The dump is a file download, not JSON, so it goes through fetch directly
-// rather than apiFetch — with the same bearer token the rest of /api uses.
+// rather than apiFetch - with the same bearer token the rest of /api uses.
 async function downloadBackupFile(id: number, filename: string): Promise<void> {
   const token = getToken()
   const base = import.meta.env.BASE_URL.replace(/\/$/, '')

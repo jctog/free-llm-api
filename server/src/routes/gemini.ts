@@ -229,7 +229,7 @@ async function handleGenerate(req: Request, res: Response, stream: boolean): Pro
 // Anthropic (/v1/messages) surfaces, whose handlers are `async` and so hand
 // Express their promise. A voided promise escapes the router entirely and
 // resurfaces as an `unhandledRejection`, which the process safety net
-// classifies as fatal for anything that is not a transport error — so one
+// classifies as fatal for anything that is not a transport error - so one
 // failing request exited the whole gateway instead of answering 500.
 geminiRouter.post(/^\/models\/(.+):generateContent$/, (req, res) => handleGenerate(req, res, false));
 

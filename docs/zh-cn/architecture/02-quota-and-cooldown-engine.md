@@ -1,6 +1,6 @@
 [English](../../en/architecture/02-quota-and-cooldown-engine.md) · **简体中文**
 
-# 额度与冷却引擎 —— 深度剖析
+# 额度与冷却引擎 -- 深度剖析
 
 > **源码：** `server/src/services/ratelimit.ts`、`server/src/services/cooldown-probe.ts`、`server/src/services/provider-quota.ts`
 
@@ -66,8 +66,8 @@ releaseLease(leaseId)  // finally 块里，幂等
 |--------|---------|-----------------|
 | `heuristic` | 我们自己的猜测（瞬时 90s、升级阶梯、鉴权失败停用、空补全） | **是** |
 | `authoritative` | 有显式提供方 Retry-After 或每日额度重置支撑（事实） | 否 |
-| `credit` | 402 额度用光——密钥校验对充值证明不了任何事 | 否 |
-| `tier` | 403 模型不在档位——密钥校验通过但模型仍被档位门槛挡住 | 否 |
+| `credit` | 402 额度用光--密钥校验对充值证明不了任何事 | 否 |
+| `tier` | 403 模型不在档位--密钥校验通过但模型仍被档位门槛挡住 | 否 |
 
 ### 升级阶梯（按模型+密钥，滚动 24h）
 
@@ -80,7 +80,7 @@ releaseLease(leaseId)  // finally 块里，幂等
 
 - 日计数器健康时的**瞬时 RPM/TPM 429** → 短 90s 冷却，**不计入**阶梯。
 - **每日耗尽**（RPD/TPD 计数器 ≥ 上限） → 走阶梯（最多 24h）。
-- **未知限额**（NULL RPD/TPD）：启发式——1 小时内 2+ 次 429 → "实际上每日耗尽" → 升级**但封顶 10 分钟**（`UNKNOWN_LIMIT_MAX_COOLDOWN_MS`）。防止 Ollama/Cloudflare 等在每个请求都是 429 时陷入 90s 死循环。
+- **未知限额**（NULL RPD/TPD）：启发式--1 小时内 2+ 次 429 → "实际上每日耗尽" → 升级**但封顶 10 分钟**（`UNKNOWN_LIMIT_MAX_COOLDOWN_MS`）。防止 Ollama/Cloudflare 等在每个请求都是 429 时陷入 90s 死循环。
 - **本地端点**（环回/RFC1918 `base_url`）：封顶 **5 s**，绝不升级（#592）。
 
 ### Retry-After 处理
@@ -114,9 +114,9 @@ parseProviderLimit(message) → { kind: 'tpm', limit: 30000 }
 learnLimitFromError(modelDbId, err) → 写入 models.tpm_limit（如果 NULL 或更低）
 ```
 
-- **只收紧**：填 NULL 或**降低**现有限额。永不升高——撞上天花板意味着预检已经放行过量。
+- **只收紧**：填 NULL 或**降低**现有限额。永不升高--撞上天花板意味着预检已经放行过量。
 - 轴优先级：TPD → TPM → RPD → RPM（天先于分钟，词元先于请求）。
-- 要求**同时**有 "Limit N" 和自信的轴匹配——不猜。
+- 要求**同时**有 "Limit N" 和自信的轴匹配--不猜。
 
 ---
 

@@ -3,7 +3,7 @@
 // A freshly pasted provider key serves EVERY model of its platform (#657:
 // `model_scope_json` NULL = no scope). That is right for most people and wrong
 // for anyone holding a relay-station key that only pays for a couple of model
-// groups — and the only way to find out used to be a stream of 401s at routing
+// groups - and the only way to find out used to be a stream of 401s at routing
 // time. So the moment a key lands for a platform with a big catalog, offer the
 // list once.
 //
@@ -22,7 +22,7 @@ import type { FallbackEntry } from './routing'
 
 /** One row of the picker: a catalog model this key could be scoped to. */
 export interface ScopeCandidate {
-  /** The provider-side model id — what `modelScope` actually stores. */
+  /** The provider-side model id - what `modelScope` actually stores. */
   modelId: string
   displayName: string
   /** Catalog capability tier ('Frontier' | 'Large' | 'Medium' | 'Small'), or null. */
@@ -39,7 +39,7 @@ export const MODEL_PICKER_MIN_MODELS = 6
 
 /**
  * The picker rows for one platform, taken from the `['fallback']` model list
- * the dashboard already holds — no extra endpoint, and no widening of the
+ * the dashboard already holds - no extra endpoint, and no widening of the
  * POST /api/keys response.
  *
  * Order is left exactly as the server sent it (fallback priority, i.e. roughly
@@ -52,7 +52,7 @@ export function scopeCandidates(
   entries: readonly Pick<FallbackEntry, 'platform' | 'modelId' | 'displayName' | 'sizeLabel' | 'contextWindow'>[],
   platform: string,
 ): ScopeCandidate[] {
-  // 'custom' rows are per-endpoint, not per-platform — one custom key must
+  // 'custom' rows are per-endpoint, not per-platform - one custom key must
   // never be offered another endpoint's models.
   if (!platform || platform === 'custom') return []
   const seen = new Set<string>()
@@ -79,7 +79,7 @@ export function shouldOfferModelPicker(candidates: readonly ScopeCandidate[]): b
 /**
  * What confirming the picker should do.
  *
- * `patch: false` means "send nothing at all" — either every model is ticked
+ * `patch: false` means "send nothing at all" - either every model is ticked
  * (the key already serves everything, and leaving the scope NULL keeps future
  * catalog additions flowing through it) or nothing is ticked (not expressible;
  * the caller disables Confirm, and this is the belt-and-braces half).

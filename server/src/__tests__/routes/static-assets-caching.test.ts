@@ -57,7 +57,7 @@ describe('static SPA: gzip compression + asset cache headers', () => {
     );
     fs.writeFileSync(path.join(tmpDir, 'assets', 'index-Ab3dE5fg.js'), BIG_JS);
     fs.writeFileSync(path.join(tmpDir, 'assets', 'index-Zz9Yx8w0.css'), BIG_CSS);
-    // A non-index hashed chunk — guards against only special-casing index-*.
+    // A non-index hashed chunk - guards against only special-casing index-*.
     fs.writeFileSync(path.join(tmpDir, 'assets', 'vendor-Q1w2E3r4.js'), BIG_JS);
 
     process.env.CLIENT_DIST = tmpDir;
@@ -82,7 +82,7 @@ describe('static SPA: gzip compression + asset cache headers', () => {
     for (const asset of [
       '/assets/index-Ab3dE5fg.js',
       '/assets/index-Zz9Yx8w0.css',
-      '/assets/vendor-Q1w2E3r4.js', // not index-* — all hashed chunks covered
+      '/assets/vendor-Q1w2E3r4.js', // not index-* - all hashed chunks covered
     ]) {
       const res = await get(port, asset);
       expect(res.status, asset).toBe(200);
@@ -107,7 +107,7 @@ describe('static SPA: gzip compression + asset cache headers', () => {
 
   it('does NOT gzip API responses (SSE/proxy responses stay untouched)', async () => {
     // /v1/openapi.json is large (>1 KB) JSON served by an API router mounted
-    // before the compression middleware — proof the middleware never wraps it.
+    // before the compression middleware - proof the middleware never wraps it.
     const res = await get(port, '/v1/openapi.json', { 'Accept-Encoding': 'gzip' });
     expect(res.status).toBe(200);
     expect(res.body.length).toBeGreaterThan(1024);

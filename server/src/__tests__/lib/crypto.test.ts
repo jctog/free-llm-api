@@ -44,7 +44,7 @@ describe('Crypto', () => {
     // Regression: the old short-key branch was '****' + key.slice(-4), which
     // echoed a 4-character key back IN FULL and revealed 4 of 5 characters of a
     // 5-character key. Short keys are real (proxy credentials, self-hosted
-    // Ollama tokens), and the mask is display-only — it must never be enough to
+    // Ollama tokens), and the mask is display-only - it must never be enough to
     // reconstruct the secret.
     it('should reveal nothing at all for keys shorter than 5 characters', () => {
       expect(maskKey('abcd')).toBe('****');

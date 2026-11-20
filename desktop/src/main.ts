@@ -15,7 +15,7 @@ import { initUpdater, getUpdateState, checkForUpdates, downloadUpdate, installUp
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_PORT = 31415;
 
-// Lean posture: one instance, menu-bar only. GPU stays ON — vibrancy
+// Lean posture: one instance, menu-bar only. GPU stays ON - vibrancy
 // (the popover/dashboard glass) needs GPU compositing; with hardware
 // acceleration disabled, transparent windows render an opaque white.
 app.setName('FreeLLMAPI');
@@ -25,8 +25,8 @@ if (!app.requestSingleInstanceLock()) {
   app.quit();
 } else {
   // Before anything else can print: a packaged app has no attached stdout, so
-  // without this the server's console output — the password-reset code above
-  // all (#824) — is written nowhere the user can read it.
+  // without this the server's console output - the password-reset code above
+  // all (#824) - is written nowhere the user can read it.
   installFileLogger();
 
   let resolvedPort = DEFAULT_PORT;
@@ -45,7 +45,7 @@ if (!app.requestSingleInstanceLock()) {
     ? (nativeTheme.shouldUseDarkColors ? 'dark' : 'light')
     : themeChoice;
   // With a 'system' choice the OS can flip appearance while the dashboard
-  // window (and its reporting preload) is closed — track it here too.
+  // window (and its reporting preload) is closed - track it here too.
   nativeTheme.on('updated', async () => {
     if (themeChoice !== 'system') return;
     const next = nativeTheme.shouldUseDarkColors ? 'dark' : 'light';
@@ -64,8 +64,8 @@ if (!app.requestSingleInstanceLock()) {
     if (sessionToken) openDashboard(resolvedPort, sessionToken);
   });
 
-  // Reopening a *running* app on macOS — double-clicking it in Finder, clicking
-  // its Dock icon — is delivered as 'activate'. LaunchServices activates the
+  // Reopening a *running* app on macOS - double-clicking it in Finder, clicking
+  // its Dock icon - is delivered as 'activate'. LaunchServices activates the
   // live process instead of starting a second one, so 'second-instance' above
   // never fires for it. Without this handler a user whose tray icon is hidden
   // or clipped by the menu bar has no way back into the UI at all (#807).
@@ -80,7 +80,7 @@ if (!app.requestSingleInstanceLock()) {
   // the local server belongs in the system browser. Without a window-open
   // handler, target="_blank" links (e.g. "Get API key" on the Keys page)
   // spawn a bare child window that inherits our preload and renders blank
-  // (#304) — deny the window and hand the URL to the OS instead. Only
+  // (#304) - deny the window and hand the URL to the OS instead. Only
   // http(s) ever reaches openExternal.
   const isExternal = (url: string) => {
     try {
@@ -202,7 +202,7 @@ if (!app.requestSingleInstanceLock()) {
   const TRAY_PROBE_DELAY_MS = 1500;
 
   // The app is menu-bar-only, so a tray macOS declines to show leaves it running
-  // with no UI whatsoever — the silent failure behind #807. Say so in the log,
+  // with no UI whatsoever - the silent failure behind #807. Say so in the log,
   // and once per version offer the ways in that do not need the icon.
   function reportHiddenTray(tray: Tray, port: number): void {
     let visible: boolean;
@@ -212,7 +212,7 @@ if (!app.requestSingleInstanceLock()) {
       return; // a diagnostic must never be the thing that breaks startup
     }
     if (visible) return;
-    console.log('[desktop] the menu bar is not showing our tray icon — see #807');
+    console.log('[desktop] the menu bar is not showing our tray icon - see #807');
 
     const cfg = loadConfig();
     if (cfg.trayHiddenNoticeVersion === app.getVersion()) return;
@@ -265,14 +265,14 @@ if (!app.requestSingleInstanceLock()) {
       : path.join(repoRoot, 'client/dist');
 
     // LAN access binds the embedded server to 0.0.0.0 so Tailscale / VMs / other
-    // devices can reach it (#442, #418). Off by default — 127.0.0.1 keeps the
+    // devices can reach it (#442, #418). Off by default - 127.0.0.1 keeps the
     // API local-only. The bind host is fixed at listen() time, so the tray
     // toggle persists the flag and relaunches.
     const host = cfg.lanAccess ? '0.0.0.0' : '127.0.0.1';
 
     // The bundled server runs in THIS process, so handing it the shell's own
     // version is both the cheapest and the most authoritative answer for the
-    // dashboard's version row — no manifest lookup, and it cannot disagree with
+    // dashboard's version row - no manifest lookup, and it cannot disagree with
     // the app the user actually launched (#703).
     process.env.FREEAPI_VERSION = app.getVersion();
 
@@ -352,7 +352,7 @@ if (!app.requestSingleInstanceLock()) {
           const pop = getPopoverWindow();
           pop?.removeAllListeners('blur'); // stay open unfocused
           if (pop) fs.writeFileSync('/tmp/freeapi-popover-bounds.json', JSON.stringify(pop.getBounds()));
-          // FREEAPI_THEME forces a theme for captures — skip the dashboard
+          // FREEAPI_THEME forces a theme for captures - skip the dashboard
           // then, or its theme report would immediately override the override.
           if (!process.env.FREEAPI_THEME) {
             openDashboard(port, sessionToken);

@@ -17,9 +17,9 @@ import type { ChatCompletionChunk } from '@freellmapi/shared/types.js';
  * send SSE headers instantly then prefill for minutes on 100k-token prompts.
  * Healthy long prefills died at 90s with "stream stalled: no data for 90000ms".
  *
- * The fix gives the FIRST read its own budget — the platform's already-tuned
+ * The fix gives the FIRST read its own budget - the platform's already-tuned
  * chat timeout (env-overridable via PROVIDER_TIMEOUT_<PLATFORM>), floored at
- * the stall budget so it can never be stricter than before — while subsequent
+ * the stall budget so it can never be stricter than before - while subsequent
  * reads keep the mid-stream stall budget (PROVIDER_STREAM_STALL_TIMEOUT_MS,
  * now also per-platform via PROVIDER_STREAM_STALL_TIMEOUT_<PLATFORM>).
  */
@@ -83,8 +83,8 @@ afterEach(() => {
 describe('first-byte grace period (issue #584)', () => {
   it('a stream silent past the stall timeout, then delivering, succeeds under the chat-timeout grace (the #584 repro)', async () => {
     // Stall budget 100ms; chat timeout (= first-byte grace) 1500ms. The
-    // upstream sends nothing for 400ms — over the stall budget, within the
-    // grace — then a normal completion. Pre-fix this died at the stall budget.
+    // upstream sends nothing for 400ms - over the stall budget, within the
+    // grace - then a normal completion. Pre-fix this died at the stall budget.
     process.env.PROVIDER_STREAM_STALL_TIMEOUT_MS = '100';
     const provider = makeProvider(1500);
     vi.spyOn(global, 'fetch').mockResolvedValue(delayedSseResponse([
@@ -98,7 +98,7 @@ describe('first-byte grace period (issue #584)', () => {
 
   it('a mid-stream gap past the stall timeout still fails fast with the stall message', async () => {
     // First byte arrives instantly (grace satisfied); the stream then goes
-    // silent past the stall budget — the watchdog must still fire.
+    // silent past the stall budget - the watchdog must still fire.
     process.env.PROVIDER_STREAM_STALL_TIMEOUT_MS = '100';
     const provider = makeProvider(1500);
     vi.spyOn(global, 'fetch').mockResolvedValue(delayedSseResponse([
@@ -115,7 +115,7 @@ describe('first-byte grace period (issue #584)', () => {
   it('no first byte within the grace budget fails with the distinct first-byte message', async () => {
     // Chat timeout 200ms, stall 100ms → first-byte budget max(200,100)=200ms.
     // The upstream stays silent for 800ms. The error must say "no first byte",
-    // not "stream stalled" — distinct wording for the attempt-trace summary.
+    // not "stream stalled" - distinct wording for the attempt-trace summary.
     process.env.PROVIDER_STREAM_STALL_TIMEOUT_MS = '100';
     const provider = makeProvider(200);
     vi.spyOn(global, 'fetch').mockResolvedValue(delayedSseResponse([
@@ -126,14 +126,14 @@ describe('first-byte grace period (issue #584)', () => {
     expect(err).not.toBeNull();
     expect(err.message).toContain('no first byte within 200ms');
     expect(err.message).not.toContain('stream stalled');
-    // Fires before any byte reached the client — must fail over invisibly.
+    // Fires before any byte reached the client - must fail over invisibly.
     expect(isRetryableError(err)).toBe(true);
   });
 
   it('the first-byte grace never tightens below the stall budget (short chat timeout)', async () => {
     // Chat timeout 100ms but stall budget 600ms: pre-grace the first read had
     // the full stall budget, and the grace must not make it stricter. First
-    // byte at 300ms — over the chat timeout, under the stall budget — succeeds.
+    // byte at 300ms - over the chat timeout, under the stall budget - succeeds.
     process.env.PROVIDER_STREAM_STALL_TIMEOUT_MS = '600';
     const provider = makeProvider(100);
     vi.spyOn(global, 'fetch').mockResolvedValue(delayedSseResponse([
@@ -238,7 +238,7 @@ describe('google adapter first-byte grace (own stream reader)', () => {
 describe('client abort composition under the grace period (#601 non-regression)', () => {
   it('a client abort while waiting for the first byte rejects promptly with the marked reason, not a timeout', async () => {
     // Real loopback upstream: undici's signal wiring is the behavior under
-    // test. SSE headers arrive instantly, then no body bytes — the consumer is
+    // test. SSE headers arrive instantly, then no body bytes - the consumer is
     // parked in the FIRST read, under a long grace budget. The disconnect must
     // surface immediately as the marked client abort, not wait out any budget.
     let sawClose!: () => void;

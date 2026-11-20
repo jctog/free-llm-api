@@ -9,7 +9,7 @@ beforeEach(() => {
 
 // classifyClaudeFamily maps a requested model alias to a Claude family (or null
 // for a concrete catalog id). Claude Code's planning alias `opusplan` is
-// opus-ish by name, but the operator map has no `opusplan` slot — it must fall
+// opus-ish by name, but the operator map has no `opusplan` slot - it must fall
 // through to the `default` family, as the function's own comment states.
 describe('classifyClaudeFamily', () => {
   it('routes Claude Code opusplan aliases to the default family', () => {

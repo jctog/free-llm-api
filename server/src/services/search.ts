@@ -239,7 +239,7 @@ export function decodeEntities(v: string): string {
       // (obfuscated-email addresses render as &#xD800;-style entities), and
       // this decoder runs on every hit title and snippet from every engine.
       // Same guard as safeCodePoint in routes/update.ts, which caught this
-      // exact class in the update-check feed. Leave the entity verbatim —
+      // exact class in the update-check feed. Leave the entity verbatim -
       // it is display text, not a hard parse dependency.
       const isLoneSurrogate = code >= 0xd800 && code <= 0xdfff;
       return Number.isFinite(code) && code > 0 && code <= 0x10ffff && !isLoneSurrogate
@@ -499,7 +499,7 @@ function logSearch(row: SearchEngineRow, keyId: number | null, status: 'ok' | 'e
   // The per-key monthly caps (#1158) and GET /v1/usage read the
   // key_monthly_usage ledger, which the requests_key_monthly_usage trigger
   // feeds from `requests`. Search only wrote search_requests, so a served
-  // search spent provider quota the cap never saw — the exact rerank gap
+  // search spent provider quota the cap never saw - the exact rerank gap
   // (#1621/#1627). request_type='search' follows the rerank/embeddings
   // precedent; the dashboard's Search page keeps reading search_requests.
   try {

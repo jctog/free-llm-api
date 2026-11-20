@@ -73,7 +73,7 @@ function mergeJson(existing: string, value: Record<string, unknown>, arrays: Rec
 // that path, and an explicit `undefined` deletes the key (a generator's way
 // to retire a sibling the new value makes stale). Editing the parsed
 // Document rather than re-rendering from a plain object keeps the user's
-// comments, key order, and quoting for every node the patch does not touch —
+// comments, key order, and quoting for every node the patch does not touch -
 // a settings.yaml shared with other providers (DeepSeek Harness keeps every
 // route under one `llm-pi-ai` key) must not lose its siblings just because
 // ours changed.
@@ -284,8 +284,8 @@ function splitTomlSections(generated: string): TomlSections {
 // the existing file, never appended after it. Generated tables are appended at
 // the end, and only root keys that the generated ROOT REGION sets are removed
 // from the existing root region. An existing `[[array]]` entry is replaced only
-// when a generated entry of the same array carries the same `name` — together
-// with the `[array.sub]` tables that belong to it — so the user's other entries
+// when a generated entry of the same array carries the same `name` - together
+// with the `[array.sub]` tables that belong to it - so the user's other entries
 // in that array stay put.
 function mergeToml(existing: string, generated: string): string {
   if (!existing.trim()) return generated;

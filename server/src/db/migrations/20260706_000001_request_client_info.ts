@@ -2,7 +2,7 @@ import type { Db } from '../types.js';
 
 /**
  * Record WHO made each proxied call. All local clients share the single
- * unified API key, so the key can't distinguish callers — the client IP
+ * unified API key, so the key can't distinguish callers - the client IP
  * (plus User-Agent for tunneled clients that all arrive as loopback) is the
  * only per-caller signal available to the analytics "Recent calls" view.
  *

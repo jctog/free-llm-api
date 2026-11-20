@@ -3,7 +3,7 @@ import { ModelScopeProvider } from '../../providers/modelscope.js';
 import { getProvider, hasProvider, resolveProvider } from '../../providers/index.js';
 import type { KeyValidationFailure } from '../../providers/base.js';
 
-// All fixtures are deliberately fake — no real ModelScope tokens exist for
+// All fixtures are deliberately fake - no real ModelScope tokens exist for
 // this project yet (auth requires an Alibaba Cloud cn-site account binding).
 const GARBAGE_KEY = 'ms-test-invalid';
 
@@ -21,7 +21,7 @@ const ROSTER = {
 
 // The verified keyless probe (2026-07-26): a 401 from chat/completions with a
 // garbage Bearer token. The alibaba-binding variant below is the
-// maintainer-documented shape for unbound accounts — unconfirmed until a
+// maintainer-documented shape for unbound accounts - unconfirmed until a
 // community tester runs a real token (#581).
 const AUTH_FAILED_401 = {
   ok: false,
@@ -49,7 +49,7 @@ describe('ModelScope registration (#581)', () => {
 });
 
 describe('ModelScope validateKey (#581)', () => {
-  it('does NOT trust GET /v1/models — a garbage key that 200s there is still invalid', async () => {
+  it('does NOT trust GET /v1/models - a garbage key that 200s there is still invalid', async () => {
     // The trap: ModelScope's /v1/models answers 200 with or without auth
     // (verified keyless 2026-07-26), so the default openai-compat validateKey
     // would mark garbage keys healthy forever.
@@ -171,7 +171,7 @@ describe('ModelScope validateKey (#581)', () => {
     await expect(provider.validateKey('ms-test-valid-shaped', ctx)).resolves.toBe(true);
     expect(fetchSpy).toHaveBeenCalledTimes(2);
 
-    // A DIFFERENT token on the same key row is a different secret — rotating a
+    // A DIFFERENT token on the same key row is a different secret - rotating a
     // key in place must re-probe rather than inherit the old token's verdict.
     await expect(provider.validateKey('ms-test-rotated', ctx)).resolves.toBe(true);
     expect(fetchSpy).toHaveBeenCalledTimes(4);
@@ -195,7 +195,7 @@ describe('ModelScope validateKey (#581)', () => {
     await expect(provider.validateKey(GARBAGE_KEY, ctx)).resolves.not.toBe(true);
     expect(fetchSpy).toHaveBeenCalledTimes(2);
 
-    // A failed validation must not be cached — the next health pass re-probes.
+    // A failed validation must not be cached - the next health pass re-probes.
     await expect(provider.validateKey(GARBAGE_KEY, ctx)).resolves.not.toBe(true);
     expect(fetchSpy).toHaveBeenCalledTimes(4);
   });

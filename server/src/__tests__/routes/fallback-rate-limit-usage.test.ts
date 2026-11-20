@@ -1,6 +1,6 @@
 // GET /api/fallback/rate-limit-usage (#876) must answer "how close is this model
 // to being unroutable", which means following the key the ROUTER would pick next
-// — not the busiest key on the account. Reporting the busiest one paints a red
+// - not the busiest key on the account. Reporting the busiest one paints a red
 // badge over a model that has an idle key sitting right there, and counting a
 // key the router would never touch (scoped away, disabled, unhealthy) is wrong
 // in both directions.

@@ -44,7 +44,7 @@ describe('Dashboard auth (#35)', () => {
 
   it('leaves /api/ping and the /v1 proxy reachable without a dashboard session', async () => {
     expect((await call(app, 'GET', '/api/ping')).status).toBe(200);
-    // /v1 has its own (unified-key) auth, so it 401s for a different reason —
+    // /v1 has its own (unified-key) auth, so it 401s for a different reason -
     // the point is it is not gated by the dashboard session middleware.
     const proxy = await call(app, 'POST', '/v1/chat/completions', { messages: [{ role: 'user', content: 'x' }] });
     expect(proxy.body.error.type).toBe('authentication_error');

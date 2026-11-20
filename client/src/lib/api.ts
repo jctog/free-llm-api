@@ -34,7 +34,7 @@ export async function apiFetch<T>(path: string, options?: RequestInit): Promise<
   }
   const res = await fetch(`${BASE}${path}`, {
     // `...options` first so an explicit method/body/signal applies, but headers
-    // are merged last — otherwise an options.headers would clobber the
+    // are merged last - otherwise an options.headers would clobber the
     // Content-Type and Authorization we set here.
     ...options,
     headers,
@@ -64,7 +64,7 @@ export async function apiFetch<T>(path: string, options?: RequestInit): Promise<
     throw err;
   }
   if (res.status === 204) return undefined as T;
-  // A 200 whose body isn't JSON means this request never reached the API — the
+  // A 200 whose body isn't JSON means this request never reached the API - the
   // usual cause is a reverse proxy (or static host) serving the dashboard's
   // index.html for /api/* instead of forwarding it to the backend. Without this
   // guard the raw res.json() throws an opaque "Unexpected token '<'", which on
@@ -75,7 +75,7 @@ export async function apiFetch<T>(path: string, options?: RequestInit): Promise<
     return JSON.parse(text) as T;
   } catch {
     throw new Error(
-      `Expected JSON from ${path} but got a non-JSON response. The API isn't reachable at this origin — ` +
+      `Expected JSON from ${path} but got a non-JSON response. The API isn't reachable at this origin - ` +
       `make sure the backend is running and that /api is forwarded to it, not served as the dashboard's static files.`,
     );
   }

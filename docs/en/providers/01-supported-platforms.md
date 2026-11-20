@@ -6,7 +6,7 @@ The `Platform` union in [`shared/types.ts` (line 59)](../../../shared/types.ts) 
 
 - **43 built-in platforms** registered as adapters at startup,
 - plus the **`custom`** placeholder (a real OpenAI-compatible adapter built per API key, since its base URL is user-supplied), giving **44 entries** in the registry map,
-- plus **`sambanova`**, retained in the type union but no longer registered — it was dropped in V23 (June 2026) when its free tier was permanently retired (every chat call returns 402 "payment method required" once the one-time $5 trial credit lapses).
+- plus **`sambanova`**, retained in the type union but no longer registered - it was dropped in V23 (June 2026) when its free tier was permanently retired (every chat call returns 402 "payment method required" once the one-time $5 trial credit lapses).
 
 Of the 43 built-in platforms, **10 use dedicated adapters** and **33 ride `OpenAICompatProvider`** directly against a provider-specific base URL. Three platforms are registered keyless (`kilo`, `ovh`, and `aihorde`, which auto-configures with its documented anonymous sentinel key). The public catalog headline is smaller than the union because several registered gateways keep their free rosters in the hosted catalog rather than shipping them to every binary.
 
@@ -41,7 +41,7 @@ Of the 43 built-in platforms, **10 use dedicated adapters** and **33 ride `OpenA
 | `reka` | Reka | Keyed | OpenAI-compat | No free tier for new accounts since 2026-09: prepaid credits required (#1202). Accounts that still hold credit keep working; balance dashboard-only. |
 | `siliconflow` | SiliconFlow | Keyed | OpenAI-compat | Registered mainly for FREE generative-media models (FLUX.1-schnell image, CosyVoice2 TTS) routed via `services/media.ts`. |
 | `routeway` | Routeway | Keyed | OpenAI-compat | Requires browser-style User-Agent (Cloudflare rejects others with error 1010); free pool observed stricter (~5 rpm) than the documented 20 rpm / 200 rpd. |
-| `bazaarlink` | BazaarLink | Keyed | OpenAI-compat | Only the `auto:free` route is cataloged — direct model ids are paid (#385). |
+| `bazaarlink` | BazaarLink | Keyed | OpenAI-compat | Only the `auto:free` route is cataloged - direct model ids are paid (#385). |
 | `ainative` | AINative Studio | Keyed | OpenAI-compat | Advertises recurring ~10M tokens/month free allocation; quota treated as unverified until confirmed by a real account. |
 | `aion` | Aion Labs | Keyed | OpenAI-compat | No-card free key; availability catalog-managed behind the 30-day age gate. |
 | `requesty` | Requesty | Keyed | OpenAI-compat | Router endpoint at `router.requesty.ai/v1`; free rows age into the monthly catalog; the free tier is 200 requests/day shared across all free models. |
@@ -54,7 +54,7 @@ Of the 43 built-in platforms, **10 use dedicated adapters** and **33 ride `OpenA
 | `modelscope` | ModelScope (Alibaba) | Keyed | Native (`ModelScopeProvider`) | Calls require binding to an Alibaba Cloud CHINA-site account with real-name verification; `GET /v1/models` accepts garbage tokens so validation uses a 1-token chat probe; retired models answer 429 "insufficient balance" (#581). |
 | `qianfan` | Baidu Qianfan | Keyed | OpenAI-compat | ERNIE-Speed/Lite/Tiny free indefinitely via pay-as-you-go billing bounded by rate limits; Chinese real-name auth required (#936). |
 | `volcengine` | Volcengine Ark (ByteDance) | Keyed | OpenAI-compat | Recurring daily per-model reward quota of 2M tokens/day/model for individual developers, on top of a one-time 500K new-user grant; real-name auth required (#936). |
-| `longcat` | LongCat (Meituan) | Keyed | OpenAI-compat | Daily free quota; exception among the Chinese providers — email signup works from outside mainland China. Also speaks Anthropic wire at `/anthropic` (unused here) (#936). |
+| `longcat` | LongCat (Meituan) | Keyed | OpenAI-compat | Daily free quota; exception among the Chinese providers - email signup works from outside mainland China. Also speaks Anthropic wire at `/anthropic` (unused here) (#936). |
 | `xfyun` | iFlytek Spark | Keyed | OpenAI-compat | Auth is the console APIPassword as a Bearer token; the Lite model is the documented free one; no published token/QPS ceiling (#936). |
 | `aihorde` | AI Horde | Keyless (anonymous sentinel `0000000000`; registered key raises queue priority) | Native (`AIHordeProvider`) | Community volunteer workers via queue-based proxy: max_tokens >= 16, stop must be array, no tools, usage reported as kudos, 120s timeout, no upstream streaming (#345). |
 | `custom` | Custom (OpenAI-compatible) | User-supplied base URL stored per `api_keys` row | OpenAI-compat built per key via `resolveProvider()` | Registered placeholder keeps `getProvider('custom')`/`hasProvider('custom')` well-behaved; 120s timeout for slow local runtimes (llama.cpp, vLLM, LM Studio) (#145). |

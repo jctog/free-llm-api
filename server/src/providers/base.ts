@@ -15,7 +15,7 @@ import { extractThinkTagsFromStream } from '../lib/think-tags.js';
 /** A provider HTTP error carrying the upstream status and, when the provider
  *  stated one, the parsed back-off so the router can bench the key for at least
  *  that long. The delay may come from the Retry-After header or from the error
- *  body — see providerHttpError. */
+ *  body - see providerHttpError. */
 export interface ProviderHttpError extends Error {
   status?: number;
   retryAfterMs?: number;
@@ -68,7 +68,7 @@ function clampRetryMs(ms: number): number | undefined {
 
 /** Depth-first search for the first `retryDelay`/`retry_after`-shaped field. The
  *  shape varies by provider and by endpoint within a provider, so walking is
- *  more durable than a list of exact paths — and cheaper to maintain than one
+ *  more durable than a list of exact paths - and cheaper to maintain than one
  *  parser per adapter. Depth-capped so a pathological body cannot spin. */
 function findStatedDelayMs(node: unknown, depth = 0): number | undefined {
   if (depth > 6 || node === null || typeof node !== 'object') return undefined;
@@ -123,7 +123,7 @@ export function parseStatedRetryMs(body: unknown): number | undefined {
     let total: number | undefined;
     for (const [, amount, unitName] of prose[1].matchAll(DURATION_PART)) {
       const unit = UNIT_MS[unitName.toLowerCase()];
-      if (!unit) break; // "try again in 5 or so" — stop at the first non-unit word
+      if (!unit) break; // "try again in 5 or so" - stop at the first non-unit word
       total = (total ?? 0) + Number(amount) * unit;
     }
     if (total !== undefined) return clampRetryMs(total);
@@ -135,7 +135,7 @@ function safeStringify(value: unknown): string {
   try {
     return JSON.stringify(value) ?? '';
   } catch {
-    return ''; // Circular or otherwise unserialisable — no prose to read.
+    return ''; // Circular or otherwise unserialisable - no prose to read.
   }
 }
 
@@ -144,7 +144,7 @@ function safeStringify(value: unknown): string {
  *  provider's explicit hint when it sets the cooldown.
  *
  *  `body` is the already-parsed error payload the caller used to build
- *  `message`. Only a delay is read out of it and only a number is kept — the
+ *  `message`. Only a delay is read out of it and only a number is kept - the
  *  body itself is never retained, so nothing extra reaches a log or the
  *  attempt trace. The Retry-After header still wins when both are present: it
  *  is the standard channel, and preferring it keeps existing behavior exactly
@@ -181,7 +181,7 @@ export interface CompletionOptions extends ExtendedSamplingOptions {
   timeoutMs?: number;
   /** Abort signal for the gateway's OWN client (request socket closed). The
    * proxy surfaces thread it here so a disconnect cancels the upstream fetch
-   * AND any in-progress body/stream read — tokens stop burning and the
+   * AND any in-progress body/stream read - tokens stop burning and the
    * in-flight lease frees immediately instead of when the read happens to
    * finish. Composed with the per-attempt timeout in fetchWithTimeout; never
    * serialized into the request body. */
@@ -196,7 +196,7 @@ export interface ProviderFetchOptions {
   signal?: AbortSignal;
   /** What the per-attempt timeout bounds:
    *  - 'headers' (default, historical): the abort timer dies the moment
-   *    response HEADERS arrive — right for streams, whose body legitimately
+   *    response HEADERS arrive - right for streams, whose body legitimately
    *    outlives any fixed deadline (readSseStream's stall watchdog owns
    *    mid-stream hangs, the client signal owns "nobody is listening").
    *  - 'request': the deadline stays armed across the body read too, so a 200
@@ -210,7 +210,7 @@ export interface ProviderFetchOptions {
 export interface SseStreamOptions {
   /** The chat timeout the adapter gave fetchWithTimeout for this request
    * (options.timeoutMs override included). Becomes the first-byte grace
-   * budget, floored at the stall budget — see firstByteBudgetMs. Defaults to
+   * budget, floored at the stall budget - see firstByteBudgetMs. Defaults to
    * fetchWithTimeout's own default, providerTimeoutMs(platform, 15000). */
   firstByteTimeoutMs?: number;
   /** Mid-stream inactivity budget; defaults to streamStallTimeoutMs(platform)
@@ -357,13 +357,13 @@ export abstract class BaseProvider {
       if (fetchOpts?.timeoutBounds === 'request') {
         // Whole-request deadline: stays armed across the body read, so a 200
         // whose body never finishes aborts res.json() at timeoutMs instead of
-        // hanging forever. Never cleared — firing after the response is fully
-        // consumed is a no-op — and unref'd so a spent request's leftover
+        // hanging forever. Never cleared - firing after the response is fully
+        // consumed is a no-op - and unref'd so a spent request's leftover
         // deadline can't hold the process open.
         timer.unref?.();
       } else {
         // Historical header-only deadline: disarmed the moment response
-        // HEADERS arrive (see finally). Streams need this — an SSE body
+        // HEADERS arrive (see finally). Streams need this - an SSE body
         // legitimately outlives any fixed deadline, and mid-stream hangs are
         // owned by the stall watchdog (readSseStream) + the client signal.
         headerTimer = timer;
@@ -397,7 +397,7 @@ export abstract class BaseProvider {
    * (google.ts) so every stream gets the same stall semantics:
    * PROVIDER_STREAM_STALL_TIMEOUT_MS (per-platform override
    * PROVIDER_STREAM_STALL_TIMEOUT_<PLATFORM>, #584), default 90s, 0 disables.
-   * Client-abort rejections pass through untouched — undici errors the body
+   * Client-abort rejections pass through untouched - undici errors the body
    * with the request signal's reason, so a disconnect surfaces here as the
    * marked error from newClientAbortError, not as a stall. `timeoutMessage`
    * lets the first-byte read report its distinct wording (#584).
@@ -422,14 +422,14 @@ export abstract class BaseProvider {
 
   /**
    * Budget for the FIRST read of a streaming body (issue #584): the platform's
-   * chat timeout is already "how slow may the first token be" — tuned per
+   * chat timeout is already "how slow may the first token be" - tuned per
    * platform at registration and env-overridable via PROVIDER_TIMEOUT_<PLATFORM>
-   * — but on streams it is disarmed the moment response HEADERS arrive, and
+   * - but on streams it is disarmed the moment response HEADERS arrive, and
    * providers like NVIDIA NIM send SSE headers instantly then prefill for
    * minutes. Floored at the stall budget so a platform with a short chat
    * timeout never gets a STRICTER first read than the pre-#584 watchdog gave
    * it. 0 on either side (env-disabled chat timeout, or disabled watchdog)
-   * means the first read is unbounded — the client signal still owns
+   * means the first read is unbounded - the client signal still owns
    * "nobody is listening".
    */
   protected firstByteBudgetMs(chatTimeoutMs: number, stallTimeoutMs: number): number {
@@ -451,7 +451,7 @@ export abstract class BaseProvider {
    *    response HEADERS arrive, so a provider that stalls mid-body used to
    *    hang the client forever. Each read now has its own deadline. The FIRST
    *    read gets a grace budget derived from the platform's chat timeout
-   *    (#584) — SSE headers can arrive instantly while the model prefills a
+   *    (#584) - SSE headers can arrive instantly while the model prefills a
    *    long prompt for minutes, which is slow, not stalled.
    *  - Abrupt EOF: a stream that ends without `[DONE]` AND without any
    *    `finish_reason` is a truncated generation, not a completion. It used
@@ -482,7 +482,7 @@ export abstract class BaseProvider {
     const reader = res.body?.getReader();
     if (!reader) throw new Error('No response body');
 
-    // The 90s default was hardcoded and silently truncated slow streams — the
+    // The 90s default was hardcoded and silently truncated slow streams - the
     // gateway ended them with an error frame plus a clean [DONE] that OpenAI
     // SDK clients swallow, so responses "just stopped" (issue #553). Operators
     // proxying slow free tiers can raise it (or 0 to disable) via
@@ -491,7 +491,7 @@ export abstract class BaseProvider {
     const inactivityTimeoutMs = opts?.stallTimeoutMs ?? streamStallTimeoutMs(this.platform);
     // First-byte grace (#584): adapters pass the same chat timeout they gave
     // fetchWithTimeout; the fallback mirrors fetchWithTimeout's own default so
-    // adapters that never tuned either stay on max(15s-or-env, stall) — i.e.
+    // adapters that never tuned either stay on max(15s-or-env, stall) - i.e.
     // exactly the stall budget they had before.
     const chatTimeoutMs = opts?.firstByteTimeoutMs ?? providerTimeoutMs(this.platform, 15000);
     const firstByteMs = this.firstByteBudgetMs(chatTimeoutMs, inactivityTimeoutMs);
@@ -532,7 +532,7 @@ export abstract class BaseProvider {
     }
 
     if (!sawFinishReason) {
-      throw new Error(`${this.name} stream ended unexpectedly (no [DONE], no finish_reason) — connection reset or truncated upstream`);
+      throw new Error(`${this.name} stream ended unexpectedly (no [DONE], no finish_reason) - connection reset or truncated upstream`);
     }
   }
 }

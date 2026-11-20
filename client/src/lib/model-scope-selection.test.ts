@@ -66,7 +66,7 @@ describe('scopeCandidates (#657 post-add picker)', () => {
     expect(rows[0]).toMatchObject({ sizeLabel: null, contextWindow: null })
   })
 
-  it('collapses duplicate model ids — modelScope matches on id alone', () => {
+  it('collapses duplicate model ids - modelScope matches on id alone', () => {
     const dupes = [entry('groq', 'dup'), entry('groq', 'dup'), entry('groq', 'other')]
     expect(scopeCandidates(dupes, 'groq').map(c => c.modelId)).toEqual(['dup', 'other'])
   })
@@ -102,7 +102,7 @@ describe('shouldOfferModelPicker', () => {
 describe('resolveScopeUpdate', () => {
   const all = ['a', 'b', 'c']
 
-  it('saves nothing when every model is ticked — the scope stays null', () => {
+  it('saves nothing when every model is ticked - the scope stays null', () => {
     // A stored full list would freeze the key at today's catalog; null keeps
     // tomorrow's models flowing through it.
     expect(resolveScopeUpdate(all, new Set(all))).toEqual({ patch: false, reason: 'all' })
@@ -123,7 +123,7 @@ describe('resolveScopeUpdate', () => {
 
   it('refuses to submit an empty selection', () => {
     // The server maps `modelScope: []` back to NULL = "serves everything", the
-    // opposite of an empty tick list — so this never becomes a request. The
+    // opposite of an empty tick list - so this never becomes a request. The
     // dialog also disables Confirm here.
     expect(resolveScopeUpdate(all, new Set())).toEqual({ patch: false, reason: 'empty' })
   })

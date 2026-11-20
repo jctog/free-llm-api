@@ -9,7 +9,7 @@ import type { ChatCompletionResponse, ChatMessage, ChatToolDefinition } from '@f
 // OWN endpoint, with the operator's OWN key, what it currently serves.
 //
 // Scope: this reads one user-configured base_url. It does not read, refresh or
-// publish the provider catalog — nothing here touches catalog sync.
+// publish the provider catalog - nothing here touches catalog sync.
 //
 // Everything in here assumes the upstream is hostile-by-accident: relays are
 // wildly inconsistent about the /models envelope, some answer HTML, and a
@@ -21,14 +21,14 @@ import type { ChatCompletionResponse, ChatMessage, ChatToolDefinition } from '@f
  *  catalog (OpenRouter, ~400 models with metadata) is well under 1 MB. */
 export const MAX_CATALOG_BYTES = 2 * 1024 * 1024;
 
-/** Hard cap on how many ids we hand back — a checkbox list, not a data dump. */
+/** Hard cap on how many ids we hand back - a checkbox list, not a data dump. */
 export const MAX_DISCOVERED_MODELS = 500;
 
 /** Ids longer than this are certainly not model ids; skip rather than store. */
 const MAX_MODEL_ID_LENGTH = 256;
 
 /** What a discovered model IS, when it discernibly isn't a chat model (#1051).
- *  Absent means "chat as far as anyone can tell" — the field is emitted only
+ *  Absent means "chat as far as anyone can tell" - the field is emitted only
  *  when a non-chat kind is detected, so plain chat rows keep their shape. */
 export type DiscoveredModelKind = 'embedding' | 'image' | 'audio' | 'transcription' | 'video';
 
@@ -44,7 +44,7 @@ export interface DiscoveredModel {
   priceNote?: string;
   /** True when every price component the upstream advertises is zero, or it
    *  plainly says "free". Set only alongside priceNote, and the only thing the
-   *  picker badges green — the note itself is never pattern-matched. */
+   *  picker badges green - the note itself is never pattern-matched. */
   isFree?: boolean;
   /** True when the upstream advertises image input (modalities/vision). */
   vision?: boolean;
@@ -152,7 +152,7 @@ function priceValue(raw: unknown): number | null {
 
 /** One price component in USD per MILLION tokens, or null when the upstream
  *  did not ship a usable figure. OpenRouter quotes strings ("0.00000125"),
- *  others quote numbers, and a few already quote per-million — so parse
+ *  others quote numbers, and a few already quote per-million - so parse
  *  string-or-number and scale by magnitude rather than by source. */
 function perMillionTokens(raw: unknown): number | null {
   const value = priceValue(raw);
@@ -174,7 +174,7 @@ function capNote(note: string): string {
 
 /** Price hint out of OpenRouter-style `pricing: { prompt, completion }` or a
  *  plain `price: "free"` string, plus the free/not-free verdict the picker
- *  badges on. Anything unrecognizable is left alone — no chip at all. */
+ *  badges on. Anything unrecognizable is left alone - no chip at all. */
 function priceHintOf(record: Record<string, unknown>): { note: string; isFree: boolean } | undefined {
   let hasFreePrice = false;
   let hasUnknownPrice = false;
@@ -183,7 +183,7 @@ function priceHintOf(record: Record<string, unknown>): { note: string; isFree: b
     if (typeof value === 'string') {
       const text = value.trim();
       if (text.length === 0) { hasUnknownPrice = true; continue; }
-      // Only the literal word counts as free — never a pattern over the note,
+      // Only the literal word counts as free - never a pattern over the note,
       // which is how "$10/M in" ends up painted green.
       if (text.toLowerCase() === 'free') { hasFreePrice = true; continue; }
       return { note: capNote(text), isFree: false };
@@ -265,7 +265,7 @@ function visionFromId(id: string): true | undefined {
 // whisper or video model registers as a chat model and then 404s forever. The
 // id is the only signal left. Same rules as VISION_ID_MARKERS: matched per
 // token (the id split on non-alphanumerics), never as a raw substring, so
-// `sdk`, `tootsie` or `pastta` can't smuggle a kind in. Chat is the default —
+// `sdk`, `tootsie` or `pastta` can't smuggle a kind in. Chat is the default -
 // classifyModelId returns undefined unless a marker is unambiguous, because a
 // wrong "media" verdict makes a working chat model unreachable, which is worse
 // than the status quo.
@@ -367,7 +367,7 @@ function toDiscovered(entry: unknown): DiscoveredModel | null {
   // `??` not `||`: an upstream that explicitly says false keeps saying false.
   const vision = visionOf(record) ?? visionFromId(id);
   if (vision !== undefined) model.vision = vision;
-  // Metadata wins over the id; a vision verdict wins over both — a VL model is
+  // Metadata wins over the id; a vision verdict wins over both - a VL model is
   // a chat model that sees, not a media model (#1051).
   if (vision !== true) {
     const kind = kindFromMetadata(record) ?? classifyModelId(id);
@@ -376,7 +376,7 @@ function toDiscovered(entry: unknown): DiscoveredModel | null {
   return model;
 }
 
-/** Whether this payload carries a model list at all — the difference between
+/** Whether this payload carries a model list at all - the difference between
  *  an endpoint that genuinely serves nothing and one whose answer we can't
  *  read (an HTML error page, a login redirect, a bare error object). */
 export function hasModelList(payload: unknown): boolean {
@@ -385,7 +385,7 @@ export function hasModelList(payload: unknown): boolean {
 
 /**
  * Model ids out of any /models envelope we recognize, deduped, sorted and
- * capped. Returns an empty list for a payload with no list in it — the caller
+ * capped. Returns an empty list for a payload with no list in it - the caller
  * decides whether that's an error worth surfacing.
  */
 export function parseModelCatalog(payload: unknown): DiscoveredModel[] {
@@ -412,7 +412,7 @@ export function parseModelCatalog(payload: unknown): DiscoveredModel[] {
  */
 export async function readCappedBody(res: Response, maxBytes = MAX_CATALOG_BYTES): Promise<string> {
   const tooLarge = () => new ModelDiscoveryError(
-    502, `The endpoint's model list is larger than ${Math.round(maxBytes / 1024)} KB — refusing to read it.`,
+    502, `The endpoint's model list is larger than ${Math.round(maxBytes / 1024)} KB - refusing to read it.`,
   );
 
   const declared = Number(res.headers?.get?.('content-length') ?? '');
@@ -470,7 +470,7 @@ export async function discoverEndpointModels(baseUrl: string, apiKey: string): P
     platform: 'custom',
     name: 'Custom (OpenAI-compatible)',
     baseUrl,
-    // Discovery is interactive — the operator is watching a spinner — so don't
+    // Discovery is interactive - the operator is watching a spinner - so don't
     // inherit the 120s custom-provider chat timeout.
     timeoutMs: 30_000,
   });
@@ -530,7 +530,7 @@ export const PROBE_MAX_TOKENS = 4;
  *  fields are unchanged from the original probe; `reasoning` and `toolCalls`
  *  are OPTIONAL additions so a client reading only `{ modelId, latencyMs }`
  *  keeps working (backward compatible). A probe that answers `ping` but then
- *  errors on a capability probe leaves that capability undefined — the caller
+ *  errors on a capability probe leaves that capability undefined - the caller
  *  only writes `supports_tools` when `toolCalls === true`. */
 export interface ProbeCapabilities {
   /** True when the reasoning probe's answer contained the expected token;
@@ -554,12 +554,12 @@ export interface ProbeEndpointModelResult extends ProbeCapabilities {
  * Fire one minimal real chat request at a custom endpoint to measure latency
  * and confirm the key works end-to-end ("probe now", #685 follow-up). When the
  * caller already knows which model to probe (a model registered on this
- * endpoint — the one whose bandit stats the sample feeds), it passes
+ * endpoint - the one whose bandit stats the sample feeds), it passes
  * `preferredModelId` and the discovery round-trip is skipped entirely; only an
  * endpoint with nothing registered falls back to discovering a model id.
  *
  * Phase 1 (#874): after the `ping` latency probe succeeds, two extra probes
- * fire while the operator is still watching — a deterministic reasoning probe
+ * fire while the operator is still watching - a deterministic reasoning probe
  * and a tool-call probe. These are best-effort: a capability probe that errors
  * or times out simply leaves that capability flag unset, so a flaky relay can
  * still clear a cooldown and record a success sample from the `ping`. Only a
@@ -611,20 +611,20 @@ export async function probeEndpointModel(
     throw new ModelDiscoveryError(502, `Probe request to ${modelId} failed: ${reason}`);
   }
   // Stop the clock HERE. `latencyMs` is the endpoint's per-request round trip
-  // — it feeds the bandit's speed axis and the operator's toast — so it must
+  // - it feeds the bandit's speed axis and the operator's toast - so it must
   // measure the ping alone. Reading it after the capability probes below would
   // report the sum of three round trips and make every probed endpoint look
   // roughly three times slower than it is.
   const latencyMs = Date.now() - startedAt;
 
   // Phase 1 (#874): the ping only proved the key works and the model answers.
-  // Fire two extra best-effort probes — reasoning + tool calls — so the
+  // Fire two extra best-effort probes - reasoning + tool calls - so the
   // operator gets a capability snapshot on the same "probe now" click. Neither
   // can fail the whole probe: the ping's success is the sample-of-record, and a
   // relay that 500s on tools but answers chat still gets its cooldown lifted.
   const capabilities = await probeModelCapabilities(provider, apiKey, modelId).catch(() => {
     // A capability probe that throws (timeout, non-OpenAI error, …) is not a
-    // probe failure — the ping already succeeded. Swallow and leave flags unset.
+    // probe failure - the ping already succeeded. Swallow and leave flags unset.
     return {} as ProbeCapabilities;
   });
 
@@ -640,8 +640,8 @@ export async function probeEndpointModel(
 // ── Capability probes (#874, phase 1) ─────────────────────────────────────
 //
 // Two focused probes run after the ping, while the operator is still watching
-// the probe spinner. Neither writes a `requests` row — the ping is the
-// sample-of-record — and neither can fail the probe: the ping already proved
+// the probe spinner. Neither writes a `requests` row - the ping is the
+// sample-of-record - and neither can fail the probe: the ping already proved
 // the key works, and a relay that 500s on tools but answers chat still deserves
 // its cooldown lifted. Only POSITIVE evidence sets a flag (the "only write
 // success samples" philosophy), so `supports_tools` is written back to the
@@ -657,7 +657,7 @@ const REASONING_PROBE_ANSWER_TOKEN = '63';
 
 /** The tool probe's dummy function: an empty-parameter `get_weather`. We send
  *  `tool_choice: 'auto'` (not `'required'`) so the test is "does the model
- *  CHOOSE to call a tool when one is offered" — the same signal the router
+ *  CHOOSE to call a tool when one is offered" - the same signal the router
  *  relies on when filtering tool-capable models. */
 const TOOL_PROBE: ChatToolDefinition = {
   type: 'function',
@@ -677,7 +677,7 @@ const TOOL_PROBE: ChatToolDefinition = {
 /**
  * Run the reasoning and tool-call capability probes against a model (#874,
  * phase 1). Best-effort: a probe that errors leaves its flag unset rather than
- * throwing — the caller treats "unset" as "unknown" and only writes
+ * throwing - the caller treats "unset" as "unknown" and only writes
  * `supports_tools` on a positive `toolCalls`.
  *
  * Exposed separately so a future caller can run capability probes without the
@@ -706,7 +706,7 @@ export async function probeModelCapabilities(
     const text = textOfCompletion(reasoningRes);
     reasoning = text.includes(REASONING_PROBE_ANSWER_TOKEN);
   } catch {
-    // An error means "unknown", not "false" — leave it undefined so the caller
+    // An error means "unknown", not "false" - leave it undefined so the caller
     // (and the UI) can tell "the model does not reason" apart from "the probe
     // never got an answer".
     reasoning = undefined;
@@ -730,7 +730,7 @@ export async function probeModelCapabilities(
     const finishReason = toolRes.choices?.[0]?.finish_reason;
     toolCalls = finishReason === 'tool_calls';
   } catch {
-    // An error means "unknown", not "false" — see the reasoning probe above.
+    // An error means "unknown", not "false" - see the reasoning probe above.
     toolCalls = undefined;
   }
 

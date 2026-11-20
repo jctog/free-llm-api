@@ -46,7 +46,7 @@ describe('key parser', () => {
   });
 
   it('drops an opening quote whose closing quote was lost', () => {
-    // Editor auto-quoting or a truncated paste yields `KEY="sk-abc` — the
+    // Editor auto-quoting or a truncated paste yields `KEY="sk-abc` - the
     // credential must not import with the `"` glued to its front.
     expect(parseDotEnv('OPENAI_API_KEY="sk-abc123')).toEqual([
       { key: 'OPENAI_API_KEY', value: 'sk-abc123' },
@@ -265,7 +265,7 @@ describe('key parser', () => {
 
   it('strips the formula-guard quote from base_url as well as the label', () => {
     // What GET /api/keys/export?format=csv writes when a custom endpoint's
-    // base_url opens with '=' — the importer has to undo the guard on the
+    // base_url opens with '=' - the importer has to undo the guard on the
     // fourth column too, or the endpoint re-imports as a broken "'=..." URL.
     const csv = 'platform,key,label,base_url\n' +
       '"custom","sk-local","\'=HYPERLINK(""x"")","\'=HYPERLINK(""http://evil"")"\n';

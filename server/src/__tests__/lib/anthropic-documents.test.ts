@@ -8,7 +8,7 @@ import {
 
 const doc = (source: unknown, rest: Record<string, unknown> = {}) => ({ type: 'document', source, ...rest });
 
-describe('convertDocumentBlock — sources that are already text', () => {
+describe('convertDocumentBlock - sources that are already text', () => {
   it('inlines a `text` source, which needs no converter at all', () => {
     const result = convertDocumentBlock(doc({ type: 'text', media_type: 'text/plain', data: 'the contract body' }));
 
@@ -36,7 +36,7 @@ describe('convertDocumentBlock — sources that are already text', () => {
   });
 });
 
-describe('convertDocumentBlock — sources that cannot be served', () => {
+describe('convertDocumentBlock - sources that cannot be served', () => {
   it('refuses a base64 PDF instead of dropping it', () => {
     const result = convertDocumentBlock(doc({
       type: 'base64',

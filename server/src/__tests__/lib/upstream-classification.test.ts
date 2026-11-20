@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { isUpstreamClassificationOutput } from '../../lib/error-classify.js';
 
 /**
- * #809: kilo's free relay sometimes answers with a bare "safe"/"unsafe" — an
+ * #809: kilo's free relay sometimes answers with a bare "safe"/"unsafe" - an
  * upstream content filter's verdict standing in for the model's reply. The
  * surfaces treat that as an empty completion and fail over.
  *

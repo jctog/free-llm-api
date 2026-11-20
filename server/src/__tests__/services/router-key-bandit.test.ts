@@ -6,7 +6,7 @@ import { addToActiveChain } from '../helpers/chain.js';
 
 // Per-key scoring inside one model (#580): with the group merge, several keys
 // (and formerly several providers' identically-named models) share one routing
-// bucket. Key selection must not be blind round-robin — a key with a bad track
+// bucket. Key selection must not be blind round-robin - a key with a bad track
 // record (expired, quota-drained, region-blocked) should be picked less than a
 // healthy sibling, while a brand-new key still gets explored.
 
@@ -28,7 +28,7 @@ vi.mock('../../lib/crypto.js', async () => {
 const ORIGINAL_DEV_MODE = process.env.DEV_MODE;
 const ORIGINAL_NODE_ENV = process.env.NODE_ENV;
 
-// Insert a model + fallback entry (no key — keys are added separately).
+// Insert a model + fallback entry (no key - keys are added separately).
 function addModel(opts: {
   platform: string; modelId: string; name: string; priority?: number;
 }): number {

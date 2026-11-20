@@ -6,7 +6,7 @@ import { mintDashboardToken } from '../helpers/auth.js';
 import { getAppVersion, resetAppVersionCache } from '../../lib/app-version.js';
 
 // #703: the dashboard had no way to show which release it is. The number users
-// know the app by lives in desktop/package.json — server/package.json (0.2.x)
+// know the app by lives in desktop/package.json - server/package.json (0.2.x)
 // and the OpenAPI spec (0.4.x) both track something else and would be wrong.
 
 describe('app version resolution', () => {
@@ -23,7 +23,7 @@ describe('app version resolution', () => {
     else process.env.FREEAPI_VERSION = saved;
   });
 
-  it('prefers FREEAPI_VERSION — the desktop shell states its own version', () => {
+  it('prefers FREEAPI_VERSION - the desktop shell states its own version', () => {
     process.env.FREEAPI_VERSION = '9.9.9';
     expect(getAppVersion()).toBe('9.9.9');
   });
@@ -89,13 +89,13 @@ describe('GET /api/settings/version', () => {
     expect(body.version).toMatch(/^\d+\.\d+\.\d+/);
   });
 
-  it('requires auth — a build number is not for anonymous callers', async () => {
+  it('requires auth - a build number is not for anonymous callers', async () => {
     const { status } = await get({});
     expect(status).toBe(401);
   });
 
   it('does not collide with the Ollama emulation, which already owns /api/version', async () => {
-    // The obvious path for this endpoint was /api/version — but ollamaRouter is
+    // The obvious path for this endpoint was /api/version - but ollamaRouter is
     // mounted first and serves it to real Ollama clients, which gate features on
     // its value. Mounting there would have shadowed it and produced a dead route
     // besides. This asserts /api/version is still ANSWERED BY OLLAMA: with the

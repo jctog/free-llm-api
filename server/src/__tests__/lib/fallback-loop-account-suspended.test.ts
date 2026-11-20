@@ -170,10 +170,10 @@ describe('a suspended account benches the whole key, not one model', () => {
 // A stale CATALOG misses on every sibling model in a row (#1218): the per-model
 // skip can't see the pattern (each miss is a different model), so from
 // MODEL_NOT_FOUND_PLATFORM_LIMIT distinct model_not_found hops on one platform
-// — within one request — the whole platform is ruled out for the rest of it.
+// - within one request - the whole platform is ruled out for the rest of it.
 describe('distinct model_not_found hops short-circuit the platform within one request', () => {
   // Plain phrasing that the EXISTING isModelNotFoundError substring checks
-  // already match — this PR is independent of the quoted-id regex widening
+  // already match - this PR is independent of the quoted-id regex widening
   // (#1219); together the two cover NavyAI's exact wording.
   const notFoundErr = () => Object.assign(
     new Error('NavyAI API error 400: model does not exist'),

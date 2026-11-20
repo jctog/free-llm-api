@@ -6,7 +6,7 @@
 // One row per downstream client/product. Auth lookups go through token_hash
 // (SHA-256 of the full `sk-cp-...` key) so the plaintext credential is never
 // queried; encrypted_key/iv/auth_tag hold an AES-256-GCM copy (same crypto
-// layer as api_keys — lib/crypto.ts) used only to render the masked key in
+// layer as api_keys - lib/crypto.ts) used only to render the masked key in
 // the dashboard. system_prompt is the prompt the proxy prepends server-side
 // for requests authenticated with this profile's key; NULL/empty means the
 // key authenticates without injecting anything. Disabled rows are rejected

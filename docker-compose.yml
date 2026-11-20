@@ -19,7 +19,7 @@ services:
       # own Watchtower, and keeps theirs off this one.
       com.centurylinklabs.watchtower.enable: "true"
       com.centurylinklabs.watchtower.scope: freellmapi
-    # Bound to localhost by default — FreeLLMAPI is single-user and must not be
+    # Bound to localhost by default - FreeLLMAPI is single-user and must not be
     # exposed to the internet. Set HOST_BIND=0.0.0.0 to reach it from your LAN.
     ports:
       - "${HOST_BIND:-127.0.0.1}:${PORT:-3001}:3001"
@@ -52,7 +52,7 @@ services:
   # recreates the freellmapi container with the same volume and settings.
   # Nothing happens on a schedule, no port is published, and no other
   # container is touched. It needs the Docker socket, which is root-equivalent
-  # on the host — leave the profile off if that is not acceptable.
+  # on the host - leave the profile off if that is not acceptable.
   watchtower:
     image: nickfedor/watchtower:1.22.3
     profiles: ["autoupdate"]

@@ -63,7 +63,7 @@ function customEmbeddings() {
   ).all() as Array<{ model_id: string; family: string; dimensions: number; key_id: number }>;
 }
 
-describe('POST /api/keys/import-selected — model lists (#382)', () => {
+describe('POST /api/keys/import-selected - model lists (#382)', () => {
   let app: Express;
 
   beforeAll(() => {
@@ -76,7 +76,7 @@ describe('POST /api/keys/import-selected — model lists (#382)', () => {
   beforeEach(() => {
     // proxyFetch runs the SSRF guard for 'custom' endpoints, which does a real
     // DNS lookup of the fake relay.example.com host. CI resolvers can take
-    // seconds on that NXDOMAIN — past the 5s test timeout — and the abandoned
+    // seconds on that NXDOMAIN - past the 5s test timeout - and the abandoned
     // handler then leaks a fetch call into the next test's mock. Fail the
     // lookup immediately; the guard treats an unresolvable host as allowed.
     vi.spyOn(dns.promises, 'lookup').mockRejectedValue(new Error('dns disabled in tests'));
@@ -189,7 +189,7 @@ describe('POST /api/keys/import-selected — model lists (#382)', () => {
     expect(db.prepare("SELECT COUNT(*) AS n FROM api_keys WHERE platform = 'custom'").get()).toEqual({ n: 1 });
     const modelDbId = (db.prepare("SELECT id FROM models WHERE platform = 'custom'").get() as { id: number }).id;
     expect(db.prepare('SELECT COUNT(*) AS n FROM fallback_config WHERE model_db_id = ?').get(modelDbId)).toEqual({ n: 1 });
-    // The second import found the dimensions on record — no second probe.
+    // The second import found the dimensions on record - no second probe.
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 

@@ -14,7 +14,7 @@ import { mintDashboardToken, isGatedApiPath } from '../helpers/auth.js';
 // Per-endpoint model identity (#651). Two relays that both offer
 // `deepseek-v3.1` used to collapse into ONE models row: one enabled flag, one
 // reliability/speed bucket. Relay A going bad took relay B's copy down with it
-// (#619). These cases pin that the two copies are now genuinely separate — and,
+// (#619). These cases pin that the two copies are now genuinely separate - and,
 // just as important, that an install with a SINGLE relay behaves exactly as
 // before.
 
@@ -176,7 +176,7 @@ describe('per-endpoint identity for custom relay models (#651)', () => {
       const a = rowOn(RELAY_A);
       const b = rowOn(RELAY_B);
 
-      // Relay A answers slowly, relay B quickly — same model id, same tokens.
+      // Relay A answers slowly, relay B quickly - same model id, same tokens.
       logRequests(SHARED_MODEL, a.key_id!, 'success', 40, 20_000);
       logRequests(SHARED_MODEL, b.key_id!, 'success', 40, 200);
       refreshStatsCache(getDb(), true);
@@ -224,8 +224,8 @@ describe('per-endpoint identity for custom relay models (#651)', () => {
 
       // Two 'probable' signals are needed to act; feeding one to each endpoint
       // must not add up to a verdict against either. (User-added models are
-      // never auto-retired anyway — that guard is asserted in
-      // services/model-retirement.test.ts — so both stay on.)
+      // never auto-retired anyway - that guard is asserted in
+      // services/model-retirement.test.ts - so both stay on.)
       noteModelRetirementSignal(
         { modelDbId: a.id, platform: 'custom', modelId: SHARED_MODEL, endpointScope: routeA.endpointScope }, eol, {},
       );
@@ -281,7 +281,7 @@ describe('per-endpoint identity for custom relay models (#651)', () => {
 
     it('keeps a bare model id reaching BOTH relays after one is renamed', async () => {
       // Display name is presentation, not identity. Renaming relay A's copy
-      // moves it into a different display-name group — that must not make it
+      // moves it into a different display-name group - that must not make it
       // (or its sibling) unreachable by the bare id every client already uses.
       await registerBothRelays(app);
       await post(app, '/api/keys/custom', {
@@ -353,7 +353,7 @@ describe('per-endpoint identity for custom relay models (#651)', () => {
       setUnifyOverrides({ merges: [], splits: [{ member: `custom:${SHARED_MODEL}` }] });
 
       const groups = getModelGroups();
-      // An unqualified key names BOTH relays, so they share one split group —
+      // An unqualified key names BOTH relays, so they share one split group -
       // exactly what it meant before #651, left alone rather than reinterpreted.
       const groupOf = (id: number) => groups.find(g => g.members.some(m => m.model_db_id === id))!;
       expect(groupOf(a.id).groupKey).toBe(groupOf(b.id).groupKey);
@@ -365,7 +365,7 @@ describe('per-endpoint identity for custom relay models (#651)', () => {
         .toEqual([a.id, b.id].sort());
     });
 
-    it('keeps a bare model id working — it spans both relays', async () => {
+    it('keeps a bare model id working - it spans both relays', async () => {
       await registerBothRelays(app);
       const groups = getModelGroups();
       const ids = resolveRequestedIdToMembers(SHARED_MODEL, groups);
@@ -374,7 +374,7 @@ describe('per-endpoint identity for custom relay models (#651)', () => {
 
     it('advertises exactly one catalog entry for a duplicated model id', async () => {
       await registerBothRelays(app);
-      // The public listing is still ONE logical model — clients that copied the
+      // The public listing is still ONE logical model - clients that copied the
       // id keep working, and the two relays are its failover set.
       const listed = buildModelListing().models.filter(m => m.id === SHARED_MODEL);
       expect(listed).toHaveLength(1);

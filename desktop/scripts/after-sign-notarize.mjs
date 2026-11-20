@@ -2,7 +2,7 @@
 // `mac.notarize`). The built-in path staples once and gives up, and on the
 // macos-15-intel runners the staple's ticket lookup at api.apple-cloudkit.com
 // regularly loses its connection ("Error 68", NSURLErrorDomain -1005) right
-// after Apple accepted the submission — that held back the v0.14.0 and v0.14.1
+// after Apple accepted the submission - that held back the v0.14.0 and v0.14.1
 // desktop installers. The ticket already exists by then, so retrying the
 // staple with a short backoff is all it takes.
 //

@@ -71,7 +71,7 @@ describe('Admin API rate limiter', () => {
     for (let i = 0; i < 12; i++) {
       const { status } = await request(app, '/api/keys/export?format=json', token);
       if (status === 429) { sawRateLimit = true; break; }
-      // Without the re-auth header the handler answers 403 — still counted.
+      // Without the re-auth header the handler answers 403 - still counted.
       expect(status).toBe(403);
     }
     expect(sawRateLimit).toBe(true);

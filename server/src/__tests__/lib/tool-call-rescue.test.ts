@@ -28,7 +28,7 @@ describe('inline tool-call dialect rescue', () => {
 
     it('reports detected-but-unparseable when the id token is degraded (no function name)', () => {
       // The live capture that motivated this module: an opaque id where
-      // functions.NAME:IDX should be — there is no way to know the tool.
+      // functions.NAME:IDX should be - there is no way to know the tool.
       const text = '<|tool_calls_section_begin|> <|tool_call_begin|> chatcmpl-tool-bde5fae954a11b1b <|tool_call_argument_begin|> {"file_path": "/private/tmp/demo-project/src"} <|tool_call_end|>';
       const r = rescueInlineToolCalls(text, TOOLS);
       expect(r.detected).toBe(true);
@@ -129,7 +129,7 @@ describe('inline tool-call dialect rescue', () => {
       expect(couldBecomeDialectMarker('<tool_ca')).toBe(true);
       expect(couldBecomeDialectMarker('<div')).toBe(false);
       expect(couldBecomeDialectMarker('Hi')).toBe(false);
-      // Full marker present is no longer a *prefix* — startsWith takes over.
+      // Full marker present is no longer a *prefix* - startsWith takes over.
       expect(couldBecomeDialectMarker('<tool_call>')).toBe(false);
     });
 

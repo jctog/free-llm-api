@@ -69,7 +69,7 @@ const TRANSIENT_404 = Object.assign(
   { status: 404 },
 );
 
-describe('modelRetirementSignal (conservative end-of-life detection — #634)', () => {
+describe('modelRetirementSignal (conservative end-of-life detection - #634)', () => {
   it('treats an explicit 410 / end-of-life body as definitive', () => {
     expect(modelRetirementSignal(NVIDIA_EOL)).toBe('definitive');
     expect(modelRetirementSignal(Object.assign(new Error('Gone'), { status: 410 }))).toBe('definitive');
@@ -135,7 +135,7 @@ describe('modelRetirementSignal (conservative end-of-life detection — #634)', 
   });
 });
 
-describe('noteModelRetirementSignal (auto-disable with a reason — #634)', () => {
+describe('noteModelRetirementSignal (auto-disable with a reason - #634)', () => {
   beforeEach(() => {
     resetModelRetirementObservations();
     getDb().prepare("DELETE FROM catalog_model_tombstones WHERE model_id LIKE 'eol-test-%'").run();

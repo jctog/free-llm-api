@@ -62,8 +62,8 @@ describe('parseModelCatalog tolerance (#488)', () => {
     expect(byId.get('d')).toBeNull();
   });
 
-  // #685 details are aimed at OpenRouter first — it is what people actually
-  // point a custom base_url at — so the fixtures below are shaped like the real
+  // #685 details are aimed at OpenRouter first - it is what people actually
+  // point a custom base_url at - so the fixtures below are shaped like the real
   // /api/v1/models rows: prices are STRINGS of USD per TOKEN, and the modality
   // signal is buried one level down under `architecture`.
   it('reads an OpenRouter row: per-token string prices and nested modalities (#685)', () => {

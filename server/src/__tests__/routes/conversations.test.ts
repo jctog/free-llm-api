@@ -109,7 +109,7 @@ describe('playground conversations', () => {
       expect(fetched.body.messages).toEqual(messages);
     });
 
-    it('drops the transient streaming flag — a stored message is finished', async () => {
+    it('drops the transient streaming flag - a stored message is finished', async () => {
       const created = await create({ messages: [{ role: 'assistant', content: 'half', streaming: true }] });
       expect(created.messages[0]).toEqual({ role: 'assistant', content: 'half' });
     });
@@ -143,7 +143,7 @@ describe('playground conversations', () => {
       expect(saved.body.model).toBe('auto');
       expect(saved.body.systemPrompt).toBe('be terse');
       expect(saved.body.updatedAt).toBeGreaterThanOrEqual(created.updatedAt);
-      // createdAt is immutable — it orders nothing, but it dates the row.
+      // createdAt is immutable - it orders nothing, but it dates the row.
       expect(saved.body.createdAt).toBe(created.createdAt);
     });
 

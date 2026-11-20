@@ -8,7 +8,7 @@
 
 每条目录模型行都带有 `rpm_limit` / `rpd_limit` 列。派发一次尝试之前，路由器检查以 `platform:modelId:keyId:rpm`（分钟）或 `...:rpd`（天）为键的滑动窗口：
 
-- 只有当 `recorded + in-flight < limit` 时请求才被放行——把进行中的租约计入，堵住了 N 个并发请求都读到同一个未消耗计数器的竞态。
+- 只有当 `recorded + in-flight < limit` 时请求才被放行--把进行中的租约计入，堵住了 N 个并发请求都读到同一个未消耗计数器的竞态。
 - 窗口同时存在于内存和持久化存储中；数据库不可用时路由器回退为累加内存窗口键。
 
 ## 词元预算（TPM/TPD）
@@ -47,7 +47,7 @@
 冷却探测任务每 60 秒扫描一轮，重新校验探测时机成熟的密钥，提前解除启发式冷却：
 
 - 只有过半停用期已过、且剩余超过 60s 才算成熟（探测一个快到期的停用纯属浪费一次校验调用）；
-- 失败的探测绝不延长停用——它把下一次探测排得更远（2min 翻倍，封顶 15min）；
+- 失败的探测绝不延长停用--它把下一次探测排得更远（2min 翻倍，封顶 15min）；
 - 探测对健康账本无副作用，重启后错开执行，并且每轮有预算（`COOLDOWN_PROBE_MAX_PER_PASS`，默认 3）；`COOLDOWN_PROBE_DISABLED=1` 可杀死该任务；
 - 探测的单位是「密钥」而非模型：一次 `validateKey` 的结果就是这把密钥持有的每一个启发式冷却的证据。
 
@@ -55,20 +55,20 @@
 
 在 #798 之前，明确说了何时可以回来的提供方，得到的却和什么都没说的提供方同一套启发式阶梯，因为错误正文在到达路由器之前就被压扁成一条消息字符串。如今每个适配器都经 `providerHttpError` 构造错误，它会捕获：
 
-1. **`Retry-After` 响应头** —— delta-seconds 或 HTTP-date，只解析一次（共享解析器在 `providers/base.ts`），且两种来源同时存在时仍是胜出通道。
+1. **`Retry-After` 响应头** -- delta-seconds 或 HTTP-date，只解析一次（共享解析器在 `providers/base.ts`），且两种来源同时存在时仍是胜出通道。
 2. **错误正文里写明的延迟**：
-   - 结构化字段：Gemini 以 429 应答时带 `error.details[]`，其中 `google.rpc.RetryInfo` 的 `retryDelay` 读作 `"17s"`；正文会被深度封顶地遍历（最大深度 6），寻找 `retryDelay` / `retry_after` / `retryAfterSeconds` 形状——跨提供方比死路径更耐用；
-   - 自然语言：锚定的短语如 "try again in 30 seconds" 或 "retry after 2m" ——之所以锚定，是为了让错误消息里无关的数字永远不可能被误认成退避时间。
+   - 结构化字段：Gemini 以 429 应答时带 `error.details[]`，其中 `google.rpc.RetryInfo` 的 `retryDelay` 读作 `"17s"`；正文会被深度封顶地遍历（最大深度 6），寻找 `retryDelay` / `retry_after` / `retryAfterSeconds` 形状--跨提供方比死路径更耐用；
+   - 自然语言：锚定的短语如 "try again in 30 seconds" 或 "retry after 2m" --之所以锚定，是为了让错误消息里无关的数字永远不可能被误认成退避时间。
 3. 所有解析出的延迟都被钳制在 24h 内，畸形或恶意的提示不可能永久停用一个密钥。
 
-只保留数字——正文从不保留——因此没有任何多余的东西进入日志或尝试轨迹。测试：[`server/src/__tests__/providers/stated-retry.test.ts`](../../../server/src/__tests__/providers/stated-retry.test.ts)。
+只保留数字--正文从不保留--因此没有任何多余的东西进入日志或尝试轨迹。测试：[`server/src/__tests__/providers/stated-retry.test.ts`](../../../server/src/__tests__/providers/stated-retry.test.ts)。
 
 ## 健康检查不得燃烧计量额度（#882）
 
 健康检查每 5 分钟跑一轮计划任务（±20% 抖动，3.5 分钟内校验过的密钥跳过，默认并发 8，同提供方探测之间间隔 ≥1s）。这个节奏对免费的校验端点没问题，在校验本身就耗费额度的地方却是毒药。`HEALTH_CHECK_INTERVAL_MS`（毫秒，最小 60000，启动时读取）可以为整个实例调整该节奏（#1593）：
 
-- ModelScope 用一次消耗额度的单词元聊天补全校验密钥（`GET /v1/models` 不做鉴权），花费魔粒额度——按默认节奏约合每密钥每天 288 次付费探测。修复（#882）：不带 `ms-` 前缀的令牌在本地直接拒绝、零网络调用，校验成功后按密钥缓存 `MODELSCOPE_VALIDATE_CACHE_MS`（默认 24 小时）。
+- ModelScope 用一次消耗额度的单词元聊天补全校验密钥（`GET /v1/models` 不做鉴权），花费魔粒额度--按默认节奏约合每密钥每天 288 次付费探测。修复（#882）：不带 `ms-` 前缀的令牌在本地直接拒绝、零网络调用，校验成功后按密钥缓存 `MODELSCOPE_VALIDATE_CACHE_MS`（默认 24 小时）。
 - Pollinations 的公开 `/v1/models` 对已撤销的密钥也返回 200，所以校验指向需鉴权的 `/account/key`；AI Horde 则把任何可达的端点视为健康，而不去占用队列名额。
 - SerpSearch、Exa 和带密钥的 Parallel 没有账户端点，它们的密钥校验就是一次不带查询的搜索。SerpSearch 因为每 5 分钟收到这类空搜索而撤销了一位用户的免费账户（#1599）。这类提供方设置 `supportsKeyPolling = false`：计划任务只校验一次密钥（从未校验过时），停在 `error` 的密钥最多每小时重问一次，冷却探测直接跳过。手动"立即检查"/"全部检查"仍会校验。
 
-给贡献者的规则：**如果 `validateKey` 会消耗计量额度，就需要缓存或一条免费的探测路径** ——见 [03-adding-a-new-provider.md](03-adding-a-new-provider.md)。
+给贡献者的规则：**如果 `validateKey` 会消耗计量额度，就需要缓存或一条免费的探测路径** --见 [03-adding-a-new-provider.md](03-adding-a-new-provider.md)。

@@ -30,9 +30,9 @@ const MOONSHOT_HOST_SUFFIXES = ['moonshot.ai', 'moonshot.cn', 'kimi.com'];
 /**
  * Whether a base URL points at Moonshot's own API. Moonshot documents an
  * assistant-message `partial: true` prefill flag that no other OpenAI-compatible
- * upstream understands, and there is no built-in moonshot platform — Kimi
+ * upstream understands, and there is no built-in moonshot platform - Kimi
  * models are otherwise served by Groq, Cloudflare, OpenRouter, Hugging Face,
- * Ollama, ... — so the flag is gated on the endpoint host, never on the model
+ * Ollama, ... - so the flag is gated on the endpoint host, never on the model
  * id. Returns false for anything that does not parse as a URL. (#1038)
  */
 export function isMoonshotEndpoint(baseUrl: string): boolean {
@@ -45,14 +45,14 @@ export function isMoonshotEndpoint(baseUrl: string): boolean {
   return MOONSHOT_HOST_SUFFIXES.some((d) => host === d || host.endsWith(`.${d}`));
 }
 
-/** Hosts that ARE OpenCode's Zen gateway (opencode.ai and subdomains — the Go
+/** Hosts that ARE OpenCode's Zen gateway (opencode.ai and subdomains - the Go
  * tier serves `https://opencode.ai/zen/go/v1`). */
 const OPENCODE_HOST_SUFFIXES = ['opencode.ai'];
 
 /**
  * Whether a base URL points at OpenCode's gateway. Since 2026-09-05 OpenCode Go
  * rejects every chat request that lacks `x-opencode-session` with a 400, while
- * `GET /models` answers without it — so a key passes the health check and then
+ * `GET /models` answers without it - so a key passes the health check and then
  * silently fails over on every completion (#1639). Gated on the endpoint host,
  * the same way isMoonshotEndpoint gates the `partial` flag.
  */
@@ -70,7 +70,7 @@ export function isOpencodeEndpoint(baseUrl: string): boolean {
  * A stable UUID derived from the credential: OpenCode asks for "any stable
  * UUID per conversation" on `x-opencode-session` and uses it to route, so the
  * header must not change between calls. The adapter never sees conversation
- * boundaries, so the key is the stablest identity available — one session id
+ * boundaries, so the key is the stablest identity available - one session id
  * per credential, deterministic across restarts, never persisted anywhere.
  */
 function stableSessionUuid(apiKey: string): string {
@@ -83,8 +83,8 @@ function stableSessionUuid(apiKey: string): string {
  * out-of-credits / top-up notice in the assistant message instead of returning
  * a 402. That reads as a successful completion, so the fallback loop never
  * rotates off the dead key (#pollinations-inband). Detect the notice so callers
- * can throw a payment-required error and fail over. Kept deliberately tight —
- * requires the credits phrase AND a top-up/quest/Pollinations marker — so a
+ * can throw a payment-required error and fail over. Kept deliberately tight -
+ * requires the credits phrase AND a top-up/quest/Pollinations marker - so a
  * genuine reply that merely discusses credits does not trip it.
  */
 export function inBandCreditsError(text: string | null | undefined): string | null {
@@ -188,7 +188,7 @@ export class OpenAICompatProvider extends BaseProvider {
   }
 
   /** Headers the endpoint requires beyond auth. OpenCode's gateway rejects chat
-   * requests without `x-opencode-session` (#1639) — a stable UUID per
+   * requests without `x-opencode-session` (#1639) - a stable UUID per
    * credential, since the adapter has no conversation boundary to key one on.
    * Empty for every other endpoint. */
   private sessionHeaders(apiKey: string): Record<string, string> {
@@ -199,7 +199,7 @@ export class OpenAICompatProvider extends BaseProvider {
   /** Some providers (Groq especially) reject a model's tool call with a 400
    * `tool_use_failed` when the model emitted it as inline DIALECT TEXT
    * (`<function=NAME{...}</function>`, Hermes/Qwen XML, etc.) that the provider's
-   * own parser couldn't convert — but they hand back the raw text in
+   * own parser couldn't convert - but they hand back the raw text in
    * `error.failed_generation`. Weaker tool models (e.g. groq llama-3.3-70b) hit
    * this constantly, dead-ending an agent's whole turn even though the call is
    * perfectly recoverable. Reuse the same inline-dialect rescue the proxy already
@@ -223,7 +223,7 @@ export class OpenAICompatProvider extends BaseProvider {
     // has turned the provider's 400 into a "success" the client cannot use, so
     // decline it instead: the original upstream error propagates and the loop
     // fails over exactly as it did before the rescue existed. Declining is the
-    // right shape here rather than throwing our own error — we are inside the
+    // right shape here rather than throwing our own error - we are inside the
     // provider's error path already.
     if (isToolArgumentValidationEnabled() && invalidToolCallReasons(rescued, schemas).length > 0) {
       return null;
@@ -243,7 +243,7 @@ export class OpenAICompatProvider extends BaseProvider {
 
   /** Extract the useful text from an upstream error body. Most providers put it
    * at error.message, but NVIDIA NIM answers RFC7807-style ({"title": ...,
-   * "detail": "Function id '...': DEGRADED function cannot be invoked"}) — the
+   * "detail": "Function id '...': DEGRADED function cannot be invoked"}) - the
    * old error.message-only read collapsed that to "Bad Request", so neither the
    * logs nor the error classifier could ever see the DEGRADED marker (#522). */
   private upstreamErrorText(errBody: unknown, res: Response): string {
@@ -257,10 +257,10 @@ export class OpenAICompatProvider extends BaseProvider {
   /** Anonymous access sends NO Authorization header: keyless providers
    * (Kilo's anonymous free tier) holding the stored `no-key` sentinel, and
    * custom endpoints whose stored credential is the same sentinel with auth
-   * off. Sending `Bearer no-key` upstream is never right — upstreams read it
+   * off. Sending `Bearer no-key` upstream is never right - upstreams read it
    * as an invalid key. A REAL key saved on a keyless platform is used instead
    * of the anonymous path, and a real key on a custom endpoint still gets its
-   * bearer (#1331): the presence of a credential decides at request time —
+   * bearer (#1331): the presence of a credential decides at request time -
    * Kilo, OVH and AI Horde all accept both modes per their docs. */
   private authHeader(apiKey: string): Record<string, string> {
     return bearerAuthHeader(apiKey);
@@ -287,7 +287,7 @@ export class OpenAICompatProvider extends BaseProvider {
    * OpenAI-compatible endpoints that are strict about unknown nested fields:
    * Mistral returns 422 for provider-private replay fields, Groq rejects
    * assistant `reasoning_content` with 400 (verified in production, #1070),
-   * and Cerebras rejects it too — `property 'messages.N.assistant.
+   * and Cerebras rejects it too - `property 'messages.N.assistant.
    * reasoning_content' is unsupported` (confirmed via vercel/ai#15042 and
    * opencode#26762, and by Cerebras' own docs, which use a `reasoning` field
    * instead). Other gateways ignore the fields, so keep the OpenAI wire
@@ -335,8 +335,8 @@ export class OpenAICompatProvider extends BaseProvider {
 
     // Moonshot's assistant `partial` prefill flag only survives to the wire
     // when this provider IS Moonshot's own API (a custom endpoint on a
-    // Moonshot/Kimi host). Every other OpenAI-compatible gateway — including
-    // the ones that serve Kimi models, like Groq, Cloudflare or OpenRouter —
+    // Moonshot/Kimi host). Every other OpenAI-compatible gateway - including
+    // the ones that serve Kimi models, like Groq, Cloudflare or OpenRouter -
     // gets it stripped, since strict upstreams 400/422 on unknown message keys
     // and the rest would ignore it anyway. (#1038)
     const sanitized = this.forwardsPartial ? messages : messages.map((m) => {
@@ -430,7 +430,7 @@ export class OpenAICompatProvider extends BaseProvider {
       data = await res.json() as ChatCompletionResponse;
     } catch (err) {
       // An aborted body read (per-attempt deadline, client disconnect) is not
-      // a malformed body — rethrow so it keeps its abort classification
+      // a malformed body - rethrow so it keeps its abort classification
       // instead of reading as a "non-OpenAI-compatible endpoint" below.
       if (isAbortLikeError(err)) throw err;
       parseErr = err;
@@ -445,7 +445,7 @@ export class OpenAICompatProvider extends BaseProvider {
       //       first one ends ("Unexpected non-whitespace character after JSON
       //       at position <n> (line <n> column <n>)") where <n> sits inside
       //       the whitespace between two valid JSON documents.
-      //   (2) the upstream connection was cut short mid-response — most often
+      //   (2) the upstream connection was cut short mid-response - most often
       //       Cloudflare's 600-second edge idle keepalive dropping a slow
       //       free-tier queue (Kilo provider, NVIDIA nemotron / Poolside
       //       Laguna models on Cloudflare-fronted upstreams). Signals: body
@@ -463,7 +463,7 @@ export class OpenAICompatProvider extends BaseProvider {
       // Only attribute it to a CDN keepalive when the upstream claims to be
       // sending JSON (Content-Type: application/json). Without that hint,
       // the parser is more likely choking on NDJSON, native API output, or
-      // HTML — all "wrong endpoint" cases. This is the safe default.
+      // HTML - all "wrong endpoint" cases. This is the safe default.
       const looksTruncated =
         /Unexpected end of JSON input/.test(msg) ||
         (/Unexpected non-whitespace character after JSON at position/.test(msg) && looksLikeJson && !looksLikeNdjson);
@@ -475,7 +475,7 @@ export class OpenAICompatProvider extends BaseProvider {
         );
       }
       throw new Error(
-        `${this.name} returned 200 with a non-JSON body — the endpoint is not OpenAI-compatible. ` +
+        `${this.name} returned 200 with a non-JSON body - the endpoint is not OpenAI-compatible. ` +
         `Check the base URL (for Ollama use http://host:11434/v1, for llama.cpp/vLLM/LM Studio the /v1 path).`,
       );
     }
@@ -557,7 +557,7 @@ export class OpenAICompatProvider extends BaseProvider {
     }
 
     // First-byte grace (#584): the same chat timeout that bounded the headers
-    // also budgets the first stream read — NIM-style providers send SSE
+    // also budgets the first stream read - NIM-style providers send SSE
     // headers instantly, then prefill long prompts for minutes.
     yield* this.guardInBandCreditsError(
       this.readSseStream(res, { firstByteTimeoutMs: options?.timeoutMs ?? this.timeoutMs }),
@@ -568,7 +568,7 @@ export class OpenAICompatProvider extends BaseProvider {
    * #pollinations-inband: wrap a chat stream so an in-band out-of-credits notice
    * (a 200 that streams the top-up message as content) fails over instead of
    * being shown as the answer. Only the FIRST content-bearing chunk is inspected
-   * — a Pollinations credits notice arrives as a single canned message — so the
+   * - a Pollinations credits notice arrives as a single canned message - so the
    * stream is otherwise byte-for-byte unchanged: reasoning/role chunks pass
    * straight through (first-token ttfb intact) and every chunk after the first
    * content one is untouched. Throwing on that first content chunk happens before
@@ -605,12 +605,12 @@ export class OpenAICompatProvider extends BaseProvider {
    * GET a catalog-style endpoint with this provider's auth header, extra
    * headers, proxy routing, timeout policy and quota bookkeeping. Shared by
    * validateKey (which only reads the status) and custom-endpoint model
-   * discovery (#488), which also reads the body — one place owns how we talk
+   * discovery (#488), which also reads the body - one place owns how we talk
    * to a provider's /models route.
    *
    * Note: transport errors (DNS / timeout / TLS) propagate to the caller.
    * health.ts catches them and marks status='error' WITHOUT incrementing the
-   * consecutive-failure counter — only confirmed 401/403 disables a key.
+   * consecutive-failure counter - only confirmed 401/403 disables a key.
    */
   protected fetchCatalogEndpoint(url: string, apiKey: string, quotaContext?: QuotaObservationContext): Promise<Response> {
     // 30s (not 10s): some upstreams return a large /v1/models catalog that

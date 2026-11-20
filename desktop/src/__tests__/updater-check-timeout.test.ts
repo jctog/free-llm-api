@@ -71,7 +71,7 @@ describe('updater check timeout (#1666)', () => {
     }
   });
 
-  it('bounds the proxy step too — a proxy that never answers fails the check', async () => {
+  it('bounds the proxy step too - a proxy that never answers fails the check', async () => {
     autoUpdater.netSession = { setProxy: () => new Promise(() => {}) };
     events.get('checking-for-update')?.();
 

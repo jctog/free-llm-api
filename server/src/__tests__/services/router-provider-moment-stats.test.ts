@@ -6,7 +6,7 @@ import { getDb, initDb } from '../../db/index.js';
 import { logRequest } from '../../lib/request-log.js';
 
 // #1347 (PR 1): rows tagged 'provider_moment' are the provider's bad minute,
-// not the model — with attribution ON they drop out of the reliability stats
+// not the model - with attribution ON they drop out of the reliability stats
 // (denominator, failures, timeouts, speed). With it OFF (the default) every
 // row counts and scoring is byte-identical to today.
 function addModel(platform: string, modelId: string): number {
@@ -22,7 +22,7 @@ function scoreFor(modelDbId: number) {
   return getRoutingScores().scores.find(s => s.modelDbId === modelDbId);
 }
 
-// 1 success, 1 ordinary failure, 1 attributed provider-moment failure —
+// 1 success, 1 ordinary failure, 1 attributed provider-moment failure -
 // all logged this instant, so the day-0 decay weight is 1 for each.
 function seed() {
   logRequest('groq', 'test-model', null, 'success', 100, 50, 12, null);

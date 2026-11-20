@@ -1,6 +1,6 @@
 // Task-type-aware routing (#1127): lets a client declare what kind of work a
 // request is (code vs chat) so the router can bias the bandit weights toward
-// quality or speed. A coding turn is quality-sensitive — a weak model
+// quality or speed. A coding turn is quality-sensitive - a weak model
 // "completes" it with wrong code the user must manually verify; a chat turn is
 // budget/speed-sensitive. The declared header is the strongest signal; when it
 // is absent or `auto`, a cheap bounded rule derives the type from the request
@@ -24,8 +24,8 @@ const MAX_SCAN_CHARS = 4000;
  * vocabulary: an earlier revision matched bare English words (`function`,
  * `class`, `cargo`, `docker`, `git`) and a bare `=>`, which classified
  * "What class of animals are dolphins?" and "Explain the function of the
- * mitochondria" as code. Auto-derivation is silent — the user never asked for
- * it — so it has to err toward `chat`: a missed code turn just routes the way
+ * mitochondria" as code. Auto-derivation is silent - the user never asked for
+ * it - so it has to err toward `chat`: a missed code turn just routes the way
  * it always did, while a false positive quietly re-weights ordinary chat
  * traffic. Hence: a marker has to be something that essentially cannot occur
  * in prose.
@@ -53,7 +53,7 @@ const CODE_MARKERS: readonly RegExp[] = [
   /^[ \t]*#\s*include\s*[<"]/m,
   // A source file path next to a line number: `src/router.ts:214`.
   /\b[\w./-]+\.(?:[jt]sx?|mjs|cjs|py|rb|go|rs|java|kt|swift|php|cs|cpp|cc|hpp|sh|sql|css|scss|html|vue|svelte|ya?ml|json|toml)\s*:\s*\d+/,
-  // Same, for the one-letter C extensions — the base name must start with a
+  // Same, for the one-letter C extensions - the base name must start with a
   // letter so an enumerated prose clause ("4.c: twelve") cannot match.
   /\b[A-Za-z_][\w./-]*\.[ch]\s*:\s*\d+/,
   // Stack frames: V8 (`at fn (file.js:1:2)`), Python (`File "x.py", line 3`).
@@ -88,7 +88,7 @@ export function deriveTaskType(tools: unknown[] | undefined, messages: ChatMessa
 /**
  * Resolve the effective task bias for a request: the explicit header wins;
  * `auto` falls back to derivation. Returns undefined when there is no signal
- * worth biasing for — callers then leave the routing weights untouched, so the
+ * worth biasing for - callers then leave the routing weights untouched, so the
  * default behaviour is unchanged. `auto` only ever biases UP toward `code`:
  * `chat` is the ordinary case, and silently re-weighting the bulk of traffic
  * in `auto` mode would defeat the point of an opt-in knob.

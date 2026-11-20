@@ -1,6 +1,6 @@
 **English** · [简体中文](../../zh-cn/architecture/05-catalog-sync.md)
 
-# Catalog Sync — Deep Dive
+# Catalog Sync - Deep Dive
 
 > **Source:** `server/src/services/catalog-sync.ts`, `server/src/services/model-state.ts`, `server/src/db/migrations/`
 
@@ -15,7 +15,7 @@ The catalog sync keeps the local model catalog in step with the published catalo
 | **Live** | Premium license holders | Every 2–3 days | Bearer `premium_license_key` |
 | **Monthly** | Free installs | ~30 days | None (public) |
 
-Free installs still self-heal, just on a slower cadence. The bundled migrations remain the **baseline** — a fetched catalog is applied only when **newer than `MIN_CATALOG_VERSION`** (bumped on every model migration), so a stale monthly snapshot can never roll back models added by a newer app version.
+Free installs still self-heal, just on a slower cadence. The bundled migrations remain the **baseline** - a fetched catalog is applied only when **newer than `MIN_CATALOG_VERSION`** (bumped on every model migration), so a stale monthly snapshot can never roll back models added by a newer app version.
 
 ---
 
@@ -42,7 +42,7 @@ interface Catalog {
 | `intelligenceRank` | 1..1000 (1 = best), within provider |
 | `speedRank` | 1..11 (catalog hand-assigned, 1 = fastest) |
 | `sizeLabel` | `Frontier` \| `Large` \| `Medium` \| `Small` (cross-provider tier) |
-| `limits` | `{rpm, rpd, tpm, tpd}` — per-model caps |
+| `limits` | `{rpm, rpd, tpm, tpd}` - per-model caps |
 | `monthlyTokenBudget` | String label (e.g. `"1M"`, `"2x"`) for headroom guardrail |
 | `contextWindow` | Max context (tokens) |
 | `enabled` | Catalog-level enable (force-disables if false) |
@@ -88,18 +88,18 @@ Applied inside **one transaction** (`applyCatalog`):
 | Metadata (name, ranks, limits, context, capabilities) | Tracks catalog **unless** user has explicit local override |
 | `enabled: false` | **Force-disables** (model dead upstream) |
 | `enabled: true` | **Never re-enables** a model the user turned off |
-| User-created rows (`source = 'user'`) | **Never updated, never deleted, never adopted** — on `platform:model_id` collision, user row wins, catalog entry skipped |
+| User-created rows (`source = 'user'`) | **Never updated, never deleted, never adopted** - on `platform:model_id` collision, user row wins, catalog entry skipped |
 | Catalog models user deleted | Stay deleted via **tombstones** (`catalog_model_tombstones` table) |
-| Auto-retired (410/end-of-life) | **Disabled, not deleted** — catalog listing them enabled lifts retirement (#634) |
+| Auto-retired (410/end-of-life) | **Disabled, not deleted** - catalog listing them enabled lifts retirement (#634) |
 | Models vanished from catalog | **Deleted** (fallback_config first, FK order) |
 
 ### Provenance Column (`source`)
 
 Replaces the old `size_label NOT IN ('User','Custom')` heuristic. Values:
 
-- `'catalog'` — created by catalog sync
-- `'user'` — declarative config, admin add, custom endpoint
-- `'declarative'` — from declarative config file
+- `'catalog'` - created by catalog sync
+- `'user'` - declarative config, admin add, custom endpoint
+- `'declarative'` - from declarative config file
 
 ---
 
@@ -153,7 +153,7 @@ interface LicenseStatus {
 ```
 
 - Cached in settings (`premium_license_status`), refreshed on every sync.
-- Entitlement enforced **server-side** at `/v1/latest` — local cache is informational UI state.
+- Entitlement enforced **server-side** at `/v1/latest` - local cache is informational UI state.
 - Offline / service down → keep cached status.
 
 ---
@@ -274,7 +274,7 @@ startCatalogSync(scheduler: Scheduler)
 | HTTP 304 | `up_to_date`, update `last_sync_ms` |
 | HTTP non-2xx | Error, keep previous catalog |
 | Missing signature | Discard, error |
-| Signature verification FAILED | Discard, **loud error** — "catalog signature verification FAILED — discarding response" |
+| Signature verification FAILED | Discard, **loud error** - "catalog signature verification FAILED - discarding response" |
 | Invalid JSON / shape | Discard, error |
 | Version older than baseline | `skipped_older`, wait for newer catalog |
 | DB unavailable during apply | Transaction rolls back, error, keep previous state |

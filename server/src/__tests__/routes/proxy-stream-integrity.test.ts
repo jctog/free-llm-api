@@ -142,7 +142,7 @@ describe('proxy stream turn-integrity', () => {
     const call = tcFrame.choices[0].delta.tool_calls[0];
     expect(call.function.name).toBe('Read');
     expect(JSON.parse(call.function.arguments)).toEqual({ file_path: '/tmp/a' });
-    expect(call.id).toBe('call_stream_1'); // synthesized — upstream sent none
+    expect(call.id).toBe('call_stream_1'); // synthesized - upstream sent none
     const finishes = fs.map(f => f.choices?.[0]?.finish_reason).filter(Boolean);
     expect(finishes).toEqual(['tool_calls']);
   });
@@ -292,7 +292,7 @@ describe('proxy stream turn-integrity', () => {
 
   it('never leaks raw tool_call deltas riding on role/reasoning chunks (OpenRouter shape)', async () => {
     // OpenRouter attaches tool_call fragments to chunks that also carry a
-    // role or reasoning key. Those must be accumulated, not forwarded raw —
+    // role or reasoning key. Those must be accumulated, not forwarded raw -
     // forwarding both the fragments AND the assembled call duplicates it.
     mockUpstream([{
       body: sse(
@@ -429,7 +429,7 @@ describe('proxy stream turn-integrity', () => {
     const fs = frames(r.text);
     expect(fs.filter(f => f.usage)).toHaveLength(1);
     expect(fs[fs.length - 1].usage).toEqual(usage);
-    // The content frame it arrived on is forwarded WITHOUT usage — the held
+    // The content frame it arrived on is forwarded WITHOUT usage - the held
     // copy is the single, last one the client sees (OpenAI ordering).
     const contentFrame = fs.find(f => f.choices?.[0]?.delta?.content === ' world');
     expect(contentFrame).toBeDefined();
@@ -464,7 +464,7 @@ describe('proxy stream turn-integrity', () => {
     // Reasoning models stream thinking (reasoning_content) long before the
     // first answer token. The regression: ttfb was recorded at header flush,
     // i.e. the END of the thinking phase, so the Analytics speed shown was the
-    // reasoning tail — or NULL on turns that never flushed. It must count the
+    // reasoning tail - or NULL on turns that never flushed. It must count the
     // first token of ANY kind. We interleave a real delay between the
     // reasoning frame and the first text frame to make the two moments
     // measurable.

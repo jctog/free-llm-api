@@ -4,7 +4,7 @@ import { hashPassword, verifyPassword } from '../lib/password.js';
 
 // Dashboard authentication: email + password accounts with opaque session
 // tokens. Distinct from the unified API key, which authenticates the /v1 proxy
-// for apps — this gates the /api/* admin surface for the human operator (#35).
+// for apps - this gates the /api/* admin surface for the human operator (#35).
 
 const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 
@@ -19,7 +19,7 @@ function sha256(s: string): string {
 
 /** The one spelling of an address the DB is keyed on. Exported so callers that
  *  bucket by email (the login throttle in routes/auth.ts) key on exactly what
- *  verifyCredentials will look up — keying on anything else lets a padded
+ *  verifyCredentials will look up - keying on anything else lets a padded
  *  address authenticate against the real row while landing in its own bucket. */
 export function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();

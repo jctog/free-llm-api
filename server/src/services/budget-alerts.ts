@@ -4,7 +4,7 @@
  * A cap that only speaks at 100% is a hard stop with no warning: an agent
  * fleet just starts seeing 429s and the operator learns about it from the
  * outage. Every comparable router grew an early-warning layer on top of its
- * caps — LiteLLM's budget_alerts / soft-budget notifications and OpenRouter's
+ * caps - LiteLLM's budget_alerts / soft-budget notifications and OpenRouter's
  * per-key spend-limit alert (80% then 100% of the limit by default) are the
  * reference designs. This is the same shape on our own ledger:
  *
@@ -130,7 +130,7 @@ export function noteBudgetAlerts(keyId: number, now = Date.now()): void {
 // ── Webhook destination ────────────────────────────────────────────────────
 //
 // BUDGET_ALERT_WEBHOOK_URL (optional, read each time an alert fires): a POST
-// target for the same alerts the Logs page shows — the LiteLLM
+// target for the same alerts the Logs page shows - the LiteLLM
 // `budget_alerts` webhook shape (Slack/Discord work via a workflow). One
 // JSON body per firing batch; fire-and-forget with a short timeout; failures
 // are logged once and swallowed. The URL is operator configuration, not

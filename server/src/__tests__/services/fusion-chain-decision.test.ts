@@ -9,7 +9,7 @@ import { seedDecisionModels } from '../helpers/decision-models.js';
 
 // #1354 follow-up: with the 'decision' strategy active, the fusion panel's
 // auto-pick (getOrderedFusionChain) must follow the preset the decision model
-// picked for THIS request — the same effectiveRoutingStrategy() seam the chat
+// picked for THIS request - the same effectiveRoutingStrategy() seam the chat
 // router already uses. Reading the raw setting instead scored every
 // decision-strategy request as plain Balanced, so a 'smartest' request got its
 // chat answer from the big model and its panel slots from the Balanced order.
@@ -89,7 +89,7 @@ describe('fusion panel chain under decision routing (#1354)', () => {
   });
 
   it('outside any request scope, decision scores as Balanced (the documented fallback)', () => {
-    // With these ranks the Balanced preset scores the frontier model first —
+    // With these ranks the Balanced preset scores the frontier model first -
     // the point is that the call is accepted and deterministic outside a
     // request scope, exactly like the weightsWithPeak('balanced') fallthrough.
     const chain = getOrderedFusionChain(1000);

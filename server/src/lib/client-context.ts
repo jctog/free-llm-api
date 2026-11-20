@@ -21,7 +21,7 @@ const storage = new AsyncLocalStorage<ClientContext>();
 // this is the socket peer address and a spoofed X-Forwarded-For from a LAN
 // client is ignored. When TRUST_PROXY (#1024) opts into trusting a reverse
 // proxy, `req.ip` walks the configured trusted-proxy chain and returns the
-// first untrusted address — instead of trusting the leftmost caller-supplied
+// first untrusted address - instead of trusting the leftmost caller-supplied
 // X-Forwarded-For value, which would let any direct caller spoof it.
 function resolveClientIp(req: Request): string | null {
   const raw = req.ip ?? req.socket.remoteAddress ?? null;

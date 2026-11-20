@@ -1,17 +1,17 @@
 [English](../../en/architecture/CHANGELOG.md) · **简体中文**
 
-# 架构域 —— 变更日志
+# 架构域 -- 变更日志
 
 `docs/architecture/` 的文档修订历史，从触及架构相关代码的提交播种而来。最近的在前。
 
-## 2026-08-23 —— 领域扩展
+## 2026-08-23 -- 领域扩展
 
 - **提交（本 PR）**：`docs(architecture): expand into deep-dive domain`
   - 创建 `docs/architecture/` 领域文件夹，含 6 篇深度文档 + `OVERVIEW.md` + `CHANGELOG.md`
   - 根目录 `docs/architecture.md` 保留为高层索引，更新了交叉引用
   - `docs/OVERVIEW.md` 索引新增 architecture/ 域行
 
-## 2026-06-xx —— 可观测性与日志
+## 2026-06-xx -- 可观测性与日志
 
 - **74df985** 仪表盘里的服务器日志查看器，位于分析导航菜单下 (#993)
   - 新增 `server-logs.ts`：双层存储（环形缓冲区 + 持久化 warn/error）
@@ -20,7 +20,7 @@
   - 新增请求分析（`requests`、`request_attempts` 表）+ 聚合视图
   - 经 `AsyncLocalStorage` 做尝试追踪，服务 `X-Fallback-Detail` 头
 
-## 2026-06-xx —— 路由与评分修复
+## 2026-06-xx -- 路由与评分修复
 
 - **f08e17c** fix(router): chars/4 欠计时的上下文窗口安全边际 (#956)
   - 路由词元估算现在把保留输出封顶 2000 词元（原为完整 max_tokens）
@@ -36,7 +36,7 @@
 - **1fea8d5** fix(fallback): 测试间重置模型失败窗口并穿个可注入的 now (#856)
   - 模型失败停用的可测性改进
 
-## 2026-05-xx —— 降级模式与回退 v2
+## 2026-05-xx -- 降级模式与回退 v2
 
 - **f412e97** feat(server): 降级模式状态机 (#904) (#906)
   - 新增 `degradation.ts`：健康提供方比率追踪器，带迟滞
@@ -59,7 +59,7 @@
   - 探测中继模型（OpenCode Zen）的裸分类词
   - 视同空补全 → 回退，`finish_reason=length` 时 `skipBench: true`
 
-## 2026-04-xx —— 路由增强
+## 2026-04-xx -- 路由增强
 
 - **c3f538e** feat(routing): 经 `MODEL_ROUTING_OVERRIDES` 做按模型权重覆盖 (#747)
   - `MODEL_ROUTING_OVERRIDES='{"model-id": {"weight": 0.5}}'` 缩放最终有效分
@@ -81,9 +81,9 @@
 - **8ad9010** Fix routing chain semantics
   - priority 策略的密集秩 + 惩罚修复
 
-## 2026-03-xx —— 额度与冷却引擎
+## 2026-03-xx -- 额度与冷却引擎
 
-- **076fa69** feat: 付费实时目录——签名同步、授权密钥、自助计费
+- **076fa69** feat: 付费实时目录--签名同步、授权密钥、自助计费
   - 付费授权的实时目录层（2-3 天刷新）
   - 免费安装的月度快照层（30 天拖尾）
   - Ed25519 签名目录、钉死公钥、启动从缓存重应用
@@ -109,7 +109,7 @@
 - **12166bd** feat(router): 跳过 tpm_limit 装不下请求的模型
   - 预检 TPM 对估算词元
 
-- **438eaa2** feat(proxy): 智能体轮次完整性——流校验、工具方言救回、粘性会话修复 (#231 audit)
+- **438eaa2** feat(proxy): 智能体轮次完整性--流校验、工具方言救回、粘性会话修复 (#231 audit)
   - 流校验：头部拿到首载荷前保留
   - 工具方言救回：内联工具调用 → 结构化 tool_calls
   - 粘性会话：30min TTL，键 = 首条用户消息哈希
@@ -124,7 +124,7 @@
   - 重试时间预算（默认 45s）
   - 带尝试轨迹的丰富耗尽响应体
 
-## 2026-02-xx —— 目录与提供方额度
+## 2026-02-xx -- 目录与提供方额度
 
 - **2410f87** feat(catalog-sync): 每次启动重应用缓存目录
   - 解决漂移：迁移重断言基线、启动同步 304、缓存文档重应用
@@ -137,7 +137,7 @@
   - 汇聚月度预算：`monthly_token_budget × usableKeyCount`
   - 模型内密钥评分做密钥选择
 
-## 2026-01-xx —— 早期架构
+## 2026-01-xx -- 早期架构
 
 - **413b5e4** feat(router): 分析驱动的老虎机路由，加权轴
   - 带可靠性/速度/智能轴的 Thompson 采样老虎机
@@ -168,7 +168,7 @@
 - **9b97219** feat(router): 回退前穷尽所有密钥 + 测试 (#42)
   - 轮询完一个模型的所有密钥再去下一模型
 
-## 2025 —— 基石
+## 2025 -- 基石
 
 - **04e1503** FreeLLMAPI 初版发布
   - 基础路由、限流、提供方适配器、SQLite 存储

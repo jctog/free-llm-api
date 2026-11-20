@@ -3,7 +3,7 @@ import { PollinationsProvider } from '../../providers/pollinations.js';
 import { getProvider, hasProvider, resolveProvider } from '../../providers/index.js';
 import type { KeyValidationFailure } from '../../providers/base.js';
 
-// Fake fixtures only — no real Pollinations key appears here or in any
+// Fake fixtures only - no real Pollinations key appears here or in any
 // assertion message (#608 acceptance criterion: never log the key).
 const REVOKED_KEY = 'sk_test_revoked';
 const VALID_KEY = 'sk_test_valid';
@@ -46,7 +46,7 @@ describe('Pollinations registration (#608)', () => {
 });
 
 describe('Pollinations validateKey (#608)', () => {
-  it('does NOT trust the public GET /v1/models — a revoked key that 200s there is invalid', async () => {
+  it('does NOT trust the public GET /v1/models - a revoked key that 200s there is invalid', async () => {
     // The reported repro: the same revoked key gets 200 from /v1/models and 401
     // from an authenticated endpoint.
     const calls: Array<{ url: string; init: RequestInit }> = [];
@@ -96,7 +96,7 @@ describe('Pollinations validateKey (#608)', () => {
     await expect(provider.validateKey(VALID_KEY)).resolves.toBe(true);
   });
 
-  it('treats 403 as inconclusive (throws) — permission, not a revoked key', async () => {
+  it('treats 403 as inconclusive (throws) - permission, not a revoked key', async () => {
     // Pollinations returns 403 when the credential authenticated but lacks the
     // account permission the probe needs. Throwing keeps health.ts on
     // status=error (previous verdict preserved, no auto-disable).

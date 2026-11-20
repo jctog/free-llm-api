@@ -36,7 +36,7 @@ function Toast({ toast }: { toast: ToastItem }) {
 
   // Auto-dismiss with a pausable countdown: hovering the toast or blurring
   // the window suspends it, so reading a message never races the timer.
-  // Sticky toasts (duration null — errors by default) never auto-dismiss.
+  // Sticky toasts (duration null - errors by default) never auto-dismiss.
   useEffect(() => {
     const duration = toast.duration
     if (duration === null) return

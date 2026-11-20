@@ -6,7 +6,7 @@ import { Tooltip } from '@/components/tooltip'
 // Provider-moment failure attribution (#1347, opt-in): tag 429 / 5xx /
 // timeout / transport failures as the provider's bad minute so they steer the
 // key without counting against the model's reliability. Independent of the
-// routing-strategy snapshot — it lives in settings, so it owns its own
+// routing-strategy snapshot - it lives in settings, so it owns its own
 // query + mutation. Off by default; existing installs keep today's scoring.
 async function fetchAttribution(): Promise<{ enabled: boolean }> {
   return apiFetch('/api/settings/provider-moment-attribution')

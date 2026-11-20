@@ -250,7 +250,7 @@ describe('Anthropic surface: thinking knob + thinking blocks', () => {
   });
 
   it("accepts thinking types outside the enabled/disabled enum (#632)", () => {
-    // 'adaptive' means the model manages its own budget — no knob forwarded.
+    // 'adaptive' means the model manages its own budget - no knob forwarded.
     expect(effortFromAnthropicThinking({ type: 'adaptive' })).toBeUndefined();
     expect(effortFromAnthropicThinking({ type: 'auto' })).toBeUndefined();
     // An explicit budget still wins, whatever the mode is called.

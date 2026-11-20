@@ -378,7 +378,7 @@ function ollamaWire(model: string): InboundChatWire {
 }
 
 // Every handler below RETURNS its promise rather than voiding it, so Express
-// 5 forwards a rejection to errorHandler — the same treatment the OpenAI and
+// 5 forwards a rejection to errorHandler - the same treatment the OpenAI and
 // Anthropic surfaces get from their `async` handlers. A voided promise leaves
 // the router and resurfaces as an `unhandledRejection`, which the process
 // safety net classifies as fatal for anything that is not a transport error,
@@ -547,8 +547,8 @@ ollamaRouter.post('/api/generate', (req, res) => {
 
 const embedSchema = z.object({
   model: z.string().optional(),
-  // /api/embed sends `input`; the legacy /api/embeddings body — the whole
-  // reason that endpoint exists — sends `prompt`.
+  // /api/embed sends `input`; the legacy /api/embeddings body - the whole
+  // reason that endpoint exists - sends `prompt`.
   input: z.union([z.string(), z.array(z.string())]).optional(),
   prompt: z.string().optional(),
   dimensions: z.number().int().positive().optional(),
@@ -607,7 +607,7 @@ ollamaRouter.post('/api/embeddings', (req: Request, res: Response, next: NextFun
     return;
   }
   // A stale dashboard session must still surface as 401 so the SPA's
-  // re-login flow triggers — unless the bearer could be a unified API key
+  // re-login flow triggers - unless the bearer could be a unified API key
   // for key-required Ollama mode, which handleEmbed will verify itself.
   if (dashboardToken && getOllamaEmulationMode() !== 'key-required') {
     res.status(401).json({ error: { message: 'Authentication required', type: 'authentication_error' } });

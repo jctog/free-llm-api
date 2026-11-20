@@ -4,17 +4,17 @@ import type { ChatCompletionChunk } from '@freellmapi/shared/types.js';
 //
 // Some models serialize their reasoning trace INTO `content` as a leading
 // `<think>…</think>` block instead of the separate `reasoning_content` field
-// other providers use (Z.ai, Ollama, Gemini thought parts — all already
+// other providers use (Z.ai, Ollama, Gemini thought parts - all already
 // normalized elsewhere). Forwarding the tags verbatim makes downstream tools
 // render thinking as answer text. This module splits it back out into the
 // OpenAI-convention `reasoning_content` field (non-streaming) and
 // `delta.reasoning_content` chunks (streaming).
 //
 // Deliberately conservative: only a `<think>` that OPENS the message (after
-// optional whitespace) starts extraction — a model *quoting* the literal tag
+// optional whitespace) starts extraction - a model *quoting* the literal tag
 // mid-answer is left untouched. Once the block closes, everything after it is
 // passed through verbatim (no re-arming), so at most one block per message is
-// extracted. Matching is exact and lowercase — the only spelling observed live.
+// extracted. Matching is exact and lowercase - the only spelling observed live.
 //
 // Streaming buffer strategy (the tag can split across chunk boundaries):
 //  - 'lead': holds at most leading whitespace plus a strict prefix of
@@ -24,12 +24,12 @@ import type { ChatCompletionChunk } from '@freellmapi/shared/types.js';
 //  - 'passthrough': zero-copy.
 // The whole stream is never buffered. An unclosed tag at stream end flushes
 // the held bytes as reasoning; an undecided lead buffer (e.g. a message that
-// is just "<thi") flushes as content — text is never lost.
+// is just "<thi") flushes as content - text is never lost.
 
 const OPEN_TAG = '<think>';
 const CLOSE_TAG = '</think>';
 // A lead buffer longer than this cannot plausibly be "whitespace before
-// <think>" — bail to passthrough so a pathological all-whitespace stream
+// <think>" - bail to passthrough so a pathological all-whitespace stream
 // can't grow the hold buffer unboundedly.
 const MAX_LEAD_HOLD = 512;
 
@@ -67,7 +67,7 @@ export class ThinkTagStreamFilter {
       if (this.state === 'lead') {
         const trimmed = input.replace(/^\s+/, '');
         if (trimmed.length === 0) {
-          // All whitespace so far — could still precede a tag. Hold (bounded).
+          // All whitespace so far - could still precede a tag. Hold (bounded).
           if (input.length > MAX_LEAD_HOLD) {
             this.state = 'passthrough';
             content += input;
@@ -79,7 +79,7 @@ export class ThinkTagStreamFilter {
           this.state = 'thinking';
           input = trimmed.slice(OPEN_TAG.length);
         } else if (OPEN_TAG.startsWith(trimmed)) {
-          // Strict prefix of the tag — wait for the next delta to decide.
+          // Strict prefix of the tag - wait for the next delta to decide.
           this.pending = input;
           input = '';
         } else {
@@ -181,7 +181,7 @@ export async function* extractThinkTagsFromStream(
       continue;
     }
     // Chunks are parsed fresh from JSON per SSE frame, so in-place mutation is
-    // safe — same rationale as normalizeOutboundContent.
+    // safe - same rationale as normalizeOutboundContent.
     choice.delta.content = content;
     if (reasoning.length > 0) {
       choice.delta.reasoning_content = choice.delta.reasoning_content

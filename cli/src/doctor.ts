@@ -1,9 +1,9 @@
-// `freellmapi doctor` — does this tool's traffic actually reach this gateway?
+// `freellmapi doctor` - does this tool's traffic actually reach this gateway?
 //
 // The load-bearing constraint: the verdict must be computed in a process that
 // INHERITS THE USER'S SESSION ENVIRONMENT. The server cannot answer this
 // question, because the failure being diagnosed is a request that never
-// arrives — there is nothing in any server-side log to look at. So the check
+// arrives - there is nothing in any server-side log to look at. So the check
 // resolves each tool's effective connection the way that tool resolves it, in
 // this process, and only then asks the gateway whether it is alive.
 //
@@ -17,7 +17,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 // 'elsewhere' is not decoration. Without it the first real run of this command
-// reported `OK claude: routed` for a Claude Code pinned to api.anthropic.com —
+// reported `OK claude: routed` for a Claude Code pinned to api.anthropic.com -
 // technically "it reaches what it is configured to reach", and precisely the
 // confident-wrong answer the command exists to prevent. `routed` now means
 // "reaches THIS gateway", which is the only question the user is asking.
@@ -78,7 +78,7 @@ export function normalizeUrl(url: string): string {
   try {
     parsed = new URL(trimmed);
   } catch {
-    // Not parseable at all — fall back to lexical trimming rather than
+    // Not parseable at all - fall back to lexical trimming rather than
     // throwing, so a malformed config value still yields a report.
     return lexical();
   }
@@ -105,7 +105,7 @@ function readJsonIfPresent(file: string): Record<string, unknown> | undefined {
   }
 }
 
-/** The system directory holding Claude Code's MANAGED settings — the scope
+/** The system directory holding Claude Code's MANAGED settings - the scope
  *  nothing else can override. */
 export function managedSettingsDir(platform: string = process.platform): string {
   if (platform === 'win32') return 'C:\\Program Files\\ClaudeCode';
@@ -118,14 +118,14 @@ export function managedSettingsDir(platform: string = process.platform): string 
  *
  * Not one file. The same directory also supports a `managed-settings.d/`
  * drop-in, whose `*.json` files are merged alphabetically ON TOP of the base
- * `managed-settings.json` — so a drop-in outranks the base, and the
+ * `managed-settings.json` - so a drop-in outranks the base, and the
  * alphabetically LAST drop-in outranks the ones before it. Reading only the
  * base file is how this command would confidently name the wrong effective
  * URL for exactly the fleet-managed install most likely to have one imposed:
  * it would report the layer the operator can see and miss the one actually
  * winning.
  *
- * An unreadable directory (the usual case — it does not exist) contributes
+ * An unreadable directory (the usual case - it does not exist) contributes
  * nothing rather than failing the report.
  */
 export function managedSettingsPaths(
@@ -166,7 +166,7 @@ function envBlockUrl(file: string): string | undefined {
  *
  * The familiar "my launcher overrode my settings.json" case is not a
  * counter-example: a launcher that wins is writing MANAGED settings, which
- * outrank every other scope — note that the rest of that same `env` block
+ * outrank every other scope - note that the rest of that same `env` block
  * still applies, which is what makes the override so hard to see by reading
  * config alone.
  */
@@ -280,12 +280,12 @@ function sectionValue(toml: string, section: string, key: string): string | unde
 export const DEFAULT_PROBE_TIMEOUT_MS = 5_000;
 
 /**
- * Probe a base URL's identity AND its health — two separate questions that must
+ * Probe a base URL's identity AND its health - two separate questions that must
  * not be collapsed.
  *
  * IDENTITY is structural: `/livez` answers `{status, version, uptime_s}` and
  * carries NO product identifier, so a body with that exact shape is evidence,
- * not proof — another service could serve the same three keys. `identified`
+ * not proof - another service could serve the same three keys. `identified`
  * therefore means "responds the way this gateway responds", and the report says
  * so. Asserting identity harder would need either an authenticated call (the
  * CLI does not have a key here) or a product marker the server does not emit.
@@ -295,7 +295,7 @@ export const DEFAULT_PROBE_TIMEOUT_MS = 5_000;
  * 503 when the database or the encryption key is down (routes/status.ts), and
  * that response is still unmistakably this gateway. Requiring `status === 'ok'`
  * to identify it would report a correctly-routed but sick gateway as "probably
- * a different service on that port" — the confident wrong answer this command
+ * a different service on that port" - the confident wrong answer this command
  * exists to prevent. Anything that is not a 2xx `'ok'` is reported as
  * unhealthy and the raw status is echoed, so a status added later degrades into
  * a truthful "reaches this gateway, which says: <status>" instead of a lie.
@@ -449,11 +449,11 @@ export async function diagnose(tool: string, options: DoctorOptions): Promise<To
       gateway,
       detail:
         `Something is listening at ${effective.value} and ${tool} would reach it, but it did not answer `
-        + '/livez the way this gateway does — so it is probably a different service on that port.',
+        + '/livez the way this gateway does - so it is probably a different service on that port.',
     };
   }
 
-  // Routing is correct here and the gateway is unmistakably this one — it just
+  // Routing is correct here and the gateway is unmistakably this one - it just
   // says it cannot serve. Reporting that as `routed` would send the user
   // hunting through config that is already right, so it gets its own verdict
   // and a nonzero exit.
@@ -466,7 +466,7 @@ export async function diagnose(tool: string, options: DoctorOptions): Promise<To
       gateway,
       detail:
         `${tool} reaches ${effective.value} and that IS this gateway, but it reports `
-        + `status "${gateway.serviceStatus}" (HTTP ${gateway.status}) — it cannot serve requests. `
+        + `status "${gateway.serviceStatus}" (HTTP ${gateway.status}) - it cannot serve requests. `
         + 'The routing is fine; the gateway is not.',
     };
   }
@@ -501,7 +501,7 @@ export function formatReport(report: ToolReport): string {
   return lines.join('\n');
 }
 
-/** Exit code: 0 when every tool is routed, 1 otherwise — so it is usable in a
+/** Exit code: 0 when every tool is routed, 1 otherwise - so it is usable in a
  *  script, not only by eye. */
 export function exitCodeFor(reports: ToolReport[]): number {
   return reports.every(report => report.verdict === 'routed') ? 0 : 1;

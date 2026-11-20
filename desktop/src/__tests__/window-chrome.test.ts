@@ -10,7 +10,7 @@ describe('dashboard window chrome per platform', () => {
     expect(platformChrome('win32').autoHideMenuBar).toBe(true);
   });
 
-  it('hides it on Linux too — same stock menu, same complaint', () => {
+  it('hides it on Linux too - same stock menu, same complaint', () => {
     expect(platformChrome('linux').autoHideMenuBar).toBe(true);
   });
 

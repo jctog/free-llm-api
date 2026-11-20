@@ -7,7 +7,7 @@ import type { ChatMessage } from '@freellmapi/shared/types.js';
 //
 // freellmapi accepts the array envelope so clients like opencode and
 // continue.dev (which always serialize as arrays) don't 400. Non-text blocks
-// are dropped silently — vision/audio aren't supported (see README).
+// are dropped silently - vision/audio aren't supported (see README).
 export type ContentTextBlock = { type: 'text'; text: string };
 export type ContentBlock = ContentTextBlock | { type: string; [key: string]: unknown };
 
@@ -20,7 +20,7 @@ export function contentToString(content: unknown): string {
         if (typeof b === 'string') return b;
         const block = b as { type?: string; text?: unknown };
         // OpenAI blocks carry type:'text'; Gemini-lineage agents (Qwen Code,
-        // AionUI) send part-style `{ text }` with no type at all — accept any
+        // AionUI) send part-style `{ text }` with no type at all - accept any
         // block whose `text` is a string and whose type doesn't say it's
         // something else. (#200)
         if (typeof block?.text === 'string' && (block.type === 'text' || block.type === undefined)) {
@@ -92,9 +92,9 @@ export function stripImagesFromMessages(messages: ChatMessage[]): ChatMessage[] 
 // shape variations free-tier providers emit. Complements normalizeOutboundContent
 // (which fixes array content) by fixing the *frame* fields, not the content:
 //   - `model` coerced to a string (some providers send null/number).
-//   - `choices[].finish_reason` defaulted to null when absent — the field must
+//   - `choices[].finish_reason` defaulted to null when absent - the field must
 //     exist per spec; Rust agents (the #200 class of compat bugs) branch on it.
-//   - a literal `tool_calls: null` on a message/delta is DELETED — OpenAI omits
+//   - a literal `tool_calls: null` on a message/delta is DELETED - OpenAI omits
 //     the field entirely when there are no calls, and `null` breaks clients that
 //     test for its presence (this is the response-side mirror of the #200 fix).
 // Content, real tool_calls arrays, reasoning_content, and every other field are

@@ -47,9 +47,9 @@ mediaRouter.get('/', (_req: Request, res: Response) => {
 // from the tagged request log. Image and audio calls are billed per image or
 // per character, not per token, so `requests` is the honest unit here and no
 // token counts are reported. As with embeddings there is no budget
-// denominator — `media_models` only carries a free-text `quota_label`
+// denominator - `media_models` only carries a free-text `quota_label`
 // ("Shared 10k neurons/day", "MP3 output - multilingual", which is not even a
-// quota) — so the summary shows spend and the label verbatim. Transcription
+// quota) - so the summary shows spend and the label verbatim. Transcription
 // rows are logged the same way (request_type='transcription', see
 // logMedia), so the Audio tab's STT section can show the same per-model
 // counts instead of dead-ending on a 400.

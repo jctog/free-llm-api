@@ -237,7 +237,7 @@ describe('declarative config with two relays serving one model id', () => {
       models: [{ platform: 'custom', modelId: 'shared-model', displayName: 'Renamed' }],
     })).toThrow(/more than one endpoint/i);
 
-    // Nothing was written — the whole apply is one transaction.
+    // Nothing was written - the whole apply is one transaction.
     expect(rowOn(RELAY_A).display_name).toBe('shared-model');
     expect(rowOn(RELAY_B).display_name).toBe('shared-model');
   });
@@ -285,7 +285,7 @@ describe('declarative config with two relays serving one model id', () => {
 
 // admin + license: the two declarative fields that touch the dashboard account
 // and the Premium catalog feed. The admin entry must only ever create the
-// FIRST account — once a user exists it degrades to a warning so a config
+// FIRST account - once a user exists it degrades to a warning so a config
 // file can never take over a claimed install. The license entry goes through
 // the same validate-then-store contract as POST /api/premium/key.
 describe('declarative config admin', () => {
@@ -312,7 +312,7 @@ describe('declarative config admin', () => {
     expect(second.admin).toBe(false);
     expect(second.warnings.some(w => w.startsWith('admin:'))).toBe(true);
     expect(userCount()).toBe(1);
-    // The original account is untouched — the second entry changed nothing.
+    // The original account is untouched - the second entry changed nothing.
     expect(verifyCredentials('ops@example.com', 'correct horse battery')).toBeTruthy();
     expect(verifyCredentials('attacker@example.com', 'totally different')).toBeNull();
     warn.mockRestore();
@@ -341,7 +341,7 @@ describe('declarative config license', () => {
       if (url.endsWith('/v1/license/check')) {
         return new Response(JSON.stringify({ plan: 'premium', status: 'active', expiresAt: null }));
       }
-      // /v1/latest catalog fetch from the kicked sync — fail it on purpose;
+      // /v1/latest catalog fetch from the kicked sync - fail it on purpose;
       // syncCatalog catches, logs, and records the error without throwing.
       return new Response('no catalog in tests', { status: 500 });
     });

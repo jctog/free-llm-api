@@ -84,7 +84,7 @@ const fallbackEntrySchema = z.object({
   enabled: z.boolean().optional(),
 });
 
-// First-run dashboard account. Created only while the users table is empty —
+// First-run dashboard account. Created only while the users table is empty -
 // since declarative config is applied before the HTTP listener starts, an
 // `admin` entry closes the unauthenticated POST /api/auth/setup window
 // entirely (no setup code is even minted). Once an account exists the entry
@@ -165,12 +165,12 @@ function encryptedKey(raw: string) {
 
 // Boot-time skip guard for `keys` entries (#600). When a platform stops being
 // keyless (pollinations lost `keyless: true` in #573), a legacy declarative
-// config still carries an entry with no `key` — applyDeclarativeConfigFromEnv()
+// config still carries an entry with no `key` - applyDeclarativeConfigFromEnv()
 // runs in main(), so throwing here used to brick the whole install at startup.
 // Such entries degrade to a warning + skip; the rest of the config still
 // applies. Platform-specific remediation hints live here.
 const MISSING_KEY_HINTS: Record<string, string> = {
-  pollinations: 'pollinations now requires an API key — get one at enter.pollinations.ai',
+  pollinations: 'pollinations now requires an API key - get one at enter.pollinations.ai',
 };
 
 function missingKeyWarning(input: z.infer<typeof keySchema>): string | null {
@@ -178,7 +178,7 @@ function missingKeyWarning(input: z.infer<typeof keySchema>): string | null {
   if (platform === 'custom' || input.key?.trim()) return null;
   const provider = resolveProvider(platform as never);
   if (!provider || provider.keyless) return null;
-  const hint = MISSING_KEY_HINTS[platform] ?? `${platform} requires an API key — add "key" to this entry or remove it`;
+  const hint = MISSING_KEY_HINTS[platform] ?? `${platform} requires an API key - add "key" to this entry or remove it`;
   return `${hint}; entry skipped`;
 }
 
@@ -340,7 +340,7 @@ interface DeclaredModelRow {
  * For catalog platforms this is the old lookup: (platform, model_id) is unique,
  * so nothing changes. For 'custom' two relays can hold the same model id
  * (#651), and `SELECT ... LIMIT 1` would patch whichever row the query happened
- * to return — silently editing the wrong relay. So an ambiguous entry is
+ * to return - silently editing the wrong relay. So an ambiguous entry is
  * refused, and the config author gets the endpoints to choose from.
  */
 function resolveDeclaredModel(
@@ -360,7 +360,7 @@ function resolveDeclaredModel(
       throw new Error(
         `${platform}/${modelId}: no custom endpoint matching '${endpoint}' serves this model` +
         `${rows.length > 0 ? ` (known: ${rows.map(r => r.endpoint_scope || '(none)').join(', ')})` : ''}. ` +
-        'A "models" entry edits a model that already exists — register it under "customProviders" first.',
+        'A "models" entry edits a model that already exists - register it under "customProviders" first.',
       );
     }
     throw new Error(`${platform}/${modelId}: endpoint '${endpoint}' matches more than one endpoint`);
@@ -368,7 +368,7 @@ function resolveDeclaredModel(
 
   if (rows.length > 1) {
     throw new Error(
-      `${platform}/${modelId} exists on more than one endpoint — add an "endpoint" to say which one ` +
+      `${platform}/${modelId} exists on more than one endpoint - add an "endpoint" to say which one ` +
       `(${rows.map(r => r.endpoint_scope || '(none)').join(', ')})`,
     );
   }
@@ -384,7 +384,7 @@ function upsertModel(db: Db, input: z.infer<typeof modelSchema>): void {
   if (!existing) {
     // A declaratively-created model is user-owned: catalog sync must never
     // update or prune it (see applyCatalog). Patching an EXISTING catalog row
-    // below does NOT flip ownership — the row's existence is still catalog-
+    // below does NOT flip ownership - the row's existence is still catalog-
     // managed and the edit is recorded as an override instead.
     db.prepare(`
       INSERT INTO models
@@ -489,7 +489,7 @@ export function applyDeclarativeConfig(input: unknown, source = 'inline'): Decla
         createUser(parsed.data.admin.email, parsed.data.admin.password);
         result.admin = true;
       } else {
-        const warning = 'admin: a dashboard account already exists — entry ignored';
+        const warning = 'admin: a dashboard account already exists - entry ignored';
         result.warnings.push(warning);
         console.warn(`[config] ${warning}`);
       }
@@ -525,7 +525,7 @@ export function applyDeclarativeConfig(input: unknown, source = 'inline'): Decla
   });
   apply();
 
-  // License activation needs the license service — network I/O has no place in
+  // License activation needs the license service - network I/O has no place in
   // the synchronous DB apply. It runs detached so a slow or unreachable
   // service never delays boot; a failure logs a warning and leaves settings
   // untouched, the same contract as the dashboard's POST /api/premium/key.
@@ -548,11 +548,11 @@ export async function activateConfiguredLicense(key: string): Promise<void> {
     if (getSetting(SETTING_LICENSE_KEY) === trimmed) return;
     const result = await validateLicenseKey(trimmed);
     if (result === null) {
-      console.warn('[config] license: could not reach the license service — key left unconfigured');
+      console.warn('[config] license: could not reach the license service - key left unconfigured');
       return;
     }
     if (!result.valid) {
-      console.warn(`[config] license: key rejected (${result.reason ?? 'invalid'}) — left unconfigured`);
+      console.warn(`[config] license: key rejected (${result.reason ?? 'invalid'}) - left unconfigured`);
       return;
     }
     setSetting(SETTING_LICENSE_KEY, trimmed);
@@ -560,7 +560,7 @@ export async function activateConfiguredLicense(key: string): Promise<void> {
     // Live-tier sync kicks off right away so the upgrade is visible within
     // seconds; its own catch-all logs failures.
     void syncCatalog(true);
-    console.log('[config] license activated — live catalog sync started');
+    console.log('[config] license activated - live catalog sync started');
   } catch (err) {
     console.warn(`[config] license activation failed: ${err instanceof Error ? err.message : err}`);
   }

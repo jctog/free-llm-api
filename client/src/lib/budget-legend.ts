@@ -3,7 +3,7 @@ import type { TokenUsageData } from './routing'
 // The monthly-budget legend: one flat list of models, smartest first.
 //
 // It used to nest model rows under provider pool headers (#1010), which read
-// as "arranged by provider" — the first thing on the Models page and the one
+// as "arranged by provider" - the first thing on the Models page and the one
 // place it was grouped that way. The legend is back to models only, ordered by
 // intelligence so the top of the list is what the router reaches for first
 // under the smartest strategy. Pool-level quota readings live on each model's

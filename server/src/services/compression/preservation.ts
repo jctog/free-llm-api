@@ -95,7 +95,7 @@ export function transformUnprotectedText(text: string, transform: (part: string)
 /**
  * Boolean-only fast path: true when any rule matches, WITHOUT collecting,
  * sorting or merging the spans. Equivalent to `scanProtectedSpans(text).length > 0`
- * (none of the rules can match the empty string — every pattern requires at
+ * (none of the rules can match the empty string - every pattern requires at
  * least one character), but it exits on the first hit instead of building the
  * full span list. The per-line callers (toolfilter's `mustKeep`,
  * `protectedLines`, hard-budget, relevance) were paying the full

@@ -1,8 +1,8 @@
-// model_probe_status — proactive per-model probe results (#1438 PR 1).
+// model_probe_status - proactive per-model probe results (#1438 PR 1).
 //
 // One row per (platform, model_id, endpoint_scope, key_id): the outcome of the
 // most recent proactive probe for that routable model+key pair. Purely
-// observational — nothing in routing or scoring reads this table in this PR;
+// observational - nothing in routing or scoring reads this table in this PR;
 // a follow-up consumes the labels. DOWN drops the table; probe data is a
 // cache of reality, not a record, so dropping it loses nothing.
 import type { Db } from '../types.js';

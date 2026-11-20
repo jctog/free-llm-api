@@ -5,7 +5,7 @@ import { EventEmitter } from 'node:events';
 
 // #949: the desktop embedder boots the server without server/src/index.ts, so
 // every startup step index.ts performs has to be repeated here by hand. The
-// regression was one missing line — restoreProxySettings() — and no test on
+// regression was one missing line - restoreProxySettings() - and no test on
 // either side of the repo noticed: the server suite proves the function works,
 // but nothing proved this boot path calls it.
 //
@@ -154,7 +154,7 @@ describe('desktop server boot sequence (#949)', () => {
     expect(calls).toContain('restoreProxySettings');
   });
 
-  it('hydrates after initDb — there is no settings table to read before it', async () => {
+  it('hydrates after initDb - there is no settings table to read before it', async () => {
     await boot();
     expect(calls.indexOf('restoreProxySettings')).toBeGreaterThan(calls.indexOf('initDb'));
   });
@@ -190,7 +190,7 @@ describe('desktop server boot sequence (#949)', () => {
 
   // The literal list above froze an incomplete sequence once already: it was
   // written for #949 with six steps and then green-lit eight later omissions,
-  // including startBackupScheduler — the Backups page saved a schedule that
+  // including startBackupScheduler - the Backups page saved a schedule that
   // never fired. So derive the required steps from the index.ts source instead
   // of trusting anyone to update both places.
   it('mirrors every startup step server/src/index.ts performs (minus the documented env-only skips)', async () => {
@@ -212,7 +212,7 @@ describe('desktop server boot sequence (#949)', () => {
     // process lifecycle (quit, relaunch, the updater's quitAndInstall), and
     // SIGTERM/SIGINT handlers there would race it.
     const SKIPPED = new Set(['restoreDbBackupIfNeeded', 'startDbBackupPump', 'loadConfig', 'installGracefulShutdown']);
-    // Regex sanity floor — an index.ts restructure must not blank this test.
+    // Regex sanity floor - an index.ts restructure must not blank this test.
     expect(steps.size).toBeGreaterThanOrEqual(10);
 
     await boot();
@@ -220,7 +220,7 @@ describe('desktop server boot sequence (#949)', () => {
       if (SKIPPED.has(step)) continue;
       expect(
         calls,
-        `server/src/index.ts calls ${step}() but the desktop embedder never does — add it to startServer() in server-host.ts`,
+        `server/src/index.ts calls ${step}() but the desktop embedder never does - add it to startServer() in server-host.ts`,
       ).toContain(step);
     }
   });

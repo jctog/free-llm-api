@@ -1,6 +1,6 @@
 **English** · [简体中文](../../zh-cn/architecture/02-quota-and-cooldown-engine.md)
 
-# Quota & Cooldown Engine — Deep Dive
+# Quota & Cooldown Engine - Deep Dive
 
 > **Source:** `server/src/services/ratelimit.ts`, `server/src/services/cooldown-probe.ts`, `server/src/services/provider-quota.ts`
 
@@ -57,14 +57,14 @@ Some providers enforce **one quota across the whole account**, not per model:
 `inferQuotaPoolKey(platform, modelId)` → string like `openrouter::free`, `google::project`, `nvidia::account`. Used by analytics and routing to attribute usage to the correct shared bucket.
 
 - Per-platform `inferPoolForPlatform()` maps each platform to its pool key shape. Aggregators with a single shared free pool (`routeway`, `bazaarlink`, `unorouter`, `orcarouter`, `xkiro`, `anyapi`, `navy`, `nara`, `sealion`, `aion`, `requesty`) get one pool; `openrouter` distinguishes `:free` from `:account`; others default to `::account` or `::<modelId>`.
-- `isSharedPool(platform)` returns the list of platforms that enforce one quota across the whole account — used by analytics and the `least-remaining` key selection (which skips `::account` pools since every key reports the same number).
+- `isSharedPool(platform)` returns the list of platforms that enforce one quota across the whole account - used by analytics and the `least-remaining` key selection (which skips `::account` pools since every key reports the same number).
 - `provider-quota.ts` also exposes `getKeyQuotaHeadroom(platform)` → a cached, platform-filtered read of `provider_quota_state` (5s TTL, confidence ≥ 0.7 floor, expired windows treated as full) that the router's `least-remaining` strategy reads to rank keys by remaining budget.
 
 ---
 
 ## 3. Window Utilization Snapshot (for the routing guardrail, #899)
 
-The hard gates (`canMakeRequest` / `canUseTokens`) answer a yes/no question on the hot path. The router also needs a **graded** signal — "how much of its window quota has this model already burned" — so it can steer traffic away from a model at 95% of its daily cap before that cap actually rejects anything. This is the input to `rateWindowHeadroomFactor` in `scoring.ts`.
+The hard gates (`canMakeRequest` / `canUseTokens`) answer a yes/no question on the hot path. The router also needs a **graded** signal - "how much of its window quota has this model already burned" - so it can steer traffic away from a model at 95% of its daily cap before that cap actually rejects anything. This is the input to `rateWindowHeadroomFactor` in `scoring.ts`.
 
 ### 5-Second Snapshot (`modelWindowUsedFraction`)
 
@@ -72,11 +72,11 @@ Cost is the whole design constraint: this runs per chain entry per request, and 
 
 - **One grouped scan** of `rate_limit_usage` (replaces four counts per model × key) plus one read of `api_keys`, **memoised for 5 seconds** (`WINDOW_USAGE_TTL_MS = 5000`) and shared by every entry of every chain.
 - Per-entry work is then pure in-memory arithmetic over the model's own limit columns (which the router already has in hand).
-- The hard gates above are **unaffected** — they still read live counts, so nothing here can let a request through a real limit.
+- The hard gates above are **unaffected** - they still read live counts, so nothing here can let a request through a real limit.
 
 ### Key Selection
 
-The chosen key is the **eligible key with the most headroom** (the one the router would pick NEXT), not the worst key on the account — a platform with one exhausted key and one idle key routes perfectly well (#921). In-flight leases are deliberately **not** counted: they close the check-then-act race on the hard gates; this is a steering signal averaged over a whole window, and folding a per-request quantity into a cached snapshot would buy noise, not accuracy.
+The chosen key is the **eligible key with the most headroom** (the one the router would pick NEXT), not the worst key on the account - a platform with one exhausted key and one idle key routes perfectly well (#921). In-flight leases are deliberately **not** counted: they close the check-then-act race on the hard gates; this is a steering signal averaged over a whole window, and folding a per-request quantity into a cached snapshot would buy noise, not accuracy.
 
 ### Pressure Calculation
 
@@ -92,8 +92,8 @@ A key metered on several windows takes the **worst** of them (the binding constr
 |--------|---------|-----------------|
 | `heuristic` | Our own guess (transient 90s, escalation ladder, auth-failure bench, empty-completion) | **Yes** |
 | `authoritative` | Backed by explicit provider Retry-After or daily-quota reset (a fact) | No |
-| `credit` | 402 out-of-credits — key validation proves nothing about top-up | No |
-| `tier` | 403 model-not-on-tier — key validates but model stays gated | No |
+| `credit` | 402 out-of-credits - key validation proves nothing about top-up | No |
+| `tier` | 403 model-not-on-tier - key validates but model stays gated | No |
 
 ### Escalation Ladder (per model+key, rolling 24h)
 
@@ -106,7 +106,7 @@ A key metered on several windows takes the **worst** of them (the binding constr
 
 - **Transient RPM/TPM 429** with healthy daily counters → short 90s cooldown, **does not count** toward ladder.
 - **Daily exhaustion** (RPD/TPD counter ≥ cap) → takes ladder step (up to 24h).
-- **Unknown limits** (NULL RPD/TPD): heuristic — 2+ 429s in 1h → "effectively daily exhausted" → escalate **but capped at 10 min** (`UNKNOWN_LIMIT_MAX_COOLDOWN_MS`). Prevents Ollama/Cloudflare/etc. from looping 90s forever when every request is a 429.
+- **Unknown limits** (NULL RPD/TPD): heuristic - 2+ 429s in 1h → "effectively daily exhausted" → escalate **but capped at 10 min** (`UNKNOWN_LIMIT_MAX_COOLDOWN_MS`). Prevents Ollama/Cloudflare/etc. from looping 90s forever when every request is a 429.
 - **Local endpoints** (loopback/RFC1918 `base_url`): capped at **5 s**, never escalates (#592).
 
 ### Retry-After Handling
@@ -140,9 +140,9 @@ parseProviderLimit(message) → { kind: 'tpm', limit: 30000 }
 learnLimitFromError(modelDbId, err) → writes to models.tpm_limit if NULL or lower
 ```
 
-- **Only tightens**: fills NULL or **lowers** an existing limit. Never raises — hitting a ceiling means our pre-check already let too much through.
+- **Only tightens**: fills NULL or **lowers** an existing limit. Never raises - hitting a ceiling means our pre-check already let too much through.
 - Axis priority: TPD → TPM → RPD → RPM (day before minute, tokens before requests).
-- Requires BOTH "Limit N" and a confident axis match — no guessing.
+- Requires BOTH "Limit N" and a confident axis match - no guessing.
 
 ---
 

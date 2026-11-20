@@ -14,11 +14,11 @@ function checkModelIdentity(requested: string, returned: unknown): void {
 }
 
 // Free-tier answers end with this line (verified live 2026-10-21: every text
-// reply, streamed as its own final delta "\n\n— via onomeo.com"; tool-call
+// reply, streamed as its own final delta "\n\n- via onomeo.com"; tool-call
 // turns carry none). It is provider branding, not model output, so it must not
 // reach clients or agents that parse the text.
-const SIGNATURE = '— via onomeo.com';
-const SIGNATURE_TAIL = /\s*— via onomeo\.com\s*$/;
+const SIGNATURE = '- via onomeo.com';
+const SIGNATURE_TAIL = /\s*- via onomeo\.com\s*$/;
 const SIGNATURE_FORMS = [`\n\n${SIGNATURE}`, `\n${SIGNATURE}`, SIGNATURE];
 
 export function stripOnomeoSignature(text: string): string {
@@ -39,13 +39,13 @@ function heldSuffixLength(text: string): number {
 
 /**
  * onomeo (#1460): an OpenAI-compatible gateway whose free models share one
- * call-counted allowance — 30 calls per 5-hour window per account, with a
+ * call-counted allowance - 30 calls per 5-hour window per account, with a
  * site-wide pool and a `too_fast` per-minute guard on top. Model rows are
  * published only through the signed catalog; nothing here enrolls models.
  *
  * Error vocabulary (from https://onomeo.com/integrations):
- * - 401 `bad_key` — the only authentication verdict; invalid.
- * - 403 `account_quota` / `network_quota` and 429 `site_busy` / `too_fast` —
+ * - 401 `bad_key` - the only authentication verdict; invalid.
+ * - 403 `account_quota` / `network_quota` and 429 `site_busy` / `too_fast` -
  *   quota and throttle answers on a VALID key. Treating 403 as an invalid key
  *   (the base `validationResult` rule) would auto-disable a good key the first
  *   time its 5-hour calls run out, so those statuses stay inconclusive here.
@@ -60,7 +60,7 @@ export class OnomeoProvider extends OpenAICompatProvider {
   protected override async validationResult(response: Response): Promise<KeyValidationResult> {
     if (response.status === 401) return super.validationResult(response);
     // 403/429 are quota/throttle verdicts on a valid key (see class docs), and
-    // every other failure is an outage — all inconclusive, none key-fatal.
+    // every other failure is an outage - all inconclusive, none key-fatal.
     if (!response.ok) throw providerHttpError(response, 'onomeo key validation is temporarily inconclusive');
     const body = await response.json().catch(() => null) as { data?: unknown; error?: unknown } | null;
     if (!Array.isArray(body?.data) || body?.error) {

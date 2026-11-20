@@ -34,7 +34,7 @@ function chainSize(profileId: number): number {
     .get(profileId) as { n: number }).n;
 }
 
-/** Enabled catalog models — what GET /api/fallback lists for any chain. */
+/** Enabled catalog models - what GET /api/fallback lists for any chain. */
 function catalogSize(): number {
   return (getDb().prepare('SELECT COUNT(*) AS n FROM models WHERE enabled = 1')
     .get() as { n: number }).n;
@@ -52,7 +52,7 @@ function autoInclude(profileId: number): number {
     .get(profileId) as { flag: number }).flag;
 }
 
-// A model that arrives after the chains already exist — what a catalog sync
+// A model that arrives after the chains already exist - what a catalog sync
 // produces, and what the backfill would otherwise push into every chain.
 function addCatalogModel(modelId: string): number {
   const db = getDb();
@@ -78,7 +78,7 @@ describe('named fallback chains', () => {
     expect(status).toBe(201);
     expect(body.name).toBe('hand-built');
     expect(chainSize(body.id)).toBe(0);
-    // An empty chain opts out of the backfill by construction — otherwise the
+    // An empty chain opts out of the backfill by construction - otherwise the
     // next catalog sync would undo the emptiness.
     expect(autoInclude(body.id)).toBe(0);
   });
@@ -152,8 +152,8 @@ describe('named fallback chains', () => {
 
     const { status, body } = await request('GET', '/api/fallback');
     expect(status).toBe(200);
-    // Every catalog model is listed — an empty chain is an empty set of
-    // opt-ins, not an empty page — and not one of them is enabled. Before the
+    // Every catalog model is listed - an empty chain is an empty set of
+    // opt-ins, not an empty page - and not one of them is enabled. Before the
     // fix the zero-row chain fell through to the global table and displayed the
     // whole catalog switched ON.
     expect(body.length).toBe(catalogSize());
@@ -241,8 +241,8 @@ describe('named fallback chains', () => {
     expect(fallbackDefault.auto_include_new_models).toBe(1);
   });
 
-  // Renaming a chain (#1179). The name IS the client-facing address — a
-  // request picks the chain with model="auto:<name>" — so rename has to
+  // Renaming a chain (#1179). The name IS the client-facing address - a
+  // request picks the chain with model="auto:<name>" - so rename has to
   // enforce exactly the creation rules and never silently no-op.
   it('renames a custom chain and moves the auto:<name> address with it', async () => {
     // Non-empty: an empty chain has nothing to route, and resolve would

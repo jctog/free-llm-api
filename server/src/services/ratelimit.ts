@@ -87,7 +87,7 @@ function pruneLeases(now: number): void {
  *
  * Some free tiers meter concurrency per credential rather than per minute, so
  * parallel streams on one key mostly 429 each other. But most do not, and
- * capping by default would serialise every provider and cost real throughput —
+ * capping by default would serialise every provider and cost real throughput -
  * so this is opt-in. There is deliberately no built-in per-platform table: the
  * providers that behave this way are not documented well enough to assert a
  * number for them here, and a wrong default is worse than none.
@@ -152,7 +152,7 @@ export function resetLeases(): void {
 // Every gate below adds in-flight leases on top of the recorded counters. This is
 // what closes the check-then-act race: routeRequest is synchronous but usage is
 // only written after the awaited provider call, so N concurrent requests all read
-// the same pre-check and every one of them passes — then they collectively blow
+// the same pre-check and every one of them passes - then they collectively blow
 // through the limit and collect real 429s. Counting leases makes the second
 // caller see the first one's request.
 //
@@ -178,7 +178,7 @@ function provisionalTokens(platform: string, modelId: string, keyId: number, now
   return total;
 }
 
-/** In-flight requests for a provider account+key across every model — the
+/** In-flight requests for a provider account+key across every model - the
  *  provider-wide analogue, for the account-level gates. */
 function provisionalProviderRequests(platform: string, keyId: number, now: number): number {
   return inFlightForKey(platform, keyId, now);
@@ -195,7 +195,7 @@ function provisionalProviderTokens(platform: string, keyId: number, now: number)
 
 // Retention sweep for rate_limit_usage. The only index on the table is
 // idx_rate_limit_usage_lookup(platform, model_id, key_id, kind, created_at_ms),
-// which a bare `created_at_ms <= ?` predicate cannot use — the prune is a full
+// which a bare `created_at_ms <= ?` predicate cannot use - the prune is a full
 // table scan. Running it inside every insert put that scan on the hot request
 // path, so it is throttled: rows are kept for a DAY and every counter query is
 // bounded by its own `created_at_ms > ?` filter, so letting expired rows linger
@@ -219,7 +219,7 @@ function recordUsage(
       VALUES (?, ?, ?, ?, ?, ?)
     `).run(platform, modelId, keyId, kind, tokens, now);
     // `now < lastUsagePruneMs` covers a clock step backwards (NTP correction,
-    // a suspended host resuming) — without it a jump forward would wedge the
+    // a suspended host resuming) - without it a jump forward would wedge the
     // prune off until real time caught up again.
     if (now - lastUsagePruneMs >= USAGE_PRUNE_INTERVAL_MS || now < lastUsagePruneMs) {
       lastUsagePruneMs = now;
@@ -357,8 +357,8 @@ export function canUseTokens(
 
 // ── Window utilization for the routing guardrail (#899) ──────────────────────
 // Everything above answers a yes/no question on the hot path: may THIS key
-// serve THIS request. The router also needs a graded one — "how much of its
-// window quota has this model already burned" — so it can steer traffic away
+// serve THIS request. The router also needs a graded one - "how much of its
+// window quota has this model already burned" - so it can steer traffic away
 // from a model at 95% of its daily cap before that cap actually rejects
 // anything. See rateWindowHeadroomFactor in scoring.ts for what is done with
 // the number.
@@ -366,7 +366,7 @@ export function canUseTokens(
 // Cost is the whole design constraint: this runs per chain entry per request,
 // and the naive shape is four counts per model × key. So it is one grouped scan
 // of rate_limit_usage plus one read of api_keys, memoised for a few seconds and
-// shared by every entry of every chain — the same trade getKeyQuotaHeadroom
+// shared by every entry of every chain - the same trade getKeyQuotaHeadroom
 // makes in provider-quota.ts. Per-entry work is then pure in-memory arithmetic
 // over the model's own limit columns, which the router already has in hand.
 
@@ -392,7 +392,7 @@ interface WindowUsageSnapshot {
 
 /** Utilization moves on the timescale of a rate-limit window, not a request, so
  *  a few seconds of staleness is invisible to a guardrail while the query count
- *  drops to ~one per burst. The hard gates above are unaffected — they still
+ *  drops to ~one per burst. The hard gates above are unaffected - they still
  *  read live counts, so nothing here can let a request through a real limit. */
 const WINDOW_USAGE_TTL_MS = 5_000;
 
@@ -550,7 +550,7 @@ export function modelWindowUsedFraction(
 
 // ── Provider-wide daily request caps (#162) ──
 // Some providers enforce one daily REQUEST quota across the WHOLE account,
-// shared by every model — not per model. OpenRouter's free tier is the classic
+// shared by every model - not per model. OpenRouter's free tier is the classic
 // case: ~1000 requests/day total (50/day if you've bought <10 credits) no
 // matter how many different free models you spread them across. The
 // per-(platform,model,key) rpd ledger can't see that, so without a provider-wide
@@ -584,8 +584,8 @@ const DEFAULT_PROVIDER_DAILY_TOKEN_CAPS: Record<string, number> = {
 // The per-model rpm_limit cannot express these: NVIDIA NIM meters ~40 requests a
 // minute across the entire account, so glm-4.7, minimax-m3 and deepseek all draw
 // from one bucket. Without an account-level gate the router sees each model's own
-// rpm as unspent — and a model row whose rpm_limit is NULL escapes pre-throttling
-// entirely — so it keeps dispatching and eats real 429s.
+// rpm as unspent - and a model row whose rpm_limit is NULL escapes pre-throttling
+// entirely - so it keeps dispatching and eats real 429s.
 const DEFAULT_PROVIDER_MINUTE_REQUEST_CAPS: Record<string, number> = {
   nvidia: 40,
   // APINex Free: 5 requests/minute per key shared across every model
@@ -644,7 +644,7 @@ function countPersistedProviderRequests(
 // Total requests today for a provider account+key, summed across every model.
 // "Today" is the window since midnight UTC, not a sliding 24h: real provider
 // account caps (OpenRouter, NVIDIA) reset on a wall-clock day boundary, so a
-// sliding window keeps a provider benched well past its actual reset — a burst
+// sliding window keeps a provider benched well past its actual reset - a burst
 // at 23:00 UTC would still be counted against the account at 22:00 the next day.
 export function providerDailyRequestCount(platform: string, keyId: number, now = Date.now()): number {
   const windowMs = msSinceUtcMidnight(now);
@@ -799,7 +799,7 @@ export function canUseProviderTokens(
 // The in-memory windows are a FALLBACK for the persisted counters: requestCount
 // / tokenCount / providerDailyRequestCount all prefer the DB and only consult
 // memory when the DB refuses to answer. So on a healthy server nothing ever
-// reads these arrays — and pruning happens only on the read path, which means
+// reads these arrays - and pruning happens only on the read path, which means
 // nothing ever trimmed them either: every recorded request leaked one timestamp
 // (and one {ts, tokens} object) for the lifetime of the process.
 //
@@ -851,15 +851,15 @@ const cooldowns = new Map<string, number>(); // key -> expiry timestamp
 // ── Cooldown provenance ───────────────────────────────────────────────────────
 // Recorded at setCooldown time so the cooldown-probe recovery job (services/
 // cooldown-probe.ts) can tell OUR guesses apart from provider-stated facts:
-//   'heuristic'     — our own pessimistic bench (transient 90s, escalation
+//   'heuristic'     - our own pessimistic bench (transient 90s, escalation
 //                     ladder, auth-failure bench, empty-completion). Often
 //                     outlives the actual outage, so probe-eligible.
-//   'authoritative' — backed by an explicit provider retry time (Retry-After
+//   'authoritative' - backed by an explicit provider retry time (Retry-After
 //                     that determined the expiry, daily-quota reset). A fact,
 //                     not a guess: never probed.
-//   'credit'        — 402 out-of-credits. A key-validation probe succeeding is
+//   'credit'        - 402 out-of-credits. A key-validation probe succeeding is
 //                     no evidence the account was topped up, so never probed.
-//   'tier'          — 403 model-not-on-tier. Same reasoning: the key validates
+//   'tier'          - 403 model-not-on-tier. Same reasoning: the key validates
 //                     fine while the model stays gated, so never probed.
 export type CooldownSource = 'heuristic' | 'authoritative' | 'credit' | 'tier';
 
@@ -867,7 +867,7 @@ export type CooldownSource = 'heuristic' | 'authoritative' | 'credit' | 'tier';
 // daily-quota exhaustion (OpenRouter free: 50/day, Cohere free: 33/day, etc.)
 // quarantines the key for the rest of the day instead of looping through
 // the 2-minute cooldown 20 times per request and consuming every fallback slot.
-// In-memory only — state resets on restart, which is fine (a clean restart
+// In-memory only - state resets on restart, which is fine (a clean restart
 // will re-escalate on the next 429 if the quota is genuinely exhausted).
 // A successful request clears the counter (recordRequest → clearCooldownHits),
 // same reversibility contract as nullLimitHits: a served request proves the
@@ -942,12 +942,12 @@ function clearCooldownHits(platform: string, modelId: string, keyId: number): vo
   cooldownHits.delete(`${platform}:${modelId}:${keyId}`);
 }
 
-// Short cooldown for a transient (per-minute) 429 — recovers within ~one window.
+// Short cooldown for a transient (per-minute) 429 - recovers within ~one window.
 const TRANSIENT_COOLDOWN_MS = 90 * 1000;
 
 // Ceiling for the null-limits escalation path. A provider that publishes no
 // RPD/TPD gives us no counter to check, so "daily-exhausted" there is inferred
-// from repeated 429s alone — and per-minute jitter under load looks exactly the
+// from repeated 429s alone - and per-minute jitter under load looks exactly the
 // same as a spent daily quota. Letting that guess climb the full ladder means a
 // short burst of RPM 429s can quarantine a model+key for 24h with nothing able
 // to contradict it (a benched route serves no request, so no success arrives to
@@ -957,7 +957,7 @@ const TRANSIENT_COOLDOWN_MS = 90 * 1000;
 const UNKNOWN_LIMIT_MAX_COOLDOWN_MS = 10 * MINUTE;
 
 // Long cooldown for a 402 Payment Required (provider/key out of credits). Unlike
-// a 429, this won't clear on the next minute/day window — it needs a top-up or
+// a 429, this won't clear on the next minute/day window - it needs a top-up or
 // billing reset. Bench the model+key for a full day so the router fails over to
 // other providers instead of re-hammering a dead key every retry. Re-escalates
 // on the next 402 after expiry if still unpaid; a restart re-benches on first hit.
@@ -969,7 +969,7 @@ export function getPaymentRequiredCooldownMs(): number {
 }
 
 // Long cooldown for a 403 Forbidden on a key that already passed validateKey
-// (so it is not a dead key — the health checker disables those). A request-time
+// (so it is not a dead key - the health checker disables those). A request-time
 // 403 means this key's tier can't reach this specific model (e.g. gpt-4o on
 // GitHub Models' free tier, subscription-only models on Cloudflare). That won't
 // change within a minute window, so bench this model+key for a full day and let
@@ -982,16 +982,16 @@ export function getModelForbiddenCooldownMs(): number {
 }
 
 // When RPD/TPD limits are NULL (provider's published daily quota is unknown or
-// not yet seeded — common for ollama, cloudflare, nvidia, huggingface, mistral,
+// not yet seeded - common for ollama, cloudflare, nvidia, huggingface, mistral,
 // kilo, llm7, pollinations), we cannot check a counter against a cap. Fall back
 // to a hit-count heuristic: after 2+ 429s within this rolling window, treat as
-// "effectively daily-exhausted" and escalate — but only as far as
+// "effectively daily-exhausted" and escalate - but only as far as
 // UNKNOWN_LIMIT_MAX_COOLDOWN_MS, since the verdict is a guess. Without this,
 // these providers
 // stay stuck at TRANSIENT_COOLDOWN_MS forever even when every request is a
 // 429 (observed in production: ollama 130× 429s in 1h with all 90s cooldowns
 // expired before the next request). Cheaper than waiting for the operator to
-// seed per-provider limits (Option A), still reversible — a successful call
+// seed per-provider limits (Option A), still reversible - a successful call
 // clears the hit window via the normal path.
 //
 // Separate counter from `cooldownHits` (used by getNextCooldownDuration's
@@ -1027,13 +1027,13 @@ export function recentHitCount(
 
 // Decide how long to bench a model+key after an upstream 429. Escalate to the
 // long quarantine (getNextCooldownDuration, up to 24h) when the model is at its
-// DAILY limit (RPD/TPD counter ≥ cap), OR — when limits are unknown — when
+// DAILY limit (RPD/TPD counter ≥ cap), OR - when limits are unknown - when
 // recentHitCount crosses the heuristic threshold. Either way, a long bench
 // avoids hammering a truly-dead key.
 //
 // A transient RPM/TPM 429 with healthy daily counters gets a short fixed
 // cooldown and does NOT count toward escalation. This is the common case for
-// providers with a tight per-minute token budget but a large daily quota —
+// providers with a tight per-minute token budget but a large daily quota -
 // e.g. groq gpt-oss-120b has rpd=1000 yet tpm=8000, so a single burst of large
 // prompts 429s on TPM while the daily quota is barely touched. Daily counters
 // are persisted (countPersistedRequests / sumPersistedTokens), so this verdict
@@ -1054,7 +1054,7 @@ export interface CooldownDecision {
 export const LOCAL_ENDPOINT_COOLDOWN_MS = 5_000;
 
 // base_url is immutable per key id (routes/keys.ts matches custom rows ON
-// base_url — a new endpoint gets a new row, #212), so the verdict can be
+// base_url - a new endpoint gets a new row, #212), so the verdict can be
 // cached for the life of the process. Built-in platforms have base_url NULL
 // → non-local. A DB that isn't ready yet is NOT cached, so a later call can
 // still decide properly.
@@ -1068,7 +1068,7 @@ export function isLocalEndpointKey(keyId: number): boolean {
       .get(keyId) as { base_url: string | null } | undefined;
     return row?.base_url ?? '';
   });
-  if (baseUrl === undefined) return false; // DB not ready — don't cache
+  if (baseUrl === undefined) return false; // DB not ready - don't cache
   const local = isLoopbackOrPrivateUrl(baseUrl || null);
   keyLocality.set(keyId, local);
   return local;
@@ -1082,10 +1082,10 @@ export function resetKeyLocalityCache(): void {
 
 export interface CooldownLimitOptions {
   /** Whether the triggering failure is an actual provider quota signal (a real
-   *  429 / rate-limit-classified error — see isRateLimitSignal in
+   *  429 / rate-limit-classified error - see isRateLimitSignal in
    *  lib/error-classify.ts). Timeouts, 5xx and transport errors are retryable
    *  but carry no quota information, so they must not feed the null-limits
-   *  exhaustion heuristic below (#592) — they get the short transient bench.
+   *  exhaustion heuristic below (#592) - they get the short transient bench.
    *  Defaults to true: legacy callers without error context (fusion's
    *  empty-completion benches) keep their pre-#592 behavior. */
   quotaSignal?: boolean;
@@ -1105,7 +1105,7 @@ export function getCooldownDurationForLimit(
 /**
  * Same verdict as getCooldownDurationForLimit, plus the provenance the
  * cooldown-probe recovery job needs: 'authoritative' when an explicit provider
- * Retry-After actually determined the expiry (a fact — never probed early),
+ * Retry-After actually determined the expiry (a fact - never probed early),
  * 'heuristic' when the duration is our own transient/escalation guess (probe-
  * eligible). A Retry-After SHORTER than our bench does not make the cooldown
  * authoritative: everything past the provider's own retry time is our guess.
@@ -1119,7 +1119,7 @@ export function getCooldownDecisionForLimit(
   opts?: CooldownLimitOptions,
 ): CooldownDecision {
   // Local inference endpoint (loopback/RFC1918 base_url): no quota exists, so
-  // neither the transient 90s bench nor the escalation ladder applies — a
+  // neither the transient 90s bench nor the escalation ladder applies - a
   // failure there means "busy right now", and a few seconds is all the pool
   // needs before retrying the user's (usually only) local route. Applies even
   // to a literal 429 (local servers emit them under concurrent load) and
@@ -1221,7 +1221,7 @@ function clearPersistedCooldown(platform: string, modelId: string, keyId: number
  * many rows went. Expiry is otherwise purely lazy: isOnCooldown drops a row only
  * when something asks about that exact (platform, model, key), so a row whose
  * model was retired, whose key was deleted, or that simply outlived a process
- * that had every route benched is never collected — the table only grows, and
+ * that had every route benched is never collected - the table only grows, and
  * every cooldown query (status rollups, the probe scan, penalty inspector) pays
  * for the dead rows. Called once at boot (index.ts) so a restart starts clean.
  */
@@ -1231,7 +1231,7 @@ export function cleanupExpiredCooldowns(now = Date.now()): number {
     return Number(result.changes ?? 0);
   }) ?? 0;
 
-  // Only the expired entries: this is a sweep, not clearCooldownsForKey — an
+  // Only the expired entries: this is a sweep, not clearCooldownsForKey - an
   // active bench must survive it.
   for (const [key, expiry] of [...cooldowns]) {
     if (expiry <= now) cooldowns.delete(key);
@@ -1355,7 +1355,7 @@ export function clearCooldownsForKey(keyId: number): number {
 
 /**
  * Drop EVERY cooldown (all keys, all models), the escalation-ladder counters
- * and the null-limits hit windows — the "my whole pool is stuck" escape hatch
+ * and the null-limits hit windows - the "my whole pool is stuck" escape hatch
  * (#952). Returns how many active benches were lifted. Penalties and the
  * model-failure windows live elsewhere; services/penalty-inspector.ts
  * composes all three into one clear.
@@ -1457,8 +1457,8 @@ export function getRateLimitStatus(
 
 // ── Learning real provider limits from error bodies (self-correcting catalog) ──
 // Free-tier limits drift and our seeded catalog is frequently wrong or null.
-// When a provider rejects a request with its real limit in the body — Groq 413:
-// "...on tokens per minute (TPM): Limit 30000, Requested 33476" — we can learn
+// When a provider rejects a request with its real limit in the body - Groq 413:
+// "...on tokens per minute (TPM): Limit 30000, Requested 33476" - we can learn
 // that ceiling and persist it so the canUseTokens / canMakeRequest pre-checks
 // stop us BEFORE the next 413 instead of re-discovering it on every request.
 // (Fork-validated: andersmmg's updateLimitsFromError parses the same Groq shape.)
@@ -1487,7 +1487,7 @@ const LIMIT_AXIS_PATTERNS: Array<{ kind: LearnedLimitKind; re: RegExp }> = [
 /**
  * Pure parser: pull a provider-reported ceiling out of an error message. Returns
  * null unless BOTH a numeric "Limit N" and a confident axis (TPM/TPD/RPM/RPD)
- * are present — guessing the axis would write the wrong column and mis-route
+ * are present - guessing the axis would write the wrong column and mis-route
  * every future request, so we refuse to guess.
  */
 export function parseProviderLimit(message: string | undefined | null): LearnedLimit | null {
@@ -1502,12 +1502,12 @@ export function parseProviderLimit(message: string | undefined | null): LearnedL
   return null;
 }
 
-// Whitelisted column names — the only values ever interpolated into the UPDATE
+// Whitelisted column names - the only values ever interpolated into the UPDATE
 // below, so there is no injection surface despite the template literal.
 // The router's tpm_limit gate scores input estimate + output reserve, so an
 // ITPM ceiling is a safe (slightly conservative) bound for it. An OTPM ceiling
 // has no column: it bounds the completion alone, and writing it into tpm_limit
-// would size out every request whose PROMPT exceeds it — one OTPM 1000
+// would size out every request whose PROMPT exceeds it - one OTPM 1000
 // rejection permanently capped a 7000-ITPM Groq model at 1000 tokens. The
 // rejected request is already skipped for this model (context-too-large path),
 // which is all an OTPM rejection calls for.
@@ -1518,7 +1518,7 @@ const LIMIT_COLUMN: Record<LearnedLimitKind, string | null> = {
 /**
  * Persist a provider-reported limit onto the model row, but ONLY when it makes
  * us more conservative: fill a NULL (unknown) limit, or LOWER an existing one
- * that was too high. Never raises a limit — hitting a ceiling means our pre-check
+ * that was too high. Never raises a limit - hitting a ceiling means our pre-check
  * already let too much through, so the true limit is at or below what we used.
  * Returns the learned limit when a row was actually changed, else null.
  * DB-guarded (no-op when the DB is unavailable), like the rest of this module.

@@ -149,9 +149,9 @@ export function isCatalogManagedModel(row: { platform: string; key_id?: number |
 }
 
 // Why a catalog model carries a tombstone:
-//   'user'        — deleted in the dashboard. Stays deleted across syncs, and
+//   'user'        - deleted in the dashboard. Stays deleted across syncs, and
 //                   the row is removed from `models` on the next catalog apply.
-//   'upstream_eol' — the provider reported it permanently gone (410 / end of
+//   'upstream_eol' - the provider reported it permanently gone (410 / end of
 //                   life, issue #634). The row SURVIVES and is only disabled,
 //                   so the dashboard can show "retired upstream" instead of
 //                   silently losing the model, and so a later catalog that
@@ -182,7 +182,7 @@ export function getCatalogModelTombstone(
 }
 
 /**
- * True only for models the USER deleted — the "keep it deleted" contract every
+ * True only for models the USER deleted - the "keep it deleted" contract every
  * caller here means. An upstream-retirement tombstone deliberately does NOT
  * count: those models stay in the catalog's write path so a refreshed catalog
  * can reinstate them (see reinstateUpstreamRetiredCatalogModel).
@@ -211,7 +211,7 @@ export function recordCatalogModelTombstone(
     DO UPDATE SET created_at = datetime('now'), source = excluded.source, reason = excluded.reason
   `).run(kind, platform, modelId, source, options.reason ?? null);
   // A user deletion drops their local metadata edits with the row. An upstream
-  // retirement keeps the row, so it keeps the overrides too — they must survive
+  // retirement keeps the row, so it keeps the overrides too - they must survive
   // if the model is reinstated.
   if (kind === 'chat' && source === 'user') {
     db.prepare('DELETE FROM model_overrides WHERE platform = ? AND model_id = ?').run(platform, modelId);
@@ -245,8 +245,8 @@ export function retireCatalogModelUpstream(
 }
 
 /**
- * Lift an upstream retirement: a catalog that still lists the model — and lists
- * it enabled — is newer and better evidence than one provider's 404. Returns
+ * Lift an upstream retirement: a catalog that still lists the model - and lists
+ * it enabled - is newer and better evidence than one provider's 404. Returns
  * true when a retirement was actually lifted.
  */
 export function reinstateUpstreamRetiredCatalogModel(

@@ -4,7 +4,7 @@ import { encrypt } from '../../lib/crypto.js';
 import { hasOtherUsableKey, hasUsableKeyForModel, setRoutingStrategy } from '../../services/router.js';
 
 // The "is this model servable right now" probes (hasOtherUsableKey /
-// hasUsableKeyForModel) document that they apply the router's own gates —
+// hasUsableKeyForModel) document that they apply the router's own gates -
 // cooldown, provider daily cap, rpm/rpd/tpm/tpd. selectKeyForModel ALSO
 // enforces the per-key monthly budget (#1158); the probes didn't, so a model
 // whose only keys had spent their monthly caps was listed `ready` on

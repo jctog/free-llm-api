@@ -1,6 +1,6 @@
 name: CLI release
 
-# Publishes the `freellmapi` CLI to npm. Closes #671 — the README and
+# Publishes the `freellmapi` CLI to npm. Closes #671 - the README and
 # docs/clients/01-agent-clients.md have always documented `npx freellmapi setup-claude`, but the
 # package was never pushed to the registry, so every one of those commands died
 # with npm E404.
@@ -14,7 +14,7 @@ name: CLI release
 # job, see the version already published, and skip. To ship a new version, bump
 # `version` in cli/package.json in the PR that changes the code.
 #
-# Auth is npm trusted publishing (OIDC) — no NPM_TOKEN, no long-lived secret.
+# Auth is npm trusted publishing (OIDC) - no NPM_TOKEN, no long-lived secret.
 # npm revoked all classic tokens in December 2025, and granular tokens with
 # "bypass 2FA" are being wound down through 2026 (they lose direct publish
 # around January 2027), so a token-based workflow would have been born
@@ -25,8 +25,8 @@ name: CLI release
 #   Organization or user: tashfeenahmed
 #   Repository:           freellmapi
 #   Workflow filename:    cli-release.yml
-# Trusted publishing cannot bootstrap a package that does not exist yet — npm
-# has no package settings page to configure until the first version is up — so
+# Trusted publishing cannot bootstrap a package that does not exist yet - npm
+# has no package settings page to configure until the first version is up - so
 # 0.3.0 was published manually. Every version after it goes through here.
 #
 # Requires npm >= 11.5.1 and Node >= 22.14.0 for OIDC, hence Node 24 below
@@ -70,7 +70,7 @@ jobs:
           # result is the signal to publish, not an error.
           PUBLISHED=$(npm view "freellmapi@$VERSION" version 2>/dev/null || true)
           if [ -n "$PUBLISHED" ]; then
-            echo "freellmapi@$VERSION is already on the registry — nothing to do."
+            echo "freellmapi@$VERSION is already on the registry - nothing to do."
             echo "should-publish=false" >> "$GITHUB_OUTPUT"
           else
             echo "freellmapi@$VERSION is not published yet."
@@ -89,7 +89,7 @@ jobs:
         if: steps.version.outputs.should-publish == 'true'
         run: |
           set -euo pipefail
-          # Install what subscribers will actually download — catches a `files`
+          # Install what subscribers will actually download - catches a `files`
           # array that omits a runtime import, which `npm test` cannot see.
           TARBALL=$(cd cli && npm pack --silent --pack-destination "$RUNNER_TEMP")
           WORKDIR="$RUNNER_TEMP/smoke"
@@ -112,5 +112,5 @@ jobs:
           if [ "${{ steps.version.outputs.should-publish }}" = "true" ]; then
             echo "Published freellmapi@$V" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "freellmapi@$V is already on the registry — skipped." >> "$GITHUB_STEP_SUMMARY"
+            echo "freellmapi@$V is already on the registry - skipped." >> "$GITHUB_STEP_SUMMARY"
           fi

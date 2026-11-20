@@ -28,7 +28,7 @@ describe('parseProviderReportedSize', () => {
     });
 
     it('returns null for the bare "Request Entity Too Large" body', () => {
-      // No "Requested N" — returning a number here would falsely report a request size.
+      // No "Requested N" - returning a number here would falsely report a request size.
       expect(parseProviderReportedSize('groq', 'Groq API error 413: Request Entity Too Large')).toBeNull();
     });
 
@@ -74,7 +74,7 @@ describe('parseProviderReportedSize', () => {
     it('returns null even though the body is parseable (limit only, not request size)', () => {
       // "Max size: 8000 tokens" is the LIMIT ceiling. Returning 8000 would
       // cause every subsequent model with TPM < 8000 to be skipped for the
-      // rest of the request — wildly wrong. The parser must refuse.
+      // rest of the request - wildly wrong. The parser must refuse.
       const msg = 'GitHub Models API error 413: Request body too large for gpt-4.1 model. Max size: 8000 tokens.';
       expect(parseProviderReportedSize('github', msg)).toBeNull();
     });

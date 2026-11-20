@@ -8,7 +8,7 @@ const LEGEND_COLLAPSED_PX = 126
 
 // The monthly token budget: a stacked bar of every configured model's remaining
 // allowance, and under it one flat legend of models, smartest first. No
-// provider headers — the provider pool grouping (#1010) made the first thing on
+// provider headers - the provider pool grouping (#1010) made the first thing on
 // the Models page read as "arranged by provider"; pool quota readings live on
 // each model's own page instead.
 export function TokenUsageBar({ data }: { data: TokenUsageData }) {

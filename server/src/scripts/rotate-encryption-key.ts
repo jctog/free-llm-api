@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
- * rotate-encryption-key — re-encrypt every stored secret under a new
+ * rotate-encryption-key - re-encrypt every stored secret under a new
  * ENCRYPTION_KEY without losing a single value.
  *
  * Why this exists: AES-256-GCM is authenticated, so a DB carried over to a
- * different ENCRYPTION_KEY fails loudly on the first decrypt — every stored
+ * different ENCRYPTION_KEY fails loudly on the first decrypt - every stored
  * API key, proxy override, client-profile credential and the Fetch Relay
  * token becomes unreadable at once, and there is no recovery path short of
  * re-entering secrets by hand.
@@ -15,7 +15,7 @@
  * The cipher parameters deliberately mirror server/src/lib/crypto.ts
  * (aes-256-gcm, 32-byte key hex, 16-byte IV, 16-byte GCM tag) so a value
  * written here decrypts under the running server exactly like one written by
- * `encrypt()`. The script does NOT touch the module-level key cache — it
+ * `encrypt()`. The script does NOT touch the module-level key cache - it
  * performs every decrypt with `--old-key` and every encrypt with `--new-key`
  * explicitly, so it is safe to run while the server is stopped (recommended)
  * or even live (a writer that fires mid-run sees only already-migrated rows
@@ -30,7 +30,7 @@
  *   --dry-run  decrypt + print every affected row WITHOUT writing anything.
  *
  * Exits 0 on success (or a clean dry run), 1 on any decrypt/validation error.
- * Nothing is written unless EVERY row decrypts — a partial rotate would leave
+ * Nothing is written unless EVERY row decrypts - a partial rotate would leave
  * the DB in a mixed-key state that is exactly the failure this script exists
  * to prevent.
  */
@@ -97,7 +97,7 @@ interface ColumnGroup {
 
 /**
  * Ciphertext stored as a JSON blob in a single `settings` value, in the shape
- * `JSON.stringify(encrypt(plaintext))` — i.e. `{"encrypted","iv","authTag"}`.
+ * `JSON.stringify(encrypt(plaintext))` - i.e. `{"encrypted","iv","authTag"}`.
  * The Fetch Relay bearer token is written this way by
  * `encodeFetchRelayToken()` (server/src/lib/proxy.ts) and read back by
  * `decodeFetchRelayToken()`, which degrades to '' with a warning when the
@@ -139,7 +139,7 @@ export interface RotateResult {
   error?: string;
 }
 
-/** The read surface rotateSecrets needs — better-sqlite3 and the app's Db both satisfy it. */
+/** The read surface rotateSecrets needs - better-sqlite3 and the app's Db both satisfy it. */
 export interface RotateReadDb {
   prepare(sql: string): { all(...args: unknown[]): unknown[]; get(...args: unknown[]): unknown };
 }
@@ -158,7 +158,7 @@ export interface RotateWriteDb {
  * Core rotate routine, exported so tests can drive it against an in-memory
  * DB. Decrypts every stored secret with `oldKey` and re-encrypts with
  * `newKey`. Returns `{ rows }` on success and `{ rows: [], error }` when ANY
- * value fails to decrypt — the caller must treat the error case as "nothing
+ * value fails to decrypt - the caller must treat the error case as "nothing
  * written".
  */
 export function rotateSecrets(
@@ -190,7 +190,7 @@ export function rotateSecrets(
         } catch (err) {
           return {
             rows: [],
-            error: `cannot decrypt ${group.label} #${row.id} with --old-key — wrong key or corrupted ciphertext (${(err as Error).message}). Aborting; nothing was written.`,
+            error: `cannot decrypt ${group.label} #${row.id} with --old-key - wrong key or corrupted ciphertext (${(err as Error).message}). Aborting; nothing was written.`,
           };
         }
         rowsToRotate.push({ group, id: row.id, plaintext, reEncrypted: encryptWith(newKey, plaintext) });
@@ -202,7 +202,7 @@ export function rotateSecrets(
     if (!names.has('key') || !names.has('value')) continue;
 
     const row = db.prepare('SELECT value FROM settings WHERE key = ?').get(group.settingKey) as { value: string } | undefined;
-    // An unset or cleared setting stores '' rather than a blob — nothing to do.
+    // An unset or cleared setting stores '' rather than a blob - nothing to do.
     if (!row || !row.value) continue;
 
     let parsed: { encrypted?: string; iv?: string; authTag?: string };
@@ -211,7 +211,7 @@ export function rotateSecrets(
     } catch {
       return {
         rows: [],
-        error: `${group.label} (settings.${group.settingKey}) is not valid JSON — refusing to guess. Aborting; nothing was written.`,
+        error: `${group.label} (settings.${group.settingKey}) is not valid JSON - refusing to guess. Aborting; nothing was written.`,
       };
     }
     if (!parsed.encrypted || !parsed.iv || !parsed.authTag) {
@@ -227,7 +227,7 @@ export function rotateSecrets(
     } catch (err) {
       return {
         rows: [],
-        error: `cannot decrypt ${group.label} (settings.${group.settingKey}) with --old-key — wrong key or corrupted ciphertext (${(err as Error).message}). Aborting; nothing was written.`,
+        error: `cannot decrypt ${group.label} (settings.${group.settingKey}) with --old-key - wrong key or corrupted ciphertext (${(err as Error).message}). Aborting; nothing was written.`,
       };
     }
     rowsToRotate.push({ group, id: group.settingKey, plaintext, reEncrypted: encryptWith(newKey, plaintext) });
@@ -283,7 +283,7 @@ function main(): void {
   const oldKey = parseHexKey(oldKeyHex, 'old');
   const newKey = parseHexKey(newKeyHex, 'new');
   if (oldKey.equals(newKey)) {
-    console.error('error: --old-key and --new-key are identical — nothing to rotate');
+    console.error('error: --old-key and --new-key are identical - nothing to rotate');
     process.exit(1);
   }
 
@@ -297,7 +297,7 @@ function main(): void {
 
     const rowsToRotate = result.rows;
     if (rowsToRotate.length === 0) {
-      console.log('No encrypted values found — nothing to rotate.');
+      console.log('No encrypted values found - nothing to rotate.');
       return;
     }
 

@@ -33,7 +33,7 @@ function setSettingIfMissing(db: LogTx, key: string, value: string): void {
 // Resolve the concrete models.id for a request (#1187). Catalog requests
 // resolve by (platform, model_id); custom requests resolve through the
 // request's key (its normalized base_url is the row's endpoint_scope).
-// Returns NULL when the request is unattributable — a custom request whose
+// Returns NULL when the request is unattributable - a custom request whose
 // key never reached routing, or whose key no longer resolves to a matching
 // model row. An unattributable request must not land on the wrong relay.
 function resolveModelDbId(
@@ -63,8 +63,8 @@ function resolveModelDbId(
 // is logged identically. Lives in a neutral lib module to avoid an import cycle
 // between the fusion service and the proxy route that both call it.
 //
-// Status is 'success', 'error', or 'canceled' (#752 — the client hung up
-// mid-attempt). A canceled request counts toward request totals — it happened —
+// Status is 'success', 'error', or 'canceled' (#752 - the client hung up
+// mid-attempt). A canceled request counts toward request totals - it happened -
 // but toward NEITHER success nor error: rates and scoring must read
 // success/(success+error), never success/total.
 //
@@ -92,7 +92,7 @@ export function logRequest(
   // (requested_model set but != model_id).
   requestedModel: string | null = null,
   // The model the UPSTREAM claims it served, ONLY when it genuinely differs
-  // from the routed model_id after cosmetic normalization (#534 — see
+  // from the routed model_id after cosmetic normalization (#534 - see
   // lib/served-model.ts). NULL when it matches or the provider reported
   // nothing usable, so the column stays empty in the healthy case.
   servedModel: string | null = null,
@@ -104,12 +104,12 @@ export function logRequest(
   // runs no inference, so it logs nothing; the dashboard playground calls the
   // same HTTP endpoints as any other client and is indistinguishable from
   // them here. The column is free-form so a future surface can add a value
-  // without a migration. NULL for call sites that pass no caller — notably
+  // without a migration. NULL for call sites that pass no caller - notably
   // the shared fallback loop's 'canceled' row, which is surface-agnostic.
   caller: string | null = null,
   // #1347 (PR 1): 'provider_moment' when a failed attempt is attributed to
   // the provider's minute (429 / 5xx / timeout / transport) instead of the
-  // model — written only when the failure-attribution setting is on; NULL
+  // model - written only when the failure-attribution setting is on; NULL
   // everywhere else, including every success row and every historical row.
   failureAttribution: string | null = null,
 ) {
@@ -170,7 +170,7 @@ export function logRequest(
 // mid-stream error row, or the last per-attempt failure row). Called once per
 // request by the fallback loop AFTER the response is finished, so the write is
 // off the client's latency path. Zero-failure single-attempt successes write
-// exactly one 'ok' row. A trace with no parent row writes nothing — since the
+// exactly one 'ok' row. A trace with no parent row writes nothing - since the
 // fallback loop logs a 'canceled' row for pure client aborts (#752), that is
 // now only the loop-top stop paths, whose failed attempts each wrote their own
 // row already.

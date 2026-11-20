@@ -45,7 +45,7 @@ export const keysRouter = Router();
 // Empty since Auray was removed outright (#1583).
 const UNLISTED_PLATFORMS = new Set<string>();
 
-// Active providers — must match providers/index.ts registrations + shared/types.ts Platform.
+// Active providers - must match providers/index.ts registrations + shared/types.ts Platform.
 // Moonshot and MiniMax direct integrations were dropped in V4. HuggingFace
 // was dropped in V4 and re-added in V13 via the router.huggingface.co route.
 // SambaNova was dropped in V23 (free tier permanently retired). GitHub Models
@@ -96,7 +96,7 @@ const upload = multer({
 // `key` is optional so keyless providers (Kilo's anonymous gateway) can be added
 // without one; the handler enforces a non-empty key for everyone else.
 // #590 (per-key proxy): an optional per-key proxy override. Only schemes the
-// proxy layer can actually dispatch through are accepted — an unvalidated
+// proxy layer can actually dispatch through are accepted - an unvalidated
 // string would be stored, encrypted, and only surface as a failed dispatcher
 // at request time, one attempt at a time. '' = no override (global proxy).
 const proxyUrlSchema = z.string().max(KEY_PROXY_URL_MAX).refine(isValidKeyProxyUrl, { message: KEY_PROXY_URL_ERROR });
@@ -126,7 +126,7 @@ const addKeySchema = z.object({
   proxyUrl: proxyUrlSchema.optional(),
 });
 
-// `modelScope` (#657): the model_id list this key may serve — relay stations
+// `modelScope` (#657): the model_id list this key may serve - relay stations
 // scope each key to a model group. null (or an empty array) clears the scope,
 // returning the key to serving every model of its platform.
 const updateKeySchema = z.object({
@@ -155,7 +155,7 @@ const importKeySchema = z.object({
   // the export file carried alongside it (#687).
   baseUrl: z.string().optional(),
   // Models declared beside a custom endpoint in the paste (#382). Ignored for
-  // catalog platforms — their model lists come from the catalog, not the file.
+  // catalog platforms - their model lists come from the catalog, not the file.
   models: z.array(z.object({
     id: z.string().min(1),
     supportsTools: z.boolean().optional(),
@@ -236,7 +236,7 @@ function insertImportedKey(platform: (typeof PLATFORMS)[number], keyName: string
 
 // Count enabled catalog models for a platform. Used to warn when a key is
 // added for a provider that has zero models in the operator's current catalog
-// tier — the Agnes case (#438): the provider is registered and selectable, but
+// tier - the Agnes case (#438): the provider is registered and selectable, but
 // its models ship in the premium/live catalog and only appear for free-tier
 // installs once they age into the monthly catalog, so a fresh install adds the
 // key and silently sees nothing.
@@ -247,7 +247,7 @@ function insertImportedKey(platform: (typeof PLATFORMS)[number], keyName: string
  * wrote 39 whenever a no-auth custom endpoint was in the list (#687).
  *
  * A custom endpoint is worth exporting even when it holds only the `no-key`
- * placeholder — the endpoint IS the thing being backed up, and its base_url
+ * placeholder - the endpoint IS the thing being backed up, and its base_url
  * restores it. Anything else needs a real secret to be worth a line.
  */
 export function isExportableKey(row: { platform: string; baseUrl: string | null; key: string }): boolean {
@@ -258,8 +258,8 @@ export function isExportableKey(row: { platform: string; baseUrl: string | null;
 
 // Every model a platform's key can serve: chat rows, plus embedding and
 // generative-media rows. Media-only providers (Speechify is TTS-only) never
-// have a chat row, so counting `models` alone reported "no models" — and fired
-// the no-catalog notice — for them even on a fully synced Premium install
+// have a chat row, so counting `models` alone reported "no models" - and fired
+// the no-catalog notice - for them even on a fully synced Premium install
 // (#1327).
 function enabledModelCount(platform: string): number {
   const db = getDb();
@@ -285,7 +285,7 @@ function openAICompatBaseUrl(platform: string): string | null {
 //
 // #1327: the old copy told a Premium user to "add a Premium license key", and
 // told everyone to add the provider as a custom OpenAI-compatible endpoint
-// "with its base URL" without naming it — even for providers with no such
+// "with its base URL" without naming it - even for providers with no such
 // endpoint. The notice now matches the install's actual catalog tier, names
 // the base URL, and only offers the custom-provider route where it works.
 function noModelsNotice(platform: string): string | undefined {
@@ -328,7 +328,7 @@ function noModelsNotice(platform: string): string | undefined {
 
 // Provider checklist (#543): every registered provider with whether the user
 // has added at least one key yet, so the dashboard can show what's still
-// missing without enumerating the whole list by hand. `custom` is excluded —
+// missing without enumerating the whole list by hand. `custom` is excluded -
 // it's a per-key user-defined placeholder, not a fixed free-tier provider to
 // "check off".
 keysRouter.get('/providers', (_req: Request, res: Response) => {
@@ -500,7 +500,7 @@ keysRouter.get('/', (_req: Request, res: Response) => {
       createdAt: row.created_at,
       lastCheckedAt: row.last_checked_at,
       // #1493: last time this key was proven to work (valid probe or served
-      // request) — distinct from lastCheckedAt, which a transport error also
+      // request) - distinct from lastCheckedAt, which a transport error also
       // refreshes.
       lastHealthyAt: row.last_healthy_at ?? null,
       lastHealthError: row.last_health_error ?? null,
@@ -559,14 +559,14 @@ function isLoopbackRemote(req: Request): boolean {
 // is random and never shown), so re-verification would lock desktop users out of
 // reading their own keys. The embedder marks the process
 // (desktop/src/server-host.ts) and the two plaintext-key endpoints below skip
-// re-auth for it — but ONLY for a request from this machine. The desktop app can
+// re-auth for it - but ONLY for a request from this machine. The desktop app can
 // bind 0.0.0.0 through its LAN-access toggle, and a remote viewer on that LAN
 // still has to prove the password before it can lift a key.
 function skipsReauth(req: Request): boolean {
   return process.env.FREEAPI_DESKTOP === '1' && isLoopbackRemote(req);
 }
 
-// Export keys — returns plaintext keys in the requested format.
+// Export keys - returns plaintext keys in the requested format.
 // GET /api/keys/export?format=json|env|csv&healthy=true
 // The response is the raw file download (Content-Type varies by format).
 // Password re-verification via x-reauth-password header is required, except for
@@ -591,7 +591,7 @@ keysRouter.get('/export', (req: Request, res: Response) => {
 
   const rows = db.prepare(`SELECT * FROM api_keys ${whereClause} ORDER BY platform, created_at ASC`).all() as any[];
 
-  // Decrypt and filter — only export keys with a real value
+  // Decrypt and filter - only export keys with a real value
   const decryptedKeys = rows
     .map(row => {
       let key = '';
@@ -618,13 +618,13 @@ keysRouter.get('/export', (req: Request, res: Response) => {
     // .env format: GOOGLE_KEY=xxx\nGROQ_KEY=yyy
     //
     // Names have to stay unique. A .env is read back into a map keyed by name,
-    // so two rows sharing one name collapse into a single imported key — every
+    // so two rows sharing one name collapse into a single imported key - every
     // second Google key was silently lost on a round trip. Repeats therefore
     // take a numeric suffix (GOOGLE_KEY_2), which still resolves to the same
     // platform through PREFIX_MAP.
     //
     // Custom endpoints get an indexed PAIR, because a custom key without its
-    // base_url cannot be restored — there is no endpoint to attach it to (#687).
+    // base_url cannot be restored - there is no endpoint to attach it to (#687).
     const seenPerPlatform = new Map<string, number>();
     let customIndex = 0;
     const lines = decryptedKeys.map(k => {
@@ -656,7 +656,7 @@ keysRouter.get('/export', (req: Request, res: Response) => {
     // =, +, -, @, tab or CR as a live formula, so a label like `=HYPERLINK(...)`
     // would execute on open. Prefix such cells with a single quote to force them
     // to be read as text. Applied to the free-text fields the user controls
-    // (labels AND base_url — the custom endpoint column is free text too, and
+    // (labels AND base_url - the custom endpoint column is free text too, and
     // the importer strips the guard quote back off both); the key value must
     // round-trip verbatim for re-import, and the platform is one of our own
     // fixed enum values.
@@ -676,7 +676,7 @@ keysRouter.get('/export', (req: Request, res: Response) => {
     return;
   }
 
-  // Default: JSON format (round-trip safe — can be imported directly)
+  // Default: JSON format (round-trip safe - can be imported directly)
   const jsonExport = {
     version: 1,
     exportedAt: new Date().toISOString(),
@@ -692,7 +692,7 @@ keysRouter.get('/export', (req: Request, res: Response) => {
 // credential it otherwise only ever shows masked (#705). Exporting every key to
 // a file was the only way to read one back, which is a poor trade for "what is
 // the key on this row again?". Gated exactly like the export it narrows: the
-// session alone is not enough, the password has to be re-entered — except for a
+// session alone is not enough, the password has to be re-entered - except for a
 // local request on the desktop build, which has no password to re-enter (see
 // skipsReauth; a LAN client of that same desktop server still needs one).
 keysRouter.post('/:id/reveal', (req: Request, res: Response) => {
@@ -799,7 +799,7 @@ keysRouter.post('/', (req: Request, res: Response) => {
   }
 
   const { encrypted, iv, authTag } = encrypt(keyToStore);
-  // #590: the proxy URL is encrypted like the key itself — it usually embeds
+  // #590: the proxy URL is encrypted like the key itself - it usually embeds
   // `user:pass@` credentials. Absent/'' stores NULLs = no override.
   const proxy = encryptProxyUrl(proxyUrl);
   const result = db.prepare(`
@@ -815,7 +815,7 @@ keysRouter.post('/', (req: Request, res: Response) => {
     id: result.lastInsertRowid,
     platform,
     label: label ?? '',
-    // Echoed back masked, never in the clear — the response body ends up in
+    // Echoed back masked, never in the clear - the response body ends up in
     // logs and dev tools.
     maskedProxyUrl: maskProxyUrl(proxyUrl),
     maskedKey: maskKey(keyToStore),
@@ -830,14 +830,14 @@ keysRouter.post('/', (req: Request, res: Response) => {
 // User-configured endpoints (llama.cpp / LM Studio / vLLM / Ollama / any
 // OpenAI-compatible base_url). Each DISTINCT base_url gets its own 'custom'
 // api_keys row, and every registered model binds to its endpoint's key via
-// models.key_id — so several custom providers coexist without overwriting
+// models.key_id - so several custom providers coexist without overwriting
 // each other (#212). Re-submitting an existing base_url updates its key/label;
 // re-registering an existing model id re-binds it to the submitted endpoint.
 // A model can be given as a bare id ("qwen3:4b") or as {model, displayName}.
 // `model`/`displayName` (singular) stay supported for older clients; `models`
 // (plural) lets one submit bind several model ids to the same endpoint. (#281)
 // A custom model can declare its capabilities at registration. `supportsTools`
-// defaults to 1 (modern OpenAI-compatible servers — Ollama, vLLM, LM Studio —
+// defaults to 1 (modern OpenAI-compatible servers - Ollama, vLLM, LM Studio -
 // all emit tool calls), `supportsVision` defaults to 0 unless declared. Leaving
 // a flag unset keeps the DB default on insert and preserves the stored value on
 // re-registration, so a capability the user later toggled isn't clobbered. (#470)
@@ -940,7 +940,7 @@ function resolveEndpointRef(ref: { keyId?: number; baseUrl?: string }): CustomEn
 
 /**
  * Models attached to an imported custom endpoint (#382). Ids that look like
- * embedding models go through the embeddings path — it needs a dimension, so
+ * embedding models go through the embeddings path - it needs a dimension, so
  * reuse the stored one when the model is already registered and probe the
  * endpoint (as POST /api/embeddings/custom does) only for a new id. Everything
  * else registers as a chat model. A failure registers as a per-model error and
@@ -957,7 +957,7 @@ async function registerImportedModels(
 ): Promise<number> {
   // #1051: classify by id, not just /embedding/. A whisper, diffusion or video
   // id registered as a chat model 404s in every chain; they go to their own
-  // tables (or, for video, are skipped — nothing can serve a custom video
+  // tables (or, for video, are skipped - nothing can serve a custom video
   // model yet).
   const kindOf = (id: string) => /embedding/i.test(id) ? 'embedding' : classifyModelId(id);
   const chat = models.filter(m => kindOf(m.id) === undefined);
@@ -1033,7 +1033,7 @@ async function rejectUnsafeBaseUrl(baseUrl: string, res: Response): Promise<bool
 // Ask a configured custom endpoint what models it currently serves (#488).
 // Relays add and drop models weekly, so re-typing the ids by hand goes stale
 // immediately. This reads ONLY the operator's own base_url with the operator's
-// own key — it never reads or refreshes the published provider catalog. Nothing
+// own key - it never reads or refreshes the published provider catalog. Nothing
 // is written: the picked ids come back through POST /custom to be registered.
 const discoverModelsSchema = z.object({
   baseUrl: z.string().url('baseUrl must be a valid URL').optional(),
@@ -1081,7 +1081,7 @@ keysRouter.post('/custom/discover-models', async (req: Request, res: Response) =
   try {
     const discovered = await discoverEndpointModels(endpoint.baseUrl, apiKey);
 
-    // "Already registered" means bound to THIS endpoint — any key of the pool
+    // "Already registered" means bound to THIS endpoint - any key of the pool
     // counts, since they all serve the same model list (#619).
     const db = getDb();
     const registeredIds = new Set<string>();
@@ -1208,7 +1208,7 @@ keysRouter.post('/discovered-models', (req: Request, res: Response) => {
   });
 });
 
-// POST /custom/probe — fire one minimal real chat request at the endpoint so an
+// POST /custom/probe - fire one minimal real chat request at the endpoint so an
 // unmeasured model gains a reliability/speed sample without waiting for natural
 // traffic (#685 follow-up). Interactive: the operator is watching, so a bounded
 // timeout and a clean error beat a silent 120s hang. Only a SUCCESSFUL probe
@@ -1233,7 +1233,7 @@ keysRouter.post('/custom/probe', async (req: Request, res: Response) => {
 
   const apiKey = parsed.data.apiKey?.trim() || endpoint.storedKey || 'no-key';
 
-  // Probe a model actually REGISTERED on this endpoint when there is one — the
+  // Probe a model actually REGISTERED on this endpoint when there is one - the
   // sample must feed the stats of a model the router can pick, not whatever id
   // happens to lead the upstream /models list. Any key of the pool counts
   // (#619), and knowing the id up front also skips the discovery round-trip.
@@ -1265,12 +1265,12 @@ keysRouter.post('/custom/probe', async (req: Request, res: Response) => {
       `).run(probe.modelId, endpoint.keyId, probe.inputTokens, probe.outputTokens, probe.latencyMs, probe.latencyMs);
 
       // A real completion just succeeded, which is stronger evidence than any
-      // health ping — lift whatever cooldown was still holding the key back.
+      // health ping - lift whatever cooldown was still holding the key back.
       clearCooldownsForKey(endpoint.keyId);
     }
 
     // Phase 1 (#874): a successful tool-call probe is positive evidence the
-    // model speaks the OpenAI tool-call protocol — write it back to the models
+    // model speaks the OpenAI tool-call protocol - write it back to the models
     // row so the tool-aware router can pick it. Only a POSITIVE result writes
     // (the "only write success samples" philosophy); a negative/unknown result
     // leaves the existing flag untouched.
@@ -1357,7 +1357,7 @@ keysRouter.post('/custom', async (req: Request, res: Response) => {
     else addEntry(m.model, m.displayName, m.supportsTools, m.supportsVision, m.kind);
   }
   // A lone model submitted through the plural `models` also carries its name in
-  // the top-level `displayName` — that is exactly what the dashboard's custom
+  // the top-level `displayName` - that is exactly what the dashboard's custom
   // form sends, and binding the field to the singular `model` alone silently
   // dropped the name the user typed, leaving the row named after its model id
   // (#704). Only a submit that resolves to ONE unnamed model may take it: a
@@ -1540,7 +1540,7 @@ keysRouter.post('/import', (req: Request, res: Response, next: NextFunction) => 
             continue;
           }
           const baseUrl = normalizeBaseUrl(parsedKey.baseUrl);
-          // Same SSRF guard the manual add path uses (#440) — an import file is
+          // Same SSRF guard the manual add path uses (#440) - an import file is
           // just as capable of naming a cloud metadata address.
           let verdict = urlVerdicts.get(baseUrl);
           if (!verdict) {
@@ -1552,7 +1552,7 @@ keysRouter.post('/import', (req: Request, res: Response, next: NextFunction) => 
             continue;
           }
           try {
-            // A placeholder value means "endpoint with auth off" — hand it to
+            // A placeholder value means "endpoint with auth off" - hand it to
             // the resolver as "no key submitted" so it stores the sentinel once
             // instead of treating 'no-key' as a real secret.
             const secret = keyValue.trim() === 'no-key' ? undefined : keyValue.trim() || undefined;
@@ -1638,7 +1638,7 @@ keysRouter.post('/preview', (req: Request, res: Response, next: NextFunction) =>
             detectedPlatform: parsedKey.platform,
             prefix: parsedKey.prefix,
             // Without this the dialog can show a custom row but never restore
-            // it — the endpoint it belongs to would be lost between the two
+            // it - the endpoint it belongs to would be lost between the two
             // calls the dashboard actually makes (#687). Models ride the same
             // round trip (#382).
             ...(parsedKey.baseUrl ? { baseUrl: parsedKey.baseUrl } : {}),
@@ -1677,7 +1677,7 @@ keysRouter.post('/import-selected', async (req: Request, res: Response) => {
     } catch { /* skip undecryptable rows */ }
   }
 
-  // One SSRF verdict per endpoint, not per key — same reasoning as /import: a
+  // One SSRF verdict per endpoint, not per key - same reasoning as /import: a
   // pooled endpoint brings several keys to one URL and each check costs a DNS
   // lookup.
   const urlVerdicts = new Map<string, { allowed: boolean; reason?: string }>();
@@ -1686,7 +1686,7 @@ keysRouter.post('/import-selected', async (req: Request, res: Response) => {
     const keyName = key.keyName?.trim() || key.platform;
     // This is the route the dashboard actually uses (preview → import-selected),
     // so a custom endpoint could not be restored from its own export file until
-    // it handled one — /import alone was never reachable from the UI (#687).
+    // it handled one - /import alone was never reachable from the UI (#687).
     if (key.platform === 'custom') {
       if (!key.baseUrl) {
         errors.push({ key: keyName, error: 'Custom providers must be added with a base URL' });
@@ -1705,7 +1705,7 @@ keysRouter.post('/import-selected', async (req: Request, res: Response) => {
         continue;
       }
       try {
-        // 'no-key' is the auth-less-local-server placeholder, not a secret —
+        // 'no-key' is the auth-less-local-server placeholder, not a secret -
         // hand it over as "no key submitted" so the resolver stores the
         // sentinel once instead of encrypting the literal string. Going
         // through the resolver (not a raw INSERT) keeps endpoint pooling
@@ -1725,7 +1725,7 @@ keysRouter.post('/import-selected', async (req: Request, res: Response) => {
     }
 
     if (existingKeys.has(key.keyValue.trim())) {
-      errors.push({ key: keyName, error: 'Duplicate key — already exists' });
+      errors.push({ key: keyName, error: 'Duplicate key - already exists' });
       continue;
     }
 
@@ -1761,7 +1761,7 @@ keysRouter.delete('/:id', (req: Request, res: Response) => {
     res.status(404).json({ error: { message: 'Key not found' } });
     return;
   }
-  // Another credential for the SAME endpoint keeps it alive — the models move
+  // Another credential for the SAME endpoint keeps it alive - the models move
   // over to it instead of being cascaded away with this key (#619).
   const sibling = row.platform === 'custom' ? siblingEndpointKeyId(db, id, row.base_url) : null;
 
@@ -1776,7 +1776,7 @@ keysRouter.delete('/:id', (req: Request, res: Response) => {
 
     db.prepare('DELETE FROM api_keys WHERE id = ?').run(id);
     // Custom models exist only because POST /custom registered them alongside
-    // their endpoint key (#117) — they can't route without it. Cascade away
+    // their endpoint key (#117) - they can't route without it. Cascade away
     // the models bound to THIS endpoint (#212); other custom providers keep
     // theirs. Legacy rows (key_id NULL) are swept once no custom keys remain,
     // so they never linger in the fallback chain forever (#189).

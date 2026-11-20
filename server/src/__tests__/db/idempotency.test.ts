@@ -25,7 +25,7 @@ describe('Migration idempotency', () => {
     };
     db1.close();
 
-    // Re-init the same DB file — V1..V9 should all no-op idempotently.
+    // Re-init the same DB file - V1..V9 should all no-op idempotently.
     const db2 = initDb(tmpPath);
     const after = {
       models: (db2.prepare('SELECT COUNT(*) AS c FROM models').get() as { c: number }).c,
@@ -59,7 +59,7 @@ describe('Migration idempotency', () => {
     expect(rows).toEqual([]);
   });
 
-  it('UNIQUE(platform, model_id) constraint holds — no duplicate catalog rows', () => {
+  it('UNIQUE(platform, model_id) constraint holds - no duplicate catalog rows', () => {
     process.env.ENCRYPTION_KEY = '0'.repeat(64);
     const db = initDb(':memory:');
 
@@ -125,7 +125,7 @@ describe('Migration idempotency', () => {
     process.env.ENCRYPTION_KEY = '0'.repeat(64);
     const db = initDb(':memory:');
 
-    // Disables — row kept but enabled=0.
+    // Disables - row kept but enabled=0.
     const disabled = db.prepare(`
       SELECT platform, model_id, enabled FROM models
        WHERE (platform = 'google' AND model_id = 'gemini-3.1-pro-preview')
@@ -135,7 +135,7 @@ describe('Migration idempotency', () => {
     expect(disabled).toHaveLength(4);
     for (const row of disabled) expect(row.enabled).toBe(0);
 
-    // Hard removals — row is gone entirely.
+    // Hard removals - row is gone entirely.
     const removed = db.prepare(`
       SELECT model_id FROM models
        WHERE (platform = 'sambanova' AND model_id = 'DeepSeek-V3.1-cb')
@@ -223,7 +223,7 @@ describe('Migration idempotency', () => {
     process.env.ENCRYPTION_KEY = '0'.repeat(64);
     const db = initDb(':memory:');
 
-    // Platform drops — no model, fallback, or key rows survive.
+    // Platform drops - no model, fallback, or key rows survive.
     const deadRows = db.prepare(
       `SELECT COUNT(*) AS n FROM models WHERE platform IN ('sambanova', 'chutes')`
     ).get() as { n: number };

@@ -114,7 +114,7 @@ describe('supportedParametersFor / supportedParametersForPlatforms', () => {
 
   it('intersects across a unify group\'s platforms', () => {
     const both = supportedParametersForPlatforms(['groq', 'mistral']);
-    // groq drops logprobs; mistral drops top_k — neither survives the intersection.
+    // groq drops logprobs; mistral drops top_k - neither survives the intersection.
     expect(both).not.toContain('logprobs');
     expect(both).not.toContain('top_k');
     // seed survives both (mistral renames it on the wire but honors it).
@@ -169,7 +169,7 @@ describe('reasoning_effort (request-side reasoning control)', () => {
   });
 });
 
-describe('reasoning_effort normalization (#619 — off-scale values must not 400)', () => {
+describe('reasoning_effort normalization (#619 - off-scale values must not 400)', () => {
   it('passes supported values through untouched, case/whitespace tolerant', () => {
     for (const effort of REASONING_EFFORTS) {
       expect(normalizeReasoningEffort(effort)).toBe(effort);

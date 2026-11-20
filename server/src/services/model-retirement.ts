@@ -2,14 +2,14 @@
 //
 // Issue #634: NVIDIA answered every request for `minimaxai/minimax-m2.7` with
 // "410 … has reached its end of life … and is no longer available". The failure
-// classifies as a model-level skip, which rules the model out for ONE request —
+// classifies as a model-level skip, which rules the model out for ONE request -
 // so the next request tried it again, and the next, forever, each one paying a
 // round trip and a fallback slot for a model that is never coming back.
 //
 // The fix persists the verdict: a definitive end-of-life response disables the
 // model right away, and a merely-probable one waits for corroboration from a
 // second distinct request first, so a single flaky 404 from a load balancer can
-// never kill a healthy model. The disable is reversible in both directions —
+// never kill a healthy model. The disable is reversible in both directions -
 // the user can switch the model back on, and a catalog refresh that still lists
 // it lifts the retirement (services/catalog-sync.ts).
 
@@ -92,7 +92,7 @@ export function noteModelRetirementSignal(
     // acted on. Still printed to stdout by providerLog.
     providerLog(
       'warn',
-      `[ModelRetirement] ${row.platform}/${row.model_id} disabled — upstream reports it retired: ${reason}`,
+      `[ModelRetirement] ${row.platform}/${row.model_id} disabled - upstream reports it retired: ${reason}`,
       { provider: row.platform, model: row.model_id, event: 'model_retired' },
     );
     return true;

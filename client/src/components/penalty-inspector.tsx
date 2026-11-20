@@ -92,7 +92,7 @@ export function PenaltyInspector() {
 
   // #878: an escalated cooldown can bench a key for up to 24h off one bad
   // window; once the operator has fixed the cause (proxy, region, quota) the
-  // only way back was waiting — offer a manual lift on the spot.
+  // only way back was waiting - offer a manual lift on the spot.
   const resetCooldown = useMutation({
     mutationFn: (keyId: number) =>
       apiFetch(`/api/keys/${keyId}/cooldowns`, { method: 'DELETE' }),

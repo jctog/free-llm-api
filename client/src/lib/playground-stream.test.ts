@@ -133,7 +133,7 @@ describe('readChatStream', () => {
     ), handlers)
     expect(result.error).toBe('Provider error (Groq): stream interrupted')
     expect(errors).toEqual(['Provider error (Groq): stream interrupted'])
-    // Whatever already streamed is still there — the error explains the cut.
+    // Whatever already streamed is still there - the error explains the cut.
     expect(result.content).toBe('partial ')
     expect(result.done).toBe(true)
   })

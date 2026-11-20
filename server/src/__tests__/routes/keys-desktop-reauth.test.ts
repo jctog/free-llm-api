@@ -6,7 +6,7 @@ import { initDb, getDb } from '../../db/index.js';
 import { mintDashboardToken } from '../helpers/auth.js';
 
 // #786: the desktop build has no user-set password, so reveal/export skip the
-// re-verification there — but only for a caller on the machine itself. The
+// re-verification there - but only for a caller on the machine itself. The
 // desktop app can bind 0.0.0.0 (its LAN-access toggle), and a LAN client of that
 // server must still re-enter the password or the second factor is gone for the
 // whole network. The real connection here is always loopback, so a middleware

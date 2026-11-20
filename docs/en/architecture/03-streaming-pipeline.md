@@ -1,15 +1,15 @@
 **English** · [简体中文](../../zh-cn/architecture/03-streaming-pipeline.md)
 
-# Streaming Pipeline — Deep Dive
+# Streaming Pipeline - Deep Dive
 
 > **Source:** `server/src/routes/proxy.ts`, `server/src/routes/responses.ts`, `server/src/routes/anthropic.ts`, `server/src/lib/fallback-loop.ts`
 
 ## 1. Design Principles
 
-- **SSE only** — zero WebSockets. Every surface (`/v1/chat/completions`, `/v1/responses`, `/v1/messages`, legacy `/completions`) streams via Server-Sent Events.
-- **Turn integrity** — the stream is validated as a *turn*, not a transport. Headers are held until first real payload; anything dying before that fails over invisibly.
-- **Failover mid-stream** — if an error frame arrives before headers flush, it's retryable; after flush, an error frame is surfaced honestly (stream_error).
-- **Unified fallback loop** — all surfaces share `lib/fallback-loop.ts` for retry budget, cooldowns, attempt trail, exhaustion rendering.
+- **SSE only** - zero WebSockets. Every surface (`/v1/chat/completions`, `/v1/responses`, `/v1/messages`, legacy `/completions`) streams via Server-Sent Events.
+- **Turn integrity** - the stream is validated as a *turn*, not a transport. Headers are held until first real payload; anything dying before that fails over invisibly.
+- **Failover mid-stream** - if an error frame arrives before headers flush, it's retryable; after flush, an error frame is surfaced honestly (stream_error).
+- **Unified fallback loop** - all surfaces share `lib/fallback-loop.ts` for retry budget, cooldowns, attempt trail, exhaustion rendering.
 
 ---
 
@@ -84,7 +84,7 @@ headerSent = false
 
 ### Token Accounting (Streaming)
 
-- **Output tokens**: `ceil((text.length + reasoning.length) / 4)` per chunk — reasoning tokens are real consumption (#764).
+- **Output tokens**: `ceil((text.length + reasoning.length) / 4)` per chunk - reasoning tokens are real consumption (#764).
 - **TTFB**: wall-clock to first content OR reasoning token.
 - **Non-stream reconciliation**: provider's `usage` block overrides estimates.
 
@@ -163,7 +163,7 @@ Codex CLI and Agents SDK speak the **Responses API** (stateful, `previous_respon
 
 ### Failover
 
-- Shares `runFallbackLoop()` — identical retry budget, cooldowns, attempt trail.
+- Shares `runFallbackLoop()` - identical retry budget, cooldowns, attempt trail.
 - Exhaustion rendering maps to Responses API error shape.
 
 ---
@@ -254,6 +254,6 @@ Thin adapter over shared fallback loop:
 
 - **Scope**: streaming and non-streaming, cacheable temperature (`temperature ≤ 1` or unset), `X-FreeLLM-Cache: on` or `RESPONSE_CACHE=1`.
 - **Key**: SHA-256 over canonical request (model, messages, all sampling params, tools, stop, response_format, n, seed, penalties, logit_bias, logprobs, top_logprobs, reasoning_effort, compression).
-- **Store**: in-memory LRU, TTL + temperature gates. Two stores — JSON bodies (persisted to SQLite) and streaming SSE (memory-only) — sharing one `RESPONSE_CACHE_MAX_ENTRIES` budget; `entries` in the stats counts both.
+- **Store**: in-memory LRU, TTL + temperature gates. Two stores - JSON bodies (persisted to SQLite) and streaming SSE (memory-only) - sharing one `RESPONSE_CACHE_MAX_ENTRIES` budget; `entries` in the stats counts both.
 - **Hit**: returns cached body, `X-Routed-Via: cache`, `X-FreeLLM-Cache: HIT`, **zero provider quota consumed**. A streaming hit replays the stored SSE byte for byte.
 - **Streaming store**: frames are buffered only when the request is cacheable (nothing is retained with the cache off) and dropped past a 2 MB replay ceiling. A truncated (`finish_reason: length`), errored, or aborted stream is never stored.

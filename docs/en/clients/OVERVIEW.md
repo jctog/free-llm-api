@@ -19,6 +19,6 @@ feature for mid-conversation model switches.
 
 ## Related
 
-- [../api/](../api/) — OpenAI-compatible `/v1` and Anthropic Messages API reference.
-- [../compression/](../compression/) — Prompt compression that agents benefit from automatically.
-- [../../zh-cn/clients/](../../zh-cn/clients/) — Simplified Chinese mirror (when translated).
+- [../api/](../api/) - OpenAI-compatible `/v1` and Anthropic Messages API reference.
+- [../compression/](../compression/) - Prompt compression that agents benefit from automatically.
+- [../../zh-cn/clients/](../../zh-cn/clients/) - Simplified Chinese mirror (when translated).

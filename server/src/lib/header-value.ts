@@ -7,13 +7,13 @@
 // `我的模型[test] v2`, and splicing one into `X-Routed-Via` killed the response
 // AFTER the upstream call had already succeeded. Worse, the throw surfaced
 // inside the failover loop, so the router booked it as a provider failure and
-// cooled the model down — every request to that relay failed, forever.
+// cooled the model down - every request to that relay failed, forever.
 //
 // Encoding rules, deliberately narrow so the output is safe on every surface:
 //   - SP and VCHAR (0x21-0x7E) pass through, so ordinary ids like
 //     `groq/llama-3.3-70b-versatile` are byte-identical to before;
-//   - everything else — control characters (header injection), DEL, and every
-//     non-ASCII code point — becomes its percent-encoded UTF-8 bytes, so the
+//   - everything else - control characters (header injection), DEL, and every
+//     non-ASCII code point - becomes its percent-encoded UTF-8 bytes, so the
 //     value stays decodable with decodeURIComponent instead of being lost;
 //   - a literal '%' becomes '%25', which is what makes that decode unambiguous.
 // The result is capped so a pathological id cannot push a response past a
@@ -25,7 +25,7 @@ function percentEncode(char: string): string {
   try {
     return encodeURIComponent(char);
   } catch {
-    // Lone surrogate — encodeURIComponent refuses it. Stand in the UTF-8
+    // Lone surrogate - encodeURIComponent refuses it. Stand in the UTF-8
     // replacement character rather than dropping the position silently.
     return '%EF%BF%BD';
   }

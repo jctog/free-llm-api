@@ -16,7 +16,7 @@ function makeStubDb(): Db {
   };
 }
 
-describe('connectDb — factory injection', () => {
+describe('connectDb - factory injection', () => {
   it('calls the injected factory instead of opening a filesystem path', () => {
     const stub = makeStubDb();
     const factory: DbFactory = vi.fn().mockReturnValue(stub);

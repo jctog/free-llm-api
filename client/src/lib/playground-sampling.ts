@@ -2,7 +2,7 @@
 // settings rail edits them and as /v1/chat/completions receives them.
 //
 // Every control is opt-in. Until you switch one on the request body carries no
-// field for it at all and the provider's own default applies — "unset" and
+// field for it at all and the provider's own default applies - "unset" and
 // "set to something that happens to look like the default" are genuinely
 // different requests, and 0 is a meaningful temperature, so the stored shape
 // keeps an explicit `enabled` flag beside a remembered value rather than
@@ -69,7 +69,7 @@ export const DEFAULT_SAMPLING: SamplingSettings = {
 /** Render order for the rail; also the order the request fields are assembled in. */
 export const SAMPLING_FIELDS: SamplingField[] = ['temperature', 'topP', 'maxTokens']
 
-/** The request fragment for a set of settings — only the enabled knobs. */
+/** The request fragment for a set of settings - only the enabled knobs. */
 export interface SamplingRequestParams {
   temperature?: number
   top_p?: number
@@ -139,7 +139,7 @@ function parseControl(raw: unknown, field: SamplingField): SamplingControl {
 }
 
 /**
- * Read settings back out of storage. Total tolerance by design — a corrupt,
+ * Read settings back out of storage. Total tolerance by design - a corrupt,
  * truncated or older entry costs you your knobs, never the Playground.
  */
 export function parseSampling(raw: string | null | undefined): SamplingSettings {
@@ -182,7 +182,7 @@ export function samplingRequestParams(settings: SamplingSettings): SamplingReque
   return params
 }
 
-/** True when at least one knob is being sent — the rail badges itself with it. */
+/** True when at least one knob is being sent - the rail badges itself with it. */
 export function samplingActiveCount(settings: SamplingSettings): number {
   return SAMPLING_FIELDS.filter(field => settings[field].enabled).length
 }

@@ -20,7 +20,7 @@ function restoreEnv() {
   }
 }
 
-describe('initEncryptionKey — input validation', () => {
+describe('initEncryptionKey - input validation', () => {
   beforeEach(() => {
     restoreEnv();
   });

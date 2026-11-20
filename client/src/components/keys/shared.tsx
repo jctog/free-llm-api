@@ -21,7 +21,7 @@ export function GetKeyLink({ url }: { url: string }) {
 
 // `url` points to each provider's key-management / signup page so the Keys page
 // can show a "Get API key" shortcut (#137). OpenCode Zen's key is free from
-// opencode.ai/auth — no card needed; billing only applies to paid models (#128).
+// opencode.ai/auth - no card needed; billing only applies to paid models (#128).
 // `keyless: true` providers (Kilo, OVH, AI Horde) need no API key but accept
 // one (#1331): the key field is optional, a blank submit stores a sentinel so
 // routing treats the platform as configured and calls go out anonymously, and
@@ -113,7 +113,7 @@ export const PLATFORMS: { value: Platform; label: string; url: string; keyless?:
 export const LISTED_PLATFORMS = PLATFORMS.filter(p => !p.hidden)
 
 // 'custom' is configured through its own form (base URL + model), not the
-// generic key dropdown — but it still appears in the grouped provider list.
+// generic key dropdown - but it still appears in the grouped provider list.
 export const CUSTOM_GROUP: { value: Platform; label: string; url: string } = {
   value: 'custom',
   label: 'Custom (OpenAI-compatible)',

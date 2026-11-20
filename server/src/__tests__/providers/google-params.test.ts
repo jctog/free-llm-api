@@ -23,7 +23,7 @@ describe('toGeminiExtendedConfig', () => {
           name: 'answer',
           schema: {
             type: 'object',
-            additionalProperties: false, // Gemini rejects this key — must be stripped
+            additionalProperties: false, // Gemini rejects this key - must be stripped
             properties: { city: { type: 'string' } },
             required: ['city'],
           },
@@ -47,7 +47,7 @@ describe('toGeminiExtendedConfig', () => {
   });
 
   it('grounding-only pseudo-tools do NOT suppress structured output', () => {
-    // google_search converts to a grounding block, not functionDeclarations —
+    // google_search converts to a grounding block, not functionDeclarations -
     // raw tools.length was silently dropping responseMimeType for it.
     const cfg = toGeminiExtendedConfig({
       response_format: { type: 'json_object' },

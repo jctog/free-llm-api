@@ -65,7 +65,7 @@ const err429 = () => Object.assign(new Error('Groq API error 429: rate limit'), 
 interface Setup { modelDbId: number; modelId: string; keyA: number; keyB: number }
 
 // Distinct groq model per test so module-global rate-limit state (cooldowns,
-// round-robin, penalties — keyed by model) can't leak between tests.
+// round-robin, penalties - keyed by model) can't leak between tests.
 function setup(rank: number): Setup {
   const db = getDb();
   setRoutingStrategy('priority');
@@ -173,7 +173,7 @@ describe('upstream 401 rotates to the sibling key instead of 502 (item 1)', () =
     // Google reports a dead/expired key as HTTP 400 "API key not valid", NOT a
     // 401. Before the fix that classified as a provider bad-request, so an
     // exhaustion could surface to the client as 400 "All routed providers
-    // rejected the request as invalid" — blaming the request for a bad key.
+    // rejected the request as invalid" - blaming the request for a bad key.
     const googleBadKey = () => Object.assign(
       new Error('Google API error 400: API key not valid. Please pass a valid API key.'),
       { status: 400 },

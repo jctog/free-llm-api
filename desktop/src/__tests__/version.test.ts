@@ -9,7 +9,7 @@ import { describe, it, expect } from 'vitest';
 // manifests, so a stale number here silently mislabels every future release.
 //
 // The authoritative tag-vs-version check is the "Verify desktop version
-// matches the tag" step in .github/workflows/desktop-release.yml — only a
+// matches the tag" step in .github/workflows/desktop-release.yml - only a
 // tagged run knows which version is being released, so it cannot live here.
 // These tests cover what is checkable without a tag: that the version is
 // well-formed, and that the lockfile tracks it (a lockfile left behind is how

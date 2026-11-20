@@ -52,7 +52,7 @@ Windows PowerShell 版本和 curl 一行命令引导见 [docs/zh-cn/install/01-i
 docker compose logs -f freellmapi
 ```
 
-打开 http://localhost:3001 ，在「密钥」页添加提供方密钥，并从该页顶部拿到你的统一 API 密钥——你的 OpenAI SDK 要指向的就是它。
+打开 http://localhost:3001 ，在「密钥」页添加提供方密钥，并从该页顶部拿到你的统一 API 密钥--你的 OpenAI SDK 要指向的就是它。
 
 ## 端口与局域网访问
 
@@ -62,13 +62,13 @@ Compose 文件把端口发布为 `"${HOST_BIND:-127.0.0.1}:${PORT:-3001}:3001"`�
 HOST_BIND=0.0.0.0 docker compose up -d
 ```
 
-只在可信网络上这么做——这个代理是单用户的，唯一的防护就是统一 API 密钥。
+只在可信网络上这么做--这个代理是单用户的，唯一的防护就是统一 API 密钥。
 
 ## 卷与持久化
 
 SQLite 数据存放在命名卷 `freellmapi-data` 中，挂载于 `/app/server/data`。升级时保持同一个 `.env` 的 `ENCRYPTION_KEY` 和同一个卷，因为提供方密钥是静态加密的。如果你的主机只有一个特定目录做了持久化，用 `FREEAPI_DB_PATH=/that/path/freellmapi.db` 把数据库指过去。
 
-Dockerfile 有意不为 `/app/server/data` 声明 `VOLUME`。持久化是部署方的职责——Compose 文件在那里映射命名卷，普通 `docker run` 则用 `-v`。改在镜像里声明的话，每个没有覆盖它的容器都会创建一个匿名卷：从 Dockerfile 构建的 PaaS 运行时（Railway、Render、Coolify、Dokploy、CapRover）要么拒绝该镜像，要么悄悄给每次重新部署发一个全新的空卷；这条声明还会遮蔽挂载在同一路径的 bind mount。
+Dockerfile 有意不为 `/app/server/data` 声明 `VOLUME`。持久化是部署方的职责--Compose 文件在那里映射命名卷，普通 `docker run` 则用 `-v`。改在镜像里声明的话，每个没有覆盖它的容器都会创建一个匿名卷：从 Dockerfile 构建的 PaaS 运行时（Railway、Render、Coolify、Dokploy、CapRover）要么拒绝该镜像，要么悄悄给每次重新部署发一个全新的空卷；这条声明还会遮蔽挂载在同一路径的 bind mount。
 
 这个卷的备份见 [02-updates-and-backup.md](02-updates-and-backup.md)。
 
@@ -89,7 +89,7 @@ runtime 阶段在 `EXPOSE 3001` 之前切换到 `USER node`。服务器数据目
 
 ## 为什么 better-sqlite3 要从源码编译
 
-`better-sqlite3` 是原生模块。在没有可用预编译二进制的 slim 镜像上——尤其是 QEMU 下的 `linux/arm64` 架构——node-gyp 会从源码编译它，这需要 Python 和一套 C++ 工具链。因此构建阶段通过 apt 安装 `python3 make g++`，而 runtime 镜像直接复制已经编译好的 `node_modules`，让发布的镜像保持干净、不带构建工具。（这套工具链由 #143 加入，此前没有它会构建失败。）
+`better-sqlite3` 是原生模块。在没有可用预编译二进制的 slim 镜像上--尤其是 QEMU 下的 `linux/arm64` 架构--node-gyp 会从源码编译它，这需要 Python 和一套 C++ 工具链。因此构建阶段通过 apt 安装 `python3 make g++`，而 runtime 镜像直接复制已经编译好的 `node_modules`，让发布的镜像保持干净、不带构建工具。（这套工具链由 #143 加入，此前没有它会构建失败。）
 
 一个相关的打包细节：npm 会把某些生产包嵌套在工作区之下而不是提升到顶层（`undici` 位于 `server/node_modules/undici`）。跳过 `server/node_modules` 的复制曾导致发布镜像里 HTTP(S) 代理分发器加载失败、所有请求都静默直连（#550，c6589ff 修复）。
 

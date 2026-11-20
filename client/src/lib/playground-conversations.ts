@@ -4,7 +4,7 @@
 //
 // Everything derivable (the auto-title, the relative time, what is safe to
 // persist) lives here as a plain function so it can be unit-tested without a
-// component — the page below only wires it up.
+// component - the page below only wires it up.
 
 // Relative, not the `@/` alias: the unit tests run under the standalone
 // vitest config, which does not carry the app's path aliases.
@@ -37,7 +37,7 @@ export interface ChatMessage {
   // answer, shown as a collapsible aside above it.
   reasoning?: string
   // True while this bubble is still being filled in by an open stream. Never
-  // stored — a saved message is finished by definition.
+  // stored - a saved message is finished by definition.
   streaming?: boolean
   meta?: {
     platform?: string
@@ -46,7 +46,7 @@ export interface ChatMessage {
     fallbackAttempts?: number
     // Fusion responses: the panel models (with their answers, for the
     // collapsible trace) and the judge that synthesized them (null when not
-    // synthesized — single survivor / best_of). `fusionStreaming` is true while
+    // synthesized - single survivor / best_of). `fusionStreaming` is true while
     // panel/judge frames are still arriving.
     fusionPanel?: FusionPanelEntry[]
     fusionJudge?: { platform: string; model: string } | null
@@ -97,7 +97,7 @@ export const AUTO_TITLE_MAX = 40
 /**
  * The title a conversation gets on its first save: the opening user message,
  * first line only, squeezed onto one row. Returns '' when there is nothing to
- * name it after yet — the caller then leaves the stored title empty, and the
+ * name it after yet - the caller then leaves the stored title empty, and the
  * next save gets another go at it.
  *
  * Only ever applied to a conversation with no title, so a rename sticks
@@ -138,7 +138,7 @@ const HOUR = 60 * MINUTE
 const DAY = 24 * HOUR
 
 /**
- * Coarse "how long ago" for a sidebar row, as an i18n key plus its count —
+ * Coarse "how long ago" for a sidebar row, as an i18n key plus its count -
  * formatting stays in the component so every locale writes its own phrasing.
  * Anything under a minute (a clock skewed into the future included) is "just
  * now"; beyond that it steps minutes → hours → days and stops, because a

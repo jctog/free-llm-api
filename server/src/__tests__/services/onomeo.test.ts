@@ -114,17 +114,17 @@ describe('onomeo chat', () => {
     expect(result._routed_via).toEqual({ platform: 'onomeo', model: 'glm-5.3' });
   });
 
-  it('strips the free-tier "— via onomeo.com" signature from a completion', async () => {
+  it('strips the free-tier "- via onomeo.com" signature from a completion', async () => {
     const body = completion('glm-5.2');
-    body.choices[0].message.content = '12\nGLM\n\n— via onomeo.com';
+    body.choices[0].message.content = '12\nGLM\n\n- via onomeo.com';
     vi.spyOn(global, 'fetch').mockResolvedValue(json(body));
     const result = await new OnomeoProvider().chatCompletion('test-key', [{ role: 'user', content: 'Hi' }], 'glm-5.2');
     expect(result.choices[0].message.content).toBe('12\nGLM');
   });
 
   it.each([
-    ['as its own final delta (live shape)', ['Hello', ', my friend.', '\n\n— via onomeo.com']],
-    ['split across deltas', ['Hello, my friend.', '\n\n— via', ' onomeo.com']],
+    ['as its own final delta (live shape)', ['Hello', ', my friend.', '\n\n- via onomeo.com']],
+    ['split across deltas', ['Hello, my friend.', '\n\n- via', ' onomeo.com']],
   ])('strips the signature from a stream %s', async (_name, pieces) => {
     const frames = [
       { choices: [{ index: 0, delta: { role: 'assistant', content: '' }, finish_reason: null }] },
@@ -142,14 +142,14 @@ describe('onomeo chat', () => {
   });
 
   it('keeps a stream that only looks like the start of the signature', async () => {
-    const frames = ['Use a dash ', '\n—', ' or a comma.'].map(content =>
+    const frames = ['Use a dash ', '\n-', ' or a comma.'].map(content =>
       `data: ${JSON.stringify({ id: 'c', object: 'chat.completion.chunk', created: 1, model: 'm', choices: [{ index: 0, delta: { content }, finish_reason: null }] })}\n\n`);
     vi.spyOn(global, 'fetch').mockResolvedValue(new Response(frames.join('') + 'data: [DONE]\n\n', {
       status: 200, headers: { 'content-type': 'text/event-stream' },
     }));
     const chunks = [];
     for await (const c of new OnomeoProvider().streamChatCompletion('test-key', [], 'm')) chunks.push(c);
-    expect(chunks.map(c => c.choices[0]?.delta?.content ?? '').join('')).toBe('Use a dash \n— or a comma.');
+    expect(chunks.map(c => c.choices[0]?.delta?.content ?? '').join('')).toBe('Use a dash \n- or a comma.');
   });
 
   it.each([403, 429])('preserves inference quota HTTP %s as failover-able, not key-fatal', async status => {

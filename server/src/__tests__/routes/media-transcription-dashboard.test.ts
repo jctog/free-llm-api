@@ -82,7 +82,7 @@ describe('transcription models on the media dashboard API', () => {
       keyCount: 0,
       isCustom: false,
     });
-    // Image rows keep their shape — transcription rides along, nothing filtered.
+    // Image rows keep their shape - transcription rides along, nothing filtered.
     expect(body.models.some((m: any) => m.modality === 'image')).toBe(true);
   });
 

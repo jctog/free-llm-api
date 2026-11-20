@@ -38,7 +38,7 @@ export function loadStoredSort<C extends string>(storageKey: string, validColumn
     ) {
       return { column: parsed.column as C, direction: parsed.direction }
     }
-  } catch { /* corrupted entry or storage unavailable — API order */ }
+  } catch { /* corrupted entry or storage unavailable - API order */ }
   return null
 }
 
@@ -46,7 +46,7 @@ export function persistSort<C extends string>(storageKey: string, sort: SortStat
   try {
     if (sort === null) localStorage.removeItem(storageKey)
     else localStorage.setItem(storageKey, JSON.stringify(sort))
-  } catch { /* quota / private mode — the sort still applies this session */ }
+  } catch { /* quota / private mode - the sort still applies this session */ }
 }
 
 export function nextSort<C extends string>(current: SortState<C>, col: C): SortState<C> {

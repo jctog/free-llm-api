@@ -129,7 +129,7 @@ export class CohereProvider extends BaseProvider {
   }
 
   async validateKey(apiKey: string, quotaContext?: QuotaObservationContext): Promise<KeyValidationResult> {
-    // Transport errors propagate — health.ts marks status='error' without
+    // Transport errors propagate - health.ts marks status='error' without
     // counting toward auto-disable. Only confirmed 401/403 disables a key.
     const res = await this.fetchWithTimeout(`${API_BASE}/models`, {
       method: 'GET',

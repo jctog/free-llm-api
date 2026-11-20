@@ -4,7 +4,7 @@
 // DOWN: reversible
 //
 // The MCP introspection server used to be unconditionally on. #925 makes it a
-// setting, and asks for off-by-default — but flipping it off for everyone would
+// setting, and asks for off-by-default - but flipping it off for everyone would
 // silently break every Claude Code / Cline session already pointed at /mcp, and
 // the failure would look like a broken gateway rather than a new switch.
 //

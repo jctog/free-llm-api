@@ -38,7 +38,7 @@ describe('request_failure_attribution migration (#1347 PR 1)', () => {
     expect(hasAttributionColumn(db)).toBe(true);
   });
 
-  it('is idempotent — a second up() is a no-op', () => {
+  it('is idempotent - a second up() is a no-op', () => {
     const db = makeDb();
     dbs.push(db);
 

@@ -6,7 +6,7 @@ import { encrypt } from '../../lib/crypto.js';
 import { mintDashboardToken } from '../helpers/auth.js';
 
 // #687, second half. #717 taught POST /api/keys/import about custom endpoints,
-// but the dashboard never calls that route — the Add-key dialog does
+// but the dashboard never calls that route - the Add-key dialog does
 // /preview then /import-selected, and /import-selected rejected every custom
 // row outright. So a custom endpoint still could not be restored from its own
 // export file through the UI. These cover the route the dashboard actually uses.
@@ -49,7 +49,7 @@ function customRows() {
     .all() as Array<{ id: number; platform: string; label: string; base_url: string | null }>;
 }
 
-describe('POST /api/keys/import-selected — custom endpoints (#687)', () => {
+describe('POST /api/keys/import-selected - custom endpoints (#687)', () => {
   let app: Express;
 
   beforeAll(() => {
@@ -81,7 +81,7 @@ describe('POST /api/keys/import-selected — custom endpoints (#687)', () => {
     ]);
   });
 
-  it('still refuses a custom row with no base URL — there is nowhere to route it', async () => {
+  it('still refuses a custom row with no base URL - there is nowhere to route it', async () => {
     const { status, body } = await post(app, '/api/keys/import-selected', {
       keys: [{ keyName: 'My Relay', keyValue: 'sk-relay-123', platform: 'custom' }],
     });

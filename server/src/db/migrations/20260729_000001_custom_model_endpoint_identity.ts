@@ -1,12 +1,12 @@
 // Migration: per-endpoint identity for custom relay models (#651)
 // Created: 2026-07-29
 //
-// DOWN: reversible (throws when duplicates exist — see below)
+// DOWN: reversible (throws when duplicates exist - see below)
 //
 // `models` was unique on (platform, model_id). Every custom relay is stored
 // under platform = 'custom', so two relays offering the same model id could not
 // coexist: the second registration silently rebound the first one's row. One
-// enabled flag, one set of ranks, one stats bucket — turning the model off
+// enabled flag, one set of ranks, one stats bucket - turning the model off
 // because relay A was broken turned it off for relay B as well (#619).
 //
 // This adds `endpoint_scope` (the endpoint's normalized base_url, '' for every
@@ -24,7 +24,7 @@
 //     is avoided on purpose: with foreign keys on, a rename rewrites the
 //     REFERENCES clauses of every child table to the new name.
 //
-// Schema only — no catalog data.
+// Schema only - no catalog data.
 
 import type { Db } from '../types.js';
 
@@ -78,7 +78,7 @@ function rebuildModels(db: Db, extraColumns: string, copiedColumns: string, uniq
   const children = childTablesOfModels(db);
   // AUTOINCREMENT's high-water mark. DROP TABLE takes the sqlite_sequence row
   // with it, and copying rows back only pushes the counter to the highest id
-  // PRESENT — so a table whose top rows were deleted (catalog sync prunes
+  // PRESENT - so a table whose top rows were deleted (catalog sync prunes
   // models routinely) would start handing out ids it has already used. Stale
   // fallback_config / profile_models rows pointing at a deleted model would
   // then silently adopt an unrelated new one.
@@ -125,7 +125,7 @@ export function up(db: Db): void {
   );
 
   // Backfill: a custom row's scope is the base_url of the key it is bound to.
-  // Rows whose key is gone (or that predate per-endpoint binding) keep '' —
+  // Rows whose key is gone (or that predate per-endpoint binding) keep '' -
   // exactly the identity they have today, so nothing about them changes.
   const bound = db.prepare(`
     SELECT m.id AS id, k.base_url AS base_url
@@ -155,7 +155,7 @@ export function down(db: Db): void {
   if (collisions.length > 0) {
     const sample = collisions.slice(0, 3).map(c => `${c.platform}/${c.model_id} (${c.n})`).join(', ');
     throw new Error(
-      `Cannot revert per-endpoint model identity: ${collisions.length} model id(s) exist on more than one endpoint — ${sample}. ` +
+      `Cannot revert per-endpoint model identity: ${collisions.length} model id(s) exist on more than one endpoint - ${sample}. ` +
       'Delete the duplicate rows (or the extra endpoint) first.',
     );
   }

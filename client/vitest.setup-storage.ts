@@ -41,12 +41,12 @@ function nativeStorageAvailable(name: 'localStorage' | 'sessionStorage'): boolea
   try {
     return typeof window[name] !== 'undefined' && window[name] !== null
   } catch {
-    // jsdom throws SecurityError on opaque origins — treat as missing.
+    // jsdom throws SecurityError on opaque origins - treat as missing.
     return false
   }
 }
 
-// Plain node-environment files have no window at all — nothing to patch there.
+// Plain node-environment files have no window at all - nothing to patch there.
 if (typeof window !== 'undefined') {
   for (const name of ['localStorage', 'sessionStorage'] as const) {
     if (!nativeStorageAvailable(name)) {

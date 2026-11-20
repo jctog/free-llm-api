@@ -2,8 +2,8 @@
 //
 // The desktop shell signs the dashboard in as a hidden machine account whose
 // password is random and never shown (desktop/src/server-host.ts). If that
-// session is ever rejected — expired after a month of uptime, cleared by a
-// 401 — the gate must ask the shell for a fresh one, never show a login form
+// session is ever rejected - expired after a month of uptime, cleared by a
+// 401 - the gate must ask the shell for a fresh one, never show a login form
 // nobody can fill in. This mounts the real AuthGate against a stubbed
 // /api/auth/status and checks exactly that.
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'

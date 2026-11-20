@@ -130,13 +130,13 @@ afterEach(() => {
 // time, on any surface. Two flavors of "off" are covered here because they leak
 // differently: catalog-off (models.enabled = 0) and auto-routing-off
 // (fallback_config / profile_models .enabled = 0). Explicitly NAMING a model
-// that is only auto-routing-off still works — that is the documented contract
-// (see routing-semantics.test.ts) — but nothing may pick it implicitly.
+// that is only auto-routing-off still works - that is the documented contract
+// (see routing-semantics.test.ts) - but nothing may pick it implicitly.
 describe('disabled models are never routed (#634)', () => {
   describe('sticky sessions', () => {
     // The sticky map holds a db id for 30 minutes, so it outlives a disable.
     // routeRequest treats an off-chain preferred id as an explicit pin and
-    // injects it ahead of the chain — which resurrected the disabled model.
+    // injects it ahead of the chain - which resurrected the disabled model.
     it.each([
       ['catalog', { enabled: false }],
       ['chain', { fallbackEnabled: false }],

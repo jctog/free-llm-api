@@ -1,35 +1,35 @@
 **English** · [简体中文](../../zh-cn/architecture/CHANGELOG.md)
 
-# Architecture Domain — Changelog
+# Architecture Domain - Changelog
 
 Doc revision history for `docs/architecture/`, seeded from commits touching architecture-relevant code.
 
 ## 2026-09-02
 
-- **docs(architecture): cross-ref Idempotency-Key replay in degraded-mode doc** — `04-degraded-mode-and-failover.md:10` now maps the pre-routing idempotency lookup (`server/src/services/idempotency.ts`, `proxy.ts:1793-1838`) and post-success persist (`proxy.ts:2640-2656`) to the fallback loop, notes `X-Routed-Via: idempotency` zero-cost replay, `stream:true` + `finish_reason:length` exclusion, in-flight NOT deduplicated (`95bc46f`), `IDEMPOTENCY_TTL_MS` 24 h lazy sweep, and that `409` + replay bypass `isDegraded()` / retry budget / hedging. Client contract lives in `docs/en/api/02-idempotency.md` (`36b877d`).
+- **docs(architecture): cross-ref Idempotency-Key replay in degraded-mode doc** - `04-degraded-mode-and-failover.md:10` now maps the pre-routing idempotency lookup (`server/src/services/idempotency.ts`, `proxy.ts:1793-1838`) and post-success persist (`proxy.ts:2640-2656`) to the fallback loop, notes `X-Routed-Via: idempotency` zero-cost replay, `stream:true` + `finish_reason:length` exclusion, in-flight NOT deduplicated (`95bc46f`), `IDEMPOTENCY_TTL_MS` 24 h lazy sweep, and that `409` + replay bypass `isDegraded()` / retry budget / hedging. Client contract lives in `docs/en/api/02-idempotency.md` (`36b877d`).
 
 ## 2026-08-25
 
-- **docs(architecture): deduplicate `architecture.md` vs `architecture/OVERVIEW.md` intros, clarify `docs/README.md` vs `docs/OVERVIEW.md`** — root `architecture.md` is now the high-level index (what the system is, two-paragraph summary, request-flow diagram, limitations and ToS) with a `See [OVERVIEW.md](OVERVIEW.md) for deep-dives` bridge and no duplicated provider/routing summaries (removed the deep-dive reference table and the Routing/Operational detail sections — those live in `01`/`02` deep-dives); `architecture/OVERVIEW.md` is now the domain scope (Scope + File Index + How deep-dives fit, high-level index cross-link); `docs/README.md` clarified as the user entry point (getting started) vs `docs/OVERVIEW.md` as the domain index (full file map) and verified no dangling `api.md`/`clients.md`/`compression.md` links (`rg "api\.md|clients\.md|compression\.md" docs --glob '!CHANGELOG.md'` — only numbered `01-*.md` hits remain).
-- **docs(observability): dedupe 06-observability.md against logs/01-server-logs-viewer.md** — the operator-facing log viewer, polling API, env vars, and client implementation now live solely in the logs domain; the observability deep-dive keeps the internals (ingest path, structured provider logs, boot preload, schema) and cross-links both ways. Added the desktop `freeapi.log` file-logger note (90aaa5b).
+- **docs(architecture): deduplicate `architecture.md` vs `architecture/OVERVIEW.md` intros, clarify `docs/README.md` vs `docs/OVERVIEW.md`** - root `architecture.md` is now the high-level index (what the system is, two-paragraph summary, request-flow diagram, limitations and ToS) with a `See [OVERVIEW.md](OVERVIEW.md) for deep-dives` bridge and no duplicated provider/routing summaries (removed the deep-dive reference table and the Routing/Operational detail sections - those live in `01`/`02` deep-dives); `architecture/OVERVIEW.md` is now the domain scope (Scope + File Index + How deep-dives fit, high-level index cross-link); `docs/README.md` clarified as the user entry point (getting started) vs `docs/OVERVIEW.md` as the domain index (full file map) and verified no dangling `api.md`/`clients.md`/`compression.md` links (`rg "api\.md|clients\.md|compression\.md" docs --glob '!CHANGELOG.md'` - only numbered `01-*.md` hits remain).
+- **docs(observability): dedupe 06-observability.md against logs/01-server-logs-viewer.md** - the operator-facing log viewer, polling API, env vars, and client implementation now live solely in the logs domain; the observability deep-dive keeps the internals (ingest path, structured provider logs, boot preload, schema) and cross-links both ways. Added the desktop `freeapi.log` file-logger note (90aaa5b).
 
-## 2026-08-23 — Routing, Quota & Chain Overhaul
+## 2026-08-23 - Routing, Quota & Chain Overhaul
 
 - **547692a** feat(router): make the headroom guardrail thresholds tunable (#989)
-  - `GET/PUT /api/settings/headroom` exposes `rampStart` and `floor` — operators can tune without a code change
+  - `GET/PUT /api/settings/headroom` exposes `rampStart` and `floor` - operators can tune without a code change
   - Thresholds read once per chain (not per model) to avoid uncached `getSetting` per model per request
   - `HEADROOM_RAMP_START` / `HEADROOM_FLOOR` in `scoring.ts`, persisted as `routing_headroom_ramp_start` / `routing_headroom_floor`
   - Out-of-range / non-finite input falls back to defaults rather than silently clamping
 
 - **45a05c7** feat(router): demote models burning through rpd/tpd windows (#1001)
-  - `rateWindowHeadroomFactor(usedFraction, opts)` — same tunable ramp driven by live rpm/rpd/tpm/tpd utilization instead of monthly tokens
+  - `rateWindowHeadroomFactor(usedFraction, opts)` - same tunable ramp driven by live rpm/rpd/tpm/tpd utilization instead of monthly tokens
   - `modelWindowUsedFraction()` in `ratelimit.ts`: one grouped scan of `rate_limit_usage` + one `api_keys` read, memoised for 5s (`WINDOW_USAGE_TTL_MS`)
-  - Router takes `Math.min(monthlyHeadroom, windowHeadroom)` — the worse of the two, never their product
+  - Router takes `Math.min(monthlyHeadroom, windowHeadroom)` - the worse of the two, never their product
   - Chosen key = eligible key with the MOST headroom (the one the router would pick next)
 
 - **c4c0221** feat(router): add a least-remaining key selection strategy (#930)
   - New `key_selection_strategy` setting (`auto` / `least-remaining`), independent of the routing strategy
-  - `orderKeysByRemainingQuota()` re-sorts by observed remaining quota — roomiest key first
+  - `orderKeysByRemainingQuota()` re-sorts by observed remaining quota - roomiest key first
   - Skips account-scoped pools (`<platform>::account`) where every key reports the same number
   - Reads quota headroom through cached `getKeyQuotaHeadroom()`; unobserved keys get neutral 0.5
 
@@ -40,7 +40,7 @@ Doc revision history for `docs/architecture/`, seeded from commits touching arch
   - Dashboard labels adjusted weights from the `adjusted` flag
 
 - **e852ff1** fix(fallback): make a fallback chain mean itself, empty or not (#1023)
-  - A profile is now authoritative whenever one is active — empty chain reads as "catalog, nothing turned on yet"
+  - A profile is now authoritative whenever one is active - empty chain reads as "catalog, nothing turned on yet"
   - Saving upserts into the chain; routing follows the same rule (empty active chain routes nothing)
   - Playground offers every custom chain as its `auto:<name>` id
 
@@ -59,14 +59,14 @@ Doc revision history for `docs/architecture/`, seeded from commits touching arch
   - Backups service, routes, migration, collapsed Backups section under Keys
   - Auth tables excluded; restore checks schema + encryption key fingerprint, runs in one transaction with pre-restore snapshot
 
-## 2026-08-23 — Domain Expansion
+## 2026-08-23 - Domain Expansion
 
 - **Commit (this PR)**: `docs(architecture): expand into deep-dive domain`
   - Created `docs/architecture/` domain folder with 6 deep-dive docs + `OVERVIEW.md` + `CHANGELOG.md`
   - Root `docs/architecture.md` retained as high-level index, updated with cross-refs
   - `docs/OVERVIEW.md` index updated with architecture/ domain row
 
-## 2026-06-xx — Observability & Logging
+## 2026-06-xx - Observability & Logging
 
 - **74df985** Server log viewer in the dashboard, under an Analytics nav menu (#993)
   - Added `server-logs.ts`: two-tier store (ring buffer + persisted warn/error)
@@ -75,7 +75,7 @@ Doc revision history for `docs/architecture/`, seeded from commits touching arch
   - Added request analytics (`requests`, `request_attempts` tables) + aggregates view
   - Added attempt tracing via AsyncLocalStorage for `X-Fallback-Detail` header
 
-## 2026-06-xx — Routing & Scoring Fixes
+## 2026-06-xx - Routing & Scoring Fixes
 
 - **f08e17c** fix(router): context-window safety margin against chars/4 under-counting (#956)
   - Routing token estimate now caps reserved OUTPUT at 2000 tokens (was full max_tokens)
@@ -91,7 +91,7 @@ Doc revision history for `docs/architecture/`, seeded from commits touching arch
 - **1fea8d5** fix(fallback): reset model-failure windows between tests and thread an injectable now (#856)
   - Testability improvements for model failure benching
 
-## 2026-05-xx — Degraded Mode & Failover v2
+## 2026-05-xx - Degraded Mode & Failover v2
 
 - **f412e97** feat(server): degraded-mode state machine (#904) (#906)
   - New `degradation.ts`: healthy-provider ratio tracker with hysteresis
@@ -114,7 +114,7 @@ Doc revision history for `docs/architecture/`, seeded from commits touching arch
   - Detects bare classification words from relay models (OpenCode Zen)
   - Treats as empty completion → fail over with `skipBench: true` when `finish_reason=length`
 
-## 2026-04-xx — Routing Enhancements
+## 2026-04-xx - Routing Enhancements
 
 - **c3f538e** feat(routing): per-model weight overrides via MODEL_ROUTING_OVERRIDES (#747)
   - `MODEL_ROUTING_OVERRIDES='{"model-id": {"weight": 0.5}}'` scales final effective score
@@ -136,9 +136,9 @@ Doc revision history for `docs/architecture/`, seeded from commits touching arch
 - **8ad9010** Fix routing chain semantics
   - Dense ranking + penalty fixes for priority strategy
 
-## 2026-03-xx — Quota & Cooldown Engine
+## 2026-03-xx - Quota & Cooldown Engine
 
-- **076fa69** feat: Premium live catalog — signed sync, license keys, self-serve billing
+- **076fa69** feat: Premium live catalog - signed sync, license keys, self-serve billing
   - Live catalog tier (2-3 day refresh) for premium licenses
   - Monthly snapshot tier (30-day trail) for free installs
   - Ed25519 signed catalogs, pinned public key, boot re-apply from cache
@@ -164,7 +164,7 @@ Doc revision history for `docs/architecture/`, seeded from commits touching arch
 - **12166bd** feat(router): skip models whose tpm_limit can't fit the request
   - Pre-check TPM against estimated tokens
 
-- **438eaa2** feat(proxy): agent turn integrity — stream validation, tool-dialect rescue, sticky-session fixes (#231 audit)
+- **438eaa2** feat(proxy): agent turn integrity - stream validation, tool-dialect rescue, sticky-session fixes (#231 audit)
   - Stream validation: headers held until first payload
   - Tool dialect rescue: inline tool calls → structured tool_calls
   - Sticky sessions: 30min TTL keyed by first user message hash
@@ -179,7 +179,7 @@ Doc revision history for `docs/architecture/`, seeded from commits touching arch
   - Retry time budget (45s default)
   - Rich exhaustion bodies with attempt trail
 
-## 2026-02-xx — Catalog & Provider Quota
+## 2026-02-xx - Catalog & Provider Quota
 
 - **2410f87** feat(catalog-sync): re-apply the cached catalog on every boot
   - Solves drift: migrations re-assert baseline, boot sync 304s, cached doc re-applied
@@ -192,7 +192,7 @@ Doc revision history for `docs/architecture/`, seeded from commits touching arch
   - Pooled monthly budget: `monthly_token_budget × usableKeyCount`
   - Per-key scoring for key selection within model
 
-## 2026-01-xx — Early Architecture
+## 2026-01-xx - Early Architecture
 
 - **413b5e4** feat(router): analytics-driven bandit routing with weighted axes
   - Thompson sampling bandit with reliability/speed/intelligence axes
@@ -223,7 +223,7 @@ Doc revision history for `docs/architecture/`, seeded from commits touching arch
 - **9b97219** feat(router): exhaust all keys before falling back + tests (#42)
   - Round-robin all keys for a model before next model
 
-## 2025 — Foundation
+## 2025 - Foundation
 
 - **04e1503** Initial release of FreeLLMAPI
   - Basic router, rate limiting, provider adapters, SQLite storage

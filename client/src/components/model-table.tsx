@@ -41,7 +41,7 @@ export function AxisBar({ value, color }: { value: number | undefined; color: st
 
 // The honest replacement for prior-valued bars (#580): a measured axis value
 // only exists once a provider has served requests. Before that the bandit uses
-// exploration priors (0.5 reliability / 0.6 speed) — rendering those as bars
+// exploration priors (0.5 reliability / 0.6 speed) - rendering those as bars
 // reads as a real, suspiciously identical measurement, so unmeasured providers
 // get this explicit placeholder instead.
 export function AxisNoData() {
@@ -97,7 +97,7 @@ export function AxisRangeBar({ values, color }: { values: (number | undefined)[]
   )
 }
 
-// The shared table header for the unified model/provider table — used by the
+// The shared table header for the unified model/provider table - used by the
 // Models page and the per-model detail page so their columns line up.
 export function ModelTableHead() {
   const { t } = useI18n()
@@ -170,7 +170,7 @@ export function RowContent({
   draggable: boolean
   dragHandle?: ReactNode
   onToggle: (modelDbId: number, enabled: boolean) => void
-  // Overrides the provider label — the model page passes an endpoint-qualified
+  // Overrides the provider label - the model page passes an endpoint-qualified
   // one when two custom endpoints serve this same model id (#651).
   providerName?: string
   // Hover text for that label, supplied ONLY when the caller actually had to
@@ -232,7 +232,7 @@ export function RowContent({
 
               The catalog figure is PER KEY. The router credits it once per key
               it can rotate through, so an operator with three keys really does
-              have three times the budget — and reading the bare catalog string
+              have three times the budget - and reading the bare catalog string
               back made it look like adding keys changed nothing (#688). The
               multiplier is written as "× N" rather than a sentence so it needs
               no translation, and the catalog's own wording ("~10-20M") is kept
@@ -244,7 +244,7 @@ export function RowContent({
               : null,
             row.rpmLimit ? t('models.rpmLimit', { count: row.rpmLimit }) : null,
             row.rpdLimit ? t('models.rpdLimit', { count: row.rpdLimit }) : null,
-          ].filter(Boolean).join(' · ') || cleanQuotaLabel(row.monthlyTokenBudget) || '—'}
+          ].filter(Boolean).join(' · ') || cleanQuotaLabel(row.monthlyTokenBudget) || '-'}
         </div>
       </td>
       {/* Reliability/speed are measured axes: with zero recorded requests the
@@ -255,7 +255,7 @@ export function RowContent({
       <td className="py-2 pr-3 align-middle">{row.totalRequests === 0 ? <AxisNoData /> : <AxisBar value={row.speed} color="#3b82f6" />}</td>
       <td className="py-2 pr-3 align-middle"><AxisBar value={row.intelligence} color="#a855f7" /></td>
       <td className="py-2 pr-3 align-middle font-mono text-[11px] text-muted-foreground tabular-nums">
-        {guard < 0.999 ? `×${guard.toFixed(2)}` : '—'}
+        {guard < 0.999 ? `×${guard.toFixed(2)}` : '-'}
       </td>
       <td className="py-2 pr-3 align-middle text-right font-mono text-xs font-medium tabular-nums">
         {row.score !== undefined ? row.score.toFixed(3) : '–'}
@@ -439,7 +439,7 @@ export function GroupHeaderCells({ group, rank, dragHandle, editableRank, onMove
       <td className="py-2 pr-3 align-middle">{measured.length === 0 ? <AxisNoData /> : <AxisRangeBar values={measured.map(m => m.reliability)} color="#22c55e" />}</td>
       <td className="py-2 pr-3 align-middle">{measured.length === 0 ? <AxisNoData /> : <AxisRangeBar values={measured.map(m => m.speed)} color="#3b82f6" />}</td>
       <td className="py-2 pr-3 align-middle"><AxisRangeBar values={group.members.map(m => m.intelligence)} color="#a855f7" /></td>
-      <td className="py-2 pr-3 align-middle font-mono text-[11px] text-muted-foreground tabular-nums">{guard < 0.999 ? `×${guard.toFixed(2)}` : '—'}</td>
+      <td className="py-2 pr-3 align-middle font-mono text-[11px] text-muted-foreground tabular-nums">{guard < 0.999 ? `×${guard.toFixed(2)}` : '-'}</td>
       <td className="py-2 pr-3 align-middle text-right font-mono text-xs font-medium tabular-nums">
         {solo ? (
           best.score !== undefined ? best.score.toFixed(3) : '–'
@@ -471,7 +471,7 @@ export function SortableGroupRow({ group, rank, editableRank, onMoveRank, onTogg
   const { t } = useI18n()
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: `grp:${group.key}` })
   const anyEnabled = group.members.some(m => m.enabled)
-  // A fully exhausted group grays out (#1015) — but an all-members-disabled
+  // A fully exhausted group grays out (#1015) - but an all-members-disabled
   // row keeps its stronger dim, so the two states never fight over opacity.
   const depleted = anyEnabled && rateUsage !== undefined && isGroupDepleted(group.members, rateUsage)
   const navigate = useNavigate()

@@ -1,7 +1,7 @@
 // Migration: keep user-deleted custom models deleted across the scheduled sync
 // Created: 2026-08-19
 //
-// DOWN: reversible — the added table is dropped, which simply means deleted
+// DOWN: reversible - the added table is dropped, which simply means deleted
 // custom models can be re-added by the next sync pass again (#926).
 
 import type { Db } from '../types.js';

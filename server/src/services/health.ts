@@ -25,7 +25,7 @@ const DEFAULT_MIN_SPACING_MS = 1000;
  *  nextHealthCheckDelayMs), tunable via HEALTH_CHECK_INTERVAL_MS (#1593):
  *  fleets on providers that dislike frequent key checks
  *  want a slower pass; a fresh install being shaken out wants a faster one.
- *  Read once at module load — the scheduler re-arms from the same constant. */
+ *  Read once at module load - the scheduler re-arms from the same constant. */
 function getCheckIntervalMs(): number {
   const n = positiveIntEnv(process.env.HEALTH_CHECK_INTERVAL_MS, DEFAULT_CHECK_INTERVAL_MS);
   return n < MIN_CHECK_INTERVAL_MS ? DEFAULT_CHECK_INTERVAL_MS : n;
@@ -37,7 +37,7 @@ const CHECK_INTERVAL_MS = getCheckIntervalMs();
 export const HEALTH_CHECK_INTERVAL_MS = CHECK_INTERVAL_MS;
 
 // Jitter applied to every scheduled interval, ±20% (4–6 minutes). Two gateways
-// started by the same deploy — or one gateway restarted on a cron — otherwise
+// started by the same deploy - or one gateway restarted on a cron - otherwise
 // probe the same provider on the same phase forever; a per-run offset breaks
 // that lock-step and keeps the average cadence at 5 minutes.
 const CHECK_INTERVAL_JITTER = 0.2;
@@ -87,11 +87,11 @@ const failureCount = new Map<number, number>();
 // #1510: consecutive transport errors per key. A key whose provider has been
 // unreachable (DNS, connection refused, TCP timeout) for this many probes in a
 // row is parked at status='error'. Unlike 'invalid' this is NOT an auto-disable:
-// 'error' keys are re-probed on every pass (never recency-skipped — see the
+// 'error' keys are re-probed on every pass (never recency-skipped - see the
 // checkAllKeys due filter) and any live request that serves restores them
 // (markKeyHealthyFromRequest), so a provider outage that heals needs no
 // operator action. At the 5-minute cadence the threshold is ~30 minutes of
-// total unreachability — far past any single blip, and the point where a key
+// total unreachability - far past any single blip, and the point where a key
 // still marked 'healthy' is provably worse than no key: the router keeps
 // handing it traffic, every attempt dies, and failover costs the request its
 // latency budget (#1510 measured 264 failures vs 8 successes in a day on a
@@ -117,7 +117,7 @@ export function clearTransportFailureState(): void {
   transportFailures.clear();
 }
 
-/** Increment and apply the park rule. A 429 never reaches here — the caller
+/** Increment and apply the park rule. A 429 never reaches here - the caller
  *  treats it as proof the provider is reachable. Returns true when this call
  *  parked the key (status written to 'error'). */
 function recordTransportFailure(keyId: number, platform: string | undefined): boolean {
@@ -128,7 +128,7 @@ function recordTransportFailure(keyId: number, platform: string | undefined): bo
   if (count < parkAfter) return false;
 
   // Park: 'error' is out of rotation (the router only routes healthy/unknown)
-  // but stays eligible for re-probing and self-heals. Never touch 'invalid' —
+  // but stays eligible for re-probing and self-heals. Never touch 'invalid' -
   // a confirmed-bad credential verdict outranks network evidence in both
   // directions, and only a successful validateKey clears it.
   const db = getDb();
@@ -148,8 +148,8 @@ function recordTransportFailure(keyId: number, platform: string | undefined): bo
 // A key whose last validation was rate-limited (429) is skipped by the
 // scheduled pass until the skip window passes: re-asking a provider that just
 // told us to slow down is how validation traffic becomes a ban. LLMTR's
-// validator is a POST to /chat/completions with a nonexistent model —
-// shaped exactly like the bot traffic their abuse system hunts — so an
+// validator is a POST to /chat/completions with a nonexistent model -
+// shaped exactly like the bot traffic their abuse system hunts - so an
 // unpaced re-ask every 5 minutes per key kept accounts flagged (#1369).
 // Forced passes (dashboard check-all, wake re-probe) still probe: explicit
 // operator intent wins over pacing. A later successful validation clears the
@@ -183,7 +183,7 @@ function recordInvalidFailure(keyId: number, platform?: string): void {
     getDb().prepare('UPDATE api_keys SET enabled = 0 WHERE id = ?').run(keyId);
     // providerLog, not console.log: losing a key is the event an operator is
     // most likely to be looking for after the fact, so it goes to the dashboard
-    // log viewer (where warn/error survive a restart) as well as to stdout —
+    // log viewer (where warn/error survive a restart) as well as to stdout -
     // which providerLog still writes, so nothing here is only visible behind a
     // login. Raised to warn for the same reason.
     providerLog(
@@ -248,7 +248,7 @@ export function supportsQuotaPolling(provider: BaseProvider): boolean {
   return provider.hasQuotaProbe;
 }
 
-/** Throttled, self-contained quota poll for one key — the entry point other
+/** Throttled, self-contained quota poll for one key - the entry point other
  *  services (or a future scheduler) can use without duplicating the gate. */
 export async function maybePollKeyQuota(keyId: number): Promise<boolean> {
   try {
@@ -316,7 +316,7 @@ export async function checkKeyHealth(keyId: number): Promise<KeyStatus> {
 
     if (isValid) {
       failureCount.delete(keyId);
-      // #1510: the provider answered — whatever unreachable streak this key had
+      // #1510: the provider answered - whatever unreachable streak this key had
       // is over, so the transport counter starts from zero again.
       transportFailures.delete(keyId);
       // The provider answered again: whatever rate-limit told us to back off
@@ -327,7 +327,7 @@ export async function checkKeyHealth(keyId: number): Promise<KeyStatus> {
       // trigger is a no-op for every other platform, and throttled.
       triggerBuiltinModelDiscovery(db, row.platform, 'healthy');
       // #1403: piggyback provider-reported quota polling on the healthy
-      // verdict — but only for providers with a quota endpoint, and at most
+      // verdict - but only for providers with a quota endpoint, and at most
       // once per QUOTA_POLL_INTERVAL_MS per key. Fire-and-forget, silent.
       if (supportsQuotaPolling(provider) && quotaPollDue(keyId)) {
         void pollKeyQuota(keyId, row, provider).catch(() => {});
@@ -343,8 +343,8 @@ export async function checkKeyHealth(keyId: number): Promise<KeyStatus> {
 
     return status;
   } catch (err: any) {
-    // Transport errors (DNS/timeout/TLS) — provider unreachable, not necessarily
-    // a bad key. Mark status='error' but do NOT increment failure counter — auto-
+    // Transport errors (DNS/timeout/TLS) - provider unreachable, not necessarily
+    // a bad key. Mark status='error' but do NOT increment failure counter - auto-
     // disable is reserved for confirmed 401/403 (returned by validateKey as false).
     // Include platform + base_url so a flapping CloudFront edge or DNS failure is
     // attributable to the responsible provider in one log read. The leading
@@ -358,11 +358,11 @@ export async function checkKeyHealth(keyId: number): Promise<KeyStatus> {
     const lastError = sanitizeProviderErrorMessage(err?.message ?? err);
     console.error(
       `[Health] Key ${keyId} (${row.platform}, base=${row.base_url ?? 'default'}) ` +
-      `transport error: ${lastError} — status preserved as '${row.status}'`,
+      `transport error: ${lastError} - status preserved as '${row.status}'`,
     );
     // Do NOT write status='error' on the first transport failure. selectKeyForModel
     // only considers keys with status IN ('healthy','unknown'), so demoting here
-    // silently removes the key's capacity for up to a full check interval — and a
+    // silently removes the key's capacity for up to a full check interval - and a
     // transport error is evidence about the network, not about the key. One flaky
     // DNS lookup, a laptop suspended for thirty seconds, or a provider edge outage
     // would take every key on that provider out of rotation at once. Record the
@@ -372,7 +372,7 @@ export async function checkKeyHealth(keyId: number): Promise<KeyStatus> {
     //
     // #1510 adds the accumulation this path was missing (opt-in via
     // HEALTH_TRANSPORT_PARK_AFTER): a key that has been unreachable that many
-    // probes in a row is parked at 'error' — still re-probed every pass, self-healing on the first answer
+    // probes in a row is parked at 'error' - still re-probed every pass, self-healing on the first answer
     // or served request, but no longer first-class routing capacity. A 429 is
     // proof the provider is reachable, so it counts as a break in the streak,
     // not an increment.
@@ -388,7 +388,7 @@ export async function checkKeyHealth(keyId: number): Promise<KeyStatus> {
 // ── Cooldown-probe validation (side-effect-free) ─────────────────────────────
 // The cooldown-probe recovery job (services/cooldown-probe.ts) needs the same
 // cheap validateKey call checkKeyHealth makes, WITHOUT any of its bookkeeping:
-// no status writes, no last_checked_at, and above all no failureCount — probes
+// no status writes, no last_checked_at, and above all no failureCount - probes
 // run far more often than the 5-minute health pass, so letting them feed the
 // consecutive-failure counter would auto-disable a genuinely-bad key in a
 // fraction of the "3 consecutive checks" the threshold promises. A probe is a
@@ -424,7 +424,7 @@ export async function probeKeyValidity(keyId: number): Promise<KeyProbeOutcome> 
     return isValid ? 'valid' : 'invalid';
   } catch {
     // Transport error (DNS/timeout/TLS): inconclusive, same as checkKeyHealth's
-    // reasoning — evidence about the network, not the key.
+    // reasoning - evidence about the network, not the key.
     return 'error';
   }
 }
@@ -458,7 +458,7 @@ export function clearLastHealthyStampState(): void {
 export function markKeyHealthyFromRequest(keyId: number): void {
   try {
     // #1493: a served request is the strongest "this key works" evidence there
-    // is — stamp last_healthy_at regardless of current status. This is the only
+    // is - stamp last_healthy_at regardless of current status. This is the only
     // success signal for providers with supportsKeyValidation === false (#1459),
     // which never get a probe. Throttled in memory, not per request.
     const now = Date.now();
@@ -473,7 +473,7 @@ export function markKeyHealthyFromRequest(keyId: number): void {
       .prepare("UPDATE api_keys SET status = 'healthy', last_health_error = NULL WHERE id = ? AND status IN ('error', 'unknown')")
       .run(keyId);
     failureCount.delete(keyId);
-    // #1510: a served request is the strongest reachability evidence there is —
+    // #1510: a served request is the strongest reachability evidence there is -
     // it also ends any transport-error streak, parked or not.
     transportFailures.delete(keyId);
   } catch {
@@ -482,7 +482,7 @@ export function markKeyHealthyFromRequest(keyId: number): void {
 }
 
 // Overlap guard: the scheduled 5-minute pass and wake-recovery re-probes can
-// coincide (or SIGCONT spam can queue several) — concurrent full passes
+// coincide (or SIGCONT spam can queue several) - concurrent full passes
 // multiply provider validate traffic and let two passes each increment the
 // same genuinely-bad key's failureCount, reaching the auto-disable threshold
 // in fewer wall-clock checks than "3 consecutive checks" intends. A second
@@ -555,7 +555,7 @@ export function interleaveByProvider<T>(rows: T[], bucketOf: (row: T) => string)
 const realSleep = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
 
 export function checkAllKeys(opts: HealthPassOptions = {}): Promise<HealthPassResult> {
-  // A caller that arrives mid-pass joins it (including a forced one — the
+  // A caller that arrives mid-pass joins it (including a forced one - the
   // in-flight pass is already probing, and stacking a second set of validates
   // on the same providers is the exact behaviour this guard exists to prevent).
   if (checkAllInFlight) return checkAllInFlight;
@@ -598,7 +598,7 @@ async function runHealthPass(opts: HealthPassOptions): Promise<HealthPassResult>
     }
     if (opts.force) return true;
     // A key the provider just rate-limited stays out until the skip window
-    // passes — even one parked at 'error'. A 429 is fresher, more specific
+    // passes - even one parked at 'error'. A 429 is fresher, more specific
     // evidence than the eagerness to re-ask an errored key (#1369).
     const limitedAt = validationRateLimitedAt.get(row.id);
     if (limitedAt !== undefined && now() - limitedAt < skipMs) {
@@ -607,7 +607,7 @@ async function runHealthPass(opts: HealthPassOptions): Promise<HealthPassResult>
     }
     // A key parked at 'error' is out of rotation until a probe says otherwise
     // (the router writes that status, and last_checked_at with it), so it is
-    // never skipped — it is the one key whose verdict is worth re-asking for.
+    // never skipped - it is the one key whose verdict is worth re-asking for.
     if (row.status === 'error') return true;
     if (row.age_ms !== null && row.age_ms < RECENT_CHECK_SKIP_MS) {
       skippedKeyIds.push(row.id);
@@ -634,7 +634,7 @@ async function runHealthPass(opts: HealthPassOptions): Promise<HealthPassResult>
   console.log(
     `[Health] Checking ${queue.length} keys` +
     (skippedKeyIds.length > 0 ? ` (${skippedKeyIds.length} checked recently, skipped)` : '') +
-    (spacingMs > 0 ? ` — ${spacingMs}ms between probes of the same provider` : '') + '...',
+    (spacingMs > 0 ? ` - ${spacingMs}ms between probes of the same provider` : '') + '...',
   );
 
   // Bounded worker pool rather than a sequential await. validateKey allows up

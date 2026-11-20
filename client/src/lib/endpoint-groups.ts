@@ -12,7 +12,7 @@ export function existingGroupLabels(keys: ApiKey[]): string[] {
 }
 
 /**
- * The typable handle a group answers to after `#` in a model id (#1176) —
+ * The typable handle a group answers to after `#` in a model id (#1176) -
  * mirrors the server's endpointHandle slug, so `My Relays` is `my-relays`.
  */
 export function groupHandle(label: string): string {

@@ -35,8 +35,8 @@ export abstract class SearchOnlyProvider extends BaseProvider {
    *  Inconclusive cases **throw**, matching #1298's contract and every other
    *  provider (pollinations, kenari, llmtr, google): the health service only
    *  treats a thrown validation as `error`; a returned `{valid:false}` is
-   *  recorded as `invalid` and — because disabled keys are skipped by later
-   *  passes — permanently benches a working key. A 10 s timeout on a search
+   *  recorded as `invalid` and - because disabled keys are skipped by later
+   *  passes - permanently benches a working key. A 10 s timeout on a search
    *  call is evidence about the network, not about the key (#1717). */
   protected async probe(url: string, init: RequestInit): Promise<KeyValidationResult> {
     let res: Response;

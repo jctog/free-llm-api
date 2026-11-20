@@ -8,7 +8,7 @@ import { mintDashboardToken, isGatedApiPath } from '../helpers/auth.js';
 // End-to-end cover for a user-registered speech-to-text endpoint: POST
 // /api/media/custom writes the media_models row AND the api_keys row that
 // carries its base_url, and /v1/audio/transcriptions must then actually reach
-// that endpoint. Registration alone is not enough — the STT candidate has to
+// that endpoint. Registration alone is not enough - the STT candidate has to
 // carry its key_id (getProviderCredential refuses to guess a key for platform
 // 'custom') and the service needs a 'custom' adapter.
 
@@ -131,7 +131,7 @@ describe('custom speech-to-text endpoint, end to end', () => {
     expect(url).toBe(`${BASE_URL}/audio/transcriptions`);
     const headers = init.headers as Record<string, string>;
     expect(headers.Authorization).toBe('Bearer stt-secret-key');
-    // Content-Type must NOT be set by hand — FormData supplies the boundary.
+    // Content-Type must NOT be set by hand - FormData supplies the boundary.
     expect(headers['Content-Type']).toBeUndefined();
 
     const form = init.body as FormData;

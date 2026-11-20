@@ -50,7 +50,7 @@ export function transcriptionOptions(models: readonly TranscriptionModelRow[], a
 }
 
 /** The `model` the mic sends: the saved choice while it is still usable,
- *  otherwise Auto — a model that lost its key must not make dictation fail. */
+ *  otherwise Auto - a model that lost its key must not make dictation fail. */
 export function resolveDictationModel(choice: string | null | undefined, models: readonly TranscriptionModelRow[]): string {
   if (!choice || choice === DICTATION_AUTO) return DICTATION_AUTO
   return availableTranscriptionModels(models).some(m => m.modelId === choice) ? choice : DICTATION_AUTO

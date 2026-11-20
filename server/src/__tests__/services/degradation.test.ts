@@ -99,7 +99,7 @@ describe('degraded-mode state machine', () => {
     seedKey('cloudflare', { status: 'healthy' });
     seedKey('mistral', { status: 'error' });
     seedKey('openai', { status: 'error' });
-    // 2/4 = 50% — exactly at the default threshold → not below.
+    // 2/4 = 50% - exactly at the default threshold → not below.
     const s = updateDegradationState(0);
     expect(s.state).toBe('normal');
   });
@@ -140,7 +140,7 @@ describe('degraded-mode state machine', () => {
     getDb().prepare("UPDATE api_keys SET status = 'healthy' WHERE platform = 'cloudflare'").run();
     updateDegradationState(60_001); // recovered pass starts streak
     getDb().prepare("UPDATE api_keys SET status = 'error' WHERE platform = 'cloudflare'").run();
-    updateDegradationState(60_002); // down again — streak reset
+    updateDegradationState(60_002); // down again - streak reset
     getDb().prepare("UPDATE api_keys SET status = 'healthy' WHERE platform IN ('cloudflare', 'mistral', 'openai')").run();
     const afterLongRecovery = updateDegradationState(60_002 + 120_000);
     expect(afterLongRecovery.state).toBe('degraded'); // exit streak restarted at 60_002

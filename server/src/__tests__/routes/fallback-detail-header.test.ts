@@ -34,7 +34,7 @@ const {
 } = await import('../../lib/fallback-loop.js');
 const { newRequestTrace, runWithRequestTrace } = await import('../../lib/attempt-trace.js');
 
-/** Remove the row entirely, so the env-var fallback is actually reachable —
+/** Remove the row entirely, so the env-var fallback is actually reachable -
  *  storing '0' is a decision, not an absence. */
 function clearDetailSetting(): void {
   getDb().prepare('DELETE FROM settings WHERE key = ?').run(EXPOSE_FALLBACK_DETAIL_SETTING);
@@ -83,7 +83,7 @@ describe('formatAttemptDetail', () => {
       record({ startOffsetMs: 0, durationMs: 39_000 }),
       record({ ordinal: 1, platform: 'google', modelId: 'gemini-2.5-flash', keyOrdinal: 2, outcome: 'timeout', startOffsetMs: 39_000, durationMs: 12 }),
     ]);
-    // A 39s stall followed by a fast failure — indistinguishable in the trail.
+    // A 39s stall followed by a fast failure - indistinguishable in the trail.
     expect(value).toBe(
       'groq/llama-3.3-70b key1=rate_limited t=0+39000ms; ' +
       'google/gemini-2.5-flash key2=timeout t=39000+12ms',
@@ -134,7 +134,7 @@ describe('isFallbackDetailHeaderEnabled', () => {
     clearDetailSetting();
   });
 
-  it('is off by default — this widens what the surface reveals', () => {
+  it('is off by default - this widens what the surface reveals', () => {
     expect(isFallbackDetailHeaderEnabled()).toBe(false);
   });
 

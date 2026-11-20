@@ -9,7 +9,7 @@ import type { ProxyMode } from '@freellmapi/shared/types.js';
 
 // #590 (per-key proxy): the SAME provider may be reached through different
 // exit IPs per key (geo-ban / risk-control avoidance). Providers are process
-// singletons, so the per-key override cannot live on the provider instance —
+// singletons, so the per-key override cannot live on the provider instance -
 // it rides request-scoped AsyncLocalStorage instead, set by the dispatcher
 // around a provider call and read here in proxyFetch.
 const perKeyProxyStore = new AsyncLocalStorage<string>();
@@ -41,7 +41,7 @@ async function loadSocksAgent(): Promise<Ctor<unknown>> {
 }
 
 // SOCKS schemes socks-proxy-agent understands. `socks5h`/`socks4a` are the
-// "resolve DNS at the proxy" variants (#630) — the ones that matter on
+// "resolve DNS at the proxy" variants (#630) - the ones that matter on
 // DNS-poisoned networks, where resolving the upstream hostname locally is
 // exactly what fails. They are ordinary SOCKS URLs to the agent; only our
 // scheme detection ever needed teaching.
@@ -151,7 +151,7 @@ function pickProxySource(dbValue: string): { url: string; source: string } {
     if (value) return { url: value, source: name };
   }
 
-  // #353: last resort — read the system-wide proxy settings (macOS System
+  // #353: last resort - read the system-wide proxy settings (macOS System
   // Settings / Windows Internet Options / GNOME desktop) so the app works
   // without duplicating the OS config. Best-effort: every failure here just
   // falls through to the direct (no-proxy) path.
@@ -287,7 +287,7 @@ let _fetchRelayToken = '';
 let _proxyEnabled = true;
 let _bypassPlatforms = new Set<string>();
 let _noProxyRules: string[] = [];
-// Escape hatch for the `ssh -D` tunnel case — see shouldBypassProxy.
+// Escape hatch for the `ssh -D` tunnel case - see shouldBypassProxy.
 let _proxyLocalDestinations = false;
 let _initialized = false;
 
@@ -305,7 +305,7 @@ const CACHE_TTL_MS = 30_000;
 //
 // A working dispatcher is cached for as long as it stays in the map: the cache
 // key IS the whole proxy URL, so unlike the global entry (whose URL can change
-// under it) it can never go stale — re-building it on a timer would only churn
+// under it) it can never go stale - re-building it on a timer would only churn
 // connection pools. A FAILED build is cached briefly instead, so a proxy that
 // was down doesn't stay written off forever.
 //
@@ -313,7 +313,7 @@ const CACHE_TTL_MS = 30_000;
 // this holds a handful, but nothing stops an operator from pointing a hundred
 // keys at a hundred rotating exits. Oldest-first eviction keeps a bad day from
 // turning into an unbounded pile of agents. An evicted (or expired) dispatcher
-// is dropped, not closed — closing it would tear down requests still streaming
+// is dropped, not closed - closing it would tear down requests still streaming
 // through it; the GC collects it once they finish. Same as the global cache.
 const perKeyCached = new Map<string, { dispatcher: unknown | undefined; isSocks: boolean; ts: number }>();
 const PER_KEY_FAILURE_TTL_MS = 30_000;
@@ -348,10 +348,10 @@ export function applyProxyUrl(dbValue: string): void {
       console.log(`[proxy] NO_PROXY direct for: ${_noProxyRules.join(', ')}`);
     }
     if (_proxyLocalDestinations) {
-      console.log('[proxy] FREEAPI_PROXY_LOCAL_DESTINATIONS is set — localhost/LAN destinations go through the proxy too.');
+      console.log('[proxy] FREEAPI_PROXY_LOCAL_DESTINATIONS is set - localhost/LAN destinations go through the proxy too.');
     }
   } else {
-    console.log('[proxy] Not configured — outbound requests go direct.');
+    console.log('[proxy] Not configured - outbound requests go direct.');
   }
   enforceRelayUrlPolicy();
   _initialized = true;
@@ -383,7 +383,7 @@ function enforceRelayUrlPolicy(): void {
  *
  * The standalone server does this in index.ts after initDb; the desktop
  * embedder (desktop/src/server-host.ts) builds the app without index.ts and
- * must call this itself — otherwise the URL saved by PUT /api/settings/proxy
+ * must call this itself - otherwise the URL saved by PUT /api/settings/proxy
  * sits in the DB but the process starts with an empty proxy and every
  * outbound request goes direct until the user re-saves the setting (#949).
  * Safe to call more than once; it is idempotent.
@@ -448,7 +448,7 @@ function decodeFetchRelayToken(value: string): string {
 /** Toggle the proxy on/off without losing the URL. */
 export function applyProxyEnabled(enabled: boolean): void {
   _proxyEnabled = enabled;
-  if (!enabled) console.log('[proxy] Disabled — requests go direct.');
+  if (!enabled) console.log('[proxy] Disabled - requests go direct.');
 }
 
 export function isProxyEnabled(): boolean {
@@ -481,7 +481,7 @@ export function getNoProxyRules(): string[] {
  * Returns true when a request should NOT use the proxy.
  * True when: proxy is disabled globally, the platform is in the bypass list,
  * the upstream host is covered by NO_PROXY, or the upstream is a local/LAN
- * destination (#951 — see below).
+ * destination (#951 - see below).
  *
  * A loopback (127.0.0.0/8, ::1, 0.0.0.0, `localhost`) or private/LAN
  * (RFC1918, ULA, CGNAT) destination is unreachable through a remote proxy:
@@ -490,8 +490,8 @@ export function getNoProxyRules(): string[] {
  * for SOCKS, actively harmful: an IP literal must go on the wire as ATYP 0x01
  * (an IP) no matter what the `socks5h` suffix promises, so Tor logs "giving
  * Tor only an IP address" and may refuse the connection. The
- * Ollama/llama.cpp/LM Studio case — the app's primary documented local use,
- * "on localhost or the LAN" — is exactly this.
+ * Ollama/llama.cpp/LM Studio case - the app's primary documented local use,
+ * "on localhost or the LAN" - is exactly this.
  *
  * FREEAPI_PROXY_LOCAL_DESTINATIONS=true opts out, for the one setup where
  * proxying a local address IS the point: an `ssh -D` dynamic tunnel, where
@@ -506,7 +506,7 @@ function shouldBypassProxy(url: string, platform?: string): boolean {
   try {
     hostname = new URL(url).hostname;
   } catch {
-    // Unparseable URL — leave the routing decision to the caller/fetch.
+    // Unparseable URL - leave the routing decision to the caller/fetch.
     return false;
   }
   if (_noProxyRules.length > 0 && noProxyMatches(hostname)) return true;
@@ -565,7 +565,7 @@ export type ProxyRequestType = 'chat' | 'embedding' | 'image' | 'video' | 'audio
 /**
  * Build an AbortError DOMException whose `message` carries a compact triage
  * tag in the form `<platform>, <type>, <timeout>s`. No upstream URL, no
- * credentials — the platform column in `requests` already identifies the
+ * credentials - the platform column in `requests` already identifies the
  * upstream and the type column identifies the request kind, so the abort
  * message just needs to round-trip what's already on the row.
  *
@@ -666,13 +666,13 @@ function enrichAbort(
  * `socks4://` schemes (`shouldLookup`) and sends the proxy a bare IP; only
  * `socks5h://`/`socks4a://` pass the name through. That local resolution is
  * what breaks rule-based proxy clients (Clash and friends), which match routing
- * rules on the domain and have nothing to match once the name is gone — and on
+ * rules on the domain and have nothing to match once the name is gone - and on
  * a DNS-poisoned network it resolves to the poisoned address as well.
  *
  * `http.request` forwards this to the agent as `opts.lookup`, so echoing the
  * hostname makes every SOCKS scheme reach the proxy with the domain intact,
  * i.e. behave like its `h`/`a` variant. The agent only forwards the "address"
- * as the SOCKS destination host — it never inspects the address family, so the
+ * as the SOCKS destination host - it never inspects the address family, so the
  * `4` is a placeholder the callback signature requires.
  */
 export function socksHostnameLookup(
@@ -706,7 +706,7 @@ function socksFetch(
   const signal = init?.signal;
   const startedAt = Date.now();
 
-  // Socket guard for the SOCKS fallback path — deliberately NOT `timeoutMs`.
+  // Socket guard for the SOCKS fallback path - deliberately NOT `timeoutMs`.
   // The two clocks measure different things: http.request's `timeout` is a
   // socket INACTIVITY timer that stays armed across the whole streaming body,
   // while `timeoutMs` is a header/request deadline the caller disarms the
@@ -728,7 +728,7 @@ function socksFetch(
       : 120_000;
 
   // What to reject with when the signal fires. A client-caused abort carries
-  // its own marked reason (newClientAbortError in lib/error-classify.ts) —
+  // its own marked reason (newClientAbortError in lib/error-classify.ts) -
   // preserve it so the failure isn't misclassified downstream as a provider
   // timeout; a plain timer abort keeps the tagged AbortError.
   const abortRejection = (): Error => {
@@ -752,7 +752,7 @@ function socksFetch(
       // Keep the destination hostname unresolved so the SOCKS proxy does the
       // DNS. `agent` here is always a SocksProxyAgent (every socksFetch caller
       // is behind an `isSocks` branch), and the agent is the only consumer of
-      // this hook — the connection to the proxy itself still resolves normally.
+      // this hook - the connection to the proxy itself still resolves normally.
       lookup: socksHostnameLookup,
     }, (res) => {
       if (signal?.aborted) {
@@ -818,7 +818,7 @@ function socksFetch(
  *
  * `requestType` and `timeoutMs` are propagated into the AbortError
  * message so triage reads `<platform>, <type>, <timeout>s`. Both default
- * to `undefined` / `'unknown'` when callers haven't been updated yet —
+ * to `undefined` / `'unknown'` when callers haven't been updated yet -
  * the abort still fires, it just omits the unknown fields.
  */
 const REDIRECT_STATUSES = new Set([301, 302, 303, 307, 308]);
@@ -833,7 +833,7 @@ export async function proxyFetch(
   try {
     // SSRF guard (#440): 'custom' is the only platform whose target URL is
     // user-supplied (base_url on the api_keys row), so it is re-assessed on
-    // every request — a URL saved before the guard existed, edited in the DB,
+    // every request - a URL saved before the guard existed, edited in the DB,
     // or whose DNS now points somewhere blocked still can't reach cloud
     // metadata / link-local addresses.
     if (platform === 'custom') {
@@ -905,7 +905,7 @@ async function dispatchFetch(
     // Every bypass still applies, unchanged: the global on/off switch, the
     // per-platform bypass list, NO_PROXY, and local/LAN destinations. A
     // per-key override says WHICH proxy to use, not that this request must be
-    // proxied — an operator who turned proxying off, listed the upstream in
+    // proxied - an operator who turned proxying off, listed the upstream in
     // NO_PROXY, or points at a local box still gets a direct connection.
     if (!shouldBypassProxy(url, platform)) {
       const resolved = await resolvePerKeyDispatcher(perKeyUrl);
@@ -1022,7 +1022,7 @@ async function resolvePerKeyDispatcher(proxyUrl: string): Promise<{ dispatcher: 
 /**
  * Returns true when the proxy is configured AND enabled. Used by the dashboard
  * to show the "Active" badge. Intentionally does NOT construct a dispatcher (so
- * it never triggers the lazy undici import) — "configured + enabled" is exactly
+ * it never triggers the lazy undici import) - "configured + enabled" is exactly
  * what the badge means.
  */
 export function isProxyActive(): boolean {
@@ -1038,7 +1038,7 @@ export function flushProxyCache(): void {
   // Outbound-proxy dispatcher (only in play when a proxy URL is configured).
   cached = null;
   // The default no-proxy path is bare fetch() on Node's GLOBAL undici
-  // dispatcher — exactly the pool the headline laptop-lid scenario rides — so
+  // dispatcher - exactly the pool the headline laptop-lid scenario rides - so
   // nulling the proxy cache alone left the flush a no-op for most
   // deployments. Node keeps that dispatcher in the global symbol registry
   // (getGlobalDispatcher/setGlobalDispatcher read and write the same key), so
@@ -1046,7 +1046,7 @@ export function flushProxyCache(): void {
   // sockets, in-flight requests keep a reference to the old dispatcher and
   // complete undisturbed. Deliberately NOT `import('undici')`: the built-in
   // fetch uses Node's bundled copy, and the npm package isn't installed in
-  // the production image (verified live — the import throws there).
+  // the production image (verified live - the import throws there).
   try {
     const sym = Symbol.for('undici.globalDispatcher.1');
     const current = (globalThis as Record<symbol, unknown>)[sym] as { constructor: new () => unknown } | undefined;
@@ -1092,7 +1092,7 @@ export const DEFAULT_PROXY_PROBE_TARGET = 'https://www.cloudflare.com/cdn-cgi/tr
  * before any proxy has been configured.
  *
  * The probe target is supplied by the caller and should be an endpoint this
- * install genuinely uses — the /models route of a provider the operator holds
+ * install genuinely uses - the /models route of a provider the operator holds
  * an enabled key for. Any HTTP response, even a 401/403 without a key, proves
  * the proxy route works; only a network-level failure (DNS, connect, timeout)
  * counts as a proxy failure.

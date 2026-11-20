@@ -109,7 +109,7 @@ Example `freellmapi.config.json`:
 ```
 
 The optional `admin` entry creates the first dashboard account while no account
-exists (ignored with a warning afterwards — a claimed install can't be taken
+exists (ignored with a warning afterwards - a claimed install can't be taken
 over by config), and `license` activates a Premium key against the license
 service in the background. Both fields are optional; the file carries plaintext
 secrets, so protect it like `ENCRYPTION_KEY`.

@@ -1,14 +1,14 @@
 // Pure helpers behind the Logs page (the live server-log viewer). Everything
 // here is deliberately free of React and of `fetch` so the merging/cursor rules
-// — the parts that are easy to get subtly wrong and impossible to eyeball in a
-// scrolling tail — can be unit-tested without a running server.
+// - the parts that are easy to get subtly wrong and impossible to eyeball in a
+// scrolling tail - can be unit-tested without a running server.
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error'
 
 /** Canonical order: quietest first. Pills, CSVs and counts all follow it. */
 export const LOG_LEVELS: readonly LogLevel[] = ['debug', 'info', 'warn', 'error'] as const
 
-/** Debug is off by default — it is the firehose, and nobody opens the page for it. */
+/** Debug is off by default - it is the firehose, and nobody opens the page for it. */
 export const DEFAULT_LOG_LEVELS: readonly LogLevel[] = ['info', 'warn', 'error'] as const
 
 /** Newest-N the first (cursorless) fetch asks for. */
@@ -37,7 +37,7 @@ export interface LogEntry {
   message: string
 }
 
-/** Ring-wide totals per level — NOT filtered by the current query. */
+/** Ring-wide totals per level - NOT filtered by the current query. */
 export interface LogCounts {
   debug: number
   info: number
@@ -49,7 +49,7 @@ export const EMPTY_LOG_COUNTS: LogCounts = { debug: 0, info: 0, warn: 0, error: 
 
 export interface LogsResponse {
   entries: LogEntry[]
-  /** Highest id the ring holds — the cursor for the next poll, even when `entries` is empty. */
+  /** Highest id the ring holds - the cursor for the next poll, even when `entries` is empty. */
   nextId: number
   counts: LogCounts
 }
@@ -70,7 +70,7 @@ export interface LogQuery {
 /**
  * Assemble the GET /api/logs URL. Levels are always sent (server-side
  * filtering, not client-side), in canonical order so the same selection always
- * produces the same string — which is what makes it usable as a query key.
+ * produces the same string - which is what makes it usable as a query key.
  */
 export function buildLogsQuery(query: LogQuery): string {
   const params = new URLSearchParams()
@@ -148,7 +148,7 @@ export function toggleLevel(levels: readonly LogLevel[], level: LogLevel): LogLe
 /**
  * Providers offered by the filter select. The server has no "list providers"
  * endpoint, so the options accumulate from whatever this session has seen and
- * never shrink — losing an option the moment its last entry is evicted would
+ * never shrink - losing an option the moment its last entry is evicted would
  * make the select flicker under load.
  */
 export function collectProviders(
@@ -168,7 +168,7 @@ export function collectProviders(
 }
 
 /**
- * Structured events offered by the event filter — the same accumulate-never-
+ * Structured events offered by the event filter - the same accumulate-never-
  * shrink contract as collectProviders. This is how an operator finds the
  * budget-threshold events (#1158) or key_invalid among the firehose without
  * typing an exact string into free text.

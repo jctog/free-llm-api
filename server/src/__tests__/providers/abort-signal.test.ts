@@ -73,8 +73,8 @@ describe('AbortSignal through provider fetch + body/stream reads', () => {
     // The rejection must carry the marked client-abort reason (not a generic
     // parse/abort error), so the fallback loop can skip all failure bookkeeping.
     expect(isClientAbortError(err)).toBe(true);
-    // And the upstream connection must actually be torn down — tokens stop
-    // burning — not left to drain in the background.
+    // And the upstream connection must actually be torn down - tokens stop
+    // burning - not left to drain in the background.
     await upstream.closed;
   });
 
@@ -105,7 +105,7 @@ describe('AbortSignal through provider fetch + body/stream reads', () => {
   });
 
   it('per-attempt timeout still fires on slow headers', async () => {
-    // Upstream never writes headers — the historical fetchWithTimeout contract.
+    // Upstream never writes headers - the historical fetchWithTimeout contract.
     upstream = await startUpstream(() => { /* never respond */ });
     const provider = makeProvider(upstream.url);
 
@@ -116,7 +116,7 @@ describe('AbortSignal through provider fetch + body/stream reads', () => {
 
     expect(err).not.toBeNull();
     expect(/aborted/i.test(err.message)).toBe(true);
-    // A timeout is a provider-health signal — it must NOT read as client-caused.
+    // A timeout is a provider-health signal - it must NOT read as client-caused.
     expect(isClientAbortError(err)).toBe(false);
     expect(Date.now() - startedAt).toBeLessThan(3000);
   });

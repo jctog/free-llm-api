@@ -97,7 +97,7 @@ describe('free-tier pool overview (#905)', () => {
     // exactly this). Latest-wins would report 5,000 requests as the headroom.
     observe({ platform: 'groq', keyId: groqKey, pool: 'groq::account', metric: 'tokens', limit: 15_000_000, remaining: 12_400_000, resetAt: future(600), observedAt: '2026-01-01 00:00:00' });
     observe({ platform: 'groq', keyId: groqKey, pool: 'groq::account', metric: 'requests', limit: 14_400, remaining: 5_000, resetAt: future(120), observedAt: '2026-01-02 00:00:00' });
-    // cerebras: the same pool seen through two keys — two accounts, two allowances.
+    // cerebras: the same pool seen through two keys - two accounts, two allowances.
     observe({ platform: 'cerebras', keyId: cerebrasA, pool: 'cerebras::shared', metric: 'tokens', limit: 30_000_000, remaining: 20_000_000, resetAt: future(300), observedAt: '2026-01-01 00:00:00' });
     observe({ platform: 'cerebras', keyId: cerebrasB, pool: 'cerebras::shared', metric: 'tokens', limit: 30_000_000, remaining: 8_000_000, resetAt: future(180), observedAt: '2026-01-03 00:00:00' });
   });
@@ -109,7 +109,7 @@ describe('free-tier pool overview (#905)', () => {
     const groq = body.pools.find((p: any) => p.poolKey === 'groq::account');
     expect(groq).toBeDefined();
     // Three models, ONE budget: the largest label in the pool (~15M), scaled by
-    // the single usable key — not 6M + 15M + 6M.
+    // the single usable key - not 6M + 15M + 6M.
     expect(groq.modelCount).toBe(3);
     expect(groq.documentedBudget).toBe(15_000_000);
     expect(body.summary.poolCount).toBe(body.pools.length);

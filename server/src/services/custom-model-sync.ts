@@ -15,7 +15,7 @@ import { endpointScopeForBaseUrl } from '../lib/endpoint-scope.js';
 // POST /custom (see custom-model-register.ts) so the two can never drift.
 //
 // Deliberate bounds:
-//  - ADD ONLY. Models that disappear upstream are left alone — an automated
+//  - ADD ONLY. Models that disappear upstream are left alone - an automated
 //    pass must never delete a row the operator may have tuned by hand.
 //  - One failing endpoint is logged and skipped; the others still sync, so a
 //    dead relay cannot hold the whole schedule hostage.
@@ -36,7 +36,7 @@ export function customModelSyncIntervalMs(): number {
 }
 
 /** Comma-separated glob patterns of model ids that are known-free (#746).
- *  When set, the sync registers ONLY models matching a pattern — anything else
+ *  When set, the sync registers ONLY models matching a pattern - anything else
  *  (presumably paid) is skipped, honoring the repo's free-only policy. When
  *  unset, the sync keeps its legacy behavior of registering everything, so
  *  existing operators are unaffected. */
@@ -62,7 +62,7 @@ export interface CustomModelSyncResult {
   paidSkipped: number;
   /** Models skipped because the operator deleted them and they must stay deleted (#926). */
   tombstoned: number;
-  /** Models skipped because they are discernibly not chat models — embedding,
+  /** Models skipped because they are discernibly not chat models - embedding,
    *  image, audio, transcription or video ids (#1051). Registering those as
    *  chat models is how they used to 404 forever. */
   nonChatSkipped: number;

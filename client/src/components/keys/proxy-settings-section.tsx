@@ -44,7 +44,7 @@ export function ProxySettingsSection() {
   // group dropdown on the Providers tab (two clicks per platform, no bulk, and
   // no way to see which platforms route through the proxy at a glance). Render
   // the same bypass list here as visible switches, one per platform that has
-  // keys — custom endpoints included, so they get a per-endpoint-style toggle
+  // keys - custom endpoints included, so they get a per-endpoint-style toggle
   // instead of being lumped into a group.
   const { data: keys = [] } = useQuery<ApiKey[]>({
     queryKey: ['keys'],
@@ -199,7 +199,7 @@ export function ProxySettingsSection() {
             ? t('keys.proxyTestOk', { ms: String(testProxy.data.latencyMs) })
             : t('keys.proxyTestFail', { reason: testProxy.data.error ?? '' })}
           {/* Which endpoint was probed. A pass or a fail is only actionable if
-              you know what was reached — and the target varies with the keys
+              you know what was reached - and the target varies with the keys
               you hold. A bare host name needs no translation. */}
           {testProxy.data.target && (
             <span className="text-muted-foreground ml-1.5 font-mono">

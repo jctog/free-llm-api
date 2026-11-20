@@ -6,7 +6,7 @@ import { CloudflareProvider } from '../../providers/cloudflare.js';
 // hidden-reasoning or buffered non-streaming models (zhipu glm-4.7-flash 41s
 // TTFB, agnes-2.0-flash 20s, OpenRouter/OpenCode/Mistral long generations,
 // @cf/zai-org/glm-4.7-flash repeated 15s aborts) need a chat timeout above
-// 15s or every attempt — streaming included — is aborted before the first byte.
+// 15s or every attempt - streaming included - is aborted before the first byte.
 // The value is a private construction detail, so the
 // registry entries are asserted via the stored field and Cloudflare via the
 // setTimeout the abort rides on.

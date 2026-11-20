@@ -48,7 +48,7 @@ const ALIASES: Record<string, string> = {
 }
 
 export interface Highlighted {
-  /** Escaped HTML with `hljs-*` spans — safe to inject as innerHTML. */
+  /** Escaped HTML with `hljs-*` spans - safe to inject as innerHTML. */
   html: string
   /** The grammar that was applied, or null when the code is plain escaped text. */
   language: string | null

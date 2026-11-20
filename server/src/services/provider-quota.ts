@@ -172,14 +172,14 @@ export function inferPoolForPlatform(platform: Platform, modelId?: string | null
   if (platform === 'orcarouter') return 'orcarouter::free';
   // UnoRouter: the docs say 1 req/min per free model, but live-probed
   // 2026-08-23 a burst across many `:free` models put the whole account into
-  // 429 on every model for several minutes — so one pool, and a 429 on any
+  // 429 on every model for several minutes - so one pool, and a 429 on any
   // model backs off the platform as a whole.
   if (platform === 'unorouter') return 'unorouter::free';
   // xkiro: one account-level allowance shared across its free models (the
   // free tier is a per-account grant, not per-model), so one pool.
   if (platform === 'xkiro') return 'xkiro::free';
   // AnyAPI: the free tier is one 100K-tokens/day budget for the whole account,
-  // shared across every free/basic model — so one pool, not one per model.
+  // shared across every free/basic model - so one pool, not one per model.
   if (platform === 'anyapi') return 'anyapi::free';
   // ModelScope: one 2000-requests/day quota across the whole account.
   if (platform === 'modelscope') return 'modelscope::account';
@@ -431,7 +431,7 @@ export function recordQuotaObservation(input: QuotaObservationInput): ProviderQu
     );
   })();
 
-  // The row just moved, so the memoised headroom for this platform is wrong —
+  // The row just moved, so the memoised headroom for this platform is wrong -
   // drop it rather than let a 5s window hide a fresh 429 from the router.
   invalidateKeyQuotaHeadroom(platform);
 
@@ -489,7 +489,7 @@ const headroomCache = new Map<string, { db: unknown; at: number; map: Map<number
 /**
  * Fraction of the observed budget still available for each key of `platform`,
  * as keyId → 0..1, where 1 is untouched and 0 exhausted. Keys with no usable
- * observation are simply absent — that is not the same as "empty", and callers
+ * observation are simply absent - that is not the same as "empty", and callers
  * must treat a miss as unknown rather than as zero headroom.
  *
  * A key metered on several metrics takes the WORST of them: the binding
@@ -526,7 +526,7 @@ export function getKeyQuotaHeadroom(platform: Platform): Map<number, number> {
   const map = new Map<number, number>();
   for (const row of rows) {
     // A window that already reset is a full budget again. Same rule as
-    // the panel headroom view, without writes — this path must not take
+    // the panel headroom view, without writes - this path must not take
     // one just to answer a routing question.
     const ratio = row.expired
       ? 1

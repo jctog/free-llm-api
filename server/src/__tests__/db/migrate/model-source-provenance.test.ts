@@ -80,7 +80,7 @@ describe('20260726_000003_model_source_provenance backfill', () => {
     const db = seededDb();
     try {
       // Hand-added native-platform model whose size_label does NOT follow the
-      // 'User'/'Custom' convention — exactly the row the old prune guard lost.
+      // 'User'/'Custom' convention - exactly the row the old prune guard lost.
       insertModel(db, 'groq', 'hand-added-model', { sizeLabel: 'Large' });
 
       // Applied catalog = every baseline row except the hand-added one.

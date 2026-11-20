@@ -91,7 +91,7 @@ describe('observeServedModel', () => {
     expect(observeServedModel({ platform: 'reka', requestedModel: 'reka-flash-3', servedModel: null })).toBeNull();
     expect(observeServedModel({ platform: 'reka', requestedModel: 'reka-flash-3', servedModel: undefined })).toBeNull();
     // Reka returns the literal placeholder "default" for every concrete model
-    // (#568) — it names no model, so it is no evidence of drift.
+    // (#568) - it names no model, so it is no evidence of drift.
     expect(observeServedModel({ platform: 'reka', requestedModel: 'reka-flash-3', servedModel: 'default' })).toBeNull();
     expect(observeServedModel({ platform: 'reka', requestedModel: 'reka-flash-3', servedModel: '  ' })).toBeNull();
     expect(console.warn).not.toHaveBeenCalled();

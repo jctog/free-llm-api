@@ -12,14 +12,14 @@ import crypto from 'crypto';
  *
  * Anthropic defines four source kinds, and they split cleanly:
  *
- *   text, content  — the document IS text already. Converting it costs nothing
+ *   text, content  - the document IS text already. Converting it costs nothing
  *                    and needs nothing installed, so we do it.
- *   base64, url    — the bytes need a real converter (PDF, DOCX, XLSX…). No
+ *   base64, url    - the bytes need a real converter (PDF, DOCX, XLSX…). No
  *                    provider in the pool accepts them and nothing here can
  *                    decode them, so these are refused with an actionable
  *                    message instead of being silently discarded.
  *
- * Stringifying the block instead — which is what a naive passthrough does —
+ * Stringifying the block instead - which is what a naive passthrough does -
  * would inject an entire base64 payload into the prompt. That is not a cheaper
  * version of support; it is a way to burn a context window on nothing.
  */
@@ -30,7 +30,7 @@ const TEXTUAL_SOURCE_TYPES = new Set(['text', 'content']);
 /** Longest title we will echo into the prompt. */
 const MAX_TITLE_LENGTH = 120;
 
-/** C0 controls, DEL, and the C1 range — they can carry terminal escapes. */
+/** C0 controls, DEL, and the C1 range - they can carry terminal escapes. */
 // eslint-disable-next-line no-control-regex -- matching control chars is the point.
 const CONTROL_CHARS = /[\u0000-\u001f\u007f-\u009f]/g;
 
@@ -137,7 +137,7 @@ export function convertDocumentBlock(block: unknown): DocumentBlockResult {
 
 /**
  * The error message for one or more unconvertible documents. Names what was
- * wrong and then what to do instead — a caller that only learns "unsupported"
+ * wrong and then what to do instead - a caller that only learns "unsupported"
  * has to guess at the fix.
  */
 export function documentRejectionMessage(reasons: string[]): string {
@@ -148,7 +148,7 @@ export function documentRejectionMessage(reasons: string[]): string {
     `This request contains ${listed}${extra}. ` +
     'Binary document attachments are not supported: no provider in the pool accepts them, ' +
     'and forwarding the request anyway would silently drop the attachment from the prompt. ' +
-    'Send the text instead — either a `text` content block, or a document block with a ' +
+    'Send the text instead - either a `text` content block, or a document block with a ' +
     '`text` or `content` source, both of which are passed through.'
   );
 }

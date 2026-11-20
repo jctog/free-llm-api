@@ -26,12 +26,12 @@ npm run test:watch -w server      # watch mode
 npm run test:migrations -w server # migration roundtrip only
 ```
 
-`test:migrations` targets exactly one file — [`src/__tests__/db/migrate/roundtrip.test.ts`](../../../server/src/__tests__/db/migrate/roundtrip.test.ts) — and replays every recorded migration up and down to prove the roundtrip. Run it after touching anything under `src/db/migrate/`.
+`test:migrations` targets exactly one file - [`src/__tests__/db/migrate/roundtrip.test.ts`](../../../server/src/__tests__/db/migrate/roundtrip.test.ts) - and replays every recorded migration up and down to prove the roundtrip. Run it after touching anything under `src/db/migrate/`.
 
 New test files added in the August 2026 batch that expand coverage:
-- `src/__tests__/routes/logs.test.ts` — server log viewer persistence and API
-- `src/__tests__/routes/custom-transcription.test.ts` — custom STT model registration and transcription usage
-- `src/__tests__/lib/provider-identity.test.ts` — custom endpoint identity classification (#889)
+- `src/__tests__/routes/logs.test.ts` - server log viewer persistence and API
+- `src/__tests__/routes/custom-transcription.test.ts` - custom STT model registration and transcription usage
+- `src/__tests__/lib/provider-identity.test.ts` - custom endpoint identity classification (#889)
 
 ### Client (`client/package.json`)
 
@@ -44,7 +44,7 @@ npm run check:i18n -w client      # scripts/check-i18n.mjs
 
 ### Everything else
 
-`npm run build` must also pass — CI builds all workspaces after tests, so type errors surface there even when unit tests stay green.
+`npm run build` must also pass - CI builds all workspaces after tests, so type errors surface there even when unit tests stay green.
 
 ## CI summary
 

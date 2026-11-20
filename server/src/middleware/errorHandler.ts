@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { logRequest } from '../lib/request-log.js';
 
 // The inference wire surfaces whose over-limit bodies deserve an analytics
-// row — the dashboard renders them like any failed request instead of the
+// row - the dashboard renders them like any failed request instead of the
 // rejection being visible only in the container log.
 const INFERENCE_PATH_PREFIXES = ['/v1', '/v1beta', '/mcp'];
 

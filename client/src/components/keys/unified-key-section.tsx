@@ -63,7 +63,7 @@ export function UnifiedKeySection() {
         <ConfirmButton
           variant="ghost"
           size="sm"
-          // Armed label stays the shared "Confirm" — the same destructive
+          // Armed label stays the shared "Confirm" - the same destructive
           // idiom every other ConfirmButton on the dashboard uses.
           disabled={regenerate.isPending || isError}
           onConfirm={() => regenerate.mutate()}

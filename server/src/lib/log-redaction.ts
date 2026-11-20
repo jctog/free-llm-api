@@ -65,7 +65,7 @@ const PATTERNS: Array<[RegExp, string]> = [
   // JWTs and other three-segment tokens.
   [/\b[A-Za-z0-9_-]{16,}\.[A-Za-z0-9_-]{16,}\.[A-Za-z0-9_-]{16,}\b/g, '[redacted-token]'],
 
-  // Dotted composite keys (Z.ai, Ollama cloud, Chutes) — hex id, dot, secret.
+  // Dotted composite keys (Z.ai, Ollama cloud, Chutes) - hex id, dot, secret.
   [/\b[A-Za-z0-9]{24,}\.[A-Za-z0-9_\-]{16,}\b/g, '[redacted-token]'],
 
   // Last resort: an unbroken 32+ char alphanumeric run. Long enough to exclude
@@ -78,7 +78,7 @@ const PATTERNS: Array<[RegExp, string]> = [
   // replacing those with [redacted-token] destroyed readable output while
   // protecting nothing. The exemption is narrow: it only fires when the run's
   // first 32 characters are all the same one, so anything with two distinct
-  // characters that early — every real key, the more so the higher its entropy —
+  // characters that early - every real key, the more so the higher its entropy -
   // fails the lookahead and is redacted exactly as before.
   [/\b(?!([A-Za-z0-9])\1{31})[A-Za-z0-9]{32,}\b/g, '[redacted-token]'],
 ];

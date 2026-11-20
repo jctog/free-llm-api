@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest';
 
-// Issue #1239 — "All rejected": a Claude Code user's request burned its whole
+// Issue #1239 - "All rejected": a Claude Code user's request burned its whole
 // 45s failover budget on eight hops that were never going to work and was then
 // told the REQUEST was invalid. The trail:
 //

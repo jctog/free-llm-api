@@ -10,8 +10,8 @@ import type { Scheduler } from '../lib/scheduler.js';
 const SCHEDULE_SETTING = 'backup_schedule';
 const LAST_RUN_SETTING = 'backup_last_run_day';
 
-// #1675: the automatic dump sources — the background scheduler and the
-// desktop updater's pre-update snapshot — write a full dump each time they
+// #1675: the automatic dump sources - the background scheduler and the
+// desktop updater's pre-update snapshot - write a full dump each time they
 // fire and nothing ever removed one. A single-user desktop install that
 // updated a few times a month accumulated 60-70 MB per update indefinitely.
 // Manual dumps are the operator's own intent and pre-restore snapshots are
@@ -106,7 +106,7 @@ export function listTables(db: Db = getDb()): string[] {
 /* ------------------------------------------------------------------ */
 
 /** The directory that holds the database file. Dumps live beside the data they
- *  came from — never relative to process.cwd(), which depends on how the server
+ *  came from - never relative to process.cwd(), which depends on how the server
  *  happened to be launched and can sit anywhere on the disk. */
 function dataDir(db: Db): string {
   const name = db.name;
@@ -125,7 +125,7 @@ function isInside(root: string, target: string): boolean {
  *  interpreted relative to the database directory and may not escape it:
  *  an operator-supplied path is otherwise an arbitrary-write primitive, and
  *  `..`, an absolute path or a symlink out of the tree would all take it
- *  there. Both the lexical path and — once the directory exists — its real
+ *  there. Both the lexical path and - once the directory exists - its real
  *  path are checked, so a symlink planted inside the data directory does not
  *  widen the hole. */
 export function resolveBackupDir(db: Db, override?: string): string {
@@ -347,7 +347,7 @@ export function createBackup(
  *
  * Deleting the row reuses deleteBackup's path re-check (a stale or hand-edited
  * row may point outside the data directory; that dump is left alone rather
- * than unlinking an arbitrary file) — so a dump whose file is already gone
+ * than unlinking an arbitrary file) - so a dump whose file is already gone
  * still loses its index row, which is the half that mattered for the listing.
  */
 export function pruneAutoDumps(db: Db, keep = getAutoDumpRetention()): number {
@@ -466,7 +466,7 @@ export function deleteBackup(db: Db, id: number): void {
 
 /** Statements naming a table the dump policy excludes. A dump this server
  *  wrote never contains them, so hitting this means the file was edited or
- *  produced elsewhere — and restoring it would overwrite the operator's own
+ *  produced elsewhere - and restoring it would overwrite the operator's own
  *  accounts and sessions. */
 const EXCLUDED_STATEMENT_RE = new RegExp(
   `\\b(?:INSERT\\s+INTO|DELETE\\s+FROM|UPDATE|DROP\\s+TABLE)\\s+"?(?:${[...EXCLUDED_TABLES].join('|')})"?\\b`,
@@ -507,7 +507,7 @@ export function restoreBackup(db: Db, id: number): RestoreResult {
 
   // api_keys rows hold AES-GCM ciphertext keyed by ENCRYPTION_KEY. Restoring a
   // dump written under a different key would load provider keys nothing on this
-  // server can decrypt — every request would then fail at send time, with the
+  // server can decrypt - every request would then fail at send time, with the
   // real cause several layers away.
   const fingerprint = currentKeyFingerprint();
   if (header.keyFingerprint !== fingerprint) {

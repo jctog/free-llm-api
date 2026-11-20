@@ -9,7 +9,7 @@ import { clearLastHealthyStampState } from '../../services/health.js';
 // POST /v1/moderations (#…): OpenAI-compatible content-moderation shim that
 // routes to the first enabled OpenAI/OpenRouter/NVIDIA key and fails over
 // across platforms. Covers the model-resolution rules, the failover chain,
-// and the route's auth/validation envelope — without hitting any provider.
+// and the route's auth/validation envelope - without hitting any provider.
 
 let app: Express;
 
@@ -73,7 +73,7 @@ function restoreFetch() {
   vi.restoreAllMocks();
 }
 
-describe('moderation service — model resolution', () => {
+describe('moderation service - model resolution', () => {
   beforeAll(() => {
     process.env.ENCRYPTION_KEY = '0'.repeat(64);
     initDb(':memory:');
@@ -106,7 +106,7 @@ describe('moderation service — model resolution', () => {
   });
 
   it('skips a key scoped to another model and takes the next key on the platform (#657)', () => {
-    // First key is a relay chat-scope key — moderation must NOT pick it.
+    // First key is a relay chat-scope key - moderation must NOT pick it.
     insertKey('openai', '["gpt-4o-mini"]');
     const unscoped = insertKey('openai');
     const models = listModerationModels();

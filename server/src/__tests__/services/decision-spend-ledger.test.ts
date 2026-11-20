@@ -10,7 +10,7 @@ import { ringSnapshot, clearLogs } from '../../lib/server-logs.js';
 // POST /v1/decisions spends real provider quota on every routing turn, but
 // logDecision only wrote decision_requests. The per-key monthly caps (#1158)
 // and GET /v1/usage read key_monthly_usage, which other surfaces feed through
-// their `requests` rows — so a capped key never accrued decision spend and
+// their `requests` rows - so a capped key never accrued decision spend and
 // served decisions forever past its cap. Decisions now settle into the ledger
 // directly, without a `requests` row that would double-count chat turns in
 // the dashboard's request analytics.

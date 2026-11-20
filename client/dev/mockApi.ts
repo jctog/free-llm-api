@@ -2,7 +2,7 @@ import type { Plugin } from 'vite'
 
 // Dev-only in-memory mock of the /api surface the Fallback page needs, so the
 // frontend can be exercised without a running backend. Enabled only when the
-// dev server is started with MOCK_API=1 (see vite.config.ts) — never bundled.
+// dev server is started with MOCK_API=1 (see vite.config.ts) - never bundled.
 
 const PRESETS: Record<string, { reliability: number; speed: number; intelligence: number }> = {
   balanced: { reliability: 0.5, speed: 0.25, intelligence: 0.25 },
@@ -87,7 +87,7 @@ export function mockApiPlugin(): Plugin {
           res.end(JSON.stringify(obj))
         }
 
-        // Auth gate — always "logged in" in mock mode.
+        // Auth gate - always "logged in" in mock mode.
         if (url === '/api/auth/status') return send({ needsSetup: false, authenticated: true, email: 'dev@local' })
         if (url === '/api/ping') return send({ status: 'ok', timestamp: new Date().toISOString() })
 

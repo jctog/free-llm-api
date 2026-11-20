@@ -2,7 +2,7 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vite
 import type { Express } from 'express';
 
 // Fails the first thing `runInboundChat` awaits, so the handler promise
-// rejects AFTER the synchronous part of the Express handler has returned —
+// rejects AFTER the synchronous part of the Express handler has returned -
 // exactly the shape Express can only see when the handler hands it the
 // promise. The flag keeps every other test on the real implementation.
 let failNormalize = false;

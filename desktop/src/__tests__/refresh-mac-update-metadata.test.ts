@@ -34,7 +34,7 @@ describe('rewriteUpdateMetadata', () => {
     expect(out[1]).toBe('files:');
     expect(out[2]).toBe('  - url: FreeLLMAPI-0.8.8-arm64.dmg');
     expect(out[5]).toBe('path: FreeLLMAPI-0.8.8-arm64.dmg');
-    // releaseDate keeps its quoting — a YAML round trip would have restyled it.
+    // releaseDate keeps its quoting - a YAML round trip would have restyled it.
     expect(out[7]).toBe("releaseDate: '2026-08-25T20:25:58.884Z'");
   });
 

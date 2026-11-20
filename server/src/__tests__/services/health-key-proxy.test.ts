@@ -39,7 +39,7 @@ function stubHttpsRequest() {
 // path would fail three checks in a row and auto-disable a perfectly good
 // credential, so health checks and cooldown probes go through the key's proxy
 // exactly like its traffic does.
-describe('Key health — per-key proxy override (#590)', () => {
+describe('Key health - per-key proxy override (#590)', () => {
   let nextId = 7000;
 
   beforeAll(() => {

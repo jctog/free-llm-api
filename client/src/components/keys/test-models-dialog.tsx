@@ -14,7 +14,7 @@ import { MODEL_TEST_MIN_INTERVAL_MS, nowMs, selectTestableModels } from '@/lib/t
 // (POST /api/models/:id/test honours key scope, cooldowns, concurrency and
 // budgets) and show pass/fail with latency. Lived on the Providers page
 // before that page was folded into Keys; the dialog lists the models of ONE
-// provider — or, for a custom endpoint, of one key — so the Keys page can
+// provider - or, for a custom endpoint, of one key - so the Keys page can
 // stay key-centric and still answer "does this provider actually work".
 
 interface TestState {

@@ -98,11 +98,11 @@ describe('max_tokens no longer starves routing (#470)', () => {
 
     expect(status).toBe(200);
     expect(body.choices[0].message.content).toBe('ok');
-    // The model was actually dispatched — not synchronously excluded.
+    // The model was actually dispatched - not synchronously excluded.
     expect(chatCompletion).toHaveBeenCalledTimes(1);
   });
 
-  it('still excludes the model when the INPUT itself exceeds the TPM budget — now an honest 413', async () => {
+  it('still excludes the model when the INPUT itself exceeds the TPM budget - now an honest 413', async () => {
     chatCompletion.mockResolvedValueOnce(GOOD_RESULT);
 
     // ~8k input tokens (32k chars / 4) > the 6k TPM budget → the only enabled

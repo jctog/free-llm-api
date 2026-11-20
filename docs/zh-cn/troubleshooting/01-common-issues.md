@@ -16,7 +16,7 @@
 
 **现象：** `POST /v1/chat/completions` 返回 `400 active chain is empty`（或 fallback ladder empty）。
 
-**原因：** 活跃的回退链存在但未启用任何模型——自 `e852ff1` / `b3bf20f` 起，空链被视为权威配置，不再静默回退到目录全量。
+**原因：** 活跃的回退链存在但未启用任何模型--自 `e852ff1` / `b3bf20f` 起，空链被视为权威配置，不再静默回退到目录全量。
 
 **修复：** 打开 `Fallback` 页面 → 在活跃链中启用模型，或设置 `profiles.auto_include_new_models=1`，或切换活跃 profile。参见 `fallback/01-named-chains.md`。
 
@@ -34,7 +34,7 @@
 
 **原因：** 同一个 `Idempotency-Key` 携带了不同的指纹（`model` / `messages` / `temperature` / `top_p` / `max_tokens` / `tools` / `tool_choice` 有差异）。参见 `api/02-idempotency.md`。
 
-**修复：** 为每个不同的请求使用全新的 UUID，或重放完全相同的请求体。进行中窗口不会去重（`95bc46f`）—— 使用相同 key 的并发重试仍可能竞态。
+**修复：** 为每个不同的请求使用全新的 UUID，或重放完全相同的请求体。进行中窗口不会去重（`95bc46f`）-- 使用相同 key 的并发重试仍可能竞态。
 
 ## 额度面板显示陈旧或排序延迟
 
@@ -68,6 +68,6 @@
 
 ## 相关
 
-- [桌面端](../desktop/OVERVIEW.md) — `freeapi.log` 轮转。
-- [代理传输](../proxy/OVERVIEW.md) — fetch-relay 协议。
-- [环境变量](../env/01-variables.md) — 全部配置项。
+- [桌面端](../desktop/OVERVIEW.md) - `freeapi.log` 轮转。
+- [代理传输](../proxy/OVERVIEW.md) - fetch-relay 协议。
+- [环境变量](../env/01-variables.md) - 全部配置项。

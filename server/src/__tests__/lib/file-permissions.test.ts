@@ -118,7 +118,7 @@ describe('restrictDirToOwner', () => {
   });
 
   it('uses 0700 on POSIX, not 0600', () => {
-    // 0600 on a directory is not a stricter 0700 — it clears the search bit and
+    // 0600 on a directory is not a stricter 0700 - it clears the search bit and
     // locks the server out of its own data directory. Assert the mode itself
     // rather than "owner-only", which both values satisfy.
     const dir = tempDir();

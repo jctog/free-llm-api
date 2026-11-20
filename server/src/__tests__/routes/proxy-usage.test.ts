@@ -9,8 +9,8 @@ import { hashClientProfileKey } from '../../lib/system-prompt.js';
 // GET /v1/usage (#1568): OpenRouter (GET /api/v1/auth/key) and LiteLLM
 // (/key/info) let a key-holder see its own consumption; until now the only
 // way to answer "what ate my tokens" was opening the dashboard. The payload
-// must come from key_monthly_usage — the SAME ledger the monthly caps enforce
-// — so the numbers can never disagree with a 429 the client just got.
+// must come from key_monthly_usage - the SAME ledger the monthly caps enforce
+// - so the numbers can never disagree with a 429 the client just got.
 
 let server: Server;
 let baseUrl: string;

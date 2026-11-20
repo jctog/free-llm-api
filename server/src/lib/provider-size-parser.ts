@@ -4,13 +4,13 @@
 // code-heavy prompts by 3-10x: a request the estimator scores at 3,700 tokens
 // can be reported as 36,532 by Groq. Without this parser the `tpm_limit` and
 // `context_window` pre-checks in the router pass on the wrong number, the call
-// fires, and the provider 413s — burning one failover hop per model in the
+// fires, and the provider 413s - burning one failover hop per model in the
 // chain instead of one hop total. This module is the single source of truth for
 // "what size did the provider say this request was": one regex per supported
 // provider, all derived from the live error corpus.
 //
 // Returns null for anything it can't pin to a real REQUESTED size (not a LIMIT
-// ceiling — see the github case below). Callers feed the result into the
+// ceiling - see the github case below). Callers feed the result into the
 // routing estimate so the existing size gates skip low-TPM / small-context
 // models on the next attempt instead of letting them re-fail.
 //
@@ -18,7 +18,7 @@
 // `Request body too large for gpt-4.1 model. Max size: 8000 tokens.` The 8000
 // is the LIMIT, not the rejected request's size. Returning it would cause
 // every subsequent model with TPM < 8000 to be skipped for the rest of the
-// request — wildly wrong, since most free models have TPM ~6000. The parser
+// request - wildly wrong, since most free models have TPM ~6000. The parser
 // returns null and `learnLimitFromError` keeps doing what it already does
 // (lowering `models.tpm_limit` to 8000 for github/gpt-4.1).
 
@@ -41,7 +41,7 @@ function pullFirstInt(body: string, pattern: RegExp): number | null {
 
 // One regex per provider. Each one is anchored on a literal token from a
 // real observed error body so a provider changing its wording trips the test
-// and forces a parser update — bare numbers without an anchor would happily
+// and forces a parser update - bare numbers without an anchor would happily
 // match an unrelated digit anywhere in the message.
 const PATTERNS: Record<string, RegExp> = {
   // "Limit 8000, Requested 36532, please reduce your message size..."

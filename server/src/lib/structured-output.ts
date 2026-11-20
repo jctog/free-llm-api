@@ -2,7 +2,7 @@
 //
 // Forwarding response_format is necessary but not sufficient: a free-tier
 // model that doesn't understand JSON mode often just answers in prose (or
-// wraps the JSON in a markdown fence) and the request LOOKS successful — the
+// wraps the JSON in a markdown fence) and the request LOOKS successful - the
 // worst failure mode, because the client asked for machine-readable output
 // and got an essay. On non-streaming responses the gateway can check, heal,
 // or fail over:
@@ -11,12 +11,12 @@
 //   2. content wraps JSON in ```fences``` or leading/trailing prose
 //                                        → heal: replace content with the JSON
 //   3. nothing parseable                 → retryable failure (skipBench: the
-//      provider is healthy, the MODEL ignored the format — no cooldown, no
+//      provider is healthy, the MODEL ignored the format - no cooldown, no
 //      penalty; the chain just tries the next candidate)
 //
 // Streaming responses used to skip enforcement entirely (bytes already on
 // the wire). Since #933 the proxy's stream path buffers structured-output
-// requests in a 'json' hold mode — headers are held until the stream ends,
+// requests in a 'json' hold mode - headers are held until the stream ends,
 // so the same check/heal/fail-over applies there too. The response cache
 // remains non-stream only.
 
@@ -41,7 +41,7 @@ function parses(text: string): boolean {
  * to the last ']', longest first. Both bracket types must be tried
  * independently: picking whichever opener appears FIRST turned
  * `According to [1], here is the JSON: {"city":"Paris"}` into the citation
- * marker `[1]` — a valid parse of the wrong value, silently delivered as the
+ * marker `[1]` - a valid parse of the wrong value, silently delivered as the
  * structured output. Longest-first means an incidental bracket token in prose
  * can never shadow the real payload next to it.
  */

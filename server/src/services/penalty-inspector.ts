@@ -108,7 +108,7 @@ export interface RouterPressureClearResult {
  * the ladder counters behind them), score penalties, and the model-failure
  * streaks that re-bench a model across keys. Pressure rebuilds from the next
  * live results, so the worst case of a premature clear is one more round of
- * failures — far better than a pool that cannot route for a day.
+ * failures - far better than a pool that cannot route for a day.
  */
 export function clearRouterPressure(): RouterPressureClearResult {
   return {

@@ -150,7 +150,7 @@ describe('Rate Limiter', () => {
       // is actually reached"): 1st call after counter ≥ limit → 2min (idx=0),
       // 2nd → 10min (idx=1), 3rd → HOUR (idx=2), 4th+ → DAY (idx=3).
       //
-      // Null-limit path enters that ladder at the 2nd 429 (1st is transient —
+      // Null-limit path enters that ladder at the 2nd 429 (1st is transient -
       // no signal yet) but is capped at 10min: with no published RPD/TPD the
       // "exhausted" verdict is inferred from repeated 429s alone, and RPM
       // jitter is indistinguishable from a spent daily quota, so the guess is
@@ -158,15 +158,15 @@ describe('Rate Limiter', () => {
       const id = Math.floor(Math.random() * 1_000_000);
       const platform = 'ollama';
       const model = `nolimit-esc-${id}`;
-      // 1st 429 — no history → transient
+      // 1st 429 - no history → transient
       expect(getCooldownDurationForLimit(platform, model, id, { rpd: null, tpd: null })).toBe(90 * 1000);
-      // 2nd 429 — heuristic threshold (2) crossed → 2min (ladder idx=0)
+      // 2nd 429 - heuristic threshold (2) crossed → 2min (ladder idx=0)
       expect(getCooldownDurationForLimit(platform, model, id, { rpd: null, tpd: null })).toBe(2 * 60 * 1000);
       // 3rd 429 → 10min (idx=1)
       expect(getCooldownDurationForLimit(platform, model, id, { rpd: null, tpd: null })).toBe(10 * 60 * 1000);
-      // 4th 429 — ladder says HOUR, cap holds it at 10min
+      // 4th 429 - ladder says HOUR, cap holds it at 10min
       expect(getCooldownDurationForLimit(platform, model, id, { rpd: null, tpd: null })).toBe(10 * 60 * 1000);
-      // 5th 429 — ladder says DAY, cap holds it at 10min
+      // 5th 429 - ladder says DAY, cap holds it at 10min
       expect(getCooldownDurationForLimit(platform, model, id, { rpd: null, tpd: null })).toBe(10 * 60 * 1000);
       // 6th+ stays at the cap, never the 24h quarantine
       expect(getCooldownDurationForLimit(platform, model, id, { rpd: null, tpd: null })).toBe(10 * 60 * 1000);

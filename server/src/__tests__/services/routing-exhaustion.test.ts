@@ -45,7 +45,7 @@ describe('Routing Key Exhaustion', () => {
     process.env.NODE_ENV = 'test';
     initDb(':memory:');
     // This suite asserts deterministic key/model fallback mechanics, which are
-    // strategy-independent — pin the legacy priority order so the bandit's
+    // strategy-independent - pin the legacy priority order so the bandit's
     // score-based reordering (now the default) doesn't pick seeded catalog
     // models that share the 'google' platform.
     setRoutingStrategy('priority');
@@ -129,7 +129,7 @@ describe('Routing Key Exhaustion', () => {
       const db = getDb();
       const proId = db.prepare("SELECT id FROM models WHERE model_id = 'gemini-1.5-pro'").get().id;
 
-      // Both keys have quota — without skipModels, Pro would be chosen.
+      // Both keys have quota - without skipModels, Pro would be chosen.
       (ratelimit.canMakeRequest as any).mockReturnValue(true);
       (ratelimit.canUseTokens as any).mockReturnValue(true);
 

@@ -122,7 +122,7 @@ describe('GET /api/media/usage', () => {
     expect(body.models.map((m: any) => m.modelId)).toEqual(['whisper-large-v3']);
 
     const whisper = body.models[0];
-    // Exactly the two transcription requests — the audio one is filtered out
+    // Exactly the two transcription requests - the audio one is filtered out
     // by request_type even though it shares platform and model id.
     expect(whisper.requestsMonth).toBe(2);
     expect(whisper.requestsToday).toBeGreaterThanOrEqual(1);
@@ -130,7 +130,7 @@ describe('GET /api/media/usage', () => {
     expect(body.totalRequestsMonth).toBe(2);
   });
 
-  it('reports no budget field — media quota labels are not token budgets', async () => {
+  it('reports no budget field - media quota labels are not token budgets', async () => {
     const { body } = await get(app, '/api/media/usage?modality=audio');
     for (const m of body.models) {
       expect(m).not.toHaveProperty('budget');

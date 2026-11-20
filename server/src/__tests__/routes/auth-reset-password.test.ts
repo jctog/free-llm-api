@@ -12,7 +12,7 @@ import { getResetCode, clearResetCode } from '../../lib/reset-code.js';
 //
 // Two pieces of module state outlive any single test and neither can be reset:
 // the /forgot-password cooldown stamp and the code's minted-at stamp. So the
-// clock here only ever moves FORWARD — each test starts an hour after the last.
+// clock here only ever moves FORWARD - each test starts an hour after the last.
 // Rewinding (which vi.useRealTimers() does after a jump) leaves those stamps in
 // the future and every later request 429s.
 //
@@ -99,7 +99,7 @@ describe('password reset by log code', () => {
     expect(setup.status).toBe(201);
   });
 
-  it('never returns the code over HTTP — it only goes to the logs', async () => {
+  it('never returns the code over HTTP - it only goes to the logs', async () => {
     const { status, body } = await forgot(app);
     expect(status).toBe(200);
     expect(getResetCode()).toBeTruthy();

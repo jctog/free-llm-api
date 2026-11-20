@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 //
 // The prop-shape tests next door prove `categoryAxisProps()` returns the right
-// numbers. They cannot prove those numbers change what recharts draws — the
+// numbers. They cannot prove those numbers change what recharts draws - the
 // original #890 fix would have passed them even if the props had been spread
 // onto the wrong element. So this file mounts a real recharts <BarChart> and
 // counts the <text> ticks that come out, both with and without our props.
@@ -13,7 +13,7 @@
 //  2. recharts decides which ticks to drop by *measuring* each label: it puts
 //     the text in a hidden span and reads getBoundingClientRect(). jsdom
 //     returns zeroes there, so every label would look infinitely thin and
-//     nothing would ever be dropped — the "before" case would silently pass.
+//     nothing would ever be dropped - the "before" case would silently pass.
 //     We stub the rect with a simple monospace-ish metric so the drop logic
 //     has real widths to work with.
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'

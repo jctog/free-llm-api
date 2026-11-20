@@ -64,5 +64,5 @@ npx freellmapi doctor
 
 ## 相关
 
-- [配置文件](02-config-files.md) —— 合并策略、`tools.json`、新增生成器。
-- [客户端与编程智能体](../clients/01-agent-clients.md) —— 按智能体接入配方、无头 URL 令牌、MCP。
+- [配置文件](02-config-files.md) -- 合并策略、`tools.json`、新增生成器。
+- [客户端与编程智能体](../clients/01-agent-clients.md) -- 按智能体接入配方、无头 URL 令牌、MCP。

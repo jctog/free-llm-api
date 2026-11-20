@@ -283,7 +283,7 @@ const store = new Map<string, CacheEntry>();
 // Streaming entries live in their own LRU: a stream's replayable artifact is
 // the exact SSE byte sequence, which is structurally different from a JSON
 // completion body, so the two kinds never share a key across stores. The
-// frames are concatenated into one string on store — a hit replays the whole
+// frames are concatenated into one string on store - a hit replays the whole
 // sequence in a single write, and one string costs far less than an array of
 // hundreds of small ones.
 interface StreamCacheEntry {
@@ -487,7 +487,7 @@ export function getCachedResponse(cacheKey: string, now = Date.now()): CachedRes
  * SQLite persistence: when the cache is on, the entry is also written through
  * to the response_cache table so it survives a restart (the daily quota-reset
  * re-run pattern). The write is deferred to the next tick and best-effort, so
- * it never sits on — or throws into — the proxy hot path; a DB failure degrades
+ * it never sits on - or throws into - the proxy hot path; a DB failure degrades
  * to in-memory-only, exactly as before.
  */
 export function storeCachedResponse(cacheKey: string, input: StoreInput, now = Date.now()): void {
@@ -609,7 +609,7 @@ export function loadCacheFromDb(now = Date.now()): void {
           lastHitAtMs: row.last_hit_at_ms,
         });
       } catch {
-        // corrupt body — skip; it will be overwritten on the next store
+        // corrupt body - skip; it will be overwritten on the next store
       }
     }
   } catch {
@@ -649,8 +649,8 @@ export interface StoreStreamInput {
 
 /**
  * Look up a cached stream. Returns null on a miss or when the entry has aged
- * past the TTL. A hit bumps hit_count and moves the entry to MRU, and — like
- * the JSON lookup — counts into the process-wide hit/miss tallies behind the
+ * past the TTL. A hit bumps hit_count and moves the entry to MRU, and - like
+ * the JSON lookup - counts into the process-wide hit/miss tallies behind the
  * dashboard's hit rate, so streaming traffic is not invisible there.
  */
 export function getCachedStreamResponse(cacheKey: string, now = Date.now()): CachedStreamResponse | null {
@@ -716,7 +716,7 @@ export interface CacheStats {
   /**
    * Entries held across BOTH stores (JSON completions + streaming replays),
    * which is also what the shared RESPONSE_CACHE_MAX_ENTRIES cap bounds. One
-   * prompt asked both streaming and non-streaming therefore counts twice —
+   * prompt asked both streaming and non-streaming therefore counts twice -
    * they are two independent replayable artifacts, and two slots of the cap.
    */
   entries: number;
@@ -726,7 +726,7 @@ export interface CacheStats {
   estimatedRequestsSaved: number;
   savedPromptTokens: number;
   savedCompletionTokens: number;
-  /** Lookups since this process started — the two halves of the ratio below. */
+  /** Lookups since this process started - the two halves of the ratio below. */
   lookupHits: number;
   lookupMisses: number;
   /** 0..1 share of this process's lookups that hit (no lookups yet → 0). */

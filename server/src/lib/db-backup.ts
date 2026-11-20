@@ -119,7 +119,7 @@ export function parseHuggingFaceTarget(target: string): { commitUrl: string; fil
  * Upload one file through the HF commit API: newline-delimited JSON, a header
  * line naming the commit followed by a line per file.
  *
- * The blob is sent as base64 TEXT rather than as bytes — `encoding: 'utf-8'`,
+ * The blob is sent as base64 TEXT rather than as bytes - `encoding: 'utf-8'`,
  * NOT 'base64', because that flag would tell HF to decode the content back to
  * binary before writing it, which is exactly what we are avoiding: repos on Xet
  * storage reject binary blobs pushed through this route. Base64 costs a third
@@ -147,7 +147,7 @@ async function uploadToHuggingFace(
   });
   if (!res.ok) {
     const detail = await res.text().catch(() => '');
-    throw new Error(`backup upload failed: HF commit HTTP ${res.status}${detail ? ` — ${detail.slice(0, 200)}` : ''}`);
+    throw new Error(`backup upload failed: HF commit HTTP ${res.status}${detail ? ` - ${detail.slice(0, 200)}` : ''}`);
   }
 }
 
@@ -204,11 +204,11 @@ async function writeTarget(target: string, payload: Buffer): Promise<void> {
   // Encrypted, but not therefore safe to leave world-readable: the key is
   // FREEAPI_DB_BACKUP_KEY or ENCRYPTION_KEY, which on a normal install sits in a
   // .env file on the same host. The mode covers creation; restrictToOwner covers
-  // the overwrite case, where an existing file keeps the mode it already had —
+  // the overwrite case, where an existing file keeps the mode it already had -
   // and covers Windows, where the mode argument is a no-op.
   fs.writeFileSync(target, payload, { mode: 0o600 });
   if (!restrictToOwner(target)) {
-    console.warn(`[db-backup] could not restrict permissions on ${target} — it may be readable by other local accounts`);
+    console.warn(`[db-backup] could not restrict permissions on ${target} - it may be readable by other local accounts`);
   }
 }
 
@@ -230,7 +230,7 @@ export async function restoreDbBackupIfNeeded(dbPath = getDefaultDbPath()): Prom
   }
 
   fs.mkdirSync(path.dirname(path.resolve(dbPath)), { recursive: true });
-  // This is the decrypted database — provider keys and the dashboard password
+  // This is the decrypted database - provider keys and the dashboard password
   // hash in the clear. connectDb hardens it too, but that is a later call and
   // sometimes a later process; the file must not be readable in between.
   fs.writeFileSync(dbPath, restored, { mode: 0o600 });

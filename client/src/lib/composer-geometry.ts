@@ -6,12 +6,12 @@
 export const COMPOSER_BUTTON_PX = 40
 /** Gap between the bar and the send button once it has broken free, px. */
 export const COMPOSER_GAP_PX = 8
-/** Bar corner radius, px — the "corner" knob of the reference block. */
+/** Bar corner radius, px - the "corner" knob of the reference block. */
 export const COMPOSER_CORNER_PX = 28
-/** Goo blur sigma, px — the "bridge" knob: how far the button stretches before
+/** Goo blur sigma, px - the "bridge" knob: how far the button stretches before
  *  the liquid gives up and it breaks free. */
 export const COMPOSER_BRIDGE = 3
-/** Alpha-contrast slope — the "edge" knob: how sharp the liquid boundary is. */
+/** Alpha-contrast slope - the "edge" knob: how sharp the liquid boundary is. */
 export const COMPOSER_EDGE = 22
 /** Textarea height at which the row switches to bottom alignment. */
 export const COMPOSER_GROWN_PX = 44

@@ -26,18 +26,18 @@ The desktop dashboard's update dialog shows this exact command for Docker instal
 
 ## Dashboard update checker (#635 / #703)
 
-Settings carries a single update surface: it reports the running release, lists recent commits, and — when the installation is Docker — prints the `docker compose pull && docker compose up -d` upgrade command. Relevant controls:
+Settings carries a single update surface: it reports the running release, lists recent commits, and - when the installation is Docker - prints the `docker compose pull && docker compose up -d` upgrade command. Relevant controls:
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
 | `FREELLMAPI_UPDATE_CHECK` | Enabled | Set to `off` to hide the checker from Settings and prevent Git discovery or outbound update-check requests. This also switches off the automatic release reminder, a separate dashboard setting (Settings > General) that is off until turned on there. |
 | `FREELLMAPI_UPDATE_GITHUB_TOKEN` | Empty (anonymous checks) | Optional token used only for update checks against GitHub. Use a narrowly scoped token only if higher rate limits are needed; generic `GITHUB_TOKEN` values are intentionally ignored. |
 
-Two build-level facts back the version display: `FREELLMAPI_INSTALL_METHOD=docker` tells the server which upgrade path to suggest, and the runtime image copies `desktop/package.json` — where the release version lives, since `server/package.json` tracks the workspace — as a ~400-byte manifest so a container install can name its own version (#703).
+Two build-level facts back the version display: `FREELLMAPI_INSTALL_METHOD=docker` tells the server which upgrade path to suggest, and the runtime image copies `desktop/package.json` - where the release version lives, since `server/package.json` tracks the workspace - as a ~400-byte manifest so a container install can name its own version (#703).
 
 ## Backing up the SQLite data volume
 
-Everything that matters lives in one place: the named volume `freellmapi-data` mounted at `/app/server/data`, containing the SQLite database (`freeapi.db`, or wherever `FREEAPI_DB_PATH` points), its `-wal`/`-shm` sidecars, and the `.encryption-key` file for dev-style installs. Back up all of it together, and keep the matching `ENCRYPTION_KEY` safe — without it, backed-up provider keys are undecryptable ciphertext.
+Everything that matters lives in one place: the named volume `freellmapi-data` mounted at `/app/server/data`, containing the SQLite database (`freeapi.db`, or wherever `FREEAPI_DB_PATH` points), its `-wal`/`-shm` sidecars, and the `.encryption-key` file for dev-style installs. Back up all of it together, and keep the matching `ENCRYPTION_KEY` safe - without it, backed-up provider keys are undecryptable ciphertext.
 
 Built-in encrypted backups (recommended, zero downtime). FreeLLMAPI can push an encrypted backup of the live database on a schedule:
 
@@ -93,7 +93,7 @@ For repeatable Docker/server installs, FreeLLMAPI can apply a JSON config on eve
 }
 ```
 
-If two custom endpoints serve the same model id, add `"endpoint"` to a `models` or `fallback` entry to say which one you mean — the endpoint's URL, or the short handle the dashboard shows next to it. Without it, an entry that matches more than one endpoint is rejected rather than applied to an arbitrary one:
+If two custom endpoints serve the same model id, add `"endpoint"` to a `models` or `fallback` entry to say which one you mean - the endpoint's URL, or the short handle the dashboard shows next to it. Without it, an entry that matches more than one endpoint is rejected rather than applied to an arbitrary one:
 
 ```json
 {

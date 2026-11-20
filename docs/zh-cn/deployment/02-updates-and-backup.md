@@ -26,18 +26,18 @@ docker compose pull && docker compose up -d
 
 ## 仪表盘更新检查器（#635 / #703）
 
-设置页承载唯一的更新入口：它报告当前运行的版本、列出近期提交，并且——当安装方式是 Docker 时——打印 `docker compose pull && docker compose up -d` 升级命令。相关的控制项：
+设置页承载唯一的更新入口：它报告当前运行的版本、列出近期提交，并且--当安装方式是 Docker 时--打印 `docker compose pull && docker compose up -d` 升级命令。相关的控制项：
 
 | 变量 | 默认值 | 用途 |
 | --- | --- | --- |
-| `FREELLMAPI_UPDATE_CHECK` | 启用 | 设为 `off` 可把检查器从设置页隐藏，并阻止 Git 发现和对外发出的更新检查请求。这也会一并关掉自动版本提醒——一个独立的仪表盘设置项（设置 > 通用），在被打开之前始终保持关闭。 |
+| `FREELLMAPI_UPDATE_CHECK` | 启用 | 设为 `off` 可把检查器从设置页隐藏，并阻止 Git 发现和对外发出的更新检查请求。这也会一并关掉自动版本提醒--一个独立的仪表盘设置项（设置 > 通用），在被打开之前始终保持关闭。 |
 | `FREELLMAPI_UPDATE_GITHUB_TOKEN` | 空（匿名检查） | 仅用于对 GitHub 做更新检查的可选令牌。只有在需要更高限额时才使用窄权限令牌；通用的 `GITHUB_TOKEN` 值会被有意忽略。 |
 
-两个构建层面的事实支撑着版本显示：`FREELLMAPI_INSTALL_METHOD=docker` 告诉服务器该建议哪条升级路径；runtime 镜像还会复制 `desktop/package.json` ——发布版本号就住在那里，因为 `server/package.json` 跟踪的是工作区版本——作为一个约 400 字节的清单，让容器安装能报出自己的版本（#703）。
+两个构建层面的事实支撑着版本显示：`FREELLMAPI_INSTALL_METHOD=docker` 告诉服务器该建议哪条升级路径；runtime 镜像还会复制 `desktop/package.json` --发布版本号就住在那里，因为 `server/package.json` 跟踪的是工作区版本--作为一个约 400 字节的清单，让容器安装能报出自己的版本（#703）。
 
 ## 备份 SQLite 数据卷
 
-要紧的东西都集中在一个地方：命名卷 `freellmapi-data`，挂载于 `/app/server/data`，里面有 SQLite 数据库（`freeapi.db`，或 `FREEAPI_DB_PATH` 指向的位置）、它的 `-wal`/`-shm` 边车文件，以及开发式安装的 `.encryption-key` 文件。把它们作为整体一起备份，并妥善保管配套的 `ENCRYPTION_KEY`——没有它，备份下来的提供方密钥只是无法解密的密文。
+要紧的东西都集中在一个地方：命名卷 `freellmapi-data`，挂载于 `/app/server/data`，里面有 SQLite 数据库（`freeapi.db`，或 `FREEAPI_DB_PATH` 指向的位置）、它的 `-wal`/`-shm` 边车文件，以及开发式安装的 `.encryption-key` 文件。把它们作为整体一起备份，并妥善保管配套的 `ENCRYPTION_KEY`--没有它，备份下来的提供方密钥只是无法解密的密文。
 
 内置加密备份（推荐，零停机）。FreeLLMAPI 可以按计划推送活动数据库的加密备份：
 
@@ -93,7 +93,7 @@ docker run --rm -v freellmapi-data:/data -v "$PWD":/backup alpine \
 }
 ```
 
-如果两个自定义端点提供同一个模型 id，就在 `models` 或 `fallback` 条目里加上 `"endpoint"` 说明你指的是哪一个——端点的 URL，或者仪表盘显示在它旁边的短名。缺省时，匹配到多个端点的条目会被拒绝，而不是随便应用到其中某一个：
+如果两个自定义端点提供同一个模型 id，就在 `models` 或 `fallback` 条目里加上 `"endpoint"` 说明你指的是哪一个--端点的 URL，或者仪表盘显示在它旁边的短名。缺省时，匹配到多个端点的条目会被拒绝，而不是随便应用到其中某一个：
 
 ```json
 {

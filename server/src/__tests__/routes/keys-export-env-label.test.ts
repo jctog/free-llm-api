@@ -52,7 +52,7 @@ async function exportCsvText(app: Express): Promise<{ status: number; text: stri
   return { status: res.status, text };
 }
 
-describe('Key label — no newline injection into exports', () => {
+describe('Key label - no newline injection into exports', () => {
   let app: Express;
 
   beforeAll(() => {

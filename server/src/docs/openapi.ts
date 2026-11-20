@@ -1,7 +1,7 @@
 // Hand-written OpenAPI 3.0 description of the public `/v1` surface.
 //
 // Why a TypeScript module and not a raw `openapi.json`: the server ships three
-// ways — `tsc` build then `node dist/index.js` (Docker / npm), `tsx` (dev), and
+// ways - `tsc` build then `node dist/index.js` (Docker / npm), `tsx` (dev), and
 // an esbuild single-file bundle for the desktop app (which carries no server
 // `node_modules`). A raw `.json` served from disk breaks the compiled and
 // bundled targets (tsc does not copy `.json` into `dist/`, and the bundle has
@@ -9,7 +9,7 @@
 // and type-checks in every one of those targets with zero extra build wiring.
 //
 // Served as JSON at `GET /v1/openapi.json`. Keep it in sync with the routers in
-// `routes/proxy.ts`, `routes/responses.ts`, and `routes/anthropic.ts` — the
+// `routes/proxy.ts`, `routes/responses.ts`, and `routes/anthropic.ts` - the
 // docs route test asserts every path here resolves to a real route.
 
 // A relative server URL keeps the docs correct on any host or port (localhost,
@@ -640,7 +640,7 @@ export const openapiSpec = {
             name: 'id',
             in: 'path',
             required: true,
-            description: 'Model id (e.g. `auto`, or `vendor/model` — slash URL-encoded).',
+            description: 'Model id (e.g. `auto`, or `vendor/model` - slash URL-encoded).',
             schema: { type: 'string' },
           },
         ],
@@ -893,7 +893,7 @@ export const openapiSpec = {
   components: {
     securitySchemes: {
       // The unified API key from the Keys page. Send it as either an OpenAI-style
-      // bearer token or an Anthropic-style x-api-key header — both are accepted.
+      // bearer token or an Anthropic-style x-api-key header - both are accepted.
       bearerAuth: {
         type: 'http',
         scheme: 'bearer',

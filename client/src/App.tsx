@@ -92,7 +92,7 @@ const modelItems = [
   { to: '/models/fusion', labelKey: 'models.fusionTab' },
 ]
 
-// The pages that hang off "Analytics". Logs is reachable only from here — it is
+// The pages that hang off "Analytics". Logs is reachable only from here - it is
 // deliberately kept out of navItems so the top bar does not grow a seventh entry.
 const analyticsItems = [
   { to: '/analytics', labelKey: 'nav.analytics' },
@@ -162,8 +162,8 @@ const isMacDesktop = isDesktopApp && (
 )
 
 // The preload's own early classList.add can be lost (it may run before this
-// document exists), so the client claims the class itself at module load —
-// before the first React paint — keeping html.desktop CSS (transparent body,
+// document exists), so the client claims the class itself at module load -
+// before the first React paint - keeping html.desktop CSS (transparent body,
 // glass backdrop on macOS) reliable.
 if (isDesktopApp) {
   document.documentElement.classList.add('desktop')
@@ -418,7 +418,7 @@ function PageBoundary({ children }: { children: ReactNode }) {
 // Routes that own the whole viewport instead of sitting in the shell's centred,
 // padded column. Only the Playground so far: its three columns run edge to edge
 // and the transcript scrolls inside its own pane, so the page must be exactly
-// as tall as what is left under the navbar — not a centred card with margins.
+// as tall as what is left under the navbar - not a centred card with margins.
 const FULL_BLEED_ROUTES = new Set(['/playground'])
 
 // The shell's content container. A full-bleed route drops the max-width and the
@@ -426,12 +426,12 @@ const FULL_BLEED_ROUTES = new Set(['/playground'])
 // other route gets a centred column that is always exactly max-w-6xl wide.
 //
 // `w-full` is load-bearing, not decoration. This <main> is an item of a COLUMN
-// flex container, so its cross axis is the horizontal one — and flexbox only
+// flex container, so its cross axis is the horizontal one - and flexbox only
 // stretches an item across the cross axis when neither cross-axis margin is
 // auto (CSS Flexbox §9.6). `mx-auto` sets both, so without an explicit width
 // the column shrink-to-fits its content instead: the page is only ever as wide
 // as the widest thing that has finished rendering. On a page that fills in from
-// several independent queries — Analytics fires ten — that turns every arriving
+// several independent queries - Analytics fires ten - that turns every arriving
 // response into a visible horizontal jump as the column re-fits, and pages
 // whose content never reaches 72rem (Analytics, Premium) settle narrower than
 // they were designed to be. A definite width makes the column 72rem from the

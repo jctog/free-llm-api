@@ -29,7 +29,7 @@ export function ImportKeysSection({ onImported }: { onImported?: () => void } = 
   const [rows, setRows] = useState<ImportRow[]>([])
   const [skipped, setSkipped] = useState<string[]>([])
 
-  // 'custom' is not one of PLATFORMS — it is configured through its own form,
+  // 'custom' is not one of PLATFORMS - it is configured through its own form,
   // so it is deliberately absent from the generic provider dropdown. An
   // imported row is the one case where it belongs there: the file already
   // names the endpoint, and without the option the row can never be selected

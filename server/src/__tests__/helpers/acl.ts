@@ -11,7 +11,7 @@ import { execFileSync } from 'node:child_process';
  *
  * Every ACE line carries a "PRINCIPAL:(RIGHTS)" pair; the leading path line
  * ("C:\\...") and the trailing "Successfully processed" summary do not. An
- * inherited entry is marked "(I)" — its absence is what proves the file no
+ * inherited entry is marked "(I)" - its absence is what proves the file no
  * longer picks up principals from its parent directory.
  *
  * Windows-only: callers must gate on `process.platform === 'win32'`.

@@ -76,7 +76,7 @@ const routingSchema = z.object({
   peakEndHour: z.number().int().min(0).max(23, { message: 'peakEndHour must be an integer between 0 and 23' }).optional(),
   peakTimezone: z.string().refine(isValidTimezone, { message: 'peakTimezone must be a valid IANA timezone name' }).optional(),
   // How to pick between several keys of one platform (#919). Independent of
-  // `strategy`, which ranks MODELS — the two are set from the same form, so
+  // `strategy`, which ranks MODELS - the two are set from the same form, so
   // they round-trip through the same request.
   keySelectionStrategy: z.enum(['auto', 'least-remaining']).optional(),
   // Ceiling on automatic cooldowns (#952): 1 min .. 24 h in ms, null = no cap
@@ -176,7 +176,7 @@ const MODEL_JOINS = `
 
 // The whole catalog seen THROUGH one chain (#1021). A chain is a set of opt-ins,
 // not a copy of the catalog: a model the chain names keeps the priority and the
-// on/off flag stored against it, and a model it does not name is still listed —
+// on/off flag stored against it, and a model it does not name is still listed -
 // switched OFF, ranked after everything the chain does name. That is what makes
 // a hand-built ("start empty") chain usable at all: it renders as "the catalog,
 // nothing turned on yet" instead of an empty page, and turning a row on is the
@@ -245,14 +245,14 @@ fallbackRouter.get('/', (req: Request, res: Response) => {
     activeProfileId = requested;
   }
   // `fallback_config` is the chain only for an install that has no profiles at
-  // all. Once one is active it is authoritative even when it is empty — falling
+  // all. Once one is active it is authoritative even when it is empty - falling
   // through to the global table there is what made two different empty chains
   // show (and save) the same configuration (#1021).
   const rows = activeProfileId != null
     ? orderProfileRows(db.prepare(PROFILE_CHAIN_SQL).all(activeProfileId) as any[])
     : db.prepare(GLOBAL_CHAIN_SQL).all() as any[];
 
-  // Count usable keys per platform — enabled AND healthy/unknown status. Unified
+  // Count usable keys per platform - enabled AND healthy/unknown status. Unified
   // with /token-usage and the routing scorer (#456) so budget pooling is computed
   // from the same key set everywhere (a disabled or invalid key adds no capacity).
   const keyCounts = db.prepare(`
@@ -317,7 +317,7 @@ fallbackRouter.get('/', (req: Request, res: Response) => {
       keyId: r.key_id ?? null,
       keyLabel: r.key_label ?? null,
       // Which relay endpoint a custom row belongs to, and the id that names it
-      // unambiguously (#651). Null for catalog models only — every custom row
+      // unambiguously (#651). Null for catalog models only - every custom row
       // bound to an endpoint carries both, including a lone one. Deciding when
       // they are worth showing is the client's job (see memberProviderLabel /
       // providerPinId / memberEndpointTitle): it reveals them only where two
@@ -367,7 +367,7 @@ fallbackRouter.put('/', (req: Request, res: Response) => {
 
   // Writing to the active chain UPSERTS: the row may not be in the chain yet,
   // which is the normal state of every model in a hand-built one. The old
-  // UPDATE-only write is why an empty chain could never gain its first model —
+  // UPDATE-only write is why an empty chain could never gain its first model -
   // and why, having matched nothing, the edit was quietly redirected into the
   // single global table shared by every chain (#1021).
   const writeAll = activeProfileId != null
@@ -397,7 +397,7 @@ fallbackRouter.put('/', (req: Request, res: Response) => {
   res.json({ success: true });
 });
 
-// `intelligence_rank` is scoped to each provider's own catalog — a provider's
+// `intelligence_rank` is scoped to each provider's own catalog - a provider's
 // #1 model is not globally #1 (see issue #135: MiniMax's top model outranking
 // Gemini Pro because both read "Intel #1"). `size_label` IS a cross-provider
 // capability tier, so normalize on it first and use intelligence_rank only as
@@ -405,7 +405,7 @@ fallbackRouter.put('/', (req: Request, res: Response) => {
 const INTELLIGENCE_TIER =
   "CASE m.size_label WHEN 'Frontier' THEN 1 WHEN 'Large' THEN 2 WHEN 'Medium' THEN 3 WHEN 'Small' THEN 4 ELSE 5 END";
 
-// Sort presets — `orderBy` is selected from a fixed whitelist, never from
+// Sort presets - `orderBy` is selected from a fixed whitelist, never from
 // user input directly, so the interpolation below is safe.
 const SORT_PRESETS: Record<string, string> = {
   intelligence: `${INTELLIGENCE_TIER} ASC, m.intelligence_rank ASC`,
@@ -436,7 +436,7 @@ fallbackRouter.post('/sort/:preset', (req: Request, res: Response) => {
 
   // Same upsert story as the PUT above: a preset sorts the list the dashboard
   // shows, which is the whole catalog seen through the chain, so a model the
-  // chain has not named yet gets its row written here too — switched OFF, the
+  // chain has not named yet gets its row written here too - switched OFF, the
   // state it was displayed in. Sorting must never enable anything; a row
   // already in the chain keeps whatever flag it had.
   const reorder = activeProfileId != null
@@ -547,7 +547,7 @@ fallbackRouter.get('/token-usage', (_req: Request, res: Response) => {
       };
     });
 
-  // Total budget counts all models (both enabled and disabled — they contribute to the pool)
+  // Total budget counts all models (both enabled and disabled - they contribute to the pool)
   const totalBudget = modelBudgets.reduce((s, m) => s + m.budget, 0);
   const totalUsed = modelBudgets.reduce((s, m) => s + m.used, 0);
 
@@ -568,9 +568,9 @@ fallbackRouter.get('/token-usage', (_req: Request, res: Response) => {
 // NEXT, not the worst key on the account: a platform with one exhausted key and
 // one idle key routes fine, and reporting the exhausted one paints a red badge
 // over a model that is wide open. So we mirror the router's key eligibility
-// (`selectKeyForModel`) — enabled + healthy/unknown, model scope allows this
+// (`selectKeyForModel`) - enabled + healthy/unknown, model scope allows this
 // model (#657), and for a custom model the key must belong to the model's own
-// endpoint (#212, #619) — and then report the ELIGIBLE key with the most
+// endpoint (#212, #619) - and then report the ELIGIBLE key with the most
 // headroom (lowest used/limit ratio across its windows), which is the key the
 // router lands on once the busier ones fail their gates.
 //

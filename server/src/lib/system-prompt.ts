@@ -4,7 +4,7 @@ import { getDb, getUnifiedApiKey } from '../db/index.js';
 
 // Per-client API keys with server-enforced system prompts (#411). A client
 // profile is a second kind of inference credential: it authenticates ONLY the
-// /v1 inference surface (proxy + responses), never the /api dashboard routes —
+// /v1 inference surface (proxy + responses), never the /api dashboard routes -
 // those require a dashboard session (middleware/requireAuth). The unified key
 // keeps today's behavior exactly: full inference access, no injected prompt.
 
@@ -72,7 +72,7 @@ export function resolveAuth(token: string | undefined): ResolvedAuth | null {
 /**
  * Prepend the server-enforced system prompt. It goes FIRST, ahead of any
  * caller-supplied system message, so the enforced instructions take priority
- * while the caller's own system message is preserved after it — the caller
+ * while the caller's own system message is preserved after it - the caller
  * can add context but cannot override or remove the profile's prompt.
  * An empty/null prompt is a neutral passthrough: nothing is injected.
  */

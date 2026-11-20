@@ -157,7 +157,7 @@ export default function FallbackPage() {
   })
 
   // Time-window rate-limit usage (#876). One observer and one poll timer for the
-  // whole table — the row component reads it from a map instead of subscribing
+  // whole table - the row component reads it from a map instead of subscribing
   // per row, which on a large catalog was hundreds of observers and timers.
   const { data: rateLimitUsage } = useQuery<RateLimitUsageData>({
     queryKey: ['fallback', 'rate-limit-usage'],
@@ -194,8 +194,8 @@ export default function FallbackPage() {
   const isManual = strategy === 'priority'
 
   // Merge fallback metadata with live scores, keyed by model. Memoized (#1047):
-  // recomputing these over the whole catalog on every render — and the page
-  // renders once per landing query plus once per 15s poll — was a large part of
+  // recomputing these over the whole catalog on every render - and the page
+  // renders once per landing query plus once per 15s poll - was a large part of
   // the "absurdly slow" feel on big catalogs.
   const scoreById = useMemo(
     () => new Map((routing?.scores ?? []).map(s => [s.modelDbId, s])),
@@ -311,7 +311,7 @@ export default function FallbackPage() {
   }
 
   // Jump-to-rank (#1317): type a target rank instead of dragging a model across
-  // a long chain. Same staging path as drag — persistGroupOrder serializes the
+  // a long chain. Same staging path as drag - persistGroupOrder serializes the
   // new display order into localEntries and Save commits it. The typed rank is
   // clamped to the chain, so 1 means "front of the queue" and an over-the-end
   // number means "last" without needing a validation error.
@@ -347,7 +347,7 @@ export default function FallbackPage() {
         {/* First-run checklist: hides itself once the install has keys + a request */}
         <GettingStarted />
 
-        {/* Monthly token budget — moved to the top */}
+        {/* Monthly token budget - moved to the top */}
         {tokenUsage && tokenUsage.totalBudget > 0 && <TokenUsageBar data={tokenUsage} />}
 
         {/* Strategy selector */}
@@ -444,7 +444,7 @@ export default function FallbackPage() {
             <div className="mt-3 flex flex-col items-start gap-2 border-t pt-3">
               {/* Key selection (#919). A separate knob from the strategy above:
                   that one ranks MODELS, this one picks between several keys of
-                  the same provider. Shown in every mode — manual chain order
+                  the same provider. Shown in every mode - manual chain order
                   still leaves the choice of key open. */}
               <label className="inline-flex items-center gap-2 text-xs text-muted-foreground">
                 <span>{t('strategies.keySelection')}</span>
@@ -506,7 +506,7 @@ export default function FallbackPage() {
 
               {/* Peak-hours adjustment (#760): an opt-in tweak to the preset
                   weights, and off it does nothing at all. Its "(peak hours)"
-                  marker on the weight summary above stays visible either way —
+                  marker on the weight summary above stays visible either way -
                   that one explains live behaviour. */}
               {!isManual && routing && (
                 <PeakHoursControls
@@ -518,7 +518,7 @@ export default function FallbackPage() {
               )}
 
               {/* Minimum reliability floor (#filter): independent of the strategy
-                  snapshot — lives in settings, so it owns its own query/mutation.
+                  snapshot - lives in settings, so it owns its own query/mutation.
                   Shown in every mode; the floor pre-filters the candidate chain
                   regardless of how models are ranked. */}
               <ReliabilityFloorControl />
@@ -681,7 +681,7 @@ export default function FallbackPage() {
                 renders. Present only while rows remain, so IO never fires idle. */}
             {hasMoreRows && <div ref={sentinelRef} className="h-px" aria-hidden="true" />}
 
-            {/* Floating action bar — fixed to the viewport so it's always visible,
+            {/* Floating action bar - fixed to the viewport so it's always visible,
                 sliding up when there are unsaved changes and back down on save/discard. */}
             <FloatingBar show={hasChanges}>
               <span className="text-xs text-muted-foreground">{t('common.unsavedChanges')}</span>

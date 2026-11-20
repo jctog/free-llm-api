@@ -3,8 +3,8 @@ import type { Express } from 'express';
 
 // #788: a provider-level failure (5xx, timeout, dead socket) is about the
 // PROVIDER, not the key that happened to catch it. Failover used to burn one
-// hop per sibling key — and then one per sibling MODEL of the same sick
-// platform — before it ever reached the next provider. The router now honors a
+// hop per sibling key - and then one per sibling MODEL of the same sick
+// platform - before it ever reached the next provider. The router now honors a
 // request-scoped skipPlatforms set, so the first 503 moves the chain on.
 // Key-scoped failures (401, 429) must keep rotating to the sibling key.
 //
@@ -62,7 +62,7 @@ const err503 = () => Object.assign(new Error('Groq API error 503: Service Unavai
 const err401 = () => Object.assign(new Error('Groq API error 401: Invalid API Key'), { status: 401 });
 
 // The decrypted key text ("<platform>-<label>") identifies every dispatched
-// attempt — chatCompletion's first argument. Which of a platform's keys the
+// attempt - chatCompletion's first argument. Which of a platform's keys the
 // round-robin cursor lands on first is not part of the contract, so the
 // platform sequence is what these tests assert on.
 const keysUsed = (): string[] => chatCompletion.mock.calls.map(call => String(call[0]));

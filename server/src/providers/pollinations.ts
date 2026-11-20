@@ -3,16 +3,16 @@ import type { KeyValidationResult } from './base.js';
 import { recordQuotaObservationsFromResponse, type QuotaObservationContext } from '../services/provider-quota.js';
 
 const POLLINATIONS_BASE_URL = 'https://gen.pollinations.ai/v1';
-/** Authenticated key-introspection endpoint — note it sits OUTSIDE /v1. */
+/** Authenticated key-introspection endpoint - note it sits OUTSIDE /v1. */
 const POLLINATIONS_ACCOUNT_KEY_URL = 'https://gen.pollinations.ai/account/key';
 
 /**
- * Pollinations — OpenAI-compatible shared-capacity tier.
+ * Pollinations - OpenAI-compatible shared-capacity tier.
  *
  * Everything except key validation is stock OpenAI-compat. validateKey is
  * overridden because Pollinations serves its catalog without auth:
  *
- *   GET /v1/models answers 200 for a revoked key (and for no key at all —
+ *   GET /v1/models answers 200 for a revoked key (and for no key at all -
  *   verified live 2026-07-28), while POST /v1/chat/completions answers 401.
  *   The default openai-compat probe therefore reported dead keys as healthy
  *   and routing degraded silently. See issue #608.
@@ -40,7 +40,7 @@ export class PollinationsProvider extends OpenAICompatProvider {
   }
 
   override async validateKey(apiKey: string, quotaContext?: QuotaObservationContext): Promise<KeyValidationResult> {
-    // Transport errors (DNS / timeout / TLS) propagate — health.ts marks
+    // Transport errors (DNS / timeout / TLS) propagate - health.ts marks
     // status='error' without counting toward auto-disable; only a confirmed
     // 401 disables a key.
     const res = await this.fetchWithTimeout(POLLINATIONS_ACCOUNT_KEY_URL, {
@@ -66,6 +66,6 @@ export class PollinationsProvider extends OpenAICompatProvider {
         `so it is NOT treated as revoked.`,
       );
     }
-    throw new Error(`Pollinations /account/key returned HTTP ${res.status} — key validity unknown`);
+    throw new Error(`Pollinations /account/key returned HTTP ${res.status} - key validity unknown`);
   }
 }

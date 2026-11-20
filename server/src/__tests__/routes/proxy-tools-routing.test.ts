@@ -76,7 +76,7 @@ describe('Tools-aware routing', () => {
     expect(flag('gemini-2.5-flash')).toBe(1);
     expect(flag('llama-3.3-70b-versatile')).toBe(1);
 
-    // hermes-3 emits tool calls as text — must NOT ride the llama-3 rule.
+    // hermes-3 emits tool calls as text - must NOT ride the llama-3 rule.
     const hermes = db.prepare("SELECT supports_tools FROM models WHERE model_id LIKE '%hermes-3%'").all() as { supports_tools: number }[];
     for (const h of hermes) expect(h.supports_tools).toBe(0);
 

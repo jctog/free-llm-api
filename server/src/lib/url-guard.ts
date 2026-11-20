@@ -23,7 +23,7 @@ import net from 'node:net';
 //     instances hosted on a VPS where the dashboard is exposed).
 //   - Everything else (public addresses): allowed.
 //
-// Related: proxyFetch refuses HTTP redirects from custom providers outright —
+// Related: proxyFetch refuses HTTP redirects from custom providers outright -
 // following one would re-request the Location target without re-running this
 // guard, so a public base_url answering 302 → an internal address would
 // otherwise defeat every check in this file.
@@ -100,20 +100,20 @@ function expandIpv6(ip: string): number[] | null {
 function classifyIpv6(ip: string): AddressClass {
   const hextets = expandIpv6(ip);
   // net.isIP already vetted the input, so this branch is unreachable in
-  // practice — but an unparseable address must not classify as public.
+  // practice - but an unparseable address must not classify as public.
   if (!hextets) return 'link-local';
   const [h0, h1, h2, h3, h4, h5, h6, h7] = hextets;
   const embedded = `${h6 >> 8}.${h6 & 0xff}.${h7 >> 8}.${h7 & 0xff}`;
   if (h0 === 0 && h1 === 0 && h2 === 0 && h3 === 0 && h4 === 0) {
     // ::ffff:0:0/96 (IPv4-mapped) and ::/96 (deprecated IPv4-compatible,
     // which also covers :: and ::1 → 0.0.0.0 / 0.0.0.1 → loopback). The
-    // WHATWG URL parser canonicalises mapped literals to the HEX form —
-    // http://[::ffff:169.254.169.254]/ parses to hostname ::ffff:a9fe:a9fe —
+    // WHATWG URL parser canonicalises mapped literals to the HEX form -
+    // http://[::ffff:169.254.169.254]/ parses to hostname ::ffff:a9fe:a9fe -
     // so classification must go through the expanded hextets; a dotted-form
     // string match never fires on URL-sourced hostnames.
     if (h5 === 0xffff || h5 === 0) return classifyIpv4(embedded);
   }
-  // NAT64 well-known prefix (64:ff9b::/96) — a NAT64 gateway would route
+  // NAT64 well-known prefix (64:ff9b::/96) - a NAT64 gateway would route
   // this straight to the embedded IPv4.
   if (h0 === 0x64 && h1 === 0xff9b && h2 === 0 && h3 === 0 && h4 === 0 && h5 === 0) {
     return classifyIpv4(embedded);
@@ -139,7 +139,7 @@ export function classifyIp(ip: string): AddressClass {
  *
  * Normalises the two spellings a URL hostname can arrive in: IPv6 literals are
  * bracketed (`[::1]`), and the FQDN form carries a trailing dot (`localhost.`
- * — a real, resolvable spelling that must not slip past as a public name).
+ * - a real, resolvable spelling that must not slip past as a public name).
  */
 export function isLoopbackOrPrivateHostname(hostname: string): boolean {
   const host = hostname.replace(/^\[|\]$/g, '').replace(/\.$/, '').toLowerCase();
@@ -160,7 +160,7 @@ export function isLoopbackOrPrivateHostname(hostname: string): boolean {
  *
  * Deliberately DNS-free so it can sit on the cooldown hot path: literal IPs and
  * 'localhost'/'*.localhost' are decidable synchronously; any other hostname
- * (LAN mDNS names included) is pragmatically treated as NON-local — the worst
+ * (LAN mDNS names included) is pragmatically treated as NON-local - the worst
  * case there is the pre-existing conservative bench, never a wrong exemption.
  */
 export function isLoopbackOrPrivateUrl(rawUrl: string | null | undefined): boolean {
@@ -197,7 +197,7 @@ function blockPrivateEnabled(): boolean {
 
 /**
  * Assess whether an outbound custom-provider URL is safe to contact.
- * Never throws on malformed input — a bad URL comes back as {allowed: false}.
+ * Never throws on malformed input - a bad URL comes back as {allowed: false}.
  */
 export async function assessProviderUrl(rawUrl: string, opts: AssessOptions = {}): Promise<UrlAssessment> {
   let url: URL;
@@ -212,7 +212,7 @@ export async function assessProviderUrl(rawUrl: string, opts: AssessOptions = {}
 
   // WHATWG URL canonicalises decimal/hex/octal IPv4 forms (http://2852039166/
   // parses to hostname 169.254.169.254), so classifying url.hostname covers
-  // those encodings too. IPv6 literals arrive bracketed — strip for net.isIP.
+  // those encodings too. IPv6 literals arrive bracketed - strip for net.isIP.
   const hostname = url.hostname.replace(/^\[|\]$/g, '').toLowerCase();
 
   if (METADATA_HOSTNAMES.has(hostname)) {
@@ -227,7 +227,7 @@ export async function assessProviderUrl(rawUrl: string, opts: AssessOptions = {}
       addresses = await (opts.resolve ?? defaultResolve)(hostname);
     } catch {
       // Unresolvable now may resolve later (device not on the LAN yet, DNS
-      // hiccup). Saving is harmless — the request-time check runs again.
+      // hiccup). Saving is harmless - the request-time check runs again.
       return { allowed: true };
     }
     if (addresses.length === 0) return { allowed: true };

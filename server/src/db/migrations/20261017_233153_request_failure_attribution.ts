@@ -11,8 +11,8 @@ function hasColumn(db: Db, table: string, column: string): boolean {
 }
 
 // #1347 (PR 1): rate-limit-aware failure attribution. A failed attempt whose
-// root cause is a provider moment — a 429, a 5xx, a timeout, a dropped socket
-// — is evidence about the provider's minute, not the model's quality. When
+// root cause is a provider moment - a 429, a 5xx, a timeout, a dropped socket
+// - is evidence about the provider's minute, not the model's quality. When
 // the opt-in setting is on, such rows are tagged 'provider_moment' so the
 // routing stats can exclude them from the model-level books. NULL (the
 // default, and every historical row) means "unattributed" and keeps today's

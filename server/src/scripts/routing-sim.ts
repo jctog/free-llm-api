@@ -1,5 +1,5 @@
 /**
- * Routing simulation — exercises the real routeRequest() against an in-memory
+ * Routing simulation - exercises the real routeRequest() against an in-memory
  * DB seeded with synthetic traffic, so you can SEE how each strategy distributes
  * requests and how the bandit adapts when a model starts failing.
  *
@@ -22,7 +22,7 @@ interface Profile {
   successes: number; failures: number; outTokens: number; latencyMs: number; ttfbMs: number;
 }
 
-// Deliberately no model that wins on every axis — so each strategy's weight
+// Deliberately no model that wins on every axis - so each strategy's weight
 // vector picks a DIFFERENT winner (that's the whole point of the redesign).
 const PROFILES: Profile[] = [
   // Frontier intelligence, good-not-great reliability, genuinely slow → wins SMARTEST.
@@ -31,7 +31,7 @@ const PROFILES: Profile[] = [
   { platform: 'groq', modelId: 'llama-fast', name: 'Speed-King', intelligenceRank: 9, sizeLabel: 'Small', budget: '~50M', successes: 27, failures: 3, outTokens: 1100, latencyMs: 700, ttfbMs: 110 },
   // Middling intel/speed but rock-solid reliability → wins RELIABLE.
   { platform: 'openrouter', modelId: 'rock', name: 'Rock-Solid', intelligenceRank: 5, sizeLabel: 'Medium', budget: '~50M', successes: 40, failures: 1, outTokens: 250, latencyMs: 2000, ttfbMs: 1500 },
-  // Large/smart but flaky — high intelligence dragged down by failures.
+  // Large/smart but flaky - high intelligence dragged down by failures.
   { platform: 'cerebras', modelId: 'smart-flaky', name: 'Smart-Flaky', intelligenceRank: 3, sizeLabel: 'Large', budget: '~50M', successes: 18, failures: 14, outTokens: 500, latencyMs: 1500, ttfbMs: 600 },
 ];
 
@@ -104,7 +104,7 @@ function main() {
   const RUNS = 2000;
 
   console.log('\n══════════════════════════════════════════════════════════════');
-  console.log('  ROUTING SIMULATION  —  4 models, 2000 requests per strategy');
+  console.log('  ROUTING SIMULATION  -  4 models, 2000 requests per strategy');
   console.log('══════════════════════════════════════════════════════════════');
   console.log('\n  Synthetic profiles:');
   for (const p of PROFILES) {
@@ -123,7 +123,7 @@ function main() {
 
   // ── Adaptation: the favored model under 'balanced' suddenly starts failing ──
   console.log('\n══════════════════════════════════════════════════════════════');
-  console.log('  ADAPTATION  —  inject a failure burst into the top model');
+  console.log('  ADAPTATION  -  inject a failure burst into the top model');
   console.log('══════════════════════════════════════════════════════════════');
   setRoutingStrategy('balanced');
   refreshStatsCache(getDb(), true);

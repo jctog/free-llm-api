@@ -1,6 +1,6 @@
 **English** · [简体中文](../../zh-cn/architecture/06-observability.md)
 
-# Observability — Deep Dive
+# Observability - Deep Dive
 
 > **Source:** `server/src/lib/server-logs.ts`, `server/src/routes/logs.ts`, `server/src/lib/request-log.ts`, `server/src/lib/log-redaction.ts`, `server/src/lib/attempt-trace.ts`
 
@@ -27,9 +27,9 @@ server-logs.ts.recordConsoleLine(level, args)
 ```
 
 **Reentrancy guards**:
-- `mirroring` — `providerLog()` mirrors to stdout via wrapped console; prevents double-ingest.
-- `persisting` — DB layer can log (busy timeout, permissions); skips persist write but ring still accepts.
-- `seeding` — boot seed probes DB, which can log.
+- `mirroring` - `providerLog()` mirrors to stdout via wrapped console; prevents double-ingest.
+- `persisting` - DB layer can log (busy timeout, permissions); skips persist write but ring still accepts.
+- `seeding` - boot seed probes DB, which can log.
 
 ### Structured Provider Logs
 
@@ -53,7 +53,7 @@ The public query API (`queryLogs({ levels, q, provider, event, sinceId, limit })
 
 ### Desktop file logger
 
-The desktop app has no terminal attached, so it tees every console line to a **file logger** (`desktop/src/logger.ts`, added in `90aaa5b`) instead of relying on the in-memory ring: `<data dir>/logs/freeapi.log`, plus one rotated `freeapi.log.1` at 1 MB each. The same redaction wrapper feeds both the ring (server) and the file (desktop), so secrets never reach the file either. The desktop's password-reset code appears here — see the [Install & deploy FAQ](../install/01-install.md#where-are-the-logs).
+The desktop app has no terminal attached, so it tees every console line to a **file logger** (`desktop/src/logger.ts`, added in `90aaa5b`) instead of relying on the in-memory ring: `<data dir>/logs/freeapi.log`, plus one rotated `freeapi.log.1` at 1 MB each. The same redaction wrapper feeds both the ring (server) and the file (desktop), so secrets never reach the file either. The desktop's password-reset code appears here - see the [Install & deploy FAQ](../install/01-install.md#where-are-the-logs).
 
 ---
 
@@ -78,8 +78,8 @@ The desktop app has no terminal attached, so it tees every console line to a **f
 
 ### `execution_id` and the `caller` dimension
 
-Every JSON body the chat completion routes send — success, cache/idempotency
-replay, and error alike — carries a top-level `execution_id` holding the same
+Every JSON body the chat completion routes send - success, cache/idempotency
+replay, and error alike - carries a top-level `execution_id` holding the same
 value as the `X-Request-ID` header, so a client that only kept the response body
 can still find the row and its attempt trail. It is stamped on the outbound copy,
 so a replayed cache hit reports the id of *that* request, not the one that filled

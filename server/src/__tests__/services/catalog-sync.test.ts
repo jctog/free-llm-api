@@ -374,7 +374,7 @@ describe('reapplyCachedCatalog', () => {
   it('restores catalog state over a re-run of the baseline migrations', () => {
     // Catalog says: one baseline model is gone. The victim must be one that a
     // re-runnable migration re-inserts on boot (V23's INSERT OR IGNORE rows),
-    // not a first-init-only seed row — that re-insertion is the exact drift
+    // not a first-init-only seed row - that re-insertion is the exact drift
     // this function exists to undo.
     const models = existingAsCatalogModels();
     const victim = models.find((m) => m.platform === 'openrouter' && m.modelId === 'moonshotai/kimi-k2.6:free')!;
@@ -389,7 +389,7 @@ describe('reapplyCachedCatalog', () => {
 
     // Simulate a restart: re-run the baseline migrations so their
     // INSERT OR IGNORE re-adds the catalog-deleted model. The source-provenance
-    // migration (20260726_000003) must stay recorded as applied — in the real
+    // migration (20260726_000003) must stay recorded as applied - in the real
     // timeline its backfill runs exactly once (every install with an applied
     // catalog cache already has a migrations table), and re-running it here
     // would re-classify the baseline's re-inserted rows against the applied
@@ -411,7 +411,7 @@ describe('reapplyCachedCatalog', () => {
 
   it('keeps an upstream retirement across a cached re-apply, and lifts it only for a newer catalog', () => {
     // The re-apply replays the snapshot the retirement already post-dates, so
-    // it must not read that snapshot as a newer opinion — otherwise every 410
+    // it must not read that snapshot as a newer opinion - otherwise every 410
     // (#634) is undone by the next restart. A genuinely newer catalog still
     // wins, which is what the lift exists for.
     const models = existingAsCatalogModels();
@@ -468,7 +468,7 @@ describe('reapplyCachedCatalog', () => {
 });
 
 // The speech-to-text registry rides the catalog's dedicated optional
-// `transcriptionModels` key (NOT the `models` array — old binaries would
+// `transcriptionModels` key (NOT the `models` array - old binaries would
 // ingest unknown-modality models entries as chat models) and lands in
 // media_models with modality='transcription'. These tests lock the sync,
 // prune scoping, enabled-merge, tombstone, and rejection rules.
@@ -697,7 +697,7 @@ describe('applyCatalog: videoModels', () => {
 });
 
 // Generative media rows (image/audio) carry adapter metadata in meta_json the
-// same way transcription rows do — the flavour a platform's endpoint expects.
+// same way transcription rows do - the flavour a platform's endpoint expects.
 // Cloudflare hosts both JSON-body image models and the FLUX.2 family, whose
 // schema takes multipart only, so the flag has to survive the sync.
 describe('applyCatalog: generative media meta', () => {

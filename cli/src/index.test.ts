@@ -61,7 +61,7 @@ describe('CLI arguments and launchers', () => {
   it('still rejects a stray positional for commands that take none', async () => {
     // `doctor` is the only command with positional arguments, so parseArgs
     // collects them generically. The dispatcher has to reject them for every
-    // other command BEFORE dispatch — checked after the setup-* branch, the
+    // other command BEFORE dispatch - checked after the setup-* branch, the
     // stray word would be silently ignored instead of erroring.
     await expect(main(['setup-claude', 'typo'])).rejects.toThrow('Unknown option: typo');
     await expect(main(['launch', 'typo'])).rejects.toThrow('Unknown option: typo');
@@ -241,7 +241,7 @@ describe('CLI arguments and launchers', () => {
 
   // #1283: on Node <17.4 the CLI died at module-load time with
   // ERR_UNKNOWN_BUILTIN_MODULE because `node:readline/promises` was imported
-  // statically, so no command — not even --help — could run, let alone print
+  // statically, so no command - not even --help - could run, let alone print
   // a readable reason. Two layers fix it: the readline import is now lazy
   // (only the interactive key prompt needs it), and this pure check turns an
   // old runtime into one clear sentence before main() runs.

@@ -8,14 +8,14 @@ import { execFileSync as nodeExecFileSync } from 'node:child_process';
  * POSIX gets `chmod 0600`. Windows has no POSIX modes at all: `fs.chmodSync`
  * there only maps the owner-write bit onto FILE_ATTRIBUTE_READONLY, so
  * `chmod(0o600)` is a silent no-op and the file keeps whatever ACL it inherited
- * from its directory. That is not a cosmetic gap — a freshly created database
+ * from its directory. That is not a cosmetic gap - a freshly created database
  * under `%TEMP%` or a shared profile can inherit Modify for app containers and
  * for other local accounts, and this file holds encrypted provider keys, the
  * dashboard password hash, or the master encryption key.
  *
  * The Windows leg therefore drops inheritance and rewrites the ACL to exactly
  * three principals: the current user, SYSTEM and Administrators. Keeping the
- * last two mirrors POSIX, where 0600 never locks root out — and dropping them
+ * last two mirrors POSIX, where 0600 never locks root out - and dropping them
  * would break backup agents and service accounts for no security gain, since
  * both can take ownership regardless.
  *
@@ -29,7 +29,7 @@ import { execFileSync as nodeExecFileSync } from 'node:child_process';
  *   - Windows really does inherit. `(OI)(CI)` marks an ACE object- and
  *     container-inheritable, so a sidecar created afterwards is born with the
  *     restricted ACL already on it.
- *   - POSIX does not propagate modes at all — a file created inside a 0700
+ *   - POSIX does not propagate modes at all - a file created inside a 0700
  *     directory still lands at 0644. It does not need to: 0700 clears the search
  *     bit for group and other, and without search permission no other account
  *     can resolve a path through the directory to reach the child in the first
@@ -56,7 +56,7 @@ export interface RestrictOptions {
 const EXEC_TIMEOUT_MS = 5_000;
 
 /** SYSTEM and the local Administrators group, as well-known SIDs. Referenced by
- *  SID rather than by name because the display names are localized — a German
+ *  SID rather than by name because the display names are localized - a German
  *  Windows reports `VORDEFINIERT\Administratoren`. */
 const SID_SYSTEM = 'S-1-5-18';
 const SID_ADMINISTRATORS = 'S-1-5-32-544';
@@ -76,7 +76,7 @@ let cachedOwnerSid: string | null | undefined;
 /**
  * The current user's SID, via `whoami /user /fo csv /nh`, which prints
  * `"DOMAIN\\user","S-1-5-21-..."`. Returns null if it cannot be determined.
- * Memoized only for the real binary — a process's own SID cannot change — so an
+ * Memoized only for the real binary - a process's own SID cannot change - so an
  * injected fake in tests is never cached and never reads another test's value.
  */
 function resolveOwnerSid(exec: ExecFileSyncLike, useCache: boolean): string | null {
@@ -107,7 +107,7 @@ function resolveOwnerSid(exec: ExecFileSyncLike, useCache: boolean): string | nu
  * Administrators. Split out from the spawn so the command shape is testable
  * without a Windows box.
  *
- * `/inheritance:r` removes the inherited ACEs (the whole point — that is where
+ * `/inheritance:r` removes the inherited ACEs (the whole point - that is where
  * the extra principals come from), and `/grant:r` replaces rather than adds, so
  * running it twice is idempotent. The `*` prefix makes icacls read each
  * principal as a SID literal instead of an account name.
@@ -187,7 +187,7 @@ function restrict(
  * cannot express them.
  *
  * @returns true when the restriction was applied, false when it could not be.
- *          Callers are expected to surface a false — the failure mode that made
+ *          Callers are expected to surface a false - the failure mode that made
  *          this function necessary was a guard everyone believed was running.
  */
 export function restrictToOwner(target: string, opts?: RestrictOptions): boolean {
@@ -201,7 +201,7 @@ export function restrictToOwner(target: string, opts?: RestrictOptions): boolean
  *
  * Callers must be sure the directory is theirs. This is deliberately not
  * something to do to any path handed in by configuration: locking down a shared
- * directory — a temp dir, a working copy, someone else's data directory — is a
+ * directory - a temp dir, a working copy, someone else's data directory - is a
  * worse outage than the leak it prevents.
  *
  * @returns true when the restriction was applied, false when it could not be.
@@ -212,7 +212,7 @@ export function restrictDirToOwner(target: string, opts?: RestrictOptions): bool
 
 /**
  * Restrict several files that share an owner, resolving the SID at most once.
- * Missing files are skipped, not failed — SQLite's `-wal`/`-shm` sidecars do not
+ * Missing files are skipped, not failed - SQLite's `-wal`/`-shm` sidecars do not
  * exist until the first write.
  *
  * @returns the targets that could not be restricted.

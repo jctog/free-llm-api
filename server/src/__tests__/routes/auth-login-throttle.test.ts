@@ -55,13 +55,13 @@ describe('login brute-force throttling', () => {
     }
     expect((await login(EMAIL, 'wrong-again')).status).toBe(429);
 
-    // Same account, padded spellings — must hit the same locked bucket.
+    // Same account, padded spellings - must hit the same locked bucket.
     for (const padded of [` ${EMAIL}`, `${EMAIL} `, `\t${EMAIL}`, `\n${EMAIL}`, `  ${EMAIL}  `]) {
       expect((await login(padded, 'wrong')).status).toBe(429);
     }
 
     // And the padded spelling must not be able to sign in past the lockout
-    // with the RIGHT password either — it is the same account.
+    // with the RIGHT password either - it is the same account.
     expect((await login(` ${EMAIL}`, PASSWORD)).status).toBe(429);
   });
 

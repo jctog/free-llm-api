@@ -11,7 +11,7 @@ export function getDashboardWindow(): BrowserWindow | null {
   return dashboardWindow;
 }
 
-// One window at a time, destroyed on close — the app lives in the tray, the
+// One window at a time, destroyed on close - the app lives in the tray, the
 // window is an on-demand view. The session token rides in via
 // additionalArguments so the CJS preload can seed localStorage before any
 // page script runs (no login flash, no reload).

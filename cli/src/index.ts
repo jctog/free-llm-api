@@ -118,7 +118,7 @@ async function promptForKey(provider = false): Promise<string> {
   }
   // Imported lazily, not statically: `node:readline/promises` only exists on
   // Node >=17.4, and a static import of it crashes the whole CLI at load time
-  // on older runtimes (#1283) — `npx freellmapi --help` died with
+  // on older runtimes (#1283) - `npx freellmapi --help` died with
   // ERR_UNKNOWN_BUILTIN_MODULE before main() or the engines check could say
   // anything useful. Deferring it means only the interactive key prompt needs
   // a modern Node; every other command degrades to the readable error below.
@@ -192,7 +192,7 @@ export interface Catalogs {
   full: CatalogModel[];
   /** Why the unfiltered fetch failed. Set means `full` is really the FILTERED
    *  roster, so "unknown model" and "out of quota" can no longer be told
-   *  apart — the exact ambiguity this pair of fetches exists to remove. */
+   *  apart - the exact ambiguity this pair of fetches exists to remove. */
   degradedReason?: string;
 }
 
@@ -203,7 +203,7 @@ export interface Catalogs {
  * exists but is out of quota right now", and reporting the second as the first
  * turns a rate limit into a spurious typo error. The unfiltered fetch is
  * best-effort: an older gateway that ignores the parameter, or any failure,
- * degrades to the filtered roster rather than blocking a launch — but it
+ * degrades to the filtered roster rather than blocking a launch - but it
  * RECORDS that it degraded, so the degradation can be reported instead of
  * silently reinstating the ambiguity.
  */
@@ -226,7 +226,7 @@ export async function catalogs(url: string, apiKey: string): Promise<Catalogs> {
  *
  * One resolution feeding both the id that gets pinned and the warning the user
  * reads, so the two can never disagree. Returns undefined when nothing was
- * pinned — the launcher then picks from the filtered roster, where there is no
+ * pinned - the launcher then picks from the filtered roster, where there is no
  * ambiguity to lose and so nothing to warn about.
  */
 export function resolvePinnedModel(
@@ -242,14 +242,14 @@ export function resolvePinnedModel(
   if (rosters.degradedReason) {
     warn(
       `freellmapi: could not fetch the unfiltered model catalog (${rosters.degradedReason}). `
-      + `Checking '${requested}' against the available-only roster instead — a model that `
+      + `Checking '${requested}' against the available-only roster instead - a model that `
       + 'exists but is out of quota may be reported as unknown.\n',
     );
   }
 
   const resolved = resolveLaunchModel(requested, rosters.available, rosters.full);
   // A pinned model that is registered but not servable right now is a launch we
-  // should still make — the router may recover it mid-session — but never one
+  // should still make - the router may recover it mid-session - but never one
   // we should make silently.
   if (resolved.unavailable) {
     warn(
@@ -406,7 +406,7 @@ async function launchClaude(options: CliOptions): Promise<number> {
   const rosters = await catalogs(options.url, apiKey);
   // Resolved here for the warning; claudeLaunchEnv resolves again to build the
   // environment. Both are pure calls over the same two rosters, so they cannot
-  // reach different verdicts — keeping claudeLaunchEnv a side-effect-free env
+  // reach different verdicts - keeping claudeLaunchEnv a side-effect-free env
   // builder is worth more than eliding the second call.
   resolvePinnedModel(options.model, rosters);
   const env = claudeLaunchEnv(
@@ -471,7 +471,7 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
   }
   if (command === 'keys') return runKeys(options, () => promptForKey(true));
   // `doctor` and `keys` take positional arguments. Every other
-  // one rejects them here, BEFORE dispatch — checking after the setup-* branch
+  // one rejects them here, BEFORE dispatch - checking after the setup-* branch
   // would let `setup-claude typo` run with the stray word silently ignored,
   // where it used to be an error.
   if (command !== 'doctor' && options.args.length) {
@@ -503,7 +503,7 @@ function isDirectExecution(): boolean {
 }
 
 /** Minimum Node major this CLI actually runs on: `AbortSignal.timeout`
- *  (17.3), global `fetch` (18), `node:readline/promises` (17.4) — rounded to
+ *  (17.3), global `fetch` (18), `node:readline/promises` (17.4) - rounded to
  *  the package's engines floor of 20. npm treats `engines` as a warning by
  *  default (and npm 6, still common on Windows boxes hitting #1283, ignores it
  *  for `npx`), so without this check an unsupported runtime gets a stack

@@ -65,8 +65,8 @@ function isAutoModel(modelId: string | undefined): boolean {
 // ─────────────────────────────────────────────────────────────────────────
 // OpenAI Responses API shim (POST /v1/responses).
 //
-// Current Codex versions only speak the Responses API — `wire_api = "chat"`
-// is rejected — so the existing /v1/chat/completions endpoint isn't reachable
+// Current Codex versions only speak the Responses API - `wire_api = "chat"`
+// is rejected - so the existing /v1/chat/completions endpoint isn't reachable
 // from Codex (see issue #96). This endpoint accepts a Responses-shaped request,
 // translates it to the internal chat-message format, runs it through the SAME
 // shared fallback loop as the proxy (lib/fallback-loop.ts), and translates the
@@ -124,7 +124,7 @@ const functionCallOutputItemSchema = z.object({
 // `reasoning` / `local_shell_call` items. We accept them all so validation never
 // 400s on a standard payload; each is then either mapped (below) or dropped
 // because chat-completions upstreams have no equivalent (computer/local_shell).
-// Each schema is permissive — we only consume the fields that matter.
+// Each schema is permissive - we only consume the fields that matter.
 const computerCallItemSchema = z.object({
   type: z.literal('computer_call'),
   call_id: z.string(),
@@ -172,7 +172,7 @@ const additionalToolsItemSchema = z.object({
 
 // The rest of the official ResponseInputItemParam union: built-in tool calls
 // (web_search, file_search, code interpreter, image generation), MCP items,
-// and item references. None has a chat-completions equivalent — validated
+// and item references. None has a chat-completions equivalent - validated
 // loosely so a standard replay never 400s, then skipped at conversion like
 // the kinds above.
 const otherKnownItemSchema = z.object({
@@ -229,7 +229,7 @@ const responsesRequestSchema = z.object({
   parallel_tool_calls: z.boolean().nullable().optional(),
   // Extended sampling params, validated the same way as /chat/completions.
   // Responses clients express structured output as `text.format` rather than
-  // `response_format` — mapped where completionOpts is built.
+  // `response_format` - mapped where completionOpts is built.
   ...samplingParamSchemaFields,
   text: z.object({
     format: z.object({
@@ -310,7 +310,7 @@ function extractPartImageUrl(p: { [k: string]: unknown }): string | undefined {
 // Responses `input_image` references an image by `image_url` OR a Files API
 // `file_id`. This proxy has no OpenAI Files backend, and the schema is
 // deliberately lenient, so an image part with no resolvable url (file_id-only,
-// or no url at all) can't survive translation — reject up front instead of
+// or no url at all) can't survive translation - reject up front instead of
 // silently dropping it and answering blind to an image the client believes
 // was sent. (`computer_screenshot` shares these forms but is intentionally
 // not checked: computer use is rejected wholesale up front, today and until
@@ -446,7 +446,7 @@ export function toChatMessages(req: ResponsesRequest): ChatMessage[] {
       // function_call items. Merge them into a single chat assistant message
       // (content + tool_calls); emitting consecutive assistant turns makes
       // Gemini map them to consecutive model turns and strict upstreams
-      // (Mistral/Cohere) 400. Drop empty assistant items — an empty turn means
+      // (Mistral/Cohere) 400. Drop empty assistant items - an empty turn means
       // nothing to a chat provider. (#96)
       const toolCalls: ChatToolCall[] = [];
       let j = i + 1;
@@ -482,7 +482,7 @@ export function toChatMessages(req: ResponsesRequest): ChatMessage[] {
 
 export function toChatTools(tools?: ResponsesRequest['tools']): ChatToolDefinition[] | undefined {
   if (!tools?.length) return undefined;
-  // Forward only function tools — chat-completions upstreams reject other
+  // Forward only function tools - chat-completions upstreams reject other
   // Responses-API tool types (web_search, local_shell, etc.). Codex sends those
   // extras alongside its function tools (shell/exec, apply_patch); dropping them
   // keeps the request valid without losing the tools that actually do the work.
@@ -649,7 +649,7 @@ function enforceFusionResponseFormat(result: FusionResult, responseFormat: Respo
   if (!text) return;
   const enforced = enforceJsonContent(text);
   if (!enforced.ok) {
-    throw new Error(`fusion produced non-JSON output despite response_format=${responseFormat.type} — retry, or pin a structured-output-capable model instead of "fusion"`);
+    throw new Error(`fusion produced non-JSON output despite response_format=${responseFormat.type} - retry, or pin a structured-output-capable model instead of "fusion"`);
   }
   if (enforced.healed) message.content = enforced.content;
 }
@@ -714,7 +714,7 @@ export async function handleResponses(req: Request, res: Response): Promise<void
   }
 
   // Unresolvable image parts (file_id-only, or no usable url) can't survive
-  // translation — fail clearly rather than dropping the image and answering
+  // translation - fail clearly rather than dropping the image and answering
   // blind.
   if (responsesInputHasFileIdImage(reqData)) {
     res.status(422).json({
@@ -783,7 +783,7 @@ export async function handleResponses(req: Request, res: Response): Promise<void
   // Image requests must route to a vision-capable model (mirrors
   // /chat/completions, proxy.ts). Reject up front with a clear message when
   // none is enabled; when vision models are available, requireVision routing
-  // skips text-only models — including a pinned/sticky one — and falls back to
+  // skips text-only models - including a pinned/sticky one - and falls back to
   // a vision-capable peer (#118, #125). A rough per-image token cost keeps
   // budget routing from being skewed by content the text heuristic can't see.
   const hasImage = messageHasImage(messages);
@@ -832,7 +832,7 @@ export async function handleResponses(req: Request, res: Response): Promise<void
   const aliasTierChain = claudeAlias?.kind === 'tier' ? resolveModelGroupCandidates(claudeAlias.dbIds) : [];
 
   // Explicit `model` field pins routing. If the catalog has no enabled row
-  // matching the requested id, return 400 — silently auto-routing to a
+  // matching the requested id, return 400 - silently auto-routing to a
   // different model would be surprising to Responses API clients.
   // Priority: explicit model > sticky session > auto routing.
   let preferredModel: number | undefined;
@@ -936,7 +936,7 @@ export async function handleResponses(req: Request, res: Response): Promise<void
   // attempt; the AbortController (threaded to the provider as
   // CompletionOptions.signal) additionally cancels the IN-FLIGHT upstream
   // fetch and any body/stream read, so tokens stop burning and the in-flight
-  // lease frees immediately. 'close' also fires on normal completion —
+  // lease frees immediately. 'close' also fires on normal completion -
   // writableEnded distinguishes a real disconnect.
   let clientGone = false;
   const clientAbort = new AbortController();
@@ -1226,7 +1226,7 @@ export async function handleResponses(req: Request, res: Response): Promise<void
       if (stream) {
         // Every output item (message text + each function_call) claims the next
         // free index. OpenAI's streaming SDK indexes snapshot.output by
-        // output_index, so indices MUST be dense & unique — reusing 0 for the
+        // output_index, so indices MUST be dense & unique - reusing 0 for the
         // text item after a tool-call item had already taken it makes the SDK
         // crash on `snapshot.output[output_index]` (#96, Codex computer-use).
         let outputIndex = 0;
@@ -1257,7 +1257,7 @@ export async function handleResponses(req: Request, res: Response): Promise<void
 
         // Commit point: headers + the response.created/in_progress skeleton go
         // out only when the first MEANINGFUL output item is about to be emitted
-        // (converged with /chat/completions — responses previously committed on
+        // (converged with /chat/completions - responses previously committed on
         // the first raw chunk, even a role-only one). Until then a connect-time
         // error, an empty completion, or an unparseable dialect turn fails over
         // on the same connection with no bytes on the wire. Idempotent.
@@ -1306,7 +1306,7 @@ export async function handleResponses(req: Request, res: Response): Promise<void
           });
 
         // Open the text output item and stream `text` as its first delta.
-        // The text item takes the next free output index (it is NOT always 0 —
+        // The text item takes the next free output index (it is NOT always 0 -
         // when the model emits tool_calls first, the function_call items own
         // the low indices). Every later text delta/done must reference this
         // same index or the SDK snapshot lookup misroutes the deltas.
@@ -1340,7 +1340,7 @@ export async function handleResponses(req: Request, res: Response): Promise<void
           for await (const chunk of gen) {
             if (clientGone) break; // client hung up: stop pulling; reader.cancel() aborts upstream
             // In-band upstream error frame ({"error":...} inside a 200 SSE
-            // stream — observed live from Groq). Throwing hands it to the catch
+            // stream - observed live from Groq). Throwing hands it to the catch
             // below: pre-commit it fails over, post-commit it surfaces
             // response.failed.
             const anyChunk = chunk as Record<string, any>;
@@ -1357,7 +1357,7 @@ export async function handleResponses(req: Request, res: Response): Promise<void
             // the dialect hold window has decided the text is real prose.
             const text = delta.content ?? '';
             // #764: reasoning models stream thinking before the first answer
-            // token — count that first token as ttfb so Analytics speed
+            // token - count that first token as ttfb so Analytics speed
             // reflects the real head-of-stream, and count thinking tokens as
             // real output consumption.
             const reasoning = streamReasoningText(chunk);
@@ -1387,7 +1387,7 @@ export async function handleResponses(req: Request, res: Response): Promise<void
                 }
               }
             } else if (reasoning.length > 0) {
-              // #764: thinking-only chunk (no visible text yet) — count tokens.
+              // #764: thinking-only chunk (no visible text yet) - count tokens.
               totalOutputTokens += Math.ceil(reasoning.length / 4);
               totalReasoningTokens += Math.ceil(reasoning.length / 4);
             }
@@ -1460,19 +1460,19 @@ export async function handleResponses(req: Request, res: Response): Promise<void
             heldText = '';
           }
 
-          // Empty completion — the provider returned 200 with no text AND no
+          // Empty completion - the provider returned 200 with no text AND no
           // tool calls. Seen in production from nemotron-3-super on ~65k-token
           // contexts: transport-level "success", zero usable output. Nothing has
           // been committed yet (the skeleton is lazy), so throwing lets the
           // shared loop fail over to the next model on the same SSE connection.
           if (msgText.length === 0 && toolAcc.size === 0) {
             // Disconnect before the commit point: the break above fired with
-            // nothing accumulated — CLIENT behavior, not a provider failure.
+            // nothing accumulated - CLIENT behavior, not a provider failure.
             // Falling through to the empty-completion throw benched a healthy
             // model+key for 90s on every Ctrl-C during a reasoning model's
             // TTFB window.
             if (clientGone && !streamStarted) {
-              console.log(`[Responses] client disconnected before first token from ${route.displayName} — dropping attempt without benching`);
+              console.log(`[Responses] client disconnected before first token from ${route.displayName} - dropping attempt without benching`);
               return 'committed';
             }
             // finish_reason 'length' = the model spent the whole output budget
@@ -1503,13 +1503,13 @@ export async function handleResponses(req: Request, res: Response): Promise<void
           //
           // No schema verdict here, deliberately. This surface commits on the
           // FIRST tool-call delta (`commit()` above, where the function_call
-          // item is opened) — the arguments are not complete until this point,
+          // item is opened) - the arguments are not complete until this point,
           // which is long after the skeleton and the item.added events have
           // left. A verdict here could only turn a delivered-but-invalid call
           // into a `response.failed` on a stream the client is already reading,
           // which is strictly worse. Wiring it would mean holding the
           // function_call item until its arguments finish, the way
-          // /chat/completions buffers — a change to this route's commit point,
+          // /chat/completions buffers - a change to this route's commit point,
           // not to validation.
           const finalToolCalls: ChatToolCall[] = [];
           for (const acc of toolAcc.values()) {
@@ -1544,11 +1544,11 @@ export async function handleResponses(req: Request, res: Response): Promise<void
         } catch (streamErr: any) {
           // Client abort mid-stream: the pump's own `if (clientGone) break`
           // can lose the race against the fetch-signal rejection, so the
-          // abort may surface here instead. Rethrow — the shared loop's
+          // abort may surface here instead. Rethrow - the shared loop's
           // client-abort branch stops the ladder without benching or an
           // error log row (the socket is gone; nothing to render).
           if (isClientAbortError(streamErr)) throw streamErr;
-          // A committed stream can't fail over (bytes already sent) — surface a
+          // A committed stream can't fail over (bytes already sent) - surface a
           // response.failed event honestly and stop. A pre-commit failure throws
           // through to the shared loop for cooldown + failover.
           // streamStarted = real events went out. headersSentEarly also counts:
@@ -1572,7 +1572,7 @@ export async function handleResponses(req: Request, res: Response): Promise<void
           }
           throw streamErr;
         } finally {
-          // #1642: this attempt is over whichever path it left by — the
+          // #1642: this attempt is over whichever path it left by - the
           // keep-alive interval must not outlive it.
           streamSettled = true;
           keepaliveStop();
@@ -1594,7 +1594,7 @@ export async function handleResponses(req: Request, res: Response): Promise<void
         function: { ...tc.function, arguments: repairToolArguments(tc.function.arguments, toolSchemas.get(tc.function.name)) },
       }));
 
-      // Inline tool-call dialect rescue (#231) — see /chat/completions.
+      // Inline tool-call dialect rescue (#231) - see /chat/completions.
       if (wantsTools && toolCalls.length === 0 && text) {
         const rescue = rescueInlineToolCalls(text, new Set((tools ?? []).map(t => t.function.name)));
         if (rescue.detected) {
@@ -1624,7 +1624,7 @@ export async function handleResponses(req: Request, res: Response): Promise<void
       // provider omits `usage`.
       const completionTokens = result.usage?.completion_tokens
         ?? Math.ceil((text.length + completionReasoningText(result).length) / 4);
-      // #764: report reasoning_tokens truthfully — the provider's own count
+      // #764: report reasoning_tokens truthfully - the provider's own count
       // when advertised, else the same chars/4 estimate of the thinking text.
       const reasoningTokens = result.usage?.completion_tokens_details?.reasoning_tokens
         ?? Math.ceil(completionReasoningText(result).length / 4);
@@ -1638,9 +1638,9 @@ export async function handleResponses(req: Request, res: Response): Promise<void
         );
       }
 
-      // Structured-output enforcement — see /chat/completions. Heal fenced or
+      // Structured-output enforcement - see /chat/completions. Heal fenced or
       // prose-wrapped JSON in place, fail over (skipBench + skipModelForRequest
-      // — a sibling key would misbehave identically) when the model ignored the
+      // - a sibling key would misbehave identically) when the model ignored the
       // requested format; finish_reason 'length' gets an honest "truncated"
       // class instead, since the JSON was cut off by max_tokens, not ignored.
       if (completionOpts.response_format && text && toolCalls.length === 0) {
@@ -1649,7 +1649,7 @@ export async function handleResponses(req: Request, res: Response): Promise<void
           const truncated = result.choices[0]?.finish_reason === 'length';
           throw Object.assign(
             new Error(truncated
-              ? `truncated JSON from ${route.displayName} (finish_reason=length — raise max_tokens for this ${completionOpts.response_format.type} request)`
+              ? `truncated JSON from ${route.displayName} (finish_reason=length - raise max_tokens for this ${completionOpts.response_format.type} request)`
               : `${route.displayName} ignored response_format (returned non-JSON despite ${completionOpts.response_format.type})`),
             { skipBench: true, skipModelForRequest: true },
           );
@@ -1704,7 +1704,7 @@ export async function handleResponses(req: Request, res: Response): Promise<void
     },
     onRoutingExhausted: (lastError, routeErr, exhaustion, info) => {
       if (streamStarted) {
-        // Headers are already on the wire — the honest status/Retry-After can
+        // Headers are already on the wire - the honest status/Retry-After can
         // only travel in the failed-event payload.
         sse('response.failed', { response: { id: responseId, object: 'response', status: 'failed', error: exhaustionErrorPayload(exhaustion) } });
         res.end();
@@ -1715,7 +1715,7 @@ export async function handleResponses(req: Request, res: Response): Promise<void
       }
     },
     onExhausted: (exhaustion, info) => {
-      // The streaming skeleton may already be on the wire — close the SSE stream
+      // The streaming skeleton may already be on the wire - close the SSE stream
       // with a failed event instead of writing JSON onto a committed response.
       if (streamStarted) {
         sse('response.failed', { response: { id: responseId, object: 'response', status: 'failed', error: exhaustionErrorPayload(exhaustion) } });

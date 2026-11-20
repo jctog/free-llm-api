@@ -3,8 +3,8 @@ import { getSetting } from '../db/index.js';
 // Operator-facing context-window floor for the ROUTING POOL (issue #1442):
 // a one-switch gate that excludes small-window models entirely, because the
 // smallest free tiers (32k and below) fail real agent workloads before any
-// rate limit does. Upward-compatible by construction — the floor is a minimum,
-// so 128k keeps 512k and 1M models — and distinct from the per-request
+// rate limit does. Upward-compatible by construction - the floor is a minimum,
+// so 128k keeps 512k and 1M models - and distinct from the per-request
 // fitsContextWindow check, which only compares THIS request's estimated size.
 //
 // Stored as a plain settings string ('off' | '32k' | '128k' | '512k' | '1m'),
@@ -15,7 +15,7 @@ import { getSetting } from '../db/index.js';
 export const MIN_CONTEXT_WINDOW_SETTING = 'min_context_window';
 
 // The named presets. '1m' is 1,048,576 (the binary MiB-scale window the
-// largest catalog rows actually advertise), not a round 1,000,000 — matching
+// largest catalog rows actually advertise), not a round 1,000,000 - matching
 // the catalog keeps the gate consistent with what /v1/models publishes.
 export const MIN_CONTEXT_WINDOW_PRESETS: Record<string, number> = {
   '32k': 32_768,
@@ -25,7 +25,7 @@ export const MIN_CONTEXT_WINDOW_PRESETS: Record<string, number> = {
 };
 
 /** The configured pool floor in tokens, or null when disabled ('off'/unset).
- *  A null context_window on a model means "unknown" and is NEVER filtered —
+ *  A null context_window on a model means "unknown" and is NEVER filtered -
  *  the same convention fitsContextWindow uses, so models the catalog has no
  *  window for can't be silently mass-excluded by a typo'd floor. */
 export function minContextWindowFloor(): number | null {
@@ -33,7 +33,7 @@ export function minContextWindowFloor(): number | null {
   try {
     raw = getSetting(MIN_CONTEXT_WINDOW_SETTING);
   } catch {
-    return null; // DB not ready — never throw on the proxy hot path
+    return null; // DB not ready - never throw on the proxy hot path
   }
   if (!raw) return null;
   const value = raw.trim().toLowerCase();

@@ -153,7 +153,7 @@ describe('isToolArgumentValidationEnabled', () => {
     getDb().prepare('DELETE FROM settings WHERE key = ?').run(TOOL_ARGUMENT_VALIDATION_SETTING);
   });
 
-  it('is off by default — a false positive costs a failover hop', () => {
+  it('is off by default - a false positive costs a failover hop', () => {
     expect(isToolArgumentValidationEnabled()).toBe(false);
   });
 

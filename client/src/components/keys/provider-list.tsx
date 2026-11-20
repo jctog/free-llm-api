@@ -87,7 +87,7 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
   const [groupOverrides, setGroupOverrides] = useState<Map<string, boolean>>(new Map())
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
-  // Custom endpoint whose model list is being fetched (#488) — relays change
+  // Custom endpoint whose model list is being fetched (#488) - relays change
   // what they serve constantly, so this is a repeat action, not a one-off.
   // `builtin`: a built-in provider key the catalog has no models for (#1348),
   // whose picks register as discovered rows instead of custom-endpoint models.
@@ -174,7 +174,7 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
     meta: { silenceToast: true },
     mutationFn: (keyId: number) =>
       // reasoning/toolCalls are optional (#874): the server omits a capability
-      // whose probe errored or timed out, and "absent" means UNKNOWN — which is
+      // whose probe errored or timed out, and "absent" means UNKNOWN - which is
       // not the same claim as "the model cannot do it", so it renders as such.
       apiFetch<{ modelId: string; latencyMs: number; reasoning?: boolean; toolCalls?: boolean }>(`/api/keys/custom/probe`, {
         method: 'POST',
@@ -192,7 +192,7 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
         tools: capability(data.toolCalls),
       })
       toast.success(
-        `${t('keys.probeSuccess', { model: data.modelId, latency: data.latencyMs })} — ${capabilities}`,
+        `${t('keys.probeSuccess', { model: data.modelId, latency: data.latencyMs })} - ${capabilities}`,
       )
     },
     onError: (error) => {
@@ -226,7 +226,7 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
   })
 
   // #787: the batch bar's one mutation. There is no bulk endpoint, so this is
-  // still one request per key against the per-key routes — but the outcome is
+  // still one request per key against the per-key routes - but the outcome is
   // reported once. Per-key mutations would each raise the global error toast,
   // so a batch where key 3 of 8 failed left the user with a pile of unrelated
   // messages and no count. Here the global toast is silenced, the requests are
@@ -264,7 +264,7 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
     },
   })
 
-  // #1504: bulk delete for custom models — mirrors bulkKeys: no bulk endpoint,
+  // #1504: bulk delete for custom models - mirrors bulkKeys: no bulk endpoint,
   // one DELETE per model against the existing per-model routes, the global
   // MutationCache toast silenced, and one summary line for the whole batch.
   const bulkModels = useMutation({
@@ -574,7 +574,7 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
                   </button>
                 </div>
 
-                {/* #787: batch bar — appears only while keys of THIS group are
+                {/* #787: batch bar - appears only while keys of THIS group are
                     selected. One mutation per key (the per-key endpoint), which
                     keeps the router and health caches consistent. */}
                 {(() => {
@@ -624,7 +624,7 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
                       const status = statusOf(k)
                       const health = healthKeyMap.get(k.id)
                       const lastChecked = health?.lastCheckedAt ?? k.lastCheckedAt
-                      // #1493: "last worked" is separate from "last checked" —
+                      // #1493: "last worked" is separate from "last checked" -
                       // a transport error refreshes the check time without
                       // proving the key works, so a stale worked-time under a
                       // fresh check-time is the signal an operator needs.
@@ -638,7 +638,7 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
                       return (
                         <div key={k.id} className="bg-card">
                           <div className="group/krow flex items-center gap-3 px-4 py-3 hover:bg-muted/40 transition-colors">
-                            {/* #787: bulk-select checkbox — enabling the row-level
+                            {/* #787: bulk-select checkbox - enabling the row-level
                                 batch bar below. Deliberately secondary: the switch
                                 stays the primary per-key control, and a checkbox on
                                 every row at rest is chrome nobody asked for. It fades
@@ -714,7 +714,7 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
                               </Badge>
                             )}
                             {/* #1403 phase 3: the provider-reported balance (#1403).
-                                Amber at ≤20% left — the same low-balance signal the
+                                Amber at ≤20% left - the same low-balance signal the
                                 Quota outlook panel gives, but visible where the operator
                                 actually scans keys instead of on a second tab. */}
                             {balance && (
@@ -910,7 +910,7 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
                           )}
                           {hasCustomModels && isExpanded && (
                             <div className="border-t bg-muted/20 px-4 py-3 pl-12">
-                              {/* #1504: batch bar for the model chips of THIS key —
+                              {/* #1504: batch bar for the model chips of THIS key -
                                   same arm-then-fire idiom as the #787 key bar above.
                                   One DELETE per model against the existing per-model
                                   routes, outcome reported once. */}

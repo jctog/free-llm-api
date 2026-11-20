@@ -5,7 +5,7 @@ import { getRoutingScores, refreshStatsCache, setHeadroomThresholds } from '../.
 import { invalidateWindowUsage, modelWindowUsedFraction } from '../../services/ratelimit.js';
 
 // #899: the headroom guardrail used to have an opinion only about models that
-// declare a monthly_token_budget. A model capped by rpd/tpd was binary-gated —
+// declare a monthly_token_budget. A model capped by rpd/tpd was binary-gated -
 // full score until the request that finally 429s it. These tests pin the graded
 // behaviour: demotion as the window fills, no opinion while it is empty,
 // automatic recovery when the window rolls, and operator-tunable thresholds.
@@ -92,7 +92,7 @@ describe('rate-window headroom guardrail (#899)', () => {
   });
 
   it('still has no opinion at low utilization, below the ramp', () => {
-    recordRequests(busy.modelId, 50); // 50% of RPD — 50% left, ramp starts at 20%
+    recordRequests(busy.modelId, 50); // 50% of RPD - 50% left, ramp starts at 20%
     expect(headroomOf(busy.id)).toBe(1);
   });
 
@@ -105,7 +105,7 @@ describe('rate-window headroom guardrail (#899)', () => {
     expect(headroomOf(idle.id)).toBe(1);
     expect(scoreOf(busy.id)).toBeLessThan(scoreOf(idle.id));
 
-    // And the ranking actually flips — the busy model is no longer first.
+    // And the ranking actually flips - the busy model is no longer first.
     const { scores } = getRoutingScores();
     expect(scores[0].modelDbId).toBe(idle.id);
   });
@@ -114,7 +114,7 @@ describe('rate-window headroom guardrail (#899)', () => {
     recordRequests(busy.modelId, 95);
     expect(headroomOf(busy.id)).toBeLessThan(1);
 
-    // Age the same rows out of the sliding day. Nothing resets a counter — the
+    // Age the same rows out of the sliding day. Nothing resets a counter - the
     // window simply stops counting them.
     getDb().prepare(
       "UPDATE rate_limit_usage SET created_at_ms = ? WHERE model_id = ?"
@@ -126,7 +126,7 @@ describe('rate-window headroom guardrail (#899)', () => {
   });
 
   it('honours the tunable thresholds from the settings API', () => {
-    recordRequests(busy.modelId, 60); // 40% left — outside the 20% default ramp
+    recordRequests(busy.modelId, 60); // 40% left - outside the 20% default ramp
     expect(headroomOf(busy.id)).toBe(1);
 
     // Operator asks to start protecting at 50% remaining with a 0.3 floor.

@@ -155,7 +155,7 @@ class ResponsesSse {
 /**
  * Serve a /v1/responses request that carries a `web_search` tool from the
  * search pool. Returns false (nothing sent) when the request has no such
- * tool, is a Fusion request, or no search key exists — the caller then runs
+ * tool, is a Fusion request, or no search key exists - the caller then runs
  * the normal handler, which drops the tool exactly as before.
  */
 export async function maybeServeResponsesWebSearch(

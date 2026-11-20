@@ -17,12 +17,12 @@ export interface NormalizedModel {
   contextWindow: number | null;
   intel: number;
   // Platforms that can serve this entry (group members under unify, a single
-  // platform otherwise) + tool capability — feeds /v1/models
+  // platform otherwise) + tool capability - feeds /v1/models
   // `supported_parameters` so agents can pick knobs per model.
   platforms: string[];
   supportsTools: boolean;
   // Dynamic execution status for agents: `ready` (a key can serve it right
-  // now), `needsKey` (disabled, or no enabled key matches it — available=0's
+  // now), `needsKey` (disabled, or no enabled key matches it - available=0's
   // breakdown), or `exhausted` (keys exist but every one is currently blocked,
   // so a request would fail immediately).
   executionStatus: 'ready' | 'needsKey' | 'exhausted';
@@ -37,12 +37,12 @@ export interface ModelListing {
   autoContextWindow: number | null;
 }
 
-// `ready` — at least one key could actually serve a request for this model
+// `ready` - at least one key could actually serve a request for this model
 // right now: enabled, healthy or never probed (probing is lazy, so an unprobed
 // key counts as usable), not scoped away from the model (#657), not on
-// cooldown, and inside its rate and token windows. `exhausted` — keys match
+// cooldown, and inside its rate and token windows. `exhausted` - keys match
 // the model but every one of them is currently blocked, so a request would
-// fail straight away. `needsKey` — nothing matches it at all, or the model is
+// fail straight away. `needsKey` - nothing matches it at all, or the model is
 // disabled.
 //
 // The gates are the router's own (hasOtherUsableKey), deliberately rather than
@@ -105,7 +105,7 @@ export function buildModelListing(): ModelListing {
         intel: infos.length ? Math.min(...infos.map(i => i.intelligence_rank)) : Number.MAX_SAFE_INTEGER,
         platforms: [...new Set(infos.map(i => i.platform))],
         supportsTools: infos.some(i => i.supports_tools === 1),
-        // A group is ready when ANY member can serve it — that is exactly the
+        // A group is ready when ANY member can serve it - that is exactly the
         // choice the router has when it dispatches the group.
         executionStatus: executionStatusFor(g.members.map(m => m.model_db_id), available),
       };

@@ -16,7 +16,7 @@ const src = path.resolve(__dirname, '../../client/dist');
 const dest = path.resolve(__dirname, '../client-dist');
 
 if (!fs.existsSync(src)) {
-  console.error(`stage-client: ${src} not found — build the web client first (npm run build -w client).`);
+  console.error(`stage-client: ${src} not found - build the web client first (npm run build -w client).`);
   process.exit(1);
 }
 

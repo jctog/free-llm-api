@@ -5,12 +5,12 @@ import { getDb, getSetting, setSetting } from '../db/index.js';
 // (e.g. `claude-sonnet-4-5` as the main model, `claude-3-5-haiku` as the
 // small/fast background model) and sends them verbatim to `/v1/messages`.
 // Since this proxy serves a free model pool (not the real Claude cloud
-// models), we map each Claude family to either "auto" (let the router pick —
+// models), we map each Claude family to either "auto" (let the router pick -
 // the default and the common case) or a specific catalog model the operator
 // pins. A concrete catalog model id sent directly (e.g. the user set
 // ANTHROPIC_MODEL to one of our models) bypasses the map and pins as-is.
 //
-// Stored as a JSON blob in the `settings` table — no migration needed.
+// Stored as a JSON blob in the `settings` table - no migration needed.
 
 const SETTING_KEY = 'anthropic_model_map';
 
@@ -131,8 +131,8 @@ function lookupTierDbIds(tier: TierSelector): number[] {
 export function resolveAnthropicModel(model?: string): ResolvedAnthropicModel {
   const db = getDb();
   // A model_id can exist on several platforms at once (the same open-weights
-  // model relayed by two providers). The row we pin is only the head hint —
-  // the caller routes over the whole group — but an arbitrary SQLite row order
+  // model relayed by two providers). The row we pin is only the head hint -
+  // the caller routes over the whole group - but an arbitrary SQLite row order
   // made the head flap between providers run to run, so pick deterministically:
   // chain priority first (ascending, as everywhere else), then insertion order.
   const lookupEnabled = (modelId: string): { id: number; model_id: string } | undefined =>

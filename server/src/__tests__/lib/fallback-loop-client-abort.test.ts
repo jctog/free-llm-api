@@ -10,7 +10,7 @@ import type { RouteResult } from '../../services/router.js';
  * when the gateway's OWN client hangs up, the composed fetch signal rejects
  * the in-flight attempt with the marked error from newClientAbortError. That
  * throw must stop the ladder immediately, release the in-flight lease via the
- * existing finally, and leave NO provider-failure trace — no cooldown, no
+ * existing finally, and leave NO provider-failure trace - no cooldown, no
  * skip-key entry, no logFailure row, no exhaustion render. What it DOES leave
  * (#752) is a 'canceled' requests row, so the dashboard shows the request
  * happened; stats/scoring queries exclude that status everywhere.
@@ -70,7 +70,7 @@ describe('fallback loop on client abort', () => {
     expect(isClientAbortError(new DOMException('The operation was aborted (groq, chat, 15s)', 'AbortError'))).toBe(false);
   });
 
-  it('stops the ladder immediately — no further attempts, nothing rendered', async () => {
+  it('stops the ladder immediately - no further attempts, nothing rendered', async () => {
     const state = newFallbackState();
     const dispatch = vi.fn(async () => { throw newClientAbortError(); });
     const h = hooks(state, {
@@ -120,7 +120,7 @@ describe('fallback loop on client abort', () => {
     // No cooldown row: a vanished client is not a provider-health signal.
     const cooldown = getDb().prepare('SELECT 1 FROM rate_limit_cooldowns WHERE platform = ? AND key_id = ?').get('fake', keyId);
     expect(cooldown).toBeUndefined();
-    // No per-request skip state either — nothing was "tried and failed".
+    // No per-request skip state either - nothing was "tried and failed".
     expect(state.skipKeys.size).toBe(0);
     expect(state.skipModels.size).toBe(0);
   });
@@ -139,7 +139,7 @@ describe('fallback loop on client abort', () => {
     expect(row).toMatchObject({ platform: 'fake', model_id: 'fake-model', status: 'canceled' });
     expect(row.error).toContain('client disconnected');
     expect(row.error).toContain('upstream request canceled');
-    // The attempt trace persists too, keyed to the canceled row — pure aborts
+    // The attempt trace persists too, keyed to the canceled row - pure aborts
     // used to leave no parent row and therefore no ladder either.
     const attempts = getDb().prepare('SELECT outcome FROM request_attempts WHERE request_id = ?').all(row.id) as any[];
     expect(attempts.map(a => a.outcome)).toEqual(['client_abort']);

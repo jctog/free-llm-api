@@ -123,7 +123,7 @@ describe('revocable URL-token aliases', () => {
     });
     expect(minted.status).toBe(201);
 
-    // The middleware injects the unified key for headerless clients — the
+    // The middleware injects the unified key for headerless clients - the
     // usage route must not treat that injection as the real unified key.
     const viaToken = await request(app, 'GET', `/v1/t/${minted.body.token}/usage`);
     expect(viaToken.status).toBe(403);

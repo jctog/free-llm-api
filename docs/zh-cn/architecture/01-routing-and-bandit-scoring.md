@@ -1,12 +1,12 @@
 [English](../../en/architecture/01-routing-and-bandit-scoring.md) · **简体中文**
 
-# 路由与老虎机评分 —— 深度剖析
+# 路由与老虎机评分 -- 深度剖析
 
 > **源码：** `server/src/services/router.ts`、`server/src/services/scoring.ts`
 
 ## 1. 概览
 
-路由器为每个请求挑选一个 `(platform, model, key)` 三元组。它**不是**轮询负载均衡器——它是一个持续从实时流量学习的上下文老虎机，从五个归一化轴合成一个分数：
+路由器为每个请求挑选一个 `(platform, model, key)` 三元组。它**不是**轮询负载均衡器--它是一个持续从实时流量学习的上下文老虎机，从五个归一化轴合成一个分数：
 
 ```
 base = w_rel·reliability + w_speed·speed + w_intel·intelligence   （凸组合，权重和为 1）
@@ -21,20 +21,20 @@ effective = base × headroomFactor × rateLimitFactor               （护栏乘
 
 启用的回退链按优先级从以下来源取：
 
-1. **活跃配置档**（`profile_models` 表）——命名链如 "coding"、"long-context"
-2. **全局 fallback_config**——旧版单链
-3. **全局排序别名**——`auto:smart`、`auto:fast`、`auto:cheap`、`auto:reliable`、`auto:balanced`
-4. **按名配置档**——`auto:my-profile`
+1. **活跃配置档**（`profile_models` 表）--命名链如 "coding"、"long-context"
+2. **全局 fallback_config**--旧版单链
+3. **全局排序别名**--`auto:smart`、`auto:fast`、`auto:cheap`、`auto:reliable`、`auto:balanced`
+4. **按名配置档**--`auto:my-profile`
 
 每个链行（`ChainRow`）携带模型的静态元数据（`intelligence_rank`、`size_label`、`monthly_token_budget`、限流、能力）加上**端点作用域**（目录模型为 `''`，中继模型为 `'custom:<base_url_hash>'`），这样服务同一 `model_id` 的两个中继能独立评分、独立限流。
 
 ### 匹配层级
 
-`match_tier`（默认 0）是**外层排序键**，支配分数。仅当统一组把一个 slug（如 `glm-4.7`）解析到提供方专属模型（如 `z-ai/glm-4.5`）时才设置——被匹配的成员得 `match_tier = 1`，这样无论它的实时数字多好，永远不会超越直接请求 `model_id` 的行。
+`match_tier`（默认 0）是**外层排序键**，支配分数。仅当统一组把一个 slug（如 `glm-4.7`）解析到提供方专属模型（如 `z-ai/glm-4.5`）时才设置--被匹配的成员得 `match_tier = 1`，这样无论它的实时数字多好，永远不会超越直接请求 `model_id` 的行。
 
 ---
 
-## 3. 可靠性 —— 带 Beta 后验的 Thompson 采样
+## 3. 可靠性 -- 带 Beta 后验的 Thompson 采样
 
 ### 衰减加权样本
 
@@ -53,8 +53,8 @@ weight(age_days) = 0.5^(age_days / 2)
 β = failures  + community_failures  + 1
 ```
 
-- **路由（实时）**：`reliability = sampleBeta(α, β)` —— Thompson 采样。探索自动且与不确定性成正比。
-- **仪表盘（显示）**：`reliability = α / (α + β)` —— 期望值，排序稳定。
+- **路由（实时）**：`reliability = sampleBeta(α, β)` -- Thompson 采样。探索自动且与不确定性成正比。
+- **仪表盘（显示）**：`reliability = α / (α + β)` -- 期望值，排序稳定。
 
 ### 社区先验（可选）
 
@@ -66,7 +66,7 @@ weight(age_days) = 0.5^(age_days / 2)
 
 ---
 
-## 4. 速度轴 —— 吞吐 + TTFB 混合
+## 4. 速度轴 -- 吞吐 + TTFB 混合
 
 ```
 throughputScore(tok/s) = 1 - exp(-tok/s / 60)          # 饱和，60 tok/s ≈ 0.63
@@ -86,7 +86,7 @@ speedScore             = 0.6·throughput + 0.4·ttfb       # 两者皆有时
 
 ---
 
-## 5. 智能轴 —— 层优先，√-压缩秩
+## 5. 智能轴 -- 层优先，√-压缩秩
 
 ```
 tierValue: Frontier=4, Large=3, Medium=2, Small=1, unknown=0
@@ -101,7 +101,7 @@ intelligenceComposite = tierValue * 1000 - sqrt(rank) * 31
 
 ---
 
-## 6. 护栏 —— 乘法，从不重排好模型
+## 6. 护栏 -- 乘法，从不重排好模型
 
 ### 余量因子（额度保护）
 
@@ -111,7 +111,7 @@ if remaining >= 0.2:  factor = 1.0
 else:                 factor = 0.1 + 0.9 * (remaining / 0.2)   # 线性斜坡到底线 0.1
 ```
 
-- `budgetTokens` = `monthly_token_budget` × `usableKeyCount(platform)` —— 汇聚 N 个密钥的免费额度。
+- `budgetTokens` = `monthly_token_budget` × `usableKeyCount(platform)` -- 汇聚 N 个密钥的免费额度。
 - 未知预算（0 或 NULL）→ factor = 1（无意见）。
 
 ### 限流因子（实时惩罚）
@@ -121,7 +121,7 @@ penalty ∈ [0, 10]   （来自 429 升级阶梯，每 2 分钟衰减 1）
 factor = 1 - (penalty / 10) * 0.6   # 最大惩罚时保留 40% 分数
 ```
 
-- 强降但不排除——惩罚衰减时模型恢复。
+- 强降但不排除--惩罚衰减时模型恢复。
 
 ---
 
@@ -171,8 +171,8 @@ keyScore       = 0.75·keyReliability + 0.25·keySpeed
 | 429 瞬时 (rpm/tpm) | 仅密钥 | 90s / 升级阶梯 | 轻 (1) | 是 |
 | 5xx / 超时 / 传输 | **平台** (#788) | 90s / 阶梯 | 轻 (1) | 否 |
 | 空补全（推理） | 仅密钥 | **豁免**（连击 ≤3） | 否 | 否 |
-| 上下文过大 | 模型 | — | 否 | 否 |
-| response_format 被忽略 | 模型 | — | 否 | 否 |
+| 上下文过大 | 模型 | - | 否 | 否 |
+| response_format 被忽略 | 模型 | - | 否 | 否 |
 
 - **模型级失败停用**（#806）：15 分钟内跨密钥 3 次可重试失败 → 模型在**其所有密钥**上停用 10 分钟（启发式、可探测）。
 - **空补全连击限制**（#751）：同一模型+密钥上连续 3 次推理截断补全 → 豁免取消 → 正常冷却/惩罚/限流学习生效。
@@ -189,7 +189,7 @@ keyScore       = 0.75·keyReliability + 0.25·keySpeed
 
 ## 11. 统一模型组（Unify）
 
-启用时，逻辑模型（如 `glm-4.7`）把多提供方折叠成一个 `/v1/models` 条目。路由**严格在组内回退**——绝不去别的模型。slug 解析成员上的 `match_tier = 1` 防止静默替换。
+启用时，逻辑模型（如 `glm-4.7`）把多提供方折叠成一个 `/v1/models` 条目。路由**严格在组内回退**--绝不去别的模型。slug 解析成员上的 `match_tier = 1` 防止静默替换。
 
 ---
 

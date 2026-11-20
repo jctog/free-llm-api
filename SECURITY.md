@@ -8,7 +8,7 @@ any of those are taken seriously. Thanks for reporting them responsibly.
 
 | Version | Supported |
 | ------- | --------- |
-| 0.13.x (current) | Yes — security fixes land here |
+| 0.13.x (current) | Yes - security fixes land here |
 | 0.12.x | Best effort; please upgrade |
 | 0.11.x and older | No |
 
@@ -18,7 +18,7 @@ re-pull `:latest`).
 
 ## Reporting a vulnerability
 
-**Preferred:** GitHub private vulnerability reporting — go to the
+**Preferred:** GitHub private vulnerability reporting - go to the
 [Security tab](https://github.com/tashfeenahmed/freellmapi/security) and click
 **Report a vulnerability**. That opens a private thread with the maintainer and
 keeps the details out of public issues.
@@ -32,7 +32,7 @@ fix is out.
 A useful report includes:
 
 - Affected version or commit, and how you run it (Docker, `npm run dev`, desktop app).
-- The impact — what an attacker gets (read keys, bypass auth, RCE, etc.).
+- The impact - what an attacker gets (read keys, bypass auth, RCE, etc.).
 - Steps to reproduce: the exact request, config, or `.env` settings involved.
   Redact your real provider keys.
 - Server logs around the failing request, where you can share them.
@@ -44,7 +44,7 @@ A useful report includes:
 - **Fix:** best effort, prioritised by severity. Expect a rough timeline in the
   first reply, and progress updates on the same thread.
 - **Disclosure:** once a fix is released. You get credit in the release notes if
-  you want it — say so in your report, and tell me the name or handle to use.
+  you want it - say so in your report, and tell me the name or handle to use.
 - **No bug bounty.** There is no money behind this project to pay one. Credit and
   a genuine thank-you are what's on offer.
 
@@ -53,7 +53,7 @@ A useful report includes:
 In scope:
 
 - The router server and its `/v1` proxy, `/api/*` admin routes, and `/mcp` endpoint.
-- Dashboard authentication — the email + password account (scrypt, session tokens)
+- Dashboard authentication - the email + password account (scrypt, session tokens)
   and the unified `freellmapi-…` API key.
 - Key handling: AES-256-GCM encryption at rest, `ENCRYPTION_KEY` usage, encrypted
   DB backups, key import/export.
@@ -82,10 +82,10 @@ Out of scope:
   reachable more widely. Never expose it straight to the internet.
 - **Protect `ENCRYPTION_KEY` and `.env`.** They decrypt every provider key you
   have stored. Keep them out of git, off shared drives, and backed up somewhere
-  safe — losing the key means losing the stored keys. In production always set
+  safe - losing the key means losing the stored keys. In production always set
   `ENCRYPTION_KEY` explicitly rather than relying on the generated dev fallback.
 - **Update.** Re-pull the Docker image (or `git pull` and rebuild) periodically;
   dependency and router fixes ride along with feature releases.
 - **Rotate what leaks.** Regenerate the unified API key from the Keys page if a
-  client that held it is compromised, and swap out suspect provider keys — the
+  client that held it is compromised, and swap out suspect provider keys - the
   router falls over to sibling keys, so a rotation is not an outage.

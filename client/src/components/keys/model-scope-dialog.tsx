@@ -12,7 +12,7 @@ import type { ApiKey } from '../../../../shared/types'
 // scoped here is skipped by the router for every model outside its list. A
 // deliberately light editor: a chip list plus a free-text id field. Suggestions
 // come only from data the key row already carries (a custom endpoint's
-// registered models) — no extra fetching for catalog platforms.
+// registered models) - no extra fetching for catalog platforms.
 export function ModelScopeDialog({
   apiKey,
   onOpenChange,
@@ -47,7 +47,7 @@ export function ModelScopeDialog({
   }
 
   const submit = () => {
-    // A typed-but-unconfirmed id still counts — losing it on Save is the
+    // A typed-but-unconfirmed id still counts - losing it on Save is the
     // classic chip-input paper cut.
     const pending = draft.trim()
     const next = pending && !ids.includes(pending) ? [...ids, pending] : ids

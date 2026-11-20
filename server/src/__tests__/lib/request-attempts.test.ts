@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest';
 
 // Durable per-attempt routing traces (P2 #15): the fallback loop records every
-// dispatched attempt — failures AND the successful final one — with timing and
+// dispatched attempt - failures AND the successful final one - with timing and
 // outcome, and persists them to `request_attempts` keyed to the terminal
 // `requests` row, in one insert batch after the response finishes. Children
 // are pruned with their parents (ON DELETE CASCADE + foreign_keys=ON).
@@ -180,7 +180,7 @@ describe('per-attempt routing traces', () => {
     expect(rows).toHaveLength(2);
     expect(rows.map(r => r.outcome)).toEqual(['rate_limited', 'ok']);
 
-    // Failed hop: short, redacted, capped summary — never the raw secret.
+    // Failed hop: short, redacted, capped summary - never the raw secret.
     const summary = rows[0].error_summary;
     expect(summary).toBeTruthy();
     expect(summary!).toContain('429');
@@ -213,7 +213,7 @@ describe('per-attempt routing traces', () => {
       outcome: 'ok',
     });
     // Wall-clock delta between trace start and first dispatch: 0 on a fast
-    // machine, a few ms on a loaded CI runner — assert small, not exactly 0
+    // machine, a few ms on a loaded CI runner - assert small, not exactly 0
     // (flaked on the Node 22 CI job).
     expect(rows[0].start_offset_ms).toBeGreaterThanOrEqual(0);
     expect(rows[0].start_offset_ms).toBeLessThan(1000);

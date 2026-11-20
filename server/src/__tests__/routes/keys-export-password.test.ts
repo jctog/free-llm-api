@@ -31,7 +31,7 @@ async function addKey(app: Express) {
   server.close();
 }
 
-describe('Key export — password re-verification', () => {
+describe('Key export - password re-verification', () => {
   beforeAll(() => {
     process.env.ENCRYPTION_KEY = '0'.repeat(64);
     initDb(':memory:');

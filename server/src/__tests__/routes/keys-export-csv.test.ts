@@ -36,7 +36,7 @@ async function exportCsvText(app: Express): Promise<{ status: number; text: stri
   return { status: res.status, text };
 }
 
-describe('Keys CSV export — formula injection guard (FIX 3)', () => {
+describe('Keys CSV export - formula injection guard (FIX 3)', () => {
   let app: Express;
 
   beforeAll(() => {
@@ -93,7 +93,7 @@ describe('Keys CSV export — formula injection guard (FIX 3)', () => {
 
   it('neutralizes formula-leading base_url cells too (free text like the label)', async () => {
     getDb().prepare('DELETE FROM api_keys').run();
-    // A custom endpoint whose base_url opens with '=' — exactly the shape the
+    // A custom endpoint whose base_url opens with '=' - exactly the shape the
     // label guard covers. Without the guard the cell opens as a live formula
     // in Excel/Sheets and the base_url cannot round-trip (the importer only
     // strips the guard quote from labels). Stored directly because the custom

@@ -84,7 +84,7 @@ healthRouter.post('/check-all', async (_req: Request, res: Response) => {
 
 // Poll one key's provider-reported balance now (#1403). The health pass only
 // piggybacks the quota probe at most once per 15 minutes; this is the manual
-// override — an operator adding a key wants the balance immediately instead
+// override - an operator adding a key wants the balance immediately instead
 // of waiting for the next healthy pass after the throttle. Returns what the
 // probe recorded (or the fresh state when the provider reported nothing, so
 // the caller can tell "no quota endpoint / probe failed" from "fresh number").
@@ -115,7 +115,7 @@ healthRouter.post('/quota/:keyId', async (req: Request, res: Response) => {
 });
 
 // Run one proactive model-probe pass now (#1438 PR 1). The scheduled pass runs
-// every 30 minutes; this is the manual override — an operator wanting fresh
+// every 30 minutes; this is the manual override - an operator wanting fresh
 // labels immediately instead of waiting for the next pass. Same shape as
 // POST /check-all: the operator pressed the button, so run a full pass.
 healthRouter.post('/probe-models', async (_req: Request, res: Response) => {

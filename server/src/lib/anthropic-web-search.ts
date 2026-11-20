@@ -165,7 +165,7 @@ class AnthropicSse {
 /**
  * Serve a /v1/messages request that carries a web_search server tool from the
  * search pool. Returns false (nothing sent) when the request has no such tool
- * or no search key is configured — the caller then runs the normal handler.
+ * or no search key is configured - the caller then runs the normal handler.
  */
 export async function maybeServeAnthropicWebSearch(
   handler: (req: Request, res: Response) => Promise<void>,

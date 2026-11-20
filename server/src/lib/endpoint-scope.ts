@@ -9,7 +9,7 @@
 // The discriminator is `models.endpoint_scope`: the normalized base_url of the
 // endpoint the row belongs to, '' for every catalog platform. Uniqueness is
 // (platform, model_id, endpoint_scope), so catalog rows keep exactly their old
-// (platform, model_id) semantics — '' is the same value for all of them — while
+// (platform, model_id) semantics - '' is the same value for all of them - while
 // two relays can each hold their own row for the same model id.
 //
 // Why base_url and not key_id: #640 settled that an endpoint is a base_url
@@ -33,7 +33,7 @@ export function endpointScopeForBaseUrl(baseUrl: string | null | undefined): str
 
 /**
  * The scope a model bound to `keyId` belongs to. '' when the key is gone or
- * carries no base_url — a legacy custom row that predates per-endpoint binding
+ * carries no base_url - a legacy custom row that predates per-endpoint binding
  * keeps the un-scoped identity it has always had, so nothing about it changes.
  */
 export function endpointScopeOfKey(db: Db, keyId: number | null | undefined): string {
@@ -45,7 +45,7 @@ export function endpointScopeOfKey(db: Db, keyId: number | null | undefined): st
 
 /**
  * A short, typable handle for a scope, used only for naming: the host (with
- * port) plus path, slugified. Derived purely from the scope, so it is stable —
+ * port) plus path, slugified. Derived purely from the scope, so it is stable -
  * adding or removing OTHER endpoints never renames an existing one.
  *
  *   https://relay-a.example.com/v1  →  relay-a.example.com-v1
@@ -76,13 +76,13 @@ export function modelStatsKey(
 }
 
 // The separator between a member id and its endpoint handle. '#' reads as a
-// fragment and — unlike ':', '@' or '/' — does not occur in provider model ids.
+// fragment and - unlike ':', '@' or '/' - does not occur in provider model ids.
 export const ENDPOINT_ID_SEPARATOR = '#';
 
 /**
  * The endpoint-qualified model id a client can send to pin ONE relay's copy:
  * `custom:deepseek-v3.1#relay-a.example.com-v1`. Null for rows with no scope,
- * whose plain `platform:model_id` member id is already unambiguous — which is
+ * whose plain `platform:model_id` member id is already unambiguous - which is
  * why a single-endpoint install never sees a qualified id anywhere.
  */
 export function qualifiedModelMemberId(
@@ -109,7 +109,7 @@ export function endpointRefMatches(requested: string, endpointScope: string): bo
 }
 
 /**
- * The typable handle for an endpoint GROUP (#1176) — the operator's label run
+ * The typable handle for an endpoint GROUP (#1176) - the operator's label run
  * through the same slug as endpoint handles, so `My Relays` is `my-relays`.
  * Used after the separator: `custom:deepseek-v3.1#my-relays`.
  */

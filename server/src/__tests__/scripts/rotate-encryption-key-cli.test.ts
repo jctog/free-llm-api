@@ -11,7 +11,7 @@ import { encryptWith, decryptWith } from '../../scripts/rotate-encryption-key.js
 // End-to-end coverage for the CLI itself, not just the exported helpers. The
 // script is an ESM module (server/package.json is "type": "module"), so a
 // stray `require()` in main() throws "require is not defined in ES module
-// scope" the moment `npm run rotate-encryption-key` is invoked — a failure the
+// scope" the moment `npm run rotate-encryption-key` is invoked - a failure the
 // unit tests cannot see, because they import rotateSecrets() directly. Only
 // actually running the script catches it.
 

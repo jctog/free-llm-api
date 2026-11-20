@@ -323,7 +323,7 @@ export default function EmbeddingsPage() {
                     )}
                   </div>
                   <span className="text-xs text-muted-foreground tabular-nums">
-                    {u ? <>{t('embeddings.usageToday', { count: u.requestsToday })} · {t('embeddings.usageMonth', { count: formatTokens(u.tokensMonth) })}</> : '—'}
+                    {u ? <>{t('embeddings.usageToday', { count: u.requestsToday })} · {t('embeddings.usageMonth', { count: formatTokens(u.tokensMonth) })}</> : '-'}
                   </span>
                 </div>
 

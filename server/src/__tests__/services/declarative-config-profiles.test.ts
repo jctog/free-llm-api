@@ -89,7 +89,7 @@ describe('declarative config keeps profile membership in sync', () => {
     db.prepare("DELETE FROM settings WHERE key = 'active_profile_id'").run();
   });
 
-  it('is idempotent — re-applying does not duplicate profile rows', () => {
+  it('is idempotent - re-applying does not duplicate profile rows', () => {
     const config = {
       customProviders: [{
         baseUrl: 'http://127.0.0.1:9126/v1',

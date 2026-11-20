@@ -4,8 +4,8 @@ import { OpenAICompatProvider } from '../../providers/openai-compat.js';
 import { defaultMaxTokensFor, resolveMaxTokens } from '../../lib/sampling-params.js';
 
 // #553: Workers AI applies its own (small) server-side max_tokens when the
-// request omits one, so a client that never sets max_tokens — the OpenAI SDK
-// default — gets a response cut off mid-sentence a couple of seconds in. The
+// request omits one, so a client that never sets max_tokens - the OpenAI SDK
+// default - gets a response cut off mid-sentence a couple of seconds in. The
 // gateway therefore sends a generous per-platform floor when, and only when,
 // the client omitted the parameter.
 

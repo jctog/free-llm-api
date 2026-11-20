@@ -249,7 +249,7 @@ function decodeXmlText(value: string): string {
 // a lone surrogate code point produces a broken string. The input here is a
 // remote Atom feed's <title>, so a single hostile or merely malformed numeric
 // entity (&#1114112;) used to crash the whole update check. Leave the entity
-// verbatim instead — it is display text, not a hard parse dependency.
+// verbatim instead - it is display text, not a hard parse dependency.
 function safeCodePoint(code: number, entity: string): string {
   if (!Number.isFinite(code) || code < 0 || code > 0x10ffff) return entity;
   // Lone surrogates are not valid scalar values.
@@ -260,7 +260,7 @@ function safeCodePoint(code: number, entity: string): string {
 /**
  * Read a response body with a hard byte ceiling, so an oversized feed is refused
  * on the way in rather than after it is already resident. Checking `.length`
- * after `await response.text()` — as this used to — is a cap that never bounds
+ * after `await response.text()` - as this used to - is a cap that never bounds
  * anything.
  */
 async function readCapped(response: FetchResponse, limit: number): Promise<string> {
@@ -424,7 +424,7 @@ export function createUpdateRouter(options: UpdateRouterOptions = {}): Router {
       version: appVersion(),
     };
     // A desktop build or a container can only be replaced by a published
-    // release — an installer, or the :latest image, which follows releases —
+    // release - an installer, or the :latest image, which follows releases -
     // so both compare against the latest tag rather than `main` (#1270):
     // untagged commits on main have nothing to install, and offering them
     // produced an "Update available" that did nothing when acted on.
@@ -575,7 +575,7 @@ export function createUpdateRouter(options: UpdateRouterOptions = {}): Router {
   /**
    * The latest published release, for the dashboard's automatic reminder (#782).
    *
-   * The browser cannot ask GitHub itself — the CSP this server sends is
+   * The browser cannot ask GitHub itself - the CSP this server sends is
    * `connect-src 'self'`, so a direct fetch to api.github.com is blocked on
    * every web install. Routing it through here also means the opt-in is
    * enforced where it cannot be bypassed: when the check is off nothing leaves
@@ -656,7 +656,7 @@ export function createUpdateRouter(options: UpdateRouterOptions = {}): Router {
 
   /**
    * Docker "Update now": asks the Watchtower sidecar to pull the newer image
-   * and recreate this container. `async=true` makes it answer 202 at once —
+   * and recreate this container. `async=true` makes it answer 202 at once -
    * the update replaces the very process handling this request, so a
    * synchronous call could never return. The dashboard then waits for the
    * server to come back on the new build.

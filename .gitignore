@@ -2,7 +2,7 @@ node_modules/
 dist/
 server/data/
 # Runtime data dir when the server is launched from the repo root (same
-# contents as server/data — DB + keyfile — so same rule).
+# contents as server/data - DB + keyfile - so same rule).
 /data/
 *.db
 *.db-wal
@@ -19,9 +19,9 @@ server/data/
 # TypeScript incremental build cache
 *.tsbuildinfo
 
-# Personal deployment scripts (contain keys/credentials — kept local)
+# Personal deployment scripts (contain keys/credentials - kept local)
 deploy-pi.sh
 update-hermes.sh
 
-# Monetization planning — private, never committed
+# Monetization planning - private, never committed
 monetization/

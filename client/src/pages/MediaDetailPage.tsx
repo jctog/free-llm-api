@@ -95,7 +95,7 @@ export default function MediaDetailPage({ modality }: { modality: 'image' | 'vid
               {quota && <span className="text-[11px] rounded-full px-2 py-0.5 bg-muted text-muted-foreground tabular-nums">{quota}</span>}
             </div>
 
-            {/* Providers serving this model — pin one with its id, or toggle it. */}
+            {/* Providers serving this model - pin one with its id, or toggle it. */}
             <div className="rounded-2xl border bg-card p-4">
               <h2 className="text-sm font-medium">{t('models.providerIdsHeading')}</h2>
               <p className="mt-0.5 mb-3 text-xs text-muted-foreground">{t('models.providerIdsHint')}</p>

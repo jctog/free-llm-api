@@ -58,7 +58,7 @@ describe('Proxy authentication and CORS', () => {
       messages: [{ role: 'user', content: 'hello' }],
     }, { 'x-api-key': getUnifiedApiKey() });
 
-    // Auth passes — it gets past the 401 gate. (Routing then fails because no
+    // Auth passes - it gets past the 401 gate. (Routing then fails because no
     // provider keys are configured in this test DB, which is fine: we only
     // care that the x-api-key header authenticated.)
     expect(status).not.toBe(401);

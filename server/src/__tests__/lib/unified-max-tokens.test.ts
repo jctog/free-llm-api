@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // The unified output-token cap: an operator-level ceiling on max_tokens that
 // applies to every client. Open WebUI sends max_tokens=65536 by default, which
-// 400s against free models whose output limit is 32768 — and the invalid value
+// 400s against free models whose output limit is 32768 - and the invalid value
 // rides every failover hop, so the chain can't rescue the request.
 
 // Mock the settings store so the cap can be driven deterministically, the same
@@ -124,7 +124,7 @@ describe('per-platform max_tokens ceiling', () => {
   });
 
   it('takes the tighter of the platform ceiling and the operator cap', () => {
-    settingStore.set(UNIFIED_MAX_TOKENS_SETTING, 'auto'); // 32768 — looser
+    settingStore.set(UNIFIED_MAX_TOKENS_SETTING, 'auto'); // 32768 - looser
     expect(resolveMaxTokens('moondream', 65536)).toBe(MOONDREAM_MAX_OUTPUT_TOKENS);
     settingStore.set(UNIFIED_MAX_TOKENS_SETTING, '128'); // tighter than the platform
     expect(resolveMaxTokens('moondream', 65536)).toBe(128);

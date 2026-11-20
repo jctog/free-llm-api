@@ -33,7 +33,7 @@ interface StoredCheck {
 
 /**
  * Compare two dotted versions; > 0 when `a` is newer. Missing parts read as 0,
- * and so does anything that isn't a leading integer — `1.2.0-rc1` compares as
+ * and so does anything that isn't a leading integer - `1.2.0-rc1` compares as
  * `1.2.0`, which is wrong in the pre-release direction but never throws and
  * never invents an update out of a tag it cannot read.
  */
@@ -73,7 +73,7 @@ function writeStored(value: StoredCheck): void {
  * browser: the CSP this server sends is `connect-src 'self'`, so a direct
  * fetch to api.github.com is blocked on every install that isn't the desktop
  * shell. And nothing is checked at all until the operator opts in from the
- * Updates dialog — the server answers `{ disabled: true }` until then, and never
+ * Updates dialog - the server answers `{ disabled: true }` until then, and never
  * makes the outbound request.
  *
  * This is an explicit notification the user asked for, so it uses real i18n
@@ -135,7 +135,7 @@ export function UpdateReminder() {
           if ('disabled' in data) {
             // Opted out: drop the cached release too, or the throttle below
             // would keep showing the old pill for a day after the opt-out.
-            // A null release also means the next load asks again — one
+            // A null release also means the next load asks again - one
             // same-origin request that the server answers without contacting
             // anything.
             setRelease(null)

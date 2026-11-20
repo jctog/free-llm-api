@@ -14,7 +14,7 @@ import type { Request, Response, NextFunction } from 'express';
 // with ALLOWED_HOSTS unset it does nothing, because a loopback-only default
 // would lock out every LAN, Docker-network, desktop-LAN and reverse-proxy
 // install on upgrade. Once ALLOWED_HOSTS lists any hostname, the allow list is
-// those names plus the loopback set — localhost, 127.0.0.1, ::1, and
+// those names plus the loopback set - localhost, 127.0.0.1, ::1, and
 // *.localhost (which browsers treat as loopback-equivalent secure contexts).
 // '*' keeps it off explicitly.
 //
@@ -43,7 +43,7 @@ function hostnameOf(hostHeader: string | undefined): string | null {
  * Express middleware enforcing the Host allowlist.
  * @param allowed raw host patterns from ALLOWED_HOSTS (empty → guard off). Exact, case-insensitive hostnames; a single `*` disables the
  *  guard. `*.example.com` entries match any single-label subdomain wildcard
- *  is NOT supported — name every host you serve.
+ *  is NOT supported - name every host you serve.
  */
 export function createHostGuard(allowed: string[]) {
   const wildcard = allowed.includes('*');

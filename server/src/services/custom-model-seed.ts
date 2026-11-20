@@ -5,8 +5,8 @@ import type { Db } from '../db/types.js';
 //
 // A model registered against a user's own endpoint carries no catalog metadata:
 // nobody has benchmarked "whatever bynara.id is proxying today". The old
-// defaults answered that with the FLOOR — size_label 'Custom' (not a tier, so
-// intelligenceComposite scores it below every real model) plus rank 50 — and
+// defaults answered that with the FLOOR - size_label 'Custom' (not a tier, so
+// intelligenceComposite scores it below every real model) plus rank 50 - and
 // the bandit's intelligence axis duly handed it 0. Every routing strategy
 // except Manual then ignored the endpoint completely, which is exactly the
 // complaint in #488: "all of the added models by custom providers have the same
@@ -16,7 +16,7 @@ import type { Db } from '../db/types.js';
 // on each axis instead. A new custom model starts mid-pack, gets explored like
 // anything else, and the bandit's own reliability/speed evidence moves it from
 // there within a handful of requests. The operator can still tune the ranks by
-// hand afterwards — re-registering the model never rewrites them.
+// hand afterwards - re-registering the model never rewrites them.
 //
 // This is measured against the operator's LOCAL models table only. It reads no
 // remote catalog and refreshes nothing: purely a starting point for the user's

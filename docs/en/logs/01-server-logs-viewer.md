@@ -4,8 +4,8 @@
 
 The dashboard includes a live **Server Logs** viewer (accessible from the
 Analytics nav menu) that surfaces the same diagnostic lines the server prints to
-stdout — routing decisions, provider health checks, key cooldowns, quota
-exhaustion, compression fidelity gates, and any `warn`/`error` level events —
+stdout - routing decisions, provider health checks, key cooldowns, quota
+exhaustion, compression fidelity gates, and any `warn`/`error` level events -
 without requiring SSH or container log access.
 
 > **Implementation internals:** the ingest path, structured `providerLog` metadata, boot preload, the `server_logs` / `requests` / `request_attempts` schema, and the desktop file logger (`freeapi.log`) are covered in the [Observability deep-dive](../architecture/06-observability.md). This guide covers the operator-facing dashboard, polling API, and client implementation.
@@ -40,16 +40,16 @@ The log store uses **one id space across two tiers**:
 ## API contract
 
 All endpoints are mounted under `/api/logs` behind the dashboard session gate
-(the unified `/v1` key opens the inference surface, **never** this one — these
+(the unified `/v1` key opens the inference surface, **never** this one - these
 lines name providers, models, key ids, and failure reasons).
 
-### `GET /api/logs` — Polling endpoint
+### `GET /api/logs` - Polling endpoint
 
 Cursor-based pagination built for a dashboard that polls every few seconds.
 
 | Query param | Type | Description |
 | --- | --- | --- |
-| `sinceId` | `integer` (optional) | Return entries **newer** than this id. Omit for the newest `limit` entries (default 200). The cursor returned as `nextId` is the store's highest id, not the highest id returned — so a poll whose matches were all filtered still advances the cursor instead of re-scanning the same tail forever. |
+| `sinceId` | `integer` (optional) | Return entries **newer** than this id. Omit for the newest `limit` entries (default 200). The cursor returned as `nextId` is the store's highest id, not the highest id returned - so a poll whose matches were all filtered still advances the cursor instead of re-scanning the same tail forever. |
 | `levels` | `csv` (optional) | Comma-separated level filter: `trace,debug,info,warn,error`. Unknown levels return `400`. |
 | `q` | `string` (optional) | Case-insensitive text search across `message`, `provider`, `source`, `event`. |
 | `provider` | `string` (optional) | Exact provider name filter (e.g., `openai`, `anthropic`). |
@@ -83,7 +83,7 @@ Cursor-based pagination built for a dashboard that polls every few seconds.
 - An already-caught-up caller (`sinceId >= lastId`) gets `entries: []` for the
   cost of one integer comparison.
 
-### `GET /api/logs/counts` — Level counts
+### `GET /api/logs/counts` - Level counts
 
 Returns the same `LogLevelCounts` object included in every poll response, so a
 page that only wants the badge numbers can fetch them once without the full
@@ -93,10 +93,10 @@ entry payload.
 { "debug": 12, "info": 145, "warn": 8, "error": 2 }
 ```
 
-### `POST /api/logs/clear` — Clear both tiers
+### `POST /api/logs/clear` - Clear both tiers
 
 Empties the ring buffer **and** truncates the `server_logs` table. The id
-counter is **not reset** — a dashboard tab holding a cursor would otherwise be
+counter is **not reset** - a dashboard tab holding a cursor would otherwise be
 handed ids it has already seen.
 
 ```json
@@ -127,7 +127,7 @@ wrapper. The flow:
 3. The wrapper **then** calls `recordConsoleLine()` / the store receives the
    already-redacted text.
 4. `providerLog()` (used for structured operational events) redacts its own
-   message before recording, then mirrors to the wrapped console — idempotent
+   message before recording, then mirrors to the wrapped console - idempotent
    under a second pass.
 
 Result: **secrets never enter the ring buffer or the database**, and operators
@@ -154,7 +154,7 @@ see exactly the same lines in the dashboard that they would see in the terminal.
 - **Provider dropdown:** Populated dynamically from the `provider` field of
   entries seen in the current stream.
 - **Event dropdown:** Same accumulate-as-you-stream contract as the provider
-  dropdown, built from the `event` field — the quick path to the structured
+  dropdown, built from the `event` field - the quick path to the structured
   operational events (budget thresholds, key invalidation, cooldown recovery)
   without typing exact strings into free text.
 - **Clear button:** Confirmed action calling `POST /api/logs/clear`, then

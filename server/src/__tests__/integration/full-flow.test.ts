@@ -48,7 +48,7 @@ describe('Full Integration Flow', () => {
   it('Step 1: Verify models are seeded', async () => {
     const { status, body } = await req(app, 'GET', '/api/models');
     expect(status).toBe(200);
-    // Tightened from >= 14 — current catalog post-V9 is 60+ rows; if a future
+    // Tightened from >= 14 - current catalog post-V9 is 60+ rows; if a future
     // migration accidentally drops a chunk we want to know.
     expect(body.length).toBeGreaterThanOrEqual(50);
     expect(body[0]).toHaveProperty('modelId');

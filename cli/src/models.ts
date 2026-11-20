@@ -2,7 +2,7 @@
 //
 // The subtlety this module exists for: `catalog()` fetches `/v1/models` with
 // `?available=true`, so a model missing from that response has TWO possible
-// meanings — it does not exist, or it exists and is merely out of quota right
+// meanings - it does not exist, or it exists and is merely out of quota right
 // now. Treating absence as "unknown model" reports a healthy pinned model as a
 // typo the moment its provider hits a rate limit. Only the UNFILTERED roster
 // can tell those apart, so `--model` is validated against that.
@@ -12,7 +12,7 @@ import type { CatalogModel } from './types.js';
 export interface ResolvedModel {
   id: string;
   /** Context window in tokens, or undefined when the catalog does not publish
-   *  one. Undefined is a fact — an unpublished window is not the same as a
+   *  one. Undefined is a fact - an unpublished window is not the same as a
    *  known 128k, and callers must not invent one. */
   contextWindow?: number;
   /** The catalog lists this model but it is not currently servable. */
@@ -45,7 +45,7 @@ export function defaultModelId(models: CatalogModel[]): string {
  *
  * `available` is the filtered roster the CLI already fetches; `full` is the
  * unfiltered one. Pass the same array twice only when the unfiltered roster
- * could not be fetched — the caller then loses the ability to distinguish an
+ * could not be fetched - the caller then loses the ability to distinguish an
  * unknown id from an unavailable one, which is exactly the ambiguity this
  * function exists to remove.
  */

@@ -41,7 +41,7 @@ async function request(app: Express, method: string, path: string, body?: any) {
   // /v1/* inference endpoints authenticate with the unified key (or a client
   // profile key), NOT the dashboard token; /api/* admin endpoints take the
   // dashboard token. isGatedApiPath covers the admin side, and /v1 paths are
-  // simply excluded from it — so add the unified key explicitly for those.
+  // simply excluded from it - so add the unified key explicitly for those.
   const isV1 = path.startsWith('/v1/');
   const res = await fetch(url, {
     method,
@@ -460,7 +460,7 @@ describe('Model management API', () => {
       expect(entry.object).toBe('model');
       expect(entry.owned_by).toBe('freellmapi');
       expect(entry.available).toBe(true);
-      // The display name says where the request really goes — none of these is
+      // The display name says where the request really goes - none of these is
       // hosted Claude.
       expect(entry.name).toMatch(/slot/);
     }

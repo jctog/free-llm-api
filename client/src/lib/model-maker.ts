@@ -1,4 +1,4 @@
-// Who MADE a model, inferred from its id — as opposed to who is serving it
+// Who MADE a model, inferred from its id - as opposed to who is serving it
 // (the platform). A Llama on Groq and the same Llama on Cloudflare are both
 // Meta's; the Playground shows the maker's mark under a reply, and the host in
 // the tooltip. Pure so it can be tested without React.
@@ -79,7 +79,7 @@ const ORGS: Array<[RegExp, ModelMakerId]> = [
 export function modelMakerOf(modelId: string | null | undefined): ModelMaker | null {
   if (!modelId) return null
   const lower = modelId.trim().toLowerCase()
-  // "org/name[:tag]" — try the org first, then the name; a bare id is its own name.
+  // "org/name[:tag]" - try the org first, then the name; a bare id is its own name.
   const slash = lower.indexOf('/')
   const org = slash > 0 ? lower.slice(0, slash) : ''
   const name = (slash > 0 ? lower.slice(slash + 1) : lower).replace(/:.*$/, '')

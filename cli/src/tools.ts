@@ -19,10 +19,10 @@ function primaryModel(models: CatalogModel[], requestedId?: string): CatalogMode
   // An explicit --model wins over every heuristic below. It is validated
   // against the UNFILTERED catalog before we get here, so an id absent from
   // `models` (the available-only roster) is a real, registered model that is
-  // merely out of quota right now — pin it anyway rather than silently writing
+  // merely out of quota right now - pin it anyway rather than silently writing
   // a different model into the user's config.
   if (requestedId) return models.find(model => model.id === requestedId) ?? { id: requestedId };
-  // `auto` — the router picking the best model per request — is the whole
+  // `auto` - the router picking the best model per request - is the whole
   // point of the gateway and the right default for a generated config. Never
   // fall back to `fusion` (multi-model fan-out) by accident.
   return models.find(model => model.id === 'auto')
@@ -199,7 +199,7 @@ function continueDev(ctx: GenerateContext): Generation {
     // environment, ~/.continue/.env, <cwd>/.continue/.env and <cwd>/.env
     // before Continue's Hub is consulted. The IDE extensions cannot see the
     // shell environment, so ~/.continue/.env is the one place that serves the
-    // CLI and the extensions alike — and it keeps the raw key out of the YAML.
+    // CLI and the extensions alike - and it keeps the raw key out of the YAML.
     {
       path: path.join(ctx.homeDir, '.continue', '.env'),
       format: 'env',
@@ -236,7 +236,7 @@ function aider(ctx: GenerateContext): Generation {
 }
 
 // OpenCode resolves `provider/model` refs only against the ids a provider
-// declares, so the default model has to be in the `models` map — `auto`, the
+// declares, so the default model has to be in the `models` map - `auto`, the
 // usual default, is filtered out of the plain catalog roster, so it goes back
 // at the front. And a provider entry alone is inert: without a top-level
 // `model` OpenCode keeps whatever it used before (or nothing on a fresh
@@ -331,7 +331,7 @@ function qwen(ctx: GenerateContext): Generation {
   const model = primaryModel(ctx.models, ctx.requestedModelId);
   const dir = path.join(ctx.homeDir, '.qwen');
   // Qwen Code looks the selected model up in the provider list and, finding
-  // nothing, silently falls back to the FIRST listed model — with `auto`
+  // nothing, silently falls back to the FIRST listed model - with `auto`
   // filtered out of the roster that was `fusion`, a multi-model fan-out. The
   // default goes first so the lookup always succeeds.
   const roster = catalogModels(ctx.models);
@@ -378,7 +378,7 @@ function qwen(ctx: GenerateContext): Generation {
 // extension can use an `openai`-type profile (Roo's "OpenAI Compatible"), but
 // the Roo CLI only starts with a provider from its own short list and then
 // forces `apiProvider: openrouter` plus the --model onto whatever profile is
-// CURRENT — so the CLI is served by a separate import file whose current
+// CURRENT - so the CLI is served by a separate import file whose current
 // profile is an `openrouter`-type one with the base URL overridden. The two
 // stores never meet: the extension reads VS Code settings, the CLI reads
 // ~/.vscode-mock/global-storage/global-state.json.
@@ -487,14 +487,14 @@ function kilo(ctx: GenerateContext): Generation {
     }],
     notes: [
       'Export FREELLMAPI_API_KEY before starting Kilo; global config is trusted for {env:…} expansion.',
-      `One-shot check: kilo run "Say hello" — openai-compatible/${model.id} is the default model.`,
+      `One-shot check: kilo run "Say hello" - openai-compatible/${model.id} is the default model.`,
     ],
   };
 }
 
 // Crush picks its provider by the top-level `models.large` / `models.small`
 // selection, and with neither set it auto-detects from whatever credentials
-// are on the machine (an AWS profile, ANTHROPIC_API_KEY, a Charm login) — a
+// are on the machine (an AWS profile, ANTHROPIC_API_KEY, a Charm login) - a
 // provider entry alone never gets used. Both slots are pointed at the chosen
 // model, which therefore has to be in the provider's list; `auto` is filtered
 // out of the plain roster, so it goes back at the front.
@@ -611,7 +611,7 @@ function dsh(ctx: GenerateContext): Generation {
       },
     ],
     notes: [
-      `Start DeepSeek Harness with: npx @deepseek-ai/dsh web — ${route}/${model.id} is ${ctx.profile === 'default' ? 'the default model' : 'in the model picker'}.`,
+      `Start DeepSeek Harness with: npx @deepseek-ai/dsh web - ${route}/${model.id} is ${ctx.profile === 'default' ? 'the default model' : 'in the model picker'}.`,
       'One-shot check: npx @deepseek-ai/dsh --profile headless "Say hello"',
       'Settings are hot-reloaded, so a running dsh picks this up on its next request.',
       `Models are declared text-only; give a vision model \`input: [text, image]\` under ${route}.models in settings.yaml to send it images.`,
@@ -628,8 +628,8 @@ function dsh(ctx: GenerateContext): Generation {
 //     `$XDG_CONFIG_HOME/mimocode` (`~/.config/mimocode` on macOS and Linux),
 //     relocated wholesale to `$MIMOCODE_HOME/config` when that is set. The
 //     directory accepts `config.json`, `mimocode.json` and `mimocode.jsonc`
-//     and merges them in that order, so writing `config.json` — the first and
-//     weakest layer — leaves a hand-written `mimocode.json` in charge.
+//     and merges them in that order, so writing `config.json` - the first and
+//     weakest layer - leaves a hand-written `mimocode.json` in charge.
 //   * `provider.<id>.models.<id>.limit` requires BOTH `context` and `output`
 //     in MiMo's schema, the same as OpenCode's (https://opencode.ai/config.json).
 // There is no MIMOCODE_API_KEY or MIMOCODE_BASE_URL: MiMo's environment
@@ -645,7 +645,7 @@ function mimo(ctx: GenerateContext): Generation {
       'mimocode',
     );
   // The default model is named as `freellmapi/<id>`, so it has to exist in the
-  // provider's own `models` map — `auto`, the usual default, is filtered out
+  // provider's own `models` map - `auto`, the usual default, is filtered out
   // of the plain catalog roster, so put the chosen model back at the front.
   const roster = catalogModels(ctx.models);
   const modelEntries = Object.fromEntries(
@@ -677,7 +677,7 @@ function mimo(ctx: GenerateContext): Generation {
     notes: [
       'Install MiMo Code with: curl -fsSL https://mimo.xiaomi.com/install | bash',
       'Export FREELLMAPI_API_KEY before starting MiMo Code.',
-      `Start it with \`mimo\` — freellmapi/${model.id} is the default model.`,
+      `Start it with \`mimo\` - freellmapi/${model.id} is the default model.`,
       'One-shot check: mimo run "Say hello"',
     ],
   };
@@ -687,13 +687,13 @@ function mimo(ctx: GenerateContext): Generation {
 // ~/.openclaw/openclaw.json, the state dir being relocatable through
 // OPENCLAW_STATE_DIR / OPENCLAW_HOME). Every model endpoint is an entry under
 // `models.providers`, and a provider its bundled catalog does not know must
-// spell out `baseUrl`, `api` and a non-empty `models` list — exactly what a
+// spell out `baseUrl`, `api` and a non-empty `models` list - exactly what a
 // gateway with a per-user live catalog is. `api: openai-completions` is the
 // adapter for a /v1/chat/completions backend; OpenClaw already strips the
 // developer role and attribution headers for a custom origin, so no `compat`
 // switches are needed. The key travels as `${FREELLMAPI_API_KEY}`, OpenClaw's
 // own env substitution, and the value lands in $OPENCLAW_STATE_DIR/.env (0600),
-// the global env file OpenClaw loads on its own — so the route works with
+// the global env file OpenClaw loads on its own - so the route works with
 // nothing exported. The default model is `freellmapi/<id>` under
 // `agents.defaults.model.primary`; the patch keeps any `fallbacks` already
 // declared beside it.
@@ -774,13 +774,13 @@ function openclaw(ctx: GenerateContext): Generation {
 // endpoint: OPENAI_BASE_URL is deliberately ignored for anything but
 // api.openai.com, and OPENAI_API_KEY is only sent to OpenAI hosts. So the
 // gateway goes into the `model` block as `provider: custom` with `base_url`,
-// and the key travels as `api_key: "${FREELLMAPI_API_KEY}"` — Hermes's own
-// substitution — with the value in $HERMES_HOME/.env (0600), the file Hermes
+// and the key travels as `api_key: "${FREELLMAPI_API_KEY}"` - Hermes's own
+// substitution - with the value in $HERMES_HOME/.env (0600), the file Hermes
 // loads on its own, so nothing needs exporting. A fresh install ships
 // `model: ""` (a "not configured" sentinel); replacing it with the mapping is
 // exactly what `hermes setup` would do, and it is what lets a headless first
 // run skip the wizard. A named profile becomes an entry in the `providers`
-// dict instead — picked with `/model custom:<name>:<model>` — leaving the
+// dict instead - picked with `/model custom:<name>:<model>` - leaving the
 // default model alone.
 function hermes(ctx: GenerateContext): Generation {
   const model = primaryModel(ctx.models, ctx.requestedModelId);
@@ -832,8 +832,8 @@ function hermes(ctx: GenerateContext): Generation {
     notes: [
       'Install Hermes Agent with: curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --skip-setup',
       ctx.profile === 'default'
-        ? `Try it with: hermes -z "Say hello" — custom/${model.id} is the default model.`
-        : `Pick it inside a chat with: /model custom:${provider}:${model.id} — the default model is unchanged.`,
+        ? `Try it with: hermes -z "Say hello" - custom/${model.id} is the default model.`
+        : `Pick it inside a chat with: /model custom:${provider}:${model.id} - the default model is unchanged.`,
       'A running `hermes gateway` (Telegram, Discord, …) needs a restart to pick the change up.',
     ],
   };
@@ -841,8 +841,8 @@ function hermes(ctx: GenerateContext): Generation {
 
 // Pi (pi.dev, @earendil-works/pi-coding-agent) keeps user configuration in its
 // agent directory, $PI_CODING_AGENT_DIR (default ~/.pi/agent). An endpoint Pi
-// does not ship is a provider entry in models.json — `baseUrl`, `api` and the
-// `models` it serves — and `api: openai-completions` is the adapter for a
+// does not ship is a provider entry in models.json - `baseUrl`, `api` and the
+// `models` it serves - and `api: openai-completions` is the adapter for a
 // /v1/chat/completions backend. Pi does not load a .env file of its own, so the
 // key is written literally (the file is created 0600); its `$NAME` form would
 // need the variable exported in every shell that starts Pi. A provider entry
@@ -904,8 +904,8 @@ function pi(ctx: GenerateContext): Generation {
     notes: [
       'Install Pi with: npm install -g @earendil-works/pi-coding-agent (or curl -fsSL https://pi.dev/install.sh | sh)',
       ctx.profile === 'default'
-        ? `Try it with: pi -p "Say hello" — ${provider}/${model.id} is the default model.`
-        : `Try it with: pi --model ${provider}/${model.id} -p "Say hello" — the default model is unchanged.`,
+        ? `Try it with: pi -p "Say hello" - ${provider}/${model.id} is the default model.`
+        : `Try it with: pi --model ${provider}/${model.id} -p "Say hello" - the default model is unchanged.`,
       'Every catalog model is in /model; a running Pi session picks the change up when /model is opened.',
       `Models are declared text-only; give a vision model \`input: ["text", "image"]\` under providers.${provider} in models.json to send it images.`,
     ],
@@ -913,7 +913,7 @@ function pi(ctx: GenerateContext): Generation {
 }
 
 // Reasonix (reasonix.io, esengine/DeepSeek-Reasonix) reads one global TOML
-// document, <Reasonix home>/config.toml — ~/.reasonix, %APPDATA%\reasonix on
+// document, <Reasonix home>/config.toml - ~/.reasonix, %APPDATA%\reasonix on
 // Windows, or $REASONIX_HOME when set. Every endpoint is a `[[providers]]`
 // entry; `kind = "openai"` posts to `<base_url>/chat/completions`, and a
 // `models` list exposes the whole catalog under one connection. The entry only
@@ -970,8 +970,8 @@ function reasonix(ctx: GenerateContext): Generation {
     notes: [
       'Install Reasonix with: npm install -g reasonix (or brew install esengine/reasonix/reasonix)',
       ctx.profile === 'default'
-        ? `Try it with: reasonix -p "Say hello" — ${provider}/${model.id} is the default model.`
-        : `Try it with: reasonix --model ${provider}/${model.id} -p "Say hello" — the default model is unchanged.`,
+        ? `Try it with: reasonix -p "Say hello" - ${provider}/${model.id} is the default model.`
+        : `Try it with: reasonix --model ${provider}/${model.id} -p "Say hello" - the default model is unchanged.`,
       `Every catalog model is in /model as ${provider}/<id>; other [[providers]] entries in config.toml are kept.`,
       `Reasonix Studio lists only the providers in [desktop].provider_access when that list is set; add "${provider}" there, or under Settings → Model → Access.`,
     ],

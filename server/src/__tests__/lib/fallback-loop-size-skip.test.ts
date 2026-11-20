@@ -93,7 +93,7 @@ describe('FallbackState.observedTotalTokens (#507)', () => {
 
   it('stays undefined when the size error has no parseable REQUESTED number', () => {
     const state = newFallbackState();
-    // Real Groq body with no "Requested N" — the parser must refuse and the
+    // Real Groq body with no "Requested N" - the parser must refuse and the
     // estimate stays at the local input guess.
     const err = Object.assign(
       new Error('Groq API error 413: Request Entity Too Large'),
@@ -135,7 +135,7 @@ describe('FallbackState.observedTotalTokens (#507)', () => {
     expect(state.observedTotalTokens).toBe(24092);
   });
 
-  it('does NOT latch github limit-only bodies (parser refuses — see provider-size-parser)', () => {
+  it('does NOT latch github limit-only bodies (parser refuses - see provider-size-parser)', () => {
     const state = newFallbackState();
     const msg = 'GitHub Models API error 413: Request body too large for gpt-4.1 model. Max size: 8000 tokens.';
     const err = Object.assign(new Error(msg), { status: 413 });
@@ -147,7 +147,7 @@ describe('FallbackState.observedTotalTokens (#507)', () => {
     expect(state.observedTotalTokens).toBeUndefined();
   });
 
-  it('never decreases — max of current and incoming wins', () => {
+  it('never decreases - max of current and incoming wins', () => {
     const state = newFallbackState();
     state.observedTotalTokens = 50000;
     const smaller = Object.assign(
@@ -222,7 +222,7 @@ describe('FallbackState.observedTotalTokens (#507)', () => {
       tpmLimit != null && estimate > tpmLimit;
     expect(tpmGate(modelSmall.tpm_limit != null ? smallTpm : null, routingTotal)).toBe(true);
     expect(tpmGate(modelLarge.tpm_limit != null ? largeTpm : null, routingTotal)).toBe(false);
-    // And at the un-inflated localEstimate, the gate accepts both — that's
+    // And at the un-inflated localEstimate, the gate accepts both - that's
     // the bug this PR fixes: under the local estimate, the router burns a
     // 413 hop on every low-tpm model in the chain instead of skipping
     // them up front.

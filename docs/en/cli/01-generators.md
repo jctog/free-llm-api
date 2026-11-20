@@ -64,5 +64,5 @@ Proves a client's requests reach this gateway (checks routed `Authorization` hea
 
 ## Related
 
-- [Config files](02-config-files.md) — merge strategies, `tools.json`, adding a new generator.
-- [Clients & agents](../clients/01-agent-clients.md) — per-agent wiring recipes, headerless URL tokens, MCP.
+- [Config files](02-config-files.md) - merge strategies, `tools.json`, adding a new generator.
+- [Clients & agents](../clients/01-agent-clients.md) - per-agent wiring recipes, headerless URL tokens, MCP.

@@ -109,7 +109,7 @@ describe('transcription service', () => {
     const [url, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
     expect(url).toBe('https://api.groq.com/openai/v1/audio/transcriptions');
     expect((init.headers as Record<string, string>).Authorization).toBe('Bearer groq-test-key');
-    // Content-Type must NOT be set by hand — FormData supplies the boundary.
+    // Content-Type must NOT be set by hand - FormData supplies the boundary.
     expect((init.headers as Record<string, string>)['Content-Type']).toBeUndefined();
     const form = init.body as FormData;
     expect(form).toBeInstanceOf(FormData);
@@ -226,7 +226,7 @@ describe('transcription service', () => {
     const r = await runTranscription('auto', params({ responseFormat: 'vtt' }));
     expect(r.platform).toBe('cloudflare');
     expect(r.vtt).toContain('WEBVTT');
-    // groq must never have been attempted — it cannot produce vtt natively.
+    // groq must never have been attempted - it cannot produce vtt natively.
     expect(fetchMock.mock.calls.every(c => !String(c[0]).includes('groq.com'))).toBe(true);
   });
 
@@ -255,7 +255,7 @@ describe('transcription service', () => {
   });
 
   // A user-registered OpenAI-compatible STT box (platform 'custom'). Its row
-  // is bound to one api_keys row that carries the base_url —
+  // is bound to one api_keys row that carries the base_url -
   // getProviderCredential refuses to guess a key for 'custom', so the
   // candidate MUST carry key_id or the row is silently skipped.
   function addCustomStt(model = 'local-whisper', secret = 'stt-secret', baseUrl = 'http://127.0.0.1:9911/v1'): number {
@@ -287,7 +287,7 @@ describe('transcription service', () => {
     expect(url).toBe('http://127.0.0.1:9911/v1/audio/transcriptions');
     const headers = init.headers as Record<string, string>;
     expect(headers.Authorization).toBe('Bearer stt-secret');
-    // Content-Type must NOT be set by hand — FormData supplies the boundary.
+    // Content-Type must NOT be set by hand - FormData supplies the boundary.
     expect(headers['Content-Type']).toBeUndefined();
     const form = init.body as FormData;
     expect(form.get('model')).toBe('local-whisper');
@@ -334,7 +334,7 @@ describe('transcription service', () => {
       .rejects.toMatchObject({ status: 502 }); // chainError wraps the 500 adapter error
   });
 
-  it("custom: vtt is refused — no custom row declares native subtitles", async () => {
+  it("custom: vtt is refused - no custom row declares native subtitles", async () => {
     addCustomStt();
     await expect(runTranscription('local-whisper', params({ responseFormat: 'vtt' })))
       .rejects.toMatchObject({ status: 400 });

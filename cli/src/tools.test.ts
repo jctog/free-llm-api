@@ -7,7 +7,7 @@ import type { GenerateContext } from './types.js';
 // Pinning ctx.detectedClient is not enough: tools.ts falls back to a live
 // detectChatGptClient() when it is undefined, so a runner with `codex` on
 // PATH (or ChatGPT.app installed) would still shift the golden notes. Mock
-// the module outright — undefined keeps the snapshots host-independent.
+// the module outright - undefined keeps the snapshots host-independent.
 vi.mock('./detect.js', () => ({
   detectChatGptClient: () => undefined,
   clientNotes: () => [
@@ -81,8 +81,8 @@ function normalizeGenerationPaths<T extends { files: GeneratedFile[]; notes?: st
   return {
     ...generation,
     files: generation.files.map(f => ({ ...f, path: asPosix(f.path) })),
-    // Generators also interpolate host-joined paths into their note text — Roo's
-    // `autoImportSettingsPath` instructions quote the import file by full path —
+    // Generators also interpolate host-joined paths into their note text - Roo's
+    // `autoImportSettingsPath` instructions quote the import file by full path -
     // so the notes are golden input as well (#1392).
     ...(generation.notes ? { notes: generation.notes.map(asPosix) } : {}),
   };
@@ -614,7 +614,7 @@ describe('tool generators', () => {
   });
 
   it('writes ZCode as a custom provider in ~/.zcode/v2/provider_config.json', () => {
-    // ZCode has no env lookup for custom providers — the key has to live in
+    // ZCode has no env lookup for custom providers - the key has to live in
     // the file, which the writer then protects with 0600 (sensitive: true).
     const [config] = tools.find(tool => tool.id === 'zcode')!.generate(context).files;
     expect(asPosix(config.path)).toBe('/home/tester/.zcode/v2/provider_config.json');

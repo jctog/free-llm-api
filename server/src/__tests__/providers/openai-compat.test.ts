@@ -250,7 +250,7 @@ describe('OpenAICompatProvider', () => {
     expect(capturedBody.parallel_tool_calls).toBe(true);
   });
 
-  describe('forceSingleToolCall (NVIDIA NIM single-tool-call 400 — issue #255)', () => {
+  describe('forceSingleToolCall (NVIDIA NIM single-tool-call 400 - issue #255)', () => {
     const nim = () => new OpenAICompatProvider({
       platform: 'nvidia',
       name: 'NVIDIA NIM',
@@ -320,7 +320,7 @@ describe('OpenAICompatProvider', () => {
   it('distinguishes a truncated 200 body (CDN keepalive) from a wrong-endpoint 200 body (#430)', async () => {
     // Cloudflare-fronted free-tier upstreams (Kilo routing Nemotron / Poolside Laguna)
     // deliver a partial JSON body when the 600s edge idle-keepalive fires mid-response.
-    // Node's JSON.parse surfaces that as "Unexpected end of JSON input" — different from
+    // Node's JSON.parse surfaces that as "Unexpected end of JSON input" - different from
     // the NDJSON / native-API case above. Operators were chasing a base-URL bug that
     // didn't exist because both paths produced the same error string.
     const headers = new Headers({ 'content-type': 'application/json' });
@@ -363,7 +363,7 @@ describe('OpenAICompatProvider', () => {
   it('does not flag NDJSON Content-Type as a truncation (#430 regression guard)', async () => {
     // A real Ollama-style upstream announces NDJSON via Content-Type. Even if
     // the parse error message happens to match the "after JSON at position"
-    // substring (NDJSON bodies do — the parser eats one object, then trips
+    // substring (NDJSON bodies do - the parser eats one object, then trips
     // on the next one), we must not misclassify it as a CDN truncation.
     const headers = new Headers({ 'content-type': 'application/x-ndjson' });
     vi.spyOn(global, 'fetch').mockResolvedValueOnce({
@@ -378,7 +378,7 @@ describe('OpenAICompatProvider', () => {
     ).rejects.toThrow(/not OpenAI-compatible/);
   });
 
-  it('does not classify NDJSON Content-Type as a truncation — explicit not.toThrow (#430)', async () => {
+  it('does not classify NDJSON Content-Type as a truncation - explicit not.toThrow (#430)', async () => {
     // Companion to the previous test: explicitly assert the truncation message
     // does NOT appear, so a future refactor can't silently switch the branch.
     const headers = new Headers({ 'content-type': 'application/x-ndjson' });
@@ -582,7 +582,7 @@ describe('OpenAICompatProvider', () => {
     expect(body.messages[0]).toEqual({ role: 'assistant', content: 'replayed turn' });
   });
 
-  it('folds reasoning into content when content is empty (Ollama style — bare `reasoning` field)', async () => {
+  it('folds reasoning into content when content is empty (Ollama style - bare `reasoning` field)', async () => {
     vi.spyOn(global, 'fetch').mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve({
@@ -687,9 +687,9 @@ describe('OpenAICompatProvider - platform instances', () => {
     { platform: 'sealion',    name: 'SEA-LION',      baseUrl: 'https://api.sea-lion.ai/v1' },
     { platform: 'orcarouter', name: 'OrcaRouter',    baseUrl: 'https://api.orcarouter.ai/v1' },
     // unorouter's /v1/models requires auth (401 without a key), so default
-    // key validation works — no validateUrl override, unlike xkiro.
+    // key validation works - no validateUrl override, unlike xkiro.
     { platform: 'unorouter', name: 'UnoRouter',      baseUrl: 'https://api.unorouter.com/v1' },
-    // xkiro validates against /v1/usage (its /v1/models is public — 200 with no
+    // xkiro validates against /v1/usage (its /v1/models is public - 200 with no
     // key), so it carries a validateUrl; chat routing is stock openai-compat.
     { platform: 'xkiro',      name: 'xKiro',         baseUrl: 'https://api.xkiro.com/v1' },
     // modelscope registers a ModelScopeProvider subclass (custom validateKey,
@@ -803,7 +803,7 @@ describe('OpenAICompatProvider - platform instances', () => {
     });
 
     // The rescue turns a provider 400 into a success. If what it recovered does
-    // not satisfy the tool's schema, that success is one the client cannot use —
+    // not satisfy the tool's schema, that success is one the client cannot use -
     // so with the opt-in verdict on, decline the rescue and let the original
     // error propagate, exactly as it did before #264.
     it('declines the rescue when the recovered arguments violate the schema', async () => {
@@ -1095,7 +1095,7 @@ describe('OpenAICompatProvider in-band out-of-credits notice (#pollinations-inba
       expect(inBandCreditsError("doesn't have enough credits. Please top up")).toBeTruthy();
     });
     it('does not flag a genuine reply that merely mentions credits', () => {
-      expect(inBandCreditsError("You don't need enough credits upfront — just enable billing.")).toBeNull();
+      expect(inBandCreditsError("You don't need enough credits upfront - just enable billing.")).toBeNull();
       expect(inBandCreditsError('Here is a poem about the ocean.')).toBeNull();
       expect(inBandCreditsError('')).toBeNull();
       expect(inBandCreditsError(undefined)).toBeNull();

@@ -85,9 +85,9 @@ The built-in path is deterministic, synchronous, dependency-light, and provider-
 
 Authenticated admin clients can use:
 
-- `GET /api/settings/compression` — read the effective configuration.
-- `PUT /api/settings/compression` — update modes, engines, limits, and trust controls.
-- `POST /api/compression/preview` — inspect compressed output and per-engine results without affecting live statistics.
-- `GET /api/compression/stats` — read rolling aggregate and per-engine savings and fidelity-gate discards.
+- `GET /api/settings/compression` - read the effective configuration.
+- `PUT /api/settings/compression` - update modes, engines, limits, and trust controls.
+- `POST /api/compression/preview` - inspect compressed output and per-engine results without affecting live statistics.
+- `GET /api/compression/stats` - read rolling aggregate and per-engine savings and fidelity-gate discards.
 
 MCP clients can read the same live aggregates with the `compression_stats` tool. Statistics contain counts, timings, and estimated savings only; request bodies are never retained.

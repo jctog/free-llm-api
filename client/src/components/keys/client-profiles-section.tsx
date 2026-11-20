@@ -22,7 +22,7 @@ interface ClientProfile {
 type ProfileWithKey = ClientProfile & { key: string }
 
 // Per-client API keys with a server-enforced system prompt (#411). Deliberately
-// a collapsed accordion under the unified-key card — the unified key stays the
+// a collapsed accordion under the unified-key card - the unified key stays the
 // first-class flow; this is the power-user add-on.
 export function ClientProfilesSection() {
   const { t } = useI18n()
@@ -30,7 +30,7 @@ export function ClientProfilesSection() {
   const [open, setOpen] = useState(false)
   const [name, setName] = useState('')
   const [prompt, setPrompt] = useState('')
-  // The freshly minted key (create/rotate) — shown once, never fetchable again.
+  // The freshly minted key (create/rotate) - shown once, never fetchable again.
   const [newKey, setNewKey] = useState<{ id: number; key: string } | null>(null)
   const [copied, setCopied] = useState(false)
 

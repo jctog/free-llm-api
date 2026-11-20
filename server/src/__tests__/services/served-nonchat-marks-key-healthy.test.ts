@@ -14,7 +14,7 @@ import { seedDecisionModels } from '../helpers/decision-models.js';
 // on it: the chat fallback loop (#1493) and a served search (#1612) already
 // do. Embeddings, rerank, decisions and media draw from the SAME pool via
 // reserveProviderCredential / the rerank candidates query, yet a success there
-// left the key frozen at 'unknown' — and for a provider whose keys never get
+// left the key frozen at 'unknown' - and for a provider whose keys never get
 // polled (#1599/#1459) or a key demoted by an earlier blip, there was no way
 // back to 'healthy' short of a manual "Check now".
 

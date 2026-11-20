@@ -8,7 +8,7 @@ const PRUNE_INTERVAL_MS = 60_000;
 // ~720 rows for a 30d max UI range. See db/migrations/.../request_aggregates.ts.
 const HOURLY_RETENTION_DAYS = 30;
 const HOURLY_PRUNE_INTERVAL_MS = 24 * 60 * 60 * 1000;
-// Persisted server_logs (warn/error only — see the migration). Much shorter
+// Persisted server_logs (warn/error only - see the migration). Much shorter
 // than the 90d analytics window: a week is well past the point where anyone is
 // still debugging last Tuesday's provider outage, and unlike `requests` these
 // rows carry no aggregate that would silently change if they were pruned.
@@ -17,7 +17,7 @@ const DEFAULT_SERVER_LOGS_MAX_ROWS = 50_000;
 // provider_quota_observations is the append-only audit trail behind
 // provider_quota_state (which always holds the current reading). Nothing reads
 // further back than the newest row per pool, so the history is diagnostics
-// only — yet a busy install wrote ~15k rows a day and reached 470k rows in a
+// only - yet a busy install wrote ~15k rows a day and reached 470k rows in a
 // month. Pruned on the daily gate: the delete is a range over created_at.
 const DEFAULT_QUOTA_OBSERVATIONS_RETENTION_DAYS = 30;
 const DEFAULT_QUOTA_OBSERVATIONS_MAX_ROWS = 200_000;
@@ -203,7 +203,7 @@ export function pruneQuotaObservations(
  * embedders, for a table that grows far slower than `requests` does.
  *
  * Guarded against the table being absent, exactly like the hourly aggregate
- * below — tests that open a DB before migrations run must not crash the prune
+ * below - tests that open a DB before migrations run must not crash the prune
  * loop. Rows are deleted by created_at_ms, never by id: the id space is shared
  * with the in-memory ring and is not a timestamp.
  */
@@ -244,15 +244,15 @@ export function pruneServerLogs(db: RetentionDb, nowMs: number): number {
  * already filter on (`expires_at_ms > now`), and both are indexed on
  * `expires_at_ms`. Neither had a sweeper: `storeIdempotencyResult` only deletes
  * expired rows for the SAME key hash it is about to overwrite, so a claim
- * whose hash never repeats — the common case, since clients send a fresh UUID
- * per request — sat in the DB forever with its full response JSON. A busy
+ * whose hash never repeats - the common case, since clients send a fresh UUID
+ * per request - sat in the DB forever with its full response JSON. A busy
  * install replaying Idempotency-Key traffic grew this table monotonically.
  * `response_cache` swept expired rows only at startup, so a long-running
  * server accumulated them between restarts too.
  *
  * `sessions` joins the sweep for the same reason (#1510-era retention series):
- * validateSession only deletes a row when its OWN token is checked again — and
- * an expired token is by definition never re-sent — while login mints a new
+ * validateSession only deletes a row when its OWN token is checked again - and
+ * an expired token is by definition never re-sent - while login mints a new
  * row per sign-in (30-day TTL). Desktop installs that mint a session on every
  * dashboard load leak one row per load. Expired rows are dead weight for every
  * reader (validateSession filters on expires_at_ms), so deleting them is safe.
@@ -316,7 +316,7 @@ export function pruneSearchLogs(db: RetentionDb, nowMs: number): number {
  * Age- and count-bound the decision-model attempt log (#1537).
  *
  * decision_requests grew on every POST /v1/decisions attempt (and every failed
- * one — a cooling-down key still logs) with no prune of any kind. Its only
+ * one - a cooling-down key still logs) with no prune of any kind. Its only
  * reader is the month-scoped count on the Decision page, so the 90d default
  * matches the other attempt logs. Guarded against the table being absent like
  * every other prune here.
@@ -398,11 +398,11 @@ export function pruneRequestAnalytics(options: {
 
   // Hourly aggregate prune (gated once per day). The UI's widest window is
   // 30d, so we keep at most 30 days of hourly buckets (~720 rows). The table
-  // is the source of truth for analytics totals — never prune more aggressively
+  // is the source of truth for analytics totals - never prune more aggressively
   // than the UI range, or the 30d count will silently drop again.
   // Guarded against the table being absent (tests that init a DB before the
   // migration runs would otherwise crash the prune loop).
-  // Quota observation log, once a day — or again next tick while a large
+  // Quota observation log, once a day - or again next tick while a large
   // backlog is still being worked off in budgeted chunks.
   if (nowMs >= nextQuotaObservationsPruneAtMs) {
     const sweep = pruneQuotaObservations(db, nowMs);
@@ -417,7 +417,7 @@ export function pruneRequestAnalytics(options: {
       .get();
     if (hasHourly) {
       // Hour keys are created_at truncated to the hour, in SQLite's canonical
-      // 'YYYY-MM-DD HH:00:00' text (space separator) — same as logRequest.hourKey()
+      // 'YYYY-MM-DD HH:00:00' text (space separator) - same as logRequest.hourKey()
       // and the summary/timeline readers. Floor the cutoff to the hour and
       // compare on the space form so the prune boundary matches the read window.
       const sqliteCutoff = toSqliteTimestamp(new Date(nowMs - HOURLY_RETENTION_DAYS * DAY_MS));

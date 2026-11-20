@@ -7,7 +7,7 @@ import { createUser } from '../../services/auth.js';
 // The desktop app seeds its hidden account as `desktop@localhost`
 // (desktop/src/server-host.ts). That address has no TLD, so while /login shared
 // the signup schema's z.email() every sign-in on a desktop install was rejected
-// with "A valid email is required" before the password was ever checked — which
+// with "A valid email is required" before the password was ever checked - which
 // also made the reset-then-sign-in-from-a-browser workaround in #807 impossible.
 // Logging in is a lookup, so the address is matched, not validated.
 
@@ -53,7 +53,7 @@ describe('login accepts the identifier the desktop app actually seeds', () => {
     createUser('desktop@localhost', 'a-long-random-password');
     const res = await postLogin({ email: 'desktop@localhost', password: 'not-the-password' });
     expect(res.status).toBe(401);
-    // Not a 400 about the address shape — the address was fine, the password was not.
+    // Not a 400 about the address shape - the address was fine, the password was not.
     expect(res.body.error.message).toBe('Invalid email or password');
   });
 

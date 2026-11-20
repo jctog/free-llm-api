@@ -4,7 +4,7 @@
 // routing unit is a "family" (one model identity + dimension) and failover only
 // walks the providers serving that same family.
 //
-// `model: "auto"` (or empty) routes to the configured default family — so auto
+// `model: "auto"` (or empty) routes to the configured default family - so auto
 // always works: with one provider it just uses that one, with several it gets
 // cross-provider redundancy for free.
 import { getDb, getSetting } from '../db/index.js';
@@ -142,7 +142,7 @@ async function openAiStyleEmbed(
 ): Promise<ProviderCallResult> {
   const body: Record<string, unknown> = { model: modelId, input: inputs, ...extra };
   // Some providers (NVIDIA NeMo NIM, Google Gemini Embedding, OpenAI v3) support
-  // Matryoshka Representation Learning (MRL) — a smaller output_dim is valid and
+  // Matryoshka Representation Learning (MRL) - a smaller output_dim is valid and
   // truncates the vector rather than failing. Others (HuggingFace feature-extraction,
   // Cloudflare BGE) ignore unknown fields silently. We only forward the param when
   // the caller asked for an explicit override, so providers that don't accept it
@@ -202,7 +202,7 @@ export interface CustomEmbeddingRegistration {
 }
 
 /**
- * Upsert one custom embedding model bound to an endpoint credential — the
+ * Upsert one custom embedding model bound to an endpoint credential - the
  * shared write path behind POST /api/embeddings/custom and the bulk key
  * importer (#382). Throws EmbeddingsError(400) when the family already exists
  * at a different dimension: vectors from mismatched spaces must never mix, so
@@ -374,7 +374,7 @@ function logEmbeddingRequest(
  * `dimensions` (optional): client-supplied output-dimension override forwarded to
  * providers that support MRL truncation (NVIDIA NeMo NIM, Google Gemini Embedding,
  * OpenAI text-embedding-3-*). Providers that ignore the field see an identical
- * request body. The override is independent of the model's native dimension — the
+ * request body. The override is independent of the model's native dimension - the
  * family registry still pins the canonical dimension, this just lets callers ask
  * for a smaller vector at the cost of some accuracy. */
 export async function runEmbeddings(model: string | undefined, inputs: string[], dimensions?: number): Promise<EmbeddingsResult> {

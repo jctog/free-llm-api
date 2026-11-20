@@ -37,7 +37,7 @@ async function addKey(key = 'gsk_testkey123') {
   return body.id;
 }
 
-describe('Reveal one key — password re-verification (#705)', () => {
+describe('Reveal one key - password re-verification (#705)', () => {
   beforeAll(() => {
     process.env.ENCRYPTION_KEY = '0'.repeat(64);
     initDb(':memory:');

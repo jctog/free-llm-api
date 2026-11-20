@@ -89,7 +89,7 @@ interface FallbackEntry {
 
 // Render a fusion panel/judge entry as "platform/model", but avoid doubling
 // the provider when the model id already carries it (e.g. openrouter/owl-alpha,
-// groq/compound) — those would otherwise read "openrouter/openrouter/owl-alpha".
+// groq/compound) - those would otherwise read "openrouter/openrouter/owl-alpha".
 function fusionRouteLabel(p: { platform: string; model: string }): string {
   return p.model.startsWith(`${p.platform}/`) ? p.model : `${p.platform}/${p.model}`
 }
@@ -123,7 +123,7 @@ function FusionTrace({ panel, judge, streaming, answerStarted }: {
   const { t } = useI18n()
   // Open while the panel streams in so you can watch it work; auto-collapse the
   // moment the final answer STARTS streaming (first token in the bubble), so it
-  // tucks away as the answer takes over — unless the user manually toggled it.
+  // tucks away as the answer takes over - unless the user manually toggled it.
   const [open, setOpen] = useState(true)
   const touched = useRef(false)
   useEffect(() => {
@@ -215,8 +215,8 @@ function ReplyTrace({ reasoning, search, answerStarted }: {
 }
 
 // How close to the bottom of the transcript still counts as "reading the live
-// answer", in pixels. Slack is needed either way — sub-pixel scroll positions
-// mean an exact comparison never matches — and a couple of lines' worth of it
+// answer", in pixels. Slack is needed either way - sub-pixel scroll positions
+// mean an exact comparison never matches - and a couple of lines' worth of it
 // keeps the follow from dropping out on a stray trackpad nudge.
 const SCROLL_FOLLOW_SLACK = 40
 
@@ -226,7 +226,7 @@ const SETTINGS_OPEN_KEY = 'playground.settingsOpen'
 // Both rails plus the chat need room the small breakpoints do not have: three
 // columns on a phone leave the transcript a sliver. So below lg a visit starts
 // with the rails collapsed to their strips whatever a desktop session
-// remembered — the toggles still work, the remembered choice just isn't
+// remembered - the toggles still work, the remembered choice just isn't
 // restored until there is width for it.
 function initialRailOpen(key: string): boolean {
   if (typeof window === 'undefined') return true
@@ -250,7 +250,7 @@ export default function PlaygroundPage() {
   // Sampling knobs (temperature / top_p / max_tokens), edited in the settings
   // rail. Every one is opt-in, so an untouched rail composes exactly the
   // request the Playground sent before they existed. Remembered in
-  // localStorage, NOT on the conversation row — these are how YOU like to
+  // localStorage, NOT on the conversation row - these are how YOU like to
   // drive the Playground, not part of a saved transcript.
   const [sampling, setSampling] = useState<SamplingSettings>(() => readSampling())
   const updateSampling = (next: SamplingSettings) => {
@@ -281,7 +281,7 @@ export default function PlaygroundPage() {
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   // Whether the transcript should keep itself pinned to the bottom. Every model
-  // streams now, so a message can grow for a minute straight — scrolling up to
+  // streams now, so a message can grow for a minute straight - scrolling up to
   // re-read something must not be undone by the next token.
   const followRef = useRef(true)
   const lastScrollTopRef = useRef(0)
@@ -292,7 +292,7 @@ export default function PlaygroundPage() {
   // ---- Saved conversations -------------------------------------------------
   // The transcript lives on the server now. `conversationId` is the row this
   // page is writing to; null means "nothing sent yet", and no row exists until
-  // the first message — a fresh visit still opens on an empty transcript.
+  // the first message - a fresh visit still opens on an empty transcript.
   const queryClient = useQueryClient()
   const [conversationId, setConversationId] = useState<number | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => initialRailOpen(SIDEBAR_OPEN_KEY))
@@ -389,7 +389,7 @@ export default function PlaygroundPage() {
     setArtifactOpen(true)
   }, [])
   const artifactHost = useMemo(() => ({ open: openArtifact, activeCode: artifact?.code ?? null }), [openArtifact, artifact?.code])
-  // Auto-open only for a reply that just finished HERE — not for every old
+  // Auto-open only for a reply that just finished HERE - not for every old
   // conversation that happens to contain one, which would pop the panel on
   // each visit. `loading` going true→false marks the reply's completion.
   const wasLoadingRef = useRef(false)
@@ -414,8 +414,8 @@ export default function PlaygroundPage() {
   })
 
   // Named fallback chains (#1021). Every custom chain is served as an
-  // `auto:<name>` model — /v1/models lists them and the send path already
-  // routes them — but the picker only ever offered 'auto', so the one place
+  // `auto:<name>` model - /v1/models lists them and the send path already
+  // routes them - but the picker only ever offered 'auto', so the one place
   // you could try a chain you had just built was a curl command. The id is
   // derived exactly as the server derives it (routes/proxy.ts).
   const { data: chains = [] } = useQuery<Chain[]>({
@@ -459,7 +459,7 @@ export default function PlaygroundPage() {
 
   // Follow the stream only while the reader is parked at the bottom. Judging
   // by direction (rather than position alone) keeps our own smooth-scroll
-  // animation — which always travels downwards — from being mistaken for the
+  // animation - which always travels downwards - from being mistaken for the
   // user taking over, whatever they used to scroll: wheel, keys, or the bar.
   useEffect(() => {
     const el = transcriptRef.current
@@ -494,7 +494,7 @@ export default function PlaygroundPage() {
   }
 
   // The id to save into, creating the row on the first message. Returns null
-  // when the create failed — saving is best-effort, never something that costs
+  // when the create failed - saving is best-effort, never something that costs
   // you the answer on screen.
   const conversationIdFor = (msgs: ChatMessage[]): Promise<number | null> => {
     if (conversationIdRef.current !== null) return Promise.resolve(conversationIdRef.current)
@@ -521,7 +521,7 @@ export default function PlaygroundPage() {
     return createRef.current
   }
 
-  // Save the whole conversation — transcript, title, model, system prompt — in
+  // Save the whole conversation - transcript, title, model, system prompt - in
   // one PUT. Called when a response FINISHES (never per delta) and on
   // rename/clear. A failure is logged and dropped: the transcript on screen is
   // the source of truth, and the next exchange saves it again.
@@ -559,7 +559,7 @@ export default function PlaygroundPage() {
     followRef.current = true
   }
 
-  // Save whatever is on screen before it goes away — leaving a conversation
+  // Save whatever is on screen before it goes away - leaving a conversation
   // mid-stream should keep the part that had already arrived. The last
   // completed exchange saved itself; this only ever adds to that.
   const flushCurrentConversation = () => {
@@ -647,7 +647,7 @@ export default function PlaygroundPage() {
   useEffect(() => {
     const stored = readActiveConversationId()
     if (stored === null) return
-    // The state it sets lands after the fetch resolves, not during this body —
+    // The state it sets lands after the fetch resolves, not during this body -
     // restoring the session IS synchronising React with an external system.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     openConversation(stored).catch(() => writeActiveConversationId(null))
@@ -714,8 +714,8 @@ export default function PlaygroundPage() {
 
   // Read a plain (non-fusion) OpenAI chat stream, filling the assistant bubble
   // in place as content and reasoning deltas land. The routing metadata is
-  // already known — it rides on the response headers, which arrive before the
-  // first frame — so the only thing the stream adds is the latency, measured
+  // already known - it rides on the response headers, which arrive before the
+  // first frame - so the only thing the stream adds is the latency, measured
   // to the last frame rather than to the first.
   const streamChat = async (
     stream: ReadableStream<Uint8Array>,
@@ -834,8 +834,8 @@ export default function PlaygroundPage() {
     setLoading(true)
     inputRef.current?.focus()
 
-    // The server row is born HERE — with the first message, not on arrival at
-    // the page — so a visit that sends nothing leaves no trace in the sidebar.
+    // The server row is born HERE - with the first message, not on arrival at
+    // the page - so a visit that sends nothing leaves no trace in the sidebar.
     // Not awaited: the create runs alongside the completion, and every save
     // below waits on the same memoised promise.
     void conversationIdFor(newMessages)
@@ -913,7 +913,7 @@ export default function PlaygroundPage() {
       if (!res.ok) {
         const err = await res.json().catch(() => ({ error: { message: `HTTP ${res.status}` } }))
         // A refused request still ends an exchange, and the question that
-        // provoked it is worth keeping — save the error bubble along with it.
+        // provoked it is worth keeping - save the error bubble along with it.
         const failed: ChatMessage[] = [...newMessages, {
           role: 'assistant',
           isError: true,
@@ -968,7 +968,7 @@ export default function PlaygroundPage() {
       setMessages(answered)
       await persistConversation(answered)
     } catch (err: any) {
-      // Clearing the chat (or leaving the page) aborts the stream on purpose —
+      // Clearing the chat (or leaving the page) aborts the stream on purpose -
       // that is not a failure to report, and the transcript it belonged to is
       // already gone.
       if (err?.name === 'AbortError') return
@@ -998,7 +998,7 @@ export default function PlaygroundPage() {
   // into the empty transcript.)
 
   // Searchable picker options: auto + fusion pinned at the top, then every model
-  // ordered BY INTELLIGENCE — size tier first (Frontier→Small), then the catalog
+  // ordered BY INTELLIGENCE - size tier first (Frontier→Small), then the catalog
   // rank within the tier, name as the final tiebreaker. (Raw intelligence_rank is
   // per-provider, not global, so tier-first matches the server's preset; #135.)
   const pickerOptions = [
@@ -1019,7 +1019,7 @@ export default function PlaygroundPage() {
         // Provider names for the multi-provider hover + search; empty when solo.
         platforms: o.providerCount > 1 ? o.platforms : [],
         // With images staged, flag (and dim) the models that can't read them.
-        // Only a hint — sending anyway is allowed and the server decides.
+        // Only a hint - sending anyway is allowed and the server decides.
         note: pendingImages.length > 0 && !visionValues.has(o.value)
           ? t('playground.noVisionBadge')
           : undefined,
@@ -1045,7 +1045,7 @@ export default function PlaygroundPage() {
     // The page is a flex child of the shell's full-bleed container, so it is
     // exactly as tall as what the navbar leaves and nothing here scrolls except
     // the three panes that mean to. The transcript keeps its OWN scroll
-    // container in the middle column — transcriptRef and the follow-the-stream
+    // container in the middle column - transcriptRef and the follow-the-stream
     // behaviour are untouched by the reshuffle.
     // Every lucide icon in the three panes draws at 1.5 instead of the default
     // 2: the page is dense with small glyphs and the bold stroke read heavy.
@@ -1080,14 +1080,14 @@ export default function PlaygroundPage() {
                 const fusionPanel = msg.meta?.fusionPanel
                 const okPanel = fusionPanel?.filter(p => p.status !== 'failed') ?? []
                 // Skip an empty assistant bubble while the fusion trace is still
-                // streaming in (no final answer yet) — the trace shows below.
+                // streaming in (no final answer yet) - the trace shows below.
                 // Reasoning that arrives before the first answer token counts:
                 // that IS the bubble's content for the moment.
                 const showBubble = msg.role === 'user' || msg.content.length > 0 || !!msg.reasoning
                 return (
                   <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                     {/* The user speaks in a bubble; the assistant answers as plain
-                        text across the whole column — no box, no padding, no fill.
+                        text across the whole column - no box, no padding, no fill.
                         Errors keep their tinted box so they read as errors. */}
                     <div className={`flex flex-col gap-1 ${msg.role === 'user' ? 'max-w-[80%] items-end' : 'w-full items-start'}`}>
                       {showBubble && (
@@ -1197,7 +1197,7 @@ export default function PlaygroundPage() {
                   </div>
                 )
               })}
-              {/* Typing dots until the reply starts materialising — which is
+              {/* Typing dots until the reply starts materialising - which is
                   the first fusion frame, the first token of a stream, or the
                   whole message on the buffered path. */}
               {loading && messages[messages.length - 1]?.role === 'user' && (

@@ -4,7 +4,7 @@ import { createApp } from '../../app.js';
 import { initDb, getDb, getUnifiedApiKey } from '../../db/index.js';
 import { mintDashboardToken, isGatedApiPath } from '../helpers/auth.js';
 
-// GET /v1/models/:id — OpenAI `models.retrieve`. Competitors all expose it
+// GET /v1/models/:id - OpenAI `models.retrieve`. Competitors all expose it
 // (OpenAI itself, OpenRouter's GET /api/v1/models/{author}/{slug}, Together),
 // and OpenAI-SDK-based gateways call it before routing. Served from the same
 // builder as the list so the two endpoints can never disagree.

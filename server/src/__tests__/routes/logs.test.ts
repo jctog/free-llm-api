@@ -43,7 +43,7 @@ async function request(
   return { status: res.status, body };
 }
 
-/** A 32-char token built at runtime, never as a literal — a source file holding
+/** A 32-char token built at runtime, never as a literal - a source file holding
  *  one is indistinguishable from a real leak to push protection (see the note
  *  in lib/log-redaction.test.ts). The stride keeps it high-entropy-looking. */
 const ALNUM = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -171,7 +171,7 @@ describe('server log viewer', () => {
     restore();
     console.warn = origWarn;
 
-    // Mirrored — the operator watching the terminal still sees it...
+    // Mirrored - the operator watching the terminal still sees it...
     expect(seen).toHaveLength(1);
     expect(String(seen[0]![0])).toContain('[Health] Key 7');
 

@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest';
 
 // Honest exhaustion statuses (P1): when the fallback ladder exhausts every
-// candidate, the terminal status must say WHY it failed and when to retry —
+// candidate, the terminal status must say WHY it failed and when to retry -
 // 413 when every attempt died on a context/size rejection, 429 + retryAtMs +
 // Retry-After when every candidate is unavailable until a known time, 404 when
 // the model is gone everywhere, 503 when nothing is configured at all, and 502
@@ -317,8 +317,8 @@ describe('routingExhaustionBody (router gave up before any upstream was tried)',
       message: 'All models exhausted: 2 routes checked.',
       status: 429,
       diagnostics: [
-        'groq/llama-3.3-70b: 2 key(s) — cooldown:2',
-        'google/gemini-2.0-flash: 1 key(s) — rpm/rpd-limit:1',
+        'groq/llama-3.3-70b: 2 key(s) - cooldown:2',
+        'google/gemini-2.0-flash: 1 key(s) - rpm/rpd-limit:1',
       ],
     });
     expect(body.status).toBe(429);
@@ -331,7 +331,7 @@ describe('routingExhaustionBody (router gave up before any upstream was tried)',
       message: 'All models exhausted.',
       status: 429,
       diagnostics: [
-        'groq/llama-3.3-70b: 1 key(s) — cooldown:1',
+        'groq/llama-3.3-70b: 1 key(s) - cooldown:1',
         'weird/x: no provider registered',
       ],
     });
@@ -359,7 +359,7 @@ describe('routingExhaustionBody (router gave up before any upstream was tried)',
       status: 429,
       diagnostics: [
         'fake/text-only: no vision support',
-        'groq/llama-3.3-70b: 1 key(s) — cooldown:1',
+        'groq/llama-3.3-70b: 1 key(s) - cooldown:1',
       ],
     });
     expect(body.status).toBe(429);

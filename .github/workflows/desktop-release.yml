@@ -1,7 +1,7 @@
 name: Desktop release
 
 # Builds the menu-bar desktop app installers (Windows .exe + macOS .dmg) and,
-# on a version tag, attaches them to the GitHub Release. Closes #318 — the
+# on a version tag, attaches them to the GitHub Release. Closes #318 - the
 # dist:win build config already existed; this is the missing publish step.
 #
 # Triggers:
@@ -10,7 +10,7 @@ name: Desktop release
 #   - pull_request (desktop)   build-only smoke test so the Windows build can't
 #                              silently rot (only when desktop/CI files change)
 #
-# Tagged runs check desktop/package.json against the tag before building — see
+# Tagged runs check desktop/package.json against the tag before building - see
 # #948, where v0.8.2 through v0.8.4 shipped installers stamped 0.8.1 because
 # nobody bumped that file.
 #
@@ -104,8 +104,8 @@ jobs:
       # desktop/package.json was never bumped after v0.8.1. electron-builder
       # reads that field for the artifact filenames AND the latest*.yml updater
       # manifests, so a stale number silently mislabels the whole release and
-      # breaks auto-update. Fail the tagged run here — before the install,
-      # build and package steps — instead of publishing mislabeled artifacts.
+      # breaks auto-update. Fail the tagged run here - before the install,
+      # build and package steps - instead of publishing mislabeled artifacts.
       # Untagged runs (workflow_dispatch, pull_request) have no tag to compare
       # against and are skipped.
       - name: Verify desktop version matches the tag
@@ -162,9 +162,9 @@ jobs:
           # No signing cert at all → fall back to an unsigned DMG rather than
           # failing the release (users bypass Gatekeeper via right-click → Open
           # or xattr -d com.apple.quarantine). Signing cert present but broken
-          # notarization config is still a hard error — that's a misconfiguration.
+          # notarization config is still a hard error - that's a misconfiguration.
           if [ -z "${CSC_LINK:-}" ]; then
-            echo "::warning::No MACOS_CSC_LINK secret — building an UNSIGNED DMG. Configure Apple Developer ID signing + notarization secrets for a Gatekeeper-clean release."
+            echo "::warning::No MACOS_CSC_LINK secret - building an UNSIGNED DMG. Configure Apple Developer ID signing + notarization secrets for a Gatekeeper-clean release."
             echo "signed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -236,7 +236,7 @@ jobs:
           security set-keychain-settings -lut 21600 "$keychain"
           security unlock-keychain -p "$keychain_password" "$keychain"
           # -A lets any tool use the key, so codesign still works even when the
-          # partition list below is refused — which is the failure being worked
+          # partition list below is refused - which is the failure being worked
           # around here, so it is a warning rather than a hard stop.
           security import "$cert" -k "$keychain" -P "$MACOS_CSC_KEY_PASSWORD" -A \
             -T /usr/bin/codesign -T /usr/bin/security
@@ -278,7 +278,7 @@ jobs:
           # Notarization goes through the App Store Connect API key, not an
           # app-specific password. electron-builder checks APPLE_ID FIRST and
           # returns as soon as it is set, so leaving that pair configured would
-          # silently shadow the API key — the two cannot coexist. The API key
+          # silently shadow the API key - the two cannot coexist. The API key
           # also does not expire the way an app-specific password does.
           CSC_IDENTITY_AUTO_DISCOVERY: ${{ runner.os == 'macOS' && startsWith(github.ref, 'refs/tags/') && steps.maccreds.outputs.signed == 'true' && 'true' || 'false' }}
           # No CSC_LINK / CSC_KEY_PASSWORD: the step above imported the
@@ -296,7 +296,7 @@ jobs:
         run: |
           set -e
           # Unconfigured secrets arrive as EMPTY env vars, and electron-builder
-          # treats a present-but-empty CSC_LINK as a certificate path — failing
+          # treats a present-but-empty CSC_LINK as a certificate path - failing
           # with "<dir> not a file" on any non-PR build (PR builds never hit it
           # because electron-builder skips signing for pull requests). Drop empty
           # signing vars so unsigned builds actually build unsigned.
@@ -306,7 +306,7 @@ jobs:
           # Run electron-builder with desktop/ as its own project root. Invoked
           # from the monorepo root (e.g. via `npm --prefix desktop run`), it walks
           # up, treats the repo root as the project, and on Windows pulls parent
-          # files (.dockerignore, .env.example, …) into the asar — failing with
+          # files (.dockerignore, .env.example, …) into the asar - failing with
           # "<file> must be under …/desktop/". Running from desktop/ and hiding the
           # root package.json (whose `workspaces` field triggers the upward scan)
           # makes desktop/ the detected project root.
@@ -332,7 +332,7 @@ jobs:
 
       # electron-builder notarizes and staples the .app, then wraps it in a DMG
       # it never submits. The DMG is the file users download, so it is the file
-      # macOS quarantines and assesses — until it carries its own stapled
+      # macOS quarantines and assesses - until it carries its own stapled
       # ticket, `spctl -t install` on the download reports "no usable
       # signature", which is #373's "damaged" block. The .app is signed inside
       # the build (dmg.sign in electron-builder.yml makes the DMG eligible to
@@ -399,7 +399,7 @@ jobs:
       # Upload the assets and nothing else. softprops/action-gh-release always
       # PATCHes the release (name, body, draft state, target commitish) before it
       # uploads, and that PATCH started coming back
-      # "403 Resource not accessible by integration" on the v0.9.6 rebuilds —
+      # "403 Resource not accessible by integration" on the v0.9.6 rebuilds -
       # every platform, while `GITHUB_TOKEN Permissions` in the same logs read
       # `Contents: write` and the release was not immutable. Asset upload itself
       # has never been refused: it is what attached the v0.9.6 Windows and Linux
@@ -429,7 +429,7 @@ jobs:
           # recipe), so it exists by now; create it rather than dropping the
           # installers on the floor if someone pushed a tag on its own.
           if ! gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
-            echo "::warning::no release for $GITHUB_REF_NAME yet — creating a draft"
+            echo "::warning::no release for $GITHUB_REF_NAME yet - creating a draft"
             gh release create "$GITHUB_REF_NAME" --draft --title "$GITHUB_REF_NAME" --generate-notes
           fi
           gh release upload "$GITHUB_REF_NAME" "${files[@]}" --clobber
@@ -496,7 +496,7 @@ jobs:
           count="$(gh release view "$GITHUB_REF_NAME" --json assets --jq '.assets | length')"
           echo "release $GITHUB_REF_NAME: draft=$draft assets=$count"
           if [ "$count" -lt 5 ]; then
-            echo "::error::only $count asset(s) attached — not publishing"
+            echo "::error::only $count asset(s) attached - not publishing"
             exit 1
           fi
           if [ "$draft" = "true" ]; then

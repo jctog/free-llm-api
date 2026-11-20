@@ -4,7 +4,7 @@ import { describe, it, expect, beforeAll, beforeEach, afterEach } from 'vitest';
 // fusion panel/judge retry path too. That path calls recordRateLimitHit on
 // every retryable failure and logs the request row with no attribution, so
 // with the switch ON a healthy model whose provider threw a 429 inside a
-// fusion call was still penalized and still counted against reliability —
+// fusion call was still penalized and still counted against reliability -
 // exactly what the feature says it stops doing. Key cooldowns are untouched.
 
 const keySeqStart = 950000;
@@ -76,7 +76,7 @@ describe('provider-moment attribution in the fusion retry path (#1347)', () => {
     await runSlot(route);
 
     expect(penaltyFor(route.modelDbId)).toBeUndefined();
-    // The key cooldown ladder still fires — the failure still steers the key.
+    // The key cooldown ladder still fires - the failure still steers the key.
     const cooldowns = getDb().prepare('SELECT COUNT(*) AS n FROM rate_limit_cooldowns WHERE key_id = ?')
       .get(route.keyId) as { n: number };
     expect(cooldowns.n).toBe(1);
@@ -97,7 +97,7 @@ describe('provider-moment attribution in the fusion retry path (#1347)', () => {
     const { route } = fakeRoute(err);
     await runSlot(route);
 
-    // 400 is not retryable at all, so the slot stops without a penalty —
+    // 400 is not retryable at all, so the slot stops without a penalty -
     // assert instead that the log row was NOT tagged as a provider moment.
     expect(lastLogRow()).toEqual({ status: 'error', failure_attribution: null });
   });

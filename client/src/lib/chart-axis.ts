@@ -4,7 +4,7 @@
 // recharts' default `interval` is 'preserveEnd' (see `implicitXAxis` /
 // `implicitYAxis` in recharts' axisSelectors): when the labels are wider than
 // the space available it silently DROPS ticks, keeping the tail and thinning
-// out everything before it. The visible result is the #890 complaint — only a
+// out everything before it. The visible result is the #890 complaint - only a
 // few provider names render, the rest are only visible on hover, and the bars
 // no longer line up with the labels the user can actually see (a bar with no
 // label looks like a different provider than it is).
@@ -12,7 +12,7 @@
 // The fix is to force EVERY tick (`interval={0}`) and then make the labels fit
 // by rotating and truncating them. Forcing the ticks on its own just trades a
 // dropped label for an unreadable pile of overlapping ones, so the rotation
-// has to be chosen from how many categories there are — hence the tiers below.
+// has to be chosen from how many categories there are - hence the tiers below.
 // The timeline (timestamp) charts are time series and want none of this.
 
 /** `fontSize` the analytics axes render their ticks at. */
@@ -26,7 +26,7 @@ export const AXIS_FONT_SIZE = 11
  */
 const CHAR_WIDTH = 5.5
 
-/** Line box of a single-line tick label — its thickness across the rotation. */
+/** Line box of a single-line tick label - its thickness across the rotation. */
 const LINE_HEIGHT = 13
 
 /** Gap between the plot edge and the start of the label (tick line + margin). */
@@ -126,7 +126,7 @@ const VERTICAL_MAX_LABEL = Math.min(
 )
 
 export interface VerticalCategoryAxisProps {
-  /** Show every category tick — 'preserveEnd' drops them here too. */
+  /** Show every category tick - 'preserveEnd' drops them here too. */
   interval: 0
   /** Horizontal room reserved for the labels beside the plot. */
   width: number

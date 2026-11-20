@@ -29,7 +29,7 @@ export function SearchSources({ search }: { search: WebSearchMeta }) {
             >
               {source.title || hostOf(source.url)}
             </a>
-            <span className="shrink-0 text-muted-foreground">— {hostOf(source.url)}</span>
+            <span className="shrink-0 text-muted-foreground">- {hostOf(source.url)}</span>
           </li>
         ))}
       </ol>

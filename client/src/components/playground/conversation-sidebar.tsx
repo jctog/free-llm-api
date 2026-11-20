@@ -117,7 +117,7 @@ export function ConversationSidebar({
         className={`${LAYER} w-60 ${open ? 'visible opacity-100' : 'invisible opacity-0'}`}
       >
         {/* Two lines: the collapse control alone on the first, then New chat as
-            a proper button spanning the width. No heading — the list explains
+            a proper button spanning the width. No heading - the list explains
             itself. */}
         <div className="flex shrink-0 flex-col gap-1.5 border-b border-border/40 px-2 pt-1 pb-2">
           <div className="flex items-center justify-end">

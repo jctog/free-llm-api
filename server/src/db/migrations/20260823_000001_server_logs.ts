@@ -8,7 +8,7 @@
 // "what went wrong while I was asleep / before this restart?". A ring answers
 // that with an empty panel.
 //
-// So warn and error — and only those — are ALSO written here. Info and debug
+// So warn and error - and only those - are ALSO written here. Info and debug
 // are the volume (a busy gateway prints several lines per request) and the part
 // nobody goes looking for after the fact; persisting them would turn a
 // diagnostic aid into the database's largest table. The CHECK constraint states
@@ -23,7 +23,7 @@
 // created_at_ms is epoch milliseconds (like playground_conversations and
 // sessions.expires_at_ms): the viewer renders relative times in the browser's
 // clock, and sub-second ordering matters when a failure prints five lines at
-// once. The index is (created_at_ms, id) — the retention prune's cutoff scan
+// once. The index is (created_at_ms, id) - the retention prune's cutoff scan
 // and the boot preload's "most recent N" both read exactly that order, with id
 // as the tiebreak for lines sharing a millisecond.
 

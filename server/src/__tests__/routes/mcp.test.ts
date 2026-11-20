@@ -35,7 +35,7 @@ describe('MCP server (/mcp, stateless Streamable HTTP)', () => {
     process.env.ENCRYPTION_KEY = '0'.repeat(64);
     initDb(':memory:');
     app = createApp();
-    // MCP is opt-in since #925 — these tests exercise the tool surface itself.
+    // MCP is opt-in since #925 - these tests exercise the tool surface itself.
     setSetting('enable_mcp', '1');
   });
 
@@ -67,7 +67,7 @@ describe('MCP server (/mcp, stateless Streamable HTTP)', () => {
     expect(body).toBeNull();
   });
 
-  it('a notification is any message without an id — never answered, even for regular methods', async () => {
+  it('a notification is any message without an id - never answered, even for regular methods', async () => {
     // JSON-RPC 2.0: no `id` member = notification. Detecting notifications by
     // the method prefix answered no-id pings, which violates the spec.
     const { status, body } = await rpc({ jsonrpc: '2.0', method: 'ping' });
@@ -109,7 +109,7 @@ describe('MCP server (/mcp, stateless Streamable HTTP)', () => {
     // was silently dropped and "24h" behaved like "since UTC midnight".
     const db = getDb();
     // 23h old: still inside the 24h window but (almost always) on the same
-    // UTC date as the since-boundary — exactly the rows the bug dropped.
+    // UTC date as the since-boundary - exactly the rows the bug dropped.
     const boundaryDayRow = new Date(Date.now() - 23 * 3600_000);
     const sqlite = (d: Date) => d.toISOString().slice(0, 19).replace('T', ' ');
     db.prepare(`INSERT INTO requests (platform, model_id, status, input_tokens, output_tokens, created_at)

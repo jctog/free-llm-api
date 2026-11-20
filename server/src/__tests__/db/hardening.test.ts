@@ -84,7 +84,7 @@ describe('database runtime hardening', () => {
   // must not be readable by other local accounts. The guarantee is the same on
   // both platforms; only the mechanism that expresses it differs, so each leg
   // asserts what its own OS can actually enforce. Asserting POSIX modes on
-  // Windows is not a stricter test — it is an unfalsifiable one: Node
+  // Windows is not a stricter test - it is an unfalsifiable one: Node
   // synthesizes 0o666 there and chmod cannot clear it, so the assertion failed
   // whether or not the file was protected.
 
@@ -121,7 +121,7 @@ describe('database runtime hardening', () => {
     // under %TEMP% or a shared profile inherits Modify for app containers and
     // for other local accounts. If any (I) survives, hardening did not run.
     expect(entries.filter(e => e.includes('(I)'))).toEqual([]);
-    // Exactly the owner, SYSTEM and Administrators — the POSIX 0600 equivalent,
+    // Exactly the owner, SYSTEM and Administrators - the POSIX 0600 equivalent,
     // where root likewise keeps access.
     expect(entries).toHaveLength(3);
   });
@@ -147,7 +147,7 @@ describe('database runtime hardening', () => {
     // Note what the reconnect above buys, and what it does not: it proves the
     // file pass restricts sidecars THAT ALREADY EXIST, which is the unclean
     // shutdown case. It says nothing about a normal start, where the sidecars
-    // appear after connectDb has already been and gone — that is what the
+    // appear after connectDb has already been and gone - that is what the
     // "data directory" block below covers.
     expect(checked).toBeGreaterThan(0);
   });
@@ -214,7 +214,7 @@ describe('data directory hardening policy', () => {
 describe('WAL sidecars on a normal start', () => {
   // The case the file-by-file pass structurally cannot reach. SQLite creates
   // -wal/-shm on the first write and deletes them on the last clean close, so
-  // on a real start there is nothing to harden by the time connectDb looks —
+  // on a real start there is nothing to harden by the time connectDb looks -
   // and a real server, unlike the tests above, never reconnects to get a second
   // chance. Only the directory can carry the restriction forward.
   //
@@ -254,13 +254,13 @@ describe('WAL sidecars on a normal start', () => {
     expect(dirEntries.filter(e => e.includes('(I)'))).toEqual([]);
     expect(dirEntries).toHaveLength(3);
     // Without (OI)(CI) the ACEs apply to the directory alone and no child ever
-    // sees them — the flags are the entire mechanism.
+    // sees them - the flags are the entire mechanism.
     expect(dirEntries.every(e => e.includes('(OI)') && e.includes('(CI)'))).toBe(true);
 
     const found = sidecars(dbPath);
     expect(found.length).toBeGreaterThan(0);
     for (const target of found) {
-      // Exactly the owner, SYSTEM and Administrators — inherited from the
+      // Exactly the owner, SYSTEM and Administrators - inherited from the
       // directory, since nothing hardened these files directly.
       expect(aclEntries(target)).toHaveLength(3);
     }

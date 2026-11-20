@@ -4,7 +4,7 @@
 //
 // Mirrors the chat exhaustion rule (lib/fallback-loop.ts exhaustedRetryError):
 // a Retry-After is only a promise when EVERY attempted candidate was rate
-// limited, and then it is the SOONEST moment any of them comes back — never the
+// limited, and then it is the SOONEST moment any of them comes back - never the
 // last provider's value. A single 429 whose sibling then 500s, or a 429 that
 // stated no delay, means we cannot tell the client when to return, so no hint.
 

@@ -40,7 +40,7 @@ describe('categoryAxisProps (#890)', () => {
     expect(categoryAxisProps(11).angle).toBe(-45)
     expect(categoryAxisProps(15).angle).toBe(-45)
     expect(categoryAxisProps(16).angle).toBe(-90)
-    // Beyond even the vertical tier's capacity we stay vertical — there is
+    // Beyond even the vertical tier's capacity we stay vertical - there is
     // nothing steeper, and interval 0 still beats dropping labels.
     expect(categoryAxisProps(500).angle).toBe(-90)
   })
@@ -125,7 +125,7 @@ describe('verticalCategoryAxisProps (#890, errors-by-category)', () => {
     expect(p.tickFormatter('rate_limit')).toBe('rate_limit')
   })
 
-  it('does not rotate — a side-on axis has its own gutter, not a tick pitch', () => {
+  it('does not rotate - a side-on axis has its own gutter, not a tick pitch', () => {
     expect(verticalCategoryAxisProps()).not.toHaveProperty('angle')
   })
 })

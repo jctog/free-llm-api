@@ -26,7 +26,7 @@ function stateRows(platform = 'openrouter') {
   ).all(platform) as { metric: string; limit_value: number | null; remaining_value: number | null; source: string }[];
 }
 
-describe('fetchQuota — provider-reported quota polling (#1403)', () => {
+describe('fetchQuota - provider-reported quota polling (#1403)', () => {
   beforeEach(() => {
     getDb().prepare('DELETE FROM provider_quota_state').run();
     getDb().prepare('DELETE FROM provider_quota_observations').run();

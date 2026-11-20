@@ -4,19 +4,19 @@
 // DOWN: reversible (see below)
 //
 // Custom endpoints registered before #705 all took the literal label 'Custom',
-// so every panel that identifies a key by its label alone — analytics,
-// cooldowns, quota signals, the models list — showed a column of identical
+// so every panel that identifies a key by its label alone - analytics,
+// cooldowns, quota signals, the models list - showed a column of identical
 // rows once more than one relay was configured. New endpoints now default to
 // the endpoint's host, but that only helped installs starting from scratch:
 // an upgrade kept the indistinguishable labels already on record.
 //
 // Only rows still holding the exact default are touched. A label the operator
-// typed (including one they deliberately typed as 'Custom' — indistinguishable
+// typed (including one they deliberately typed as 'Custom' - indistinguishable
 // from the default, and renaming it to the host is the same outcome they would
 // get by re-adding the endpoint) is the only ambiguity; anything else they
 // named stays untouched.
 //
-// Data only — no schema change.
+// Data only - no schema change.
 
 import type { Db } from '../types.js';
 

@@ -5,7 +5,7 @@ import { bearerAuthHeader } from '../../lib/credential.js';
 
 // #1331: a real API key saved on a keyless platform (Kilo, OVH) was silently
 // routed over the anonymous path, and a custom endpoint stored with the
-// `no-key` sentinel sent `Authorization: Bearer no-key` upstream — which
+// `no-key` sentinel sent `Authorization: Bearer no-key` upstream - which
 // upstreams read as an invalid key. The Authorization header must depend on
 // the CREDENTIAL, not on the provider's keyless flag.
 describe('keyless bearer handling (#1331)', () => {

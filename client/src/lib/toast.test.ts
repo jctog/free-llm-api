@@ -61,7 +61,7 @@ describe('toast store (#586)', () => {
 
     it('never evicts an un-dismissed error while non-errors are present', async () => {
       const { toast, getToasts } = await loadStore()
-      toast.error('important error') // oldest — the old slice(-4) would drop it
+      toast.error('important error') // oldest - the old slice(-4) would drop it
       toast.info('a')
       toast.success('b')
       toast.info('c')

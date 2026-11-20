@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vite
 
 // #1347 (PR 1): with provider-moment attribution enabled, a 429 / 5xx /
 // timeout / transport failure still benches the KEY (the cooldown ladder is
-// the steering mechanism) but must NOT touch the model's books — the failure
+// the steering mechanism) but must NOT touch the model's books - the failure
 // window and the rate-limit/failure penalties. With the feature off (the
 // default) the behaviour is exactly today's.
 
@@ -71,7 +71,7 @@ describe('provider-moment attribution in recordRetryableFailure (#1347 PR 1)', (
     expect(cooldownCount(route)).toBe(1);
   });
 
-  it('feature OFF (default): a 429 still penalizes the model — current behaviour preserved', () => {
+  it('feature OFF (default): a 429 still penalizes the model - current behaviour preserved', () => {
     const route = fakeRoute();
     recordRetryableFailure(route, err429(), newFallbackState());
 
@@ -99,7 +99,7 @@ describe('provider-moment attribution in recordRetryableFailure (#1347 PR 1)', (
     expect(cooldownCount(route)).toBe(1);
   });
 
-  it('feature ON: a provider 400 is NOT a provider moment — the model penalty stays', () => {
+  it('feature ON: a provider 400 is NOT a provider moment - the model penalty stays', () => {
     process.env.ROUTER_PROVIDER_MOMENT_ATTRIBUTION = '1';
 
     const route = fakeRoute();

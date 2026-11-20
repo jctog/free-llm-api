@@ -20,7 +20,7 @@ async function get(app: Express, path: string) {
 }
 
 // PR #459 scaled /token-usage budgets by healthy+enabled keys, but the pre-existing
-// GET / handler counted enabled=1 only — so the two dashboards disagreed on pooled
+// GET / handler counted enabled=1 only - so the two dashboards disagreed on pooled
 // capacity. Both must now use the SAME filter (enabled AND status healthy/unknown),
 // matching the routing scorer (#456).
 describe('fallback key-count filter parity (#456)', () => {

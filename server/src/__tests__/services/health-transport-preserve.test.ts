@@ -17,7 +17,7 @@ const { checkKeyHealth, checkAllKeys, markKeyHealthyFromRequest } = await import
  * selectKeyForModel only accepts keys with status IN ('healthy','unknown'), so
  * writing status='error' removes a key's capacity entirely. A transport error
  * (DNS, TLS, timeout, suspended laptop) says nothing about the credential, so it
- * must not demote — otherwise one blip benches every key on a provider at once.
+ * must not demote - otherwise one blip benches every key on a provider at once.
  */
 describe('transport errors do not demote a key', () => {
   let nextId = 7000;
@@ -123,7 +123,7 @@ describe('markKeyHealthyFromRequest', () => {
     expect(row(id)).toEqual({ status: 'healthy', last_health_error: null });
   });
 
-  it("never resurrects an 'invalid' key — only a real probe clears that", () => {
+  it("never resurrects an 'invalid' key - only a real probe clears that", () => {
     const id = seedKey('invalid');
     markKeyHealthyFromRequest(id);
     expect(row(id).status).toBe('invalid');

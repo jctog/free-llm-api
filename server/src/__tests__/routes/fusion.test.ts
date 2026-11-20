@@ -804,7 +804,7 @@ describe('fusion route (/v1/chat/completions, model: "fusion")', () => {
 
   it('auto-panel excludes models whose platform has no usable key', async () => {
     const db = getDb();
-    // Strip every key, then configure ONLY groq — no cerebras/openrouter/etc.
+    // Strip every key, then configure ONLY groq - no cerebras/openrouter/etc.
     db.prepare('DELETE FROM api_keys').run();
     const r = await request(app, 'POST', '/api/keys', { platform: 'groq', key: 'k_groq_only', label: 'only-groq' });
     expect(r.status).toBe(201);
@@ -813,7 +813,7 @@ describe('fusion route (/v1/chat/completions, model: "fusion")', () => {
     expect(candidates.length).toBeGreaterThan(0);
     // Even though the seeded catalog has many higher-ranked models on other
     // platforms (cerebras, openrouter, opencode…), none are routable without a
-    // key — so the panel pool is groq-only.
+    // key - so the panel pool is groq-only.
     expect(candidates.every(c => c.platform === 'groq')).toBe(true);
   });
 
@@ -995,7 +995,7 @@ describe('diversifyChain', () => {
 
   it('prefers a fresh-family model over a same-family model on a new provider', () => {
     // Strategy order: same family on two providers, then a different family.
-    // Platform-only diversity would panel [or/qwen3-coder, cb/qwen3-coder] —
+    // Platform-only diversity would panel [or/qwen3-coder, cb/qwen3-coder] -
     // perspective-redundant. Family-aware diversity surfaces deepseek instead.
     const ordered = [
       cand('openrouter', 'qwen3-coder'),

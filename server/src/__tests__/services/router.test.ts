@@ -183,7 +183,7 @@ describe('Router', () => {
     expect(routeRequest(106000).modelDbId).toBe(google.id);
 
     // When nothing fits WITH the margin anywhere, the raw advertised window is
-    // still honored — one attempt rather than an empty pool.
+    // still honored - one attempt rather than an empty pool.
     db.prepare("DELETE FROM api_keys WHERE platform = 'google'").run();
     expect(routeRequest(106000).modelDbId).toBe(groq.id);
   });
@@ -196,7 +196,7 @@ describe('Router', () => {
       VALUES (?, ?, ?, ?, ?, ?, ?)
     `).run('groq', 'test', groqKey.encrypted, groqKey.iv, groqKey.authTag, 'healthy', 1);
     db.prepare("UPDATE models SET tpm_limit = NULL, tpd_limit = NULL WHERE platform = 'groq'").run();
-    // A null context_window means "unknown" — never filtered out, even for a huge request.
+    // A null context_window means "unknown" - never filtered out, even for a huge request.
     db.prepare("UPDATE models SET context_window = NULL WHERE platform = 'groq'").run();
     expect(() => routeRequest(500000)).not.toThrow();
   });

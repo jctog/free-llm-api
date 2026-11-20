@@ -8,7 +8,7 @@ Free tiers fail in specific, metered ways: per-minute and per-day request caps, 
 
 Every catalog model row carries `rpm_limit` / `rpd_limit` columns. Before dispatching an attempt, the router checks sliding windows keyed `platform:modelId:keyId:rpm` (minute) or `...:rpd` (day):
 
-- A request is admitted only when `recorded + in-flight < limit` — counting in-flight leases (below) closes the race where N concurrent requests all read the same counter as unspent.
+- A request is admitted only when `recorded + in-flight < limit` - counting in-flight leases (below) closes the race where N concurrent requests all read the same counter as unspent.
 - Windows exist both in memory and persisted; on DB unavailability the router falls back to summing the in-memory window keys.
 
 ## Token budgets (TPM/TPD)
@@ -47,7 +47,7 @@ Cooldowns record why they exist (`heuristic`, `authoritative`, `credit`, `tier`)
 The cooldown-probe job scans every 60s and re-validates probe-ripe keys to clear heuristic cooldowns early:
 
 - ripe only after half the bench has elapsed, and only if >60s remains (probing a nearly-expired bench wastes a validate call);
-- a failed probe never extends the bench — it schedules the next probe further out (2min doubling, capped at 15min);
+- a failed probe never extends the bench - it schedules the next probe further out (2min doubling, capped at 15min);
 - probes are side-effect-free for health bookkeeping, staggered after restart, and budgeted per pass (`COOLDOWN_PROBE_MAX_PER_PASS`, default 3); `COOLDOWN_PROBE_DISABLED=1` kills the job;
 - the probe unit is the KEY, not the model: one `validateKey` result is evidence for every heuristic cooldown that key holds.
 
@@ -55,13 +55,13 @@ The cooldown-probe job scans every 60s and re-validates probe-ripe keys to clear
 
 Before #798, a provider that stated exactly when to come back got the same heuristic ladder as one that said nothing, because error bodies were flattened to a message string before reaching the router. Now every adapter builds errors via `providerHttpError`, which captures:
 
-1. **The `Retry-After` header** — delta-seconds or HTTP-date, parsed once (shared parser in `providers/base.ts`) and still the winning channel when both sources are present.
+1. **The `Retry-After` header** - delta-seconds or HTTP-date, parsed once (shared parser in `providers/base.ts`) and still the winning channel when both sources are present.
 2. **A delay stated inside the error body**:
    - structured fields: Gemini answers 429 with `error.details[]` carrying `google.rpc.RetryInfo` whose `retryDelay` reads `"17s"`; the body is walked depth-capped (max depth 6) looking for `retryDelay` / `retry_after` / `retryAfterSeconds` shapes, which is more durable across providers than exact paths;
-   - prose: anchored phrases like "try again in 30 seconds" or "retry after 2m" — anchored so an unrelated number in an error message can never be mistaken for a back-off.
+   - prose: anchored phrases like "try again in 30 seconds" or "retry after 2m" - anchored so an unrelated number in an error message can never be mistaken for a back-off.
 3. All parsed delays are clamped to 24h so a malformed/hostile hint cannot bench a key forever.
 
-Only the number is kept — never the body — so nothing extra reaches logs or attempt traces. Tests: [`server/src/__tests__/providers/stated-retry.test.ts`](../../../server/src/__tests__/providers/stated-retry.test.ts).
+Only the number is kept - never the body - so nothing extra reaches logs or attempt traces. Tests: [`server/src/__tests__/providers/stated-retry.test.ts`](../../../server/src/__tests__/providers/stated-retry.test.ts).
 
 ## Provider-reported quota polling (#1403)
 
@@ -71,8 +71,8 @@ Headers and error bodies only show quota when a request happens to carry them. P
 
 Health runs a scheduled pass every 5 minutes (±20% jitter, keys validated more recently than 3.5 minutes skipped, default concurrency 8, ≥1s spacing between same-provider probes). That cadence is fine for free validation endpoints but poisonous where validation itself costs quota. `HEALTH_CHECK_INTERVAL_MS` (milliseconds, minimum 60000, read at startup) changes it for the whole install (#1593):
 
-- ModelScope validates keys with a paid 1-token chat completion (`GET /v1/models` does not enforce auth), spending magic-grain quota — at the default cadence roughly 288 paid probes/key/day. Fix (#882): tokens not prefixed `ms-` are rejected locally with zero network calls, and a successful validation is cached per key for `MODELSCOPE_VALIDATE_CACHE_MS` (default 24h).
+- ModelScope validates keys with a paid 1-token chat completion (`GET /v1/models` does not enforce auth), spending magic-grain quota - at the default cadence roughly 288 paid probes/key/day. Fix (#882): tokens not prefixed `ms-` are rejected locally with zero network calls, and a successful validation is cached per key for `MODELSCOPE_VALIDATE_CACHE_MS` (default 24h).
 - Pollinations' public `/v1/models` answers 200 even for revoked keys, so validation targets the authenticated `/account/key`; AI Horde treats any reachable endpoint as healthy rather than spending queue slots.
 - SerpSearch, Exa and keyed Parallel have no account endpoint, so their key check is a search with no query. SerpSearch revoked a user's free account over those empty searches arriving every 5 minutes (#1599). Such providers set `supportsKeyPolling = false`: the scheduled pass validates a key once (when it has never been checked), re-asks about a key parked at `error` at most hourly, and the cooldown probe skips it. Manual "Check now" / "Check all" still validate.
 
-The rule for contributors: **if `validateKey` consumes metered quota, it needs a cache or a free probe path** — see [03-adding-a-new-provider.md](03-adding-a-new-provider.md).
+The rule for contributors: **if `validateKey` consumes metered quota, it needs a cache or a free probe path** - see [03-adding-a-new-provider.md](03-adding-a-new-provider.md).

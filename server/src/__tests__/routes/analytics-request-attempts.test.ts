@@ -73,7 +73,7 @@ describe('per-attempt traces in the analytics requests API', () => {
     expect(body.rows.map((r: any) => r.attemptCount)).toEqual([0, 3]);
   });
 
-  it('returns the ordered attempts ladder — with per-hop error summaries — in the per-request detail payload', async () => {
+  it('returns the ordered attempts ladder - with per-hop error summaries - in the per-request detail payload', async () => {
     const id = insertRequest('success', recentSql(12));
     insertAttempt(id, 0, 'groq', 'llama-x', 1, 'rate_limited', 0, 210, '429 rate limit reached, retry in 7m12s');
     insertAttempt(id, 1, 'google', 'gemini-y', 2, 'timeout', 215, 10000, 'upstream timeout after 10000ms');

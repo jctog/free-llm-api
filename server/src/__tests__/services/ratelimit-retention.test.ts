@@ -49,7 +49,7 @@ describe('rate_limit_usage retention sweep is throttled', () => {
     // The prune predicate (created_at_ms <= ?) cannot use the composite lookup
     // index, so it is a full table scan; running it per insert put that scan on
     // the request path. Rows outliving their DAY window by up to a minute are
-    // harmless — every counter query filters on created_at_ms itself.
+    // harmless - every counter query filters on created_at_ms itself.
     vi.useFakeTimers();
     const t0 = Date.UTC(2026, 3, 1, 12, 0, 0);
     vi.setSystemTime(t0);
@@ -183,7 +183,7 @@ describe('cleanupExpiredCooldowns', () => {
 
   it('removes expired rows and reports how many went', () => {
     // Cooldown expiry is otherwise collected only by isOnCooldown, and only for
-    // the exact route asked about — rows for a retired model or a deleted key
+    // the exact route asked about - rows for a retired model or a deleted key
     // are never asked about again, so they sit in the table forever.
     setCooldown('groq', 'expired-a', keyId, -1000);
     setCooldown('groq', 'expired-b', keyId, -5 * MINUTE);

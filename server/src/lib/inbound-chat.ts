@@ -263,8 +263,8 @@ export async function runInboundChat(
         let text = contentToString(message?.content ?? '');
         const reasoning = message?.reasoning_content ?? '';
         let toolCalls = message?.tool_calls ?? [];
-        // Reasoning-only is an empty turn to the caller — coding agents stall
-        // on a blank reply — so it fails over like an empty completion,
+        // Reasoning-only is an empty turn to the caller - coding agents stall
+        // on a blank reply - so it fails over like an empty completion,
         // mirroring the Anthropic surface's non-streaming check (#1184).
         if (!text && toolCalls.length === 0) {
           throw Object.assign(
@@ -273,7 +273,7 @@ export async function runInboundChat(
           );
         }
         // #809: a bare "safe"/"unsafe" classification word from a relay is an
-        // upstream filter, not the requested model — fail over like an empty
+        // upstream filter, not the requested model - fail over like an empty
         // completion.
         if (isUpstreamClassificationOutput(text, route.platform) && toolCalls.length === 0) {
           throw Object.assign(
@@ -361,7 +361,7 @@ export async function runInboundChat(
       const toolAcc = new Map<number, { id?: string; name: string; args: string; thoughtSignature?: string }>();
       let dialectMode: 'undecided' | 'passthrough' | 'dialect' = 'undecided';
       let heldText = '';
-      // Thinking deltas held until something commit-worthy arrives (#1184) —
+      // Thinking deltas held until something commit-worthy arrives (#1184) -
       // the same buffer the Anthropic surface keeps: a stream that produces
       // ONLY reasoning stays uncommitted through to stream end and fails over
       // invisibly, instead of locking the ladder on a blank reply. Flushed in
@@ -485,7 +485,7 @@ export async function runInboundChat(
         // Opt-in schema verdict, before the tool calls are committed. Tool
         // calls are buffered to the end of the stream on this path, so a
         // tool-only turn has sent nothing yet and can still fail over. A turn
-        // that already streamed real text is past its commit point — leave it
+        // that already streamed real text is past its commit point - leave it
         // alone rather than tearing down a stream the client is reading.
         // Whitespace or an early reasoning commit (#1642) is not real text.
         if (isToolArgumentValidationEnabled() && toolCalls.length > 0 && (!committed || !text.trim())) {
@@ -500,7 +500,7 @@ export async function runInboundChat(
             0,
           ) / 4);
         }
-        // Reasoning-only is an empty turn to the caller (#1184) — same rule as
+        // Reasoning-only is an empty turn to the caller (#1184) - same rule as
         // the non-streaming path above; nothing was committed, so the failover
         // hop is invisible to the client.
         if (!text && toolCalls.length === 0) {
@@ -511,7 +511,7 @@ export async function runInboundChat(
           );
         }
         // #809: bare "safe"/"unsafe" classification output from a relay is an
-        // upstream filter, not the requested model — fail over like an empty
+        // upstream filter, not the requested model - fail over like an empty
         // completion.
         if (isUpstreamClassificationOutput(text, route.platform) && toolCalls.length === 0) {
           if (clientGone) return 'committed';

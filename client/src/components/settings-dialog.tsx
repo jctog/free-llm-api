@@ -604,7 +604,7 @@ export function SettingsDialog({
         </div>
 
         <div className="flex min-h-0 flex-1 flex-col sm:flex-row">
-          {/* Sidebar on ≥sm, scrollable tab strip below it — the same
+          {/* Sidebar on ≥sm, scrollable tab strip below it - the same
               breakpoint-swap the navbar uses for its own navigation. */}
           <nav
             aria-label={t('settings.sections')}

@@ -29,7 +29,7 @@ describe('iteracompute registration and import (#1649)', () => {
 describe('iteracompute key validation (#1649)', () => {
   // GET /models is anonymous (a bogus Bearer header still returns 200, verified
   // live 2026-10-22) and /chat/completions reserves monthly allowance per
-  // request, so there is no free credential probe — same stance as freeai
+  // request, so there is no free credential probe - same stance as freeai
   // (#1459): inconclusive, never a false verdict, never quota spent.
   it('never probes: validation is inconclusive by design', async () => {
     const fetch = vi.spyOn(global, 'fetch');

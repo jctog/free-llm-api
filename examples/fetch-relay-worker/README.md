@@ -41,4 +41,4 @@ methods, SSE, and other streamed responses. It rejects `CONNECT`, `TRACE`, URL
 credentials, IP-literal and local host targets, fragments, and relay loops. It
 does not implement SOCKS, raw TCP, WebSockets, cookies, or automatic redirects.
 Logs contain request ID, method, target hostname/protocol, status, TTFB, and
-Cloudflare colo—not bodies, credentials, paths, or query values.
+Cloudflare colo-not bodies, credentials, paths, or query values.

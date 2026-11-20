@@ -4,7 +4,7 @@ import { isProviderBadRequestError } from '../../lib/error-classify.js';
 import { cooldownDecisionForError } from '../../lib/fallback-loop.js';
 import { MODEL_FORBIDDEN_COOLDOWN_MS } from '../../services/ratelimit.js';
 
-describe('isModelAccessForbiddenError (403 model-not-on-tier, drives whole-model skip — issue #256)', () => {
+describe('isModelAccessForbiddenError (403 model-not-on-tier, drives whole-model skip - issue #256)', () => {
   it('flags a 403 reaching the proxy by message or attached status', () => {
     // GitHub Models / Cloudflare 403 a model the key's free tier can't reach.
     expect(isModelAccessForbiddenError(new Error('GitHub Models API error 403: Model not available on your plan'))).toBe(true);
@@ -22,7 +22,7 @@ describe('isModelAccessForbiddenError (403 model-not-on-tier, drives whole-model
   });
 
   // Issue #618: some providers deny model access with a 400 (or 401) instead of
-  // a 403. Classified transient, those got the 90s bench — and the auto-router
+  // a 403. Classified transient, those got the 90s bench - and the auto-router
   // re-picked the same unreachable model the moment it expired, forever, with
   // an escalating penalty. They must classify as model-inaccessible-for-this-key.
   it('flags a 400/401 whose body says the key may not access the model (#618)', () => {
@@ -82,7 +82,7 @@ describe('isModelNotFoundError (drives whole-model skip within a request)', () =
     expect(isModelNotFoundError(new Error('No endpoints found for openrouter/minimax/minimax-m2.5:free'))).toBe(true);
   });
 
-  it('flags a stale/removed model reported as a 400 "No model found" (Routeway) — MODEL-level, not request shape', () => {
+  it('flags a stale/removed model reported as a 400 "No model found" (Routeway) - MODEL-level, not request shape', () => {
     // "No model found" does NOT contain the substring "not found" (words are
     // no/model/found), so before the phrase list it slipped through to
     // isProviderBadRequestError and surfaced as a request-blaming 400.
@@ -93,7 +93,7 @@ describe('isModelNotFoundError (drives whole-model skip within a request)', () =
     expect(isModelNotFoundError(new Error('API error 404: no such model'))).toBe(true);
   });
 
-  it('flags 410 Gone (model pulled upstream) by message or attached status — #339', () => {
+  it('flags 410 Gone (model pulled upstream) by message or attached status - #339', () => {
     expect(isModelNotFoundError(new Error('Ollama Cloud API error 410: Gone'))).toBe(true);
     expect(isModelNotFoundError(Object.assign(new Error('Gone'), { status: 410 }))).toBe(true);
   });
@@ -141,7 +141,7 @@ describe('isRetryableError', () => {
     // `${name} API error ${status}: ${msg}`, so a tool-call-generation failure
     // surfaces as "Groq API error 400: Failed to call a function...". That
     // matches the "api error 400" rule, so it's ALREADY retryable and fails
-    // over to the next provider — #168 is covered by existing behavior.
+    // over to the next provider - #168 is covered by existing behavior.
     it('treats a Groq failed_generation 400 as retryable', () => {
       expect(isRetryableError(new Error(
         "Groq API error 400: Failed to call a function. Please adjust your prompt. See 'failed_generation' for more details.",
@@ -241,7 +241,7 @@ describe('isRetryableError', () => {
   describe('410 Gone & un-enumerated upstream statuses fail over instead of 502 (#337/#339)', () => {
     // The headline bug: a provider error whose HTTP status the substring allowlist
     // never enumerated (410 Gone, 502, 504, 408 …) used to abort the whole chain
-    // with a 502 — stranding the healthy paid routes still queued later in the
+    // with a 502 - stranding the healthy paid routes still queued later in the
     // fallback order. It must rotate to the next route instead.
     it('treats an Ollama "410: Gone" as retryable, by message and by attached status', () => {
       // openai-compat throws via providerHttpError, so the real error carries both.
@@ -262,7 +262,7 @@ describe('isRetryableError', () => {
     });
 
     it('still treats genuinely-fatal 400/401 as NON-retryable even with an attached status', () => {
-      // The structured catch-all must not swallow client-fatal errors — they fail on
+      // The structured catch-all must not swallow client-fatal errors - they fail on
       // every provider identically, so aborting the request is the correct behavior.
       expect(isRetryableError(Object.assign(new Error('Bad Request'), { status: 400 }))).toBe(false);
       expect(isRetryableError(Object.assign(new Error('Unauthorized'), { status: 401 }))).toBe(false);

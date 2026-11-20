@@ -56,7 +56,7 @@ export function classifyClientAgent(req: Request): ClientAgent {
   if (header(req, 'x-zcode-app-version') || header(req, 'x-title').startsWith('z code')) return 'zcode';
 
   // UA signals must beat wire-format fallbacks: Qwen Code speaks the Gemini
-  // wire on /v1beta, and a plain openai SDK can call /v1/responses — neither
+  // wire on /v1beta, and a plain openai SDK can call /v1/responses - neither
   // should be counted as the surface's flagship client. Claude Code's real UA
   // is `claude-cli/x.y.z (external, cli)`.
   if (/claude[- ]?code|\bclaude-cli\b/.test(ua)) return 'claude-code';

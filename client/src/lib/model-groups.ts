@@ -4,7 +4,7 @@
 // ONE option per group (value = canonicalId, which the proxy resolves to the
 // whole group); when OFF, one option per provider row (value = model_id), as
 // before. FallbackPage does its own richer grouping (it needs the members to
-// render expandable rows) — this helper is just for the flat picker case.
+// render expandable rows) - this helper is just for the flat picker case.
 
 export interface PickerEntry {
   modelDbId: number
@@ -26,7 +26,7 @@ export interface ModelOption {
   providerCount: number
   // Sort axes for "by intelligence": the catalog's intelligence_rank is per-
   // provider, not global (issue #135), so the dashboard orders by size tier
-  // first, then rank within the tier — mirroring the server's intelligence
+  // first, then rank within the tier - mirroring the server's intelligence
   // preset. For a group these hold the BEST (most capable) member's values.
   sizeTier: number     // Frontier=1, Large=2, Medium=3, Small=4, unknown=5
   intelligenceRank: number

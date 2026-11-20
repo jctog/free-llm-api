@@ -17,7 +17,7 @@ afterEach(() => {
 
 function freshLegacyDb(): Database.Database {
   // A DB at the baseline's pre-#651 shape: UNIQUE(platform, model_id), no
-  // endpoint_scope, no migrations bookkeeping — what a pre-migrator install
+  // endpoint_scope, no migrations bookkeeping - what a pre-migrator install
   // hands to the current binary.
   const db = new Database(':memory:');
   dbs.push(db);
@@ -82,7 +82,7 @@ describe('legacy baseline re-run against a post-rename DB (#1603)', () => {
 
   it('the whole migration runner completes on a legacy DB carrying post-rename rows', async () => {
     // End-to-end shape of #1603: an existing DB (models already at the current
-    // ids) without a `migrations` table — the runner replays the baseline and
+    // ids) without a `migrations` table - the runner replays the baseline and
     // must not die.
     const base = new Database(':memory:');
     await runMigrations(base, 'up');

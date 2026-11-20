@@ -1,13 +1,13 @@
 // Detect that the host slept (laptop lid closed, VM paused) and give the
 // server a chance to shake off stale state the moment it comes back. While
-// the process is suspended nothing runs — timers, health probes, keep-alive
-// sockets all freeze — so the first requests after wake used to hit dead
+// the process is suspended nothing runs - timers, health probes, keep-alive
+// sockets all freeze - so the first requests after wake used to hit dead
 // upstream sockets and pre-sleep key statuses until the 5-minute health cycle
 // caught up. Detection is a 5s heartbeat: when the wall clock jumped far
 // beyond the expected tick interval (>30s drift), the process was suspended.
 // SIGCONT/SIGUSR2 also trigger a wake event, so operators (and the desktop
 // wrapper) can force a recovery pass by signaling the process. SIGUSR1 is
-// deliberately NOT used: Node reserves it for the inspector — signaling it
+// deliberately NOT used: Node reserves it for the inspector - signaling it
 // opens a debugger port, which is the opposite of hardening.
 //
 // Ported from @Naster17's fork (Naster17/freellmapi-pro@4c43cf2a), trimmed to
@@ -37,7 +37,7 @@ let timer: NodeJS.Timeout | null = null;
 let lastTickAt = 0;
 let lastWakeAt = 0;
 let installed = false;
-// Kept so stopWakeDetect can remove exactly the listeners this module added —
+// Kept so stopWakeDetect can remove exactly the listeners this module added -
 // removeAllListeners would silently unhook any OTHER module's SIGUSR2 handler
 // (log rotation, heap-dump triggers).
 const sigcontHandler = () => handleSignal('SIGCONT');
@@ -80,7 +80,7 @@ function invokeHooks(event: WakeEvent): void {
 }
 
 export function startWakeDetect(h: WakeHooks): void {
-  if (installed) return; // idempotent — no double signal registration
+  if (installed) return; // idempotent - no double signal registration
   installed = true;
   hooks = h;
   lastTickAt = Date.now();

@@ -14,13 +14,13 @@ import { sanitizeProviderErrorMessage } from '../lib/error-redaction.js';
 import { z } from 'zod';
 
 // ─────────────────────────────────────────────────────────────────────────
-// MCP server for the gateway (POST /mcp) — Model Context Protocol over
+// MCP server for the gateway (POST /mcp) - Model Context Protocol over
 // Streamable HTTP, stateless mode.
 //
 // Lets MCP-speaking agents (Claude Code, Cursor, Cline…) ask the router
 // questions mid-session: which free models are usable right now and with
 // which parameters, how healthy the provider pool is, what the routing
-// strategy is, and how much quota the cache has saved — plus one control
+// strategy is, and how much quota the cache has saved - plus one control
 // knob (switching the routing strategy). The ask_freellmapi tool also lets
 // ChatGPT and other MCP clients run a non-streaming inference through the same
 // /v1/chat/completions path as every OpenAI-compatible client.
@@ -37,7 +37,7 @@ import { z } from 'zod';
 export const mcpRouter = Router();
 
 // Always negotiated to 2025-06-18: this transport rejects JSON-RPC batches,
-// which the 2025-03-26 and 2024-11-05 revisions still allowed — echoing an
+// which the 2025-03-26 and 2024-11-05 revisions still allowed - echoing an
 // older requested version while enforcing the newer transport rule promised
 // clients batching they'd never get. Per the MCP spec the server answers with
 // the latest version it supports; clients that can't speak it disconnect.
@@ -58,7 +58,7 @@ function rpcError(id: number | string | null, code: number, message: string) {
   return { jsonrpc: '2.0', id, error: { code, message } };
 }
 
-// One text block carrying pretty-printed JSON — the standard shape for
+// One text block carrying pretty-printed JSON - the standard shape for
 // machine-readable MCP tool output.
 function toolJson(data: unknown) {
   const structuredContent = data && typeof data === 'object' && !Array.isArray(data)
@@ -168,10 +168,10 @@ const USAGE_RANGES: Record<string, number> = { '24h': 24, '7d': 24 * 7, '30d': 2
 
 function usageSummary(args: Record<string, unknown>): unknown {
   // Object.hasOwn: a prototype key ('constructor', 'toString') is truthy via
-  // the prototype chain but multiplies to NaN below — fall back to 24h.
+  // the prototype chain but multiplies to NaN below - fall back to 24h.
   const range = typeof args.range === 'string' && Object.hasOwn(USAGE_RANGES, args.range) ? args.range : '24h';
   const db = getDb();
-  // SQLite datetime('now') format (space separator, no ms/Z) — an ISO 'T'
+  // SQLite datetime('now') format (space separator, no ms/Z) - an ISO 'T'
   // string compares GREATER than every same-day stored row (space < 'T'
   // lexicographically), which silently dropped the window's boundary day:
   // "24h" effectively meant "since UTC midnight". Same conversion as
@@ -207,7 +207,7 @@ function routingInfo(): unknown {
   const scores = getRoutingScores();
   return {
     strategy: scores.strategy,
-    // Which key of a platform requests are steered to (#919) — a separate knob
+    // Which key of a platform requests are steered to (#919) - a separate knob
     // from the model strategy, so it has to be reported separately too.
     key_selection: scores.keySelectionStrategy,
     top_models: scores.scores
@@ -579,7 +579,7 @@ const TOOLS: Record<string, McpTool> = {
 
 // Returns the JSON-RPC response for a request, or undefined for a
 // notification. JSON-RPC 2.0 defines a notification as a message WITHOUT an
-// `id` member (id:null is a — discouraged — request and gets a response);
+// `id` member (id:null is a - discouraged - request and gets a response);
 // detecting notifications by the `notifications/` method prefix answered
 // no-id requests and 202'd id-carrying notifications.
 async function handleRpc(msg: JsonRpcRequest, req: Request, res: Response): Promise<unknown | undefined> {
@@ -693,7 +693,7 @@ mcpRouter.post('/', async (req: Request, res: Response) => {
 
   const response = await handleRpc(body as JsonRpcRequest, req, res);
   if (response === undefined) {
-    res.status(202).end(); // notification — accepted, nothing to say
+    res.status(202).end(); // notification - accepted, nothing to say
     return;
   }
   res.json(response);

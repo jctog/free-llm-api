@@ -5,7 +5,7 @@
 //
 // When a request walks the failover ladder (groq 429 → google timeout →
 // cerebras ok), the `requests` table records isolated rows with no linkage,
-// ordering, or per-attempt timing — the journey that explains "why was this
+// ordering, or per-attempt timing - the journey that explains "why was this
 // slow/failed" is invisible. `request_attempts` stores one row per dispatched
 // attempt (including the successful final one), keyed to the TERMINAL
 // `requests` row of the ladder: provider, model, per-request key ordinal

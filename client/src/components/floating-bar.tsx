@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 
-// Viewport-fixed action bar that slides up when shown and — instead of
-// vanishing — slides back down before unmounting (kept in the tree for the
+// Viewport-fixed action bar that slides up when shown and - instead of
+// vanishing - slides back down before unmounting (kept in the tree for the
 // duration of the exit animation).
 export function FloatingBar({ show, children }: { show: boolean; children: ReactNode }) {
   const [render, setRender] = useState(show)

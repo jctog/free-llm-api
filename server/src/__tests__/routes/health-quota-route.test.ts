@@ -9,7 +9,7 @@ import { resolveProvider } from '../../providers/index.js';
 import { healthRouter } from '../../routes/health.js';
 import { mintDashboardToken } from '../helpers/auth.js';
 
-// POST /api/health/quota/:keyId — the manual override of the #1403 15-minute
+// POST /api/health/quota/:keyId - the manual override of the #1403 15-minute
 // health-poll throttle (#1404). Only the provider probe is replaced; the route,
 // auth, DB state and response shape are exercised for real. (The probe is
 // spied on the provider instance rather than stubbing global fetch, because

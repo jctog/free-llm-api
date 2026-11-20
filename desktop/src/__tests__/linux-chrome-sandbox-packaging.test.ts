@@ -53,7 +53,7 @@ describe('linux chrome-sandbox packaging (#1229)', () => {
       directory = mkdtempSync(join(tmpdir(), 'linux-sandbox-'));
       const sandbox = join(directory, 'chrome-sandbox');
       writeFileSync(sandbox, 'fake-sandbox');
-      // 0o755 — the mode electron-builder leaves the helper at today.
+      // 0o755 - the mode electron-builder leaves the helper at today.
       chmodSync(sandbox, 0o755);
       expect(statSync(sandbox).mode & 0o7777).toBe(0o755);
 

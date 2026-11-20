@@ -16,7 +16,7 @@ import {
 } from '@/lib/composer-geometry'
 
 // The Playground's bottom input as one body of liquid: the bar and the send
-// button share a goo silhouette. THE MORPH PATTERN — the library owns x: it
+// button share a goo silhouette. THE MORPH PATTERN - the library owns x: it
 // animates the button and its silhouette in perfect sync, so while the button
 // is leaving the two are still one body of liquid, necking thinner until the
 // goo gives up. The bar never moves; the button walks out from under its
@@ -61,13 +61,13 @@ export function LiquidComposer({
   const [dictationPhase, setDictationPhase] = useState<DictationPhase>('idle')
   const [micStream, setMicStream] = useState<MediaStream | null>(null)
   const recording = dictationPhase === 'recording' && micStream !== null
-  // The mic only ever fades — no scale, no travel. It shows while the bar is
+  // The mic only ever fades - no scale, no travel. It shows while the bar is
   // empty (and for as long as a recording or transcription is in progress),
   // and stops being there once there is something to send.
   const showMic = !hasContent || dictationPhase !== 'idle'
 
   // The textarea's inline height is set from input events, which a
-  // programmatic clear never fires — so the DOM height is reset here.
+  // programmatic clear never fires - so the DOM height is reset here.
   useEffect(() => {
     if (value !== '') return
     const el = inputRef.current
@@ -83,7 +83,7 @@ export function LiquidComposer({
       className={`flex gap-2 ${grown ? 'items-end' : 'items-center'}`}
       data-testid="liquid-composer"
     >
-      {/* The bar: never moves. Its own background is transparent — the
+      {/* The bar: never moves. Its own background is transparent - the
           silhouette layer paints the fill. */}
       <Liquid.Item className="min-w-0 flex-1">
         <div
@@ -182,8 +182,8 @@ export function LiquidComposer({
         </div>
       </Liquid.Item>
 
-      {/* The button: the one thing that moves. Its content only ever fades —
-          no scale, no travel of its own — the silhouette does the travelling.
+      {/* The button: the one thing that moves. Its content only ever fades -
+          no scale, no travel of its own - the silhouette does the travelling.
           While parked under the bar its wrapper sits exactly over the mic, so
           the wrapper (not just the faded button) must let clicks through. */}
       <Liquid.Item x={sendButtonOffset(hasContent)} className={hasContent ? undefined : 'pointer-events-none'}>

@@ -2,7 +2,7 @@
  * Per-key monthly budget (#1158): optional request/token caps per api_keys row,
  * enforced against the CURRENT UTC month's successful requests. A key at its
  * cap returns `quota_exceeded` (429) with a Retry-After of "seconds until the
- * next month" — the semantic GateLLM-style rejection so an agent knows when the
+ * next month" - the semantic GateLLM-style rejection so an agent knows when the
  * window resets instead of hammering a 429.
  *
  * Successful usage is retained in key_monthly_usage independently of analytics
@@ -141,7 +141,7 @@ export function reserveMonthlyBudget(
   return { allowed: true, release: () => { active.delete(reservation); } };
 }
 
-/** Seconds from `now` until the next UTC month boundary — the Retry-After value. */
+/** Seconds from `now` until the next UTC month boundary - the Retry-After value. */
 export function secondsUntilNextMonth(now = Date.now()): number {
   return Math.max(1, Math.floor((utcNextMonthStartMs(now) - now) / 1000));
 }

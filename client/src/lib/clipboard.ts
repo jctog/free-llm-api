@@ -1,7 +1,7 @@
 // Copy to clipboard, on secure and insecure origins alike (#734).
 //
 // `navigator.clipboard` only exists in a secure context. A LAN install served
-// over plain HTTP — http://192.168.1.50:4001, the documented Docker setup — is
+// over plain HTTP - http://192.168.1.50:4001, the documented Docker setup - is
 // not one, so the async Clipboard API is simply `undefined` there: every copy
 // button either threw or silently did nothing while still flashing "Copied".
 //
@@ -27,7 +27,7 @@ function legacyCopy(text: string): boolean {
   const area = document.createElement('textarea')
   area.value = text
   // Off-screen but still selectable: display:none or visibility:hidden would
-  // make the selection — and therefore the copy — a no-op. readonly keeps the
+  // make the selection - and therefore the copy - a no-op. readonly keeps the
   // mobile keyboard from popping up during the flicker.
   area.setAttribute('readonly', '')
   area.style.position = 'fixed'

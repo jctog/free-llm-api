@@ -15,13 +15,13 @@ const { checkKeyHealth } = await import('../../services/health.js');
 
 // The crash watchdog (cron bff5ae167d28, every 12h) greps /tmp/freellmapi.log for
 // "[Health] Key N (... transport error" to attribute transport failures to the
-// responsible provider. The format is part of an implicit contract — a refactor
+// responsible provider. The format is part of an implicit contract - a refactor
 // that drops the leading "[Health] Key N (" prefix or removes the platform/base
 // context will silently break attribution. These tests pin the format.
 
-// The trailing "— status preserved as '<status>'" records that a transport error
+// The trailing "- status preserved as '<status>'" records that a transport error
 // deliberately no longer demotes the key; the error message is captured up to it.
-const ERROR_RE = /^\[Health\] Key (\d+) \(([^,]+), base=([^)]+)\) transport error: (.+?)(?: — status preserved as '(\w+)')?$/;
+const ERROR_RE = /^\[Health\] Key (\d+) \(([^,]+), base=([^)]+)\) transport error: (.+?)(?: - status preserved as '(\w+)')?$/;
 
 beforeAll(() => {
   process.env.ENCRYPTION_KEY = '0'.repeat(64);
@@ -45,7 +45,7 @@ describe('checkKeyHealth transport-error log format', () => {
     const id = ++lastKeyId;
     const db = initDb(':memory:');
     // Use a real encrypt() call so decrypt() in production code succeeds and the
-    // mocked validateKey is what throws — exercising the actual transport-error
+    // mocked validateKey is what throws - exercising the actual transport-error
     // catch path.
     const enc = encrypt('sk-test-fake-api-key-for-health-log-test');
     db.prepare(

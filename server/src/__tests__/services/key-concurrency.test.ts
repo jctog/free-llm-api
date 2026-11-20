@@ -57,7 +57,7 @@ describe('in-flight leases', () => {
     acquireLease('groq', 'llama-3.3-70b', 1, 100);
     expect(inFlightForKey('groq', 1)).toBe(1);
 
-    // Past LEASE_MAX_AGE_MS (2 min) — the backstop for a release that never came.
+    // Past LEASE_MAX_AGE_MS (2 min) - the backstop for a release that never came.
     vi.advanceTimersByTime(3 * 60 * 1000);
     expect(inFlightForKey('groq', 1)).toBe(0);
   });
@@ -75,7 +75,7 @@ describe('per-key concurrency cap', () => {
     delete process.env.MAX_CONCURRENT_REQUESTS_PER_KEY_GROQ;
   });
 
-  it('is unlimited by default — capping every provider would cost throughput', () => {
+  it('is unlimited by default - capping every provider would cost throughput', () => {
     expect(getKeyConcurrencyLimit('groq')).toBeNull();
     for (let i = 0; i < 25; i++) acquireLease('groq', 'llama-3.3-70b', 1, 100);
     expect(canUseKeyConcurrency('groq', 1)).toBe(true);

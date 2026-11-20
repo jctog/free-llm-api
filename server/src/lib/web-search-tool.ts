@@ -36,7 +36,7 @@ const RESULTS_PER_SEARCH = 5;
 const MAX_QUERY_CHARS = 400;
 const EXTRACT_CHARS = 1_200;
 
-/** True when at least one enabled search engine has a usable key — the same
+/** True when at least one enabled search engine has a usable key - the same
  *  check /v1/search routes with, so agents' web search only switches on when a
  *  search can actually run. */
 export function hasSearchCapability(): boolean {
@@ -180,7 +180,7 @@ export function newWebSearchCallId(): string {
 
 // ── In-process re-entry into a route handler ────────────────────────────────
 // The search loop re-runs the surface's own handler (auth, routing, failover,
-// analytics, tool repair — all unchanged) once per model turn, non-streaming,
+// analytics, tool repair - all unchanged) once per model turn, non-streaming,
 // and captures what it would have sent. Only the response members those
 // handlers touch are implemented.
 

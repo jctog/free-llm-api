@@ -162,7 +162,7 @@ export class CloudflareProvider extends BaseProvider {
   }
 
   async validateKey(apiKey: string, quotaContext?: QuotaObservationContext): Promise<KeyValidationResult> {
-    // Transport errors propagate — health.ts marks status='error' without
+    // Transport errors propagate - health.ts marks status='error' without
     // counting toward auto-disable. Only confirmed bad/inactive tokens disable.
     const { accountId, token } = this.parseKey(apiKey);
 
@@ -188,7 +188,7 @@ export class CloudflareProvider extends BaseProvider {
 
   // Hits a Cloudflare token-verify endpoint. Returns {result} for a definitive
   // verdict, or {authFailed} when the token lacks access to THIS endpoint
-  // (401/403) so the caller can try the other scope — carrying the upstream
+  // (401/403) so the caller can try the other scope - carrying the upstream
   // reason so a key that fails both scopes still surfaces why.
   private async verifyAt(url: string, token: string, quotaContext?: QuotaObservationContext): Promise<{ result: KeyValidationResult } | { authFailed: KeyValidationFailure }> {
     const res = await this.fetchWithTimeout(
@@ -208,7 +208,7 @@ export class CloudflareProvider extends BaseProvider {
     if (res.status === 401 || res.status === 403) {
       return { authFailed: await this.validationResult(res) as KeyValidationFailure };
     }
-    if (!res.ok) return { result: true }; // unexpected non-2xx that isn't auth — don't disable
+    if (!res.ok) return { result: true }; // unexpected non-2xx that isn't auth - don't disable
     const data = await res.json() as any;
     if (data.success === true && data.result?.status === 'active') return { result: true };
     const reason = data.result?.status

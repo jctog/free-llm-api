@@ -4,7 +4,7 @@ import { clientContextMiddleware, getClientContext } from '../../lib/client-cont
 
 // Minimal fake req: the middleware only touches headers, socket, and req.ip.
 // `ip` is what Express resolves from the socket peer address (or from the
-// X-Forwarded-For chain when `trust proxy` is enabled) — the middleware reads
+// X-Forwarded-For chain when `trust proxy` is enabled) - the middleware reads
 // req.ip rather than re-implementing the trust chain itself (#1024).
 function fakeReq(headers: Record<string, string | string[]>, remoteAddress?: string, ip?: string): Request {
   return { headers, socket: { remoteAddress }, ip } as unknown as Request;

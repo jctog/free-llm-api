@@ -5,7 +5,7 @@
  * new model often continues the previous model's tool-call style and emits
  * the call as TEXT in its private training dialect instead of a structured
  * `tool_calls` array. The client's agent loop sees prose, treats the turn as
- * a final answer, and dies mid-task — observed live with the OpenAI Agents
+ * a final answer, and dies mid-task - observed live with the OpenAI Agents
  * SDK when Kimi-K2.6 continued a DeepSeek history:
  *
  *   <|tool_calls_section_begin|> <|tool_call_begin|> chatcmpl-tool-bde5...
@@ -13,7 +13,7 @@
  * This module detects the known dialects and re-parses them into standard
  * OpenAI tool_calls, schema-gated against the request's tool list. A turn
  * that is detected as a dialect but cannot be parsed into a known tool is a
- * DEAD turn — the caller fails over instead of delivering gibberish.
+ * DEAD turn - the caller fails over instead of delivering gibberish.
  *
  * Supported dialects:
  *  1. Kimi / DeepSeek token style:
@@ -23,7 +23,7 @@
  *     <function=NAME>{...}</function>
  *  3. Qwen / Hermes XML: <tool_call>{"name": ..., "arguments": ...}</tool_call>
  *  4. Bare or ```json-fenced single JSON object: {"name": KNOWN, "arguments": {...}}
- *     (only rescued when "name" matches a requested tool — bare JSON is a
+ *     (only rescued when "name" matches a requested tool - bare JSON is a
  *     legitimate answer shape, so this one is strictly schema-gated)
  */
 
@@ -142,7 +142,7 @@ function parseTokenDialect(text: string, toolNames: Set<string>): { calls: Rescu
     const extracted = jsonStart === -1 ? null : extractBalancedJson(clean, jsonStart);
     // Function name rides in the id token as `functions.NAME:IDX`. Some
     // models degrade it to an opaque id (observed: `chatcmpl-tool-<hex>`),
-    // which leaves no way to know WHICH tool was meant — unparseable.
+    // which leaves no way to know WHICH tool was meant - unparseable.
     const nameMatch = /^functions\.([A-Za-z0-9_.-]+):\d+$/.exec(idToken);
     const name = nameMatch?.[1];
     let argsOk = false;
@@ -230,7 +230,7 @@ export function rescueInlineToolCalls(text: string, toolNames: Set<string>): Res
     return { detected: true, calls, cleanText };
   }
 
-  // Dialect 4: the entire answer is one JSON object naming a known tool —
+  // Dialect 4: the entire answer is one JSON object naming a known tool -
   // either bare or inside a ```json fence. Strictly schema-gated.
   const trimmed = text.trim();
   const fenced = /^```(?:json)?\s*([\s\S]*?)\s*```$/.exec(trimmed);

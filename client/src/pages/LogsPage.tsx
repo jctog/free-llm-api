@@ -48,7 +48,7 @@ const SCROLL_FOLLOW_SLACK = 40
 
 // Level colors follow the dashboard's existing severity ramp (see the penalty
 // inspector): red for error, amber for warn, a calm blue for info, and plain
-// muted for debug — which is noise you opted into.
+// muted for debug - which is noise you opted into.
 const LEVEL_CLASS: Record<LogLevel, string> = {
   debug: 'bg-muted text-muted-foreground',
   info: 'bg-sky-600/15 text-sky-700 dark:text-sky-400',
@@ -187,7 +187,7 @@ export default function LogsPage() {
     // First call has no cursor (newest 200); every later call is incremental.
     // The merge happens here rather than in an effect on `data` because
     // react-query's structural sharing can hand back an identical object for
-    // an unchanged response — and an empty poll still has to advance the cursor.
+    // an unchanged response - and an empty poll still has to advance the cursor.
     queryFn: async () => {
       const stream = streamRef.current
       const response = await apiFetch<LogsResponse>(
@@ -207,7 +207,7 @@ export default function LogsPage() {
     refetchInterval: paused ? false : LOG_POLL_MS,
     // A backgrounded tab burns no requests; polling resumes on focus.
     refetchIntervalInBackground: false,
-    // Pause has to mean paused — otherwise coming back to the tab would sneak
+    // Pause has to mean paused - otherwise coming back to the tab would sneak
     // a fetch past it.
     refetchOnWindowFocus: !paused,
     refetchOnReconnect: !paused,
@@ -229,8 +229,8 @@ export default function LogsPage() {
   const newestId = entries.length ? entries[entries.length - 1].id : null
 
   // Follow the tail only while the reader is parked at the bottom. Judging by
-  // direction (not position alone) keeps our own smooth scroll — which always
-  // travels downwards — from being mistaken for the user taking over, whatever
+  // direction (not position alone) keeps our own smooth scroll - which always
+  // travels downwards - from being mistaken for the user taking over, whatever
   // they scrolled with: wheel, keys, or the bar.
   const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
     const el = event.currentTarget
@@ -247,7 +247,7 @@ export default function LogsPage() {
   }
 
   // mergeEntries returns the SAME array when a poll brought nothing, so this
-  // only runs on real output — an idle server never yanks the viewport.
+  // only runs on real output - an idle server never yanks the viewport.
   useEffect(() => {
     if (!entries.length) return
     if (followRef.current) endRef.current?.scrollIntoView({ behavior: 'smooth' })

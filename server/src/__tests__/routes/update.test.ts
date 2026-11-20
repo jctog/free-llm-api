@@ -182,7 +182,7 @@ describe('Update API', () => {
       expect(request?.headers).not.toHaveProperty('Authorization');
     });
 
-    // Both install a published release — an installer or the :latest image —
+    // Both install a published release - an installer or the :latest image -
     // so both compare against the newest tag; untagged main commits have
     // nothing to install.
     describe.each(['desktop', 'docker'] as const)('%s installs', (installation) => {
@@ -552,7 +552,7 @@ describe('Update API', () => {
       currentTime += 1;
       expect((await httpGet(app, '/api/update/check')).status).toBe(502);
       // A failure is never cached as a result, only suppressed for its short
-      // negative TTL — so the retry happens, just not on the very next click.
+      // negative TTL - so the retry happens, just not on the very next click.
       currentTime += 45_000;
       expect((await httpGet(app, '/api/update/check')).body.status).toBe('current');
       expect(fetchMock).toHaveBeenCalledTimes(3);

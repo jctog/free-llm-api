@@ -4,7 +4,7 @@
 
 ## Package manifest
 
-`desktop/package.json` `freellmapi-desktop@0.9.2` — Electron `38.8.6`, `better-sqlite3@12.10.0`, `electron-builder@25.1.8`, `esbuild@0.24.0`. Entry `build/main.mjs` (`type: module`). AppId `com.freellmapi.desktop`, publish `github:tashfeenahmed/freellmapi` (`desktop/electron-builder.yml`). `asar` + `client-dist` in `extraResources`; per-OS signing targets (mac `dmg`+`zip` `arm64`+`x64` signed/notarized/stapled via `refresh-mac-update-metadata.mjs`, win `nsis`+`zip` `x64`, linux `AppImage`+`deb`+`tar.xz`+`rpm` `x64` since #981 `d8fae97`).
+`desktop/package.json` `freellmapi-desktop@0.9.2` - Electron `38.8.6`, `better-sqlite3@12.10.0`, `electron-builder@25.1.8`, `esbuild@0.24.0`. Entry `build/main.mjs` (`type: module`). AppId `com.freellmapi.desktop`, publish `github:tashfeenahmed/freellmapi` (`desktop/electron-builder.yml`). `asar` + `client-dist` in `extraResources`; per-OS signing targets (mac `dmg`+`zip` `arm64`+`x64` signed/notarized/stapled via `refresh-mac-update-metadata.mjs`, win `nsis`+`zip` `x64`, linux `AppImage`+`deb`+`tar.xz`+`rpm` `x64` since #981 `d8fae97`).
 
 ## Build pipeline
 
@@ -44,18 +44,18 @@ Deliberately NOT mirrored: `restoreDbBackupIfNeeded`/`startDbBackupPump` (`FREEA
 
 - Single-instance lock (`app.requestSingleInstanceLock`); second launch focuses existing window.
 - `userData` override from `FREEAPI_REPO` dev path.
-- `installFileLogger` ordering — must run before any `console.log` the server will emit.
+- `installFileLogger` ordering - must run before any `console.log` the server will emit.
 - Theme/locale mirroring from system.
 - `FREEAPI_SHOT` capture mode for screenshots.
 
 ## Tray / popover / window
 
-- `desktop/src/tray.ts` — menu-bar icon, `Open Logs Folder` / `Open Backups Folder` (`logger.ts:openLogsFolder`/`openBackupsFolder` via `shell.openPath`), `Open FreeLLMAPI`, quit.
-- `desktop/src/popover.ts` — popover window for quick access.
-- `desktop/src/window.ts` — main BrowserWindow chrome.
+- `desktop/src/tray.ts` - menu-bar icon, `Open Logs Folder` / `Open Backups Folder` (`logger.ts:openLogsFolder`/`openBackupsFolder` via `shell.openPath`), `Open FreeLLMAPI`, quit.
+- `desktop/src/popover.ts` - popover window for quick access.
+- `desktop/src/window.ts` - main BrowserWindow chrome.
 
 ## Related
 
-- [Logging and updates](02-logging-and-updates.md) — `freeapi.log` rotation, update delivery, signing.
-- [Install & deploy](../install/01-install.md) — desktop vs Docker vs local dev.
-- [Logs viewer](../logs/01-server-logs-viewer.md) — the polling API the desktop log tap feeds.
+- [Logging and updates](02-logging-and-updates.md) - `freeapi.log` rotation, update delivery, signing.
+- [Install & deploy](../install/01-install.md) - desktop vs Docker vs local dev.
+- [Logs viewer](../logs/01-server-logs-viewer.md) - the polling API the desktop log tap feeds.

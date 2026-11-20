@@ -10,7 +10,7 @@ import { getClientContext } from '../lib/client-context.js';
 // Cohere-style rerank over the existing free-tier key pool (#1029). Deliberately
 // narrow first slice: platform='cohere' keys and custom OpenAI-compatible
 // endpoints (POST {base_url}/rerank, Jina shape). No catalog table, no new
-// platforms — a rerank model id pins nothing; failover walks the candidate
+// platforms - a rerank model id pins nothing; failover walks the candidate
 // keys in order and takes the first success.
 
 export interface RerankResult {
@@ -36,7 +36,7 @@ interface RerankCandidate {
   platform: string;
   key: string;
   baseUrl: string | null;
-  /** Parsed api_keys.model_scope_json (#657) — null = unscoped, serves any rerank model. */
+  /** Parsed api_keys.model_scope_json (#657) - null = unscoped, serves any rerank model. */
   scope: Set<string> | null;
 }
 
@@ -115,7 +115,7 @@ async function callProvider(cand: RerankCandidate, model: string | undefined, qu
     relevanceScore: r.relevance_score ?? 0,
     document: typeof r.document === 'string' ? r.document : r.document?.text ?? documents[r.index ?? -1] ?? '',
   })).filter(r => r.index >= 0 && r.index < documents.length);
-  // An upstream answer with no in-range hit serves nobody — treat it as a
+  // An upstream answer with no in-range hit serves nobody - treat it as a
   // malformed response so the chain moves on to the next provider.
   if (results.length === 0) throw new RerankError('upstream returned no valid rerank hits', 502);
   return { modelId, results };

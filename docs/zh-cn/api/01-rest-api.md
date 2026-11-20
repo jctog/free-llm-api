@@ -57,11 +57,11 @@ curl http://localhost:3001/v1/chat/completions \
 
 单写 `auto` 会走你当前生效的回退链。加个后缀可以只影响这一次请求，不用改仪表盘：
 
-- `auto:smart` —— 偏向智能评分最高的模型
-- `auto:fast` —— 偏向实测速度（吞吐和首字节时间）
-- `auto:cheap` —— 偏向省钱；目前和 `balanced` 是同一套权重（池子里的东西本来就都是免费的）
-- `auto:reliable` —— 偏向近期成功率
-- `auto:balanced` —— 默认权重（稳定性优先，速度和智能分摊剩下的部分）
+- `auto:smart` -- 偏向智能评分最高的模型
+- `auto:fast` -- 偏向实测速度（吞吐和首字节时间）
+- `auto:cheap` -- 偏向省钱；目前和 `balanced` 是同一套权重（池子里的东西本来就都是免费的）
+- `auto:reliable` -- 偏向近期成功率
+- `auto:balanced` -- 默认权重（稳定性优先，速度和智能分摊剩下的部分）
 
 这些策略会对 **所有已启用的模型** 重新排序，忽略你的链路顺序。常见的同义写法也能识别（`auto:fastest`、`auto:speed`、`auto:smartest`、`auto:cheapest`、`auto:budget` 等等），整个模型字符串不区分大小写。
 
@@ -283,7 +283,7 @@ curl http://localhost:3001/v1/messages \
 
 Claude 的模型名在 **密钥 → Anthropic** 标签页里映射到你的免费池：每个系列（`default`、`opus`、`sonnet`、`haiku`）可以路由到 `auto`（由路由器挑一个免费模型），也可以固定到你指定的模型。`POST /v1/messages/count_tokens` 和一个按内容协商的 `GET /v1/models`（发送了 `anthropic-version` 时返回 Anthropic 的结构）也都实现了。流式、系统提示词、工具使用和图像输入，都经由和 OpenAI 端点相同的那套路由翻译。
 
-**Claude Code** —— 把它指向你的服务器再启动：
+**Claude Code** -- 把它指向你的服务器再启动：
 
 *在 macOS / Linux 上（Bash）：*
 ```bash

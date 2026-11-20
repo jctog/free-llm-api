@@ -65,7 +65,7 @@ function storedRange(): TimeRange {
 // Sortable columns of the three breakdown tables. Sorting is client-side over
 // the rows already loaded and remembered per table (same localStorage idiom as
 // the range). Recent calls are fetched newest-first with limit=100, so its
-// sort covers that window, not the whole filtered set — the table says so
+// sort covers that window, not the whole filtered set - the table says so
 // whenever `total` exceeds the loaded rows.
 type RecentCallCol = 'time' | 'ip' | 'agent' | 'model' | 'provider' | 'status' | 'attempts' | 'inTokens' | 'outTokens' | 'latency'
 const RECENT_CALL_COLS: readonly RecentCallCol[] = ['time', 'ip', 'agent', 'model', 'provider', 'status', 'attempts', 'inTokens', 'outTokens', 'latency']
@@ -154,7 +154,7 @@ interface CacheStatsResponse {
   totalHits: number
   estimatedRequestsSaved: number
   savedTokens: number
-  // Lookups since the server started — the ratio's two halves. Kept separate
+  // Lookups since the server started - the ratio's two halves. Kept separate
   // from totalHits, which shrinks when entries are evicted.
   lookupHits: number
   lookupMisses: number
@@ -231,7 +231,7 @@ interface ByKeyRow {
 
 interface ErrorDistribution {
   byCategory: Array<{ category: string; count: number }>
-  // One entry per provider — per custom ENDPOINT, not one pooled 'custom'
+  // One entry per provider - per custom ENDPOINT, not one pooled 'custom'
   // entry (#889); `platform` is kept for the dot coloring.
   byPlatform: Array<{ platform: string; providerId?: string; endpoint?: string; count: number }>
   detailed: Array<{ platform: string; model_id: string; error_category: string; count: number }>
@@ -301,7 +301,7 @@ interface RequestDetail extends Omit<RecentCallRow, 'attemptCount'> {
 
 type StatusFilter = 'all' | 'success' | 'error' | 'canceled'
 
-// 'canceled' (#752 — the client hung up mid-request) is neither success nor
+// 'canceled' (#752 - the client hung up mid-request) is neither success nor
 // error: neutral amber, not destructive red.
 function statusTextClass(status: string): string {
   if (status === 'success') return 'text-muted-foreground'
@@ -312,7 +312,7 @@ function statusTextClass(status: string): string {
 // First product token of the UA ("python-requests/2.32.3", "curl/8.6.0", …)
 // is enough to tell callers apart in a narrow cell; full string on hover.
 function shortUserAgent(ua: string | null): string {
-  if (!ua) return '—'
+  if (!ua) return '-'
   const first = ua.split(' ')[0]
   return first.length > 32 ? first.slice(0, 32) + '…' : first
 }
@@ -387,7 +387,7 @@ function DetailField({ label, value, mono }: { label: string; value: React.React
   )
 }
 
-// Per-request drill-down: the parent row's fields plus the failover ladder —
+// Per-request drill-down: the parent row's fields plus the failover ladder -
 // one entry per dispatched attempt (ordinal → provider/model → key ordinal →
 // outcome → timing, with the redacted per-hop error when one was recorded).
 // A dialog (the app's detail-popup idiom, cf. keys/export-keys-dialog) rather
@@ -455,9 +455,9 @@ function RequestDetailDialog({ requestId, onClose }: { requestId: number | null;
                 mono
               />
               <DetailField label={t('analytics.latency')} value={formatMs(detail.latencyMs ?? 0)} mono />
-              <DetailField label={t('analytics.ttft')} value={detail.ttfbMs != null ? formatMs(detail.ttfbMs) : '—'} mono />
-              <DetailField label={t('analytics.clientIp')} value={detail.clientIp ?? '—'} mono />
-              <DetailField label={t('analytics.clientAgent')} value={detail.clientUserAgent ?? '—'} />
+              <DetailField label={t('analytics.ttft')} value={detail.ttfbMs != null ? formatMs(detail.ttfbMs) : '-'} mono />
+              <DetailField label={t('analytics.clientIp')} value={detail.clientIp ?? '-'} mono />
+              <DetailField label={t('analytics.clientAgent')} value={detail.clientUserAgent ?? '-'} />
             </div>
 
             {detail.error && (
@@ -520,7 +520,7 @@ const tooltipStyle = { backgroundColor: 'var(--popover)', border: '1px solid var
 
 // The timeline endpoint buckets on the viewer's wall clock (the query sends
 // the browser's tzOffset), so its zone-less timestamps ("2026-08-10T14:00:00"
-// hourly, "2026-08-10" daily) are already local time. Parse them as local —
+// hourly, "2026-08-10" daily) are already local time. Parse them as local -
 // re-interpreting them as UTC here would shift every tick a second time.
 function formatTimelineTick(value: string): string {
   if (!value) return ''
@@ -706,13 +706,13 @@ export default function AnalyticsPage() {
   // Avg time-to-first-token is null when nothing streamed (or the raw window
   // was pruned); show a placeholder glyph rather than a misleading "0 ms".
   const avgTtfb = summary?.avgTtfbMs
-  const ttftValue = avgTtfb != null ? `${avgTtfb} ms` : '—'
+  const ttftValue = avgTtfb != null ? `${avgTtfb} ms` : '-'
 
   // p95 latency is likewise null when the raw window was pruned; the server
   // does NOT coerce it (unlike avg latency), so a null must render the same
   // placeholder glyph instead of a misleading "0 ms".
   const p95Latency = summary?.p95LatencyMs
-  const p95Value = p95Latency != null ? `${p95Latency} ms` : '—'
+  const p95Value = p95Latency != null ? `${p95Latency} ms` : '-'
 
   // TTFT-by-provider is empty when no provider recorded a streaming first
   // token; render a muted line instead of an axis-only empty chart.
@@ -754,7 +754,7 @@ export default function AnalyticsPage() {
               <Stat icon={Clock} label={t('analytics.p95Latency')} value={p95Value} />
               <Stat icon={Zap} label={t('analytics.avgTtft')} value={ttftValue} />
               {/* Priced per request at the served model's paid-API equivalent
-                  rate (not a flat frontier-model rate) — see db/model-pricing.ts.
+                  rate (not a flat frontier-model rate) - see db/model-pricing.ts.
                   The value is a 30-day projection; the hover hint tells the whole
                   story (actual period amount + whether it was extrapolated). */}
               <Stat icon={CircleDollarSign} label={t('analytics.estSavings')} value={`$${savings30d.toFixed(2)}`} hint={savingsHint} />
@@ -1071,7 +1071,7 @@ export default function AnalyticsPage() {
                           <TableCell className="pl-4 text-xs text-muted-foreground tabular-nums whitespace-nowrap">
                             {formatSqliteUtcToLocalTime(r.createdAt, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                           </TableCell>
-                          <TableCell className="text-xs font-medium tabular-nums">{r.clientIp ?? '—'}</TableCell>
+                          <TableCell className="text-xs font-medium tabular-nums">{r.clientIp ?? '-'}</TableCell>
                           <TableCell className="text-xs text-muted-foreground" title={r.clientUserAgent ?? undefined}>
                             {shortUserAgent(r.clientUserAgent)}
                           </TableCell>
@@ -1088,7 +1088,7 @@ export default function AnalyticsPage() {
                           {/* >1 = the request burned failover hops; that is the
                               row worth drilling into, so give it weight. */}
                           <TableCell className={`text-right text-xs tabular-nums ${r.attemptCount > 1 ? 'font-medium' : 'text-muted-foreground'}`}>
-                            {r.attemptCount > 0 ? r.attemptCount : '—'}
+                            {r.attemptCount > 0 ? r.attemptCount : '-'}
                           </TableCell>
                           <TableCell className="text-right text-xs tabular-nums">{formatTokens(r.inputTokens)}</TableCell>
                           <TableCell className="text-right text-xs tabular-nums">{formatTokens(r.outputTokens)}</TableCell>
@@ -1102,7 +1102,7 @@ export default function AnalyticsPage() {
             </Panel>
           </div>
 
-          {/* Per-provider breakdown: the tabular face of the by-platform data —
+          {/* Per-provider breakdown: the tabular face of the by-platform data -
               the charts above show volume/latency, this row surfaces the
               success-rate and error-count numbers (#335). */}
           <div className="lg:col-span-2">
@@ -1138,12 +1138,12 @@ export default function AnalyticsPage() {
                           <TableCell className="text-right tabular-nums">{p.requests}</TableCell>
                           <TableCell className="text-right tabular-nums">{p.successRate}%</TableCell>
                           <TableCell className={`text-right tabular-nums ${p.errorCount > 0 ? 'text-destructive' : ''}`}>
-                            {p.errorCount > 0 ? p.errorCount : '—'}
+                            {p.errorCount > 0 ? p.errorCount : '-'}
                           </TableCell>
                           <TableCell className="text-right tabular-nums">{p.avgLatencyMs} ms</TableCell>
-                          <TableCell className="text-right tabular-nums">{p.p95LatencyMs != null ? `${p.p95LatencyMs} ms` : '—'}</TableCell>
-                          <TableCell className="text-right tabular-nums">{p.avgTtfbMs != null ? `${p.avgTtfbMs} ms` : '—'}</TableCell>
-                          <TableCell className="text-right tabular-nums">{p.avgTokensPerSecond != null ? p.avgTokensPerSecond : '—'}</TableCell>
+                          <TableCell className="text-right tabular-nums">{p.p95LatencyMs != null ? `${p.p95LatencyMs} ms` : '-'}</TableCell>
+                          <TableCell className="text-right tabular-nums">{p.avgTtfbMs != null ? `${p.avgTtfbMs} ms` : '-'}</TableCell>
+                          <TableCell className="text-right tabular-nums">{p.avgTokensPerSecond != null ? p.avgTokensPerSecond : '-'}</TableCell>
                           <TableCell className="text-right tabular-nums">{formatTokens(p.totalInputTokens)}</TableCell>
                           <TableCell className="text-right tabular-nums pr-4">{formatTokens(p.totalOutputTokens)}</TableCell>
                         </TableRow>
@@ -1181,7 +1181,7 @@ export default function AnalyticsPage() {
                           <TableCell className="pl-4 text-sm font-medium">{m.displayName}</TableCell>
                           <TableCell className="text-xs text-muted-foreground">{m.endpoint ?? m.platform}</TableCell>
                           <TableCell className="text-right tabular-nums">{m.requests}</TableCell>
-                          <TableCell className="text-right tabular-nums">{m.pinnedRequests > 0 ? m.pinnedRequests : '—'}</TableCell>
+                          <TableCell className="text-right tabular-nums">{m.pinnedRequests > 0 ? m.pinnedRequests : '-'}</TableCell>
                           <TableCell className="text-right tabular-nums">{m.successRate}%</TableCell>
                           <TableCell className="text-right tabular-nums">{m.avgLatencyMs} ms</TableCell>
                           <TableCell className="text-right tabular-nums">{formatTokens(m.totalInputTokens)}</TableCell>
@@ -1219,7 +1219,7 @@ export default function AnalyticsPage() {
                           <TableCell className="pl-4 text-sm font-medium">
                             {k.label || t('analytics.keyLabelFallback', { id: k.keyId })}
                           </TableCell>
-                          <TableCell className="text-xs text-muted-foreground">{k.platform ?? '—'}</TableCell>
+                          <TableCell className="text-xs text-muted-foreground">{k.platform ?? '-'}</TableCell>
                           <TableCell className="text-right tabular-nums">{k.requests}</TableCell>
                           <TableCell className="text-right tabular-nums">{k.successRate}%</TableCell>
                           <TableCell className="text-right tabular-nums">{k.avgLatencyMs} ms</TableCell>

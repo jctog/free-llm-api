@@ -1,6 +1,6 @@
 // Extended sampling / output-shape parameters forwarded to providers.
 //
-// Until now only temperature / max_tokens / top_p / stop reached upstream —
+// Until now only temperature / max_tokens / top_p / stop reached upstream -
 // everything else a client sent (seed, penalties, logit_bias, logprobs,
 // response_format…) was validated away by the request schema and silently
 // dropped, so "OpenAI-compatible" was quietly narrower than it claimed
@@ -17,7 +17,7 @@
 // fields, so the default is to send everything and let the per-platform
 // droplist name the documented exceptions (Mistral 422s on unknown keys,
 // Groq 400s on the logprobs family). A provider that still 400s fails over like any other
-// provider-invalid request and shows up in the attempt trail — and its
+// provider-invalid request and shows up in the attempt trail - and its
 // droplist entry is one line to add.
 
 import { z } from 'zod';
@@ -33,10 +33,10 @@ export type ReasoningEffort = typeof REASONING_EFFORTS[number];
 
 // Effort spellings clients actually send that aren't on OpenAI's scale, mapped
 // to the nearest value we do support (#619: a strict enum turned a client's
-// `reasoning_effort: 'max'` into a 400 from our own edge — a knob nobody asked
+// `reasoning_effort: 'max'` into a 400 from our own edge - a knob nobody asked
 // to be fatal). Values that mean "let the model decide" ('auto', 'adaptive',
 // 'default') are deliberately absent: they resolve to undefined below, i.e.
-// nothing is forwarded and the provider default stands — same rule
+// nothing is forwarded and the provider default stands - same rule
 // effortFromGeminiThinking applies to a -1 thinking budget.
 const EFFORT_ALIASES: Readonly<Record<string, ReasoningEffort>> = {
   max: 'high', maximum: 'high', highest: 'high', ultra: 'high', xhigh: 'high', 'x-high': 'high',
@@ -48,7 +48,7 @@ const EFFORT_ALIASES: Readonly<Record<string, ReasoningEffort>> = {
 /**
  * Coerce a client-supplied effort value onto our scale: supported values pass
  * through, known aliases clamp to the nearest supported one, and anything
- * else (unknown word, wrong type, "auto") yields undefined — the knob is
+ * else (unknown word, wrong type, "auto") yields undefined - the knob is
  * dropped and the provider's own default applies. Never throws, so a bad
  * effort can't fail a request. Exported for tests.
  */
@@ -199,7 +199,7 @@ export interface PlatformParamPolicy {
   drop?: readonly ExtendedSamplingKey[];
   rename?: Readonly<Partial<Record<ExtendedSamplingKey, string>>>;
   // The platform supports json_schema but 400s on json_object (observed live:
-  // Reka — "Unsupported response_format type: 'json_object'. Supported types
+  // Reka - "Unsupported response_format type: 'json_object'. Supported types
   // are 'text' and 'json_schema'."). Upgrade json_object to a permissive
   // json_schema on the wire instead of dropping structured output entirely.
   jsonObjectToSchema?: boolean;
@@ -212,7 +212,7 @@ export interface PlatformParamPolicy {
   // supported value instead of being forwarded into a 400 (#619). Omitted =
   // forward whatever the client asked for.
   reasoningEfforts?: readonly ReasoningEffort[];
-  // Output-token floor sent when — and ONLY when — the client omitted
+  // Output-token floor sent when - and ONLY when - the client omitted
   // max_tokens entirely (#553). Some providers apply a tiny server-side
   // default in that case and cut the answer off mid-sentence, which clients
   // experience as a broken stream rather than as a truncation. A
@@ -279,16 +279,16 @@ export const PLATFORM_PARAM_POLICIES: Partial<Record<Platform, PlatformParamPoli
   },
   // Gemini's generationConfig has no equivalents for these; the adapter
   // translates the rest natively (topK, seed, penalties, responseSchema, and
-  // reasoning_effort → thinkingConfig — see toGeminiExtendedConfig).
+  // reasoning_effort → thinkingConfig - see toGeminiExtendedConfig).
   google: { drop: ['min_p', 'repetition_penalty', 'logit_bias', 'logprobs', 'top_logprobs'] },
   // Cohere's OpenAI-compat endpoint covers seed/penalties/response_format;
-  // the rest (incl. reasoning_effort — Cohere's own knob is a non-OpenAI
+  // the rest (incl. reasoning_effort - Cohere's own knob is a non-OpenAI
   // `thinking` object) have no mapping there.
   cohere: { drop: ['top_k', 'min_p', 'repetition_penalty', 'logit_bias', 'logprobs', 'top_logprobs', 'reasoning_effort'] },
   // Workers AI's OpenAI-compat endpoint parses a known subset; send only what
   // it understands. It also applies a small server-side max_tokens default
   // when the request omits one, so an SDK client that never sets max_tokens
-  // (the common case) sees answers stop a couple of seconds in — reported on
+  // (the common case) sees answers stop a couple of seconds in - reported on
   // @cf/openai/gpt-oss-120b, where the model's own reasoning trace eats the
   // default before any visible text lands (#553). 8192 is the floor we send
   // instead: generous for a chat turn plus reasoning, and small enough to fit
@@ -309,7 +309,7 @@ export const PLATFORM_PARAM_POLICIES: Partial<Record<Platform, PlatformParamPoli
   // AI Horde builds its own payload format; none of the extended set maps.
   aihorde: { drop: [...EXTENDED_SAMPLING_KEYS] },
   // Kilo's anonymous gateway 400s ("Provider returned error") whenever
-  // response_format is present — observed live 2026-07-11; seed passes fine.
+  // response_format is present - observed live 2026-07-11; seed passes fine.
   // Dropping it also makes structured-output routing skip kilo entirely.
   kilo: { drop: ['response_format'] },
   // Reka supports json_schema but rejects json_object (live 2026-07-11);
@@ -373,9 +373,9 @@ export function maxTokensCapFor(platform: string): number | undefined {
 /**
  * The max_tokens to put on the wire for one request: whatever the client asked
  * for, or the platform's floor when the client asked for nothing (#553), then
- * lowered to the tightest ceiling that applies — the platform's own
+ * lowered to the tightest ceiling that applies - the platform's own
  * maxTokensCap, the operator's unified cap, or both. With neither in play
- * nothing is clamped — a client-set value passes through untouched in both
+ * nothing is clamped - a client-set value passes through untouched in both
  * directions, and the gateway's own guardrails (token budget, routing reserve)
  * have already had their say by the time an adapter calls this.
  *
@@ -396,7 +396,7 @@ export function resolveMaxTokens(platform: string, requested: number | undefined
 // Optional operator-level ceiling on max_tokens for EVERY client. Aggressive
 // clients (Open WebUI sends max_tokens=65536 by default) 400 against free
 // models whose output limit is 32768 (CF qwen3-30b, zhipu glm), and without a
-// ceiling the same invalid value rides every fallback candidate — the chain
+// ceiling the same invalid value rides every fallback candidate - the chain
 // cannot rescue the request. The cap only LOWERS an
 // excessive value; a client value at or below it is untouched, and clients that
 // send nothing still get today's platform floor. 'off' (default) keeps the
@@ -409,7 +409,7 @@ export const UNIFIED_MAX_TOKENS_AUTO = 32768;
 /** The configured unified output cap, or null when disabled ('off'/unset).
  *  'auto' resolves to UNIFIED_MAX_TOKENS_AUTO; an explicit integer is used
  *  verbatim; anything else is treated as disabled so a bad value can't 400
- *  requests. Reads the settings table on every call — cheap (better-sqlite3
+ *  requests. Reads the settings table on every call - cheap (better-sqlite3
  *  sync read) and picks up dashboard changes without a restart, mirroring
  *  guardrails.ts. */
 export function unifiedMaxTokensCap(): number | null {
@@ -417,7 +417,7 @@ export function unifiedMaxTokensCap(): number | null {
   try {
     raw = getSetting(UNIFIED_MAX_TOKENS_SETTING);
   } catch {
-    return null; // DB not ready — never throw on the proxy hot path
+    return null; // DB not ready - never throw on the proxy hot path
   }
   if (!raw) return null;
   const value = raw.trim().toLowerCase();
@@ -427,13 +427,13 @@ export function unifiedMaxTokensCap(): number | null {
   return Number.isInteger(n) && n > 0 ? n : null;
 }
 
-/** True when this platform's policy strips response_format before send — the
+/** True when this platform's policy strips response_format before send - the
  *  router uses it to skip such platforms for structured-output requests. */
 export function platformDropsResponseFormat(platform: string): boolean {
   return PLATFORM_PARAM_POLICIES[platform as Platform]?.drop?.includes('response_format') ?? false;
 }
 
-/** The advertised parameter list for a model on `platform` — the base set
+/** The advertised parameter list for a model on `platform` - the base set
  *  every surface supports, plus tools when the model does, minus the
  *  platform's droplist. */
 export function supportedParametersFor(platform: string, caps: { tools?: boolean } = {}): string[] {
@@ -450,7 +450,7 @@ export function supportedParametersFor(platform: string, caps: { tools?: boolean
 }
 
 /** For a model served by several platforms (a unify group): the INTERSECTION
- *  of the members' supported sets — a param is only advertised when every
+ *  of the members' supported sets - a param is only advertised when every
  *  platform the router might pick honors it. */
 export function supportedParametersForPlatforms(platforms: string[], caps: { tools?: boolean } = {}): string[] {
   if (platforms.length === 0) return supportedParametersFor('', caps);

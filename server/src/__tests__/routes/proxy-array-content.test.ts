@@ -59,7 +59,7 @@ describe('OpenAI multimodal array content', () => {
   });
 
   it('accepts content as a string (the legacy shape)', async () => {
-    // Provider call will fail (no real key), but schema validation must pass —
+    // Provider call will fail (no real key), but schema validation must pass -
     // we assert it isn't rejected with a 400 zod error.
     const { status, body } = await request(app, 'POST', '/v1/chat/completions', {
       messages: [{ role: 'user', content: 'hello' }],
@@ -196,7 +196,7 @@ describe('OpenAI multimodal array content', () => {
   it('accepts an assistant message with empty content and no tool_calls (#165)', async () => {
     // OpenAI accepts empty/null assistant turns in history; we coerce to "" and
     // forward rather than 400-ing a payload OpenAI would take. The request then
-    // routes (and fails downstream on the fake key) — the point is it is NOT a
+    // routes (and fails downstream on the fake key) - the point is it is NOT a
     // 400 schema rejection.
     const { status, body } = await request(app, 'POST', '/v1/chat/completions', {
       messages: [
@@ -232,7 +232,7 @@ describe('OpenAI multimodal array content', () => {
           {
             role: 'assistant',
             content: null,
-            // type dropped + arguments already parsed to an object — the way
+            // type dropped + arguments already parsed to an object - the way
             // Gemini-lineage agents replay our tool_calls back at us.
             tool_calls: [{ id: 'call_1', function: { name: 'ls', arguments: { path: '.' } } }],
           },
@@ -371,7 +371,7 @@ describe('OpenAI multimodal array content', () => {
         const urlStr = typeof url === 'string' ? url : url.toString();
         if (urlStr.includes('api.groq.com/openai/v1/chat/completions')) {
           const body = JSON.parse(String((init as RequestInit).body));
-          // Strict upstreams reject tool_calls: null AND tool_calls: [] —
+          // Strict upstreams reject tool_calls: null AND tool_calls: [] -
           // neither may survive normalization.
           expect(body.messages[1]).not.toHaveProperty('tool_calls');
           expect(body.messages[2]).not.toHaveProperty('tool_calls');

@@ -133,7 +133,7 @@ describe('quota-forecast: daily balance aggregation (#1104)', () => {
 
   it('returns null rate_exhaustion when the observation window is empty', () => {
     insertState({ platform: 'groq', keyId: 1, pool: 'groq::account', metric: 'requests', limit: 100, remaining: 80, resetAt: future() });
-    // No recent requests inserted — rate is too sparse to estimate.
+    // No recent requests inserted - rate is too sparse to estimate.
     const e = getQuotaForecast()[0];
     expect(e.rate_per_min).toBeNull();
     expect(e.estimated_exhaustion_at).toBeNull();
@@ -141,7 +141,7 @@ describe('quota-forecast: daily balance aggregation (#1104)', () => {
 
   it('estimates exhaustion time once enough recent requests exist', () => {
     insertState({ platform: 'groq', keyId: 1, pool: 'groq::account', metric: 'requests', limit: 100, remaining: 30, resetAt: future() });
-    // Insert 8 requests spread across the last 10-minute window — above the
+    // Insert 8 requests spread across the last 10-minute window - above the
     // 3-request minimum that marks a rate observable.
     const now = Date.now();
     for (let i = 1; i <= 8; i++) insertRequest('groq', new Date(now - i * 60_000).toISOString());

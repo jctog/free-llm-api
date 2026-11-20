@@ -136,7 +136,7 @@ describe('Fallback API', () => {
   });
 
   // Regression: GET /routing must always carry customWeights, even before the
-  // user has saved any — the dashboard's custom-weight sliders dereference it
+  // user has saved any - the dashboard's custom-weight sliders dereference it
   // and a missing field white-screened the Fallback page.
   it('GET /api/fallback/routing always includes customWeights', async () => {
     const { status, body } = await request(app, 'GET', '/api/fallback/routing');
@@ -244,7 +244,7 @@ describe('Fallback API', () => {
   });
 
   // Regression: the toggle state must ride on GET /routing, not just the PUT
-  // echo — the dashboard checkbox renders from the GET payload, so a missing
+  // echo - the dashboard checkbox renders from the GET payload, so a missing
   // field made it look permanently off and impossible to disable from the UI.
   it('GET /api/fallback/routing reflects the exploration toggle set via PUT', async () => {
     const get0 = await request(app, 'GET', '/api/fallback/routing');
@@ -293,7 +293,7 @@ describe('Fallback API', () => {
     expect(put.body.peakEndHour).toBe(23);
     expect(put.body.peakTimezone).toBe('Asia/Kolkata');
     // 00:00–23:00 covers every hour but the last, so the echo is the adjusted
-    // vector except in that one hour — assert the two are consistent with each
+    // vector except in that one hour - assert the two are consistent with each
     // other rather than pinning the wall clock.
     expect(put.body.weights).toEqual(put.body.peakAdjusted
       ? { reliability: 0.65, speed: 0.1, intelligence: 0.25 }
@@ -435,7 +435,7 @@ describe('Fallback API', () => {
     await request(app, 'POST', '/api/fallback/sort/intelligence');
     const { body } = await request(app, 'GET', '/api/fallback');
 
-    // The last Frontier model must come before the first non-Frontier model —
+    // The last Frontier model must come before the first non-Frontier model -
     // i.e. no "Intel #1 from a weaker provider" leaks above the frontier tier.
     const lastFrontier = body.map((m: any) => m.sizeLabel).lastIndexOf('Frontier');
     const firstNonFrontier = body.findIndex((m: any) => m.sizeLabel !== 'Frontier');

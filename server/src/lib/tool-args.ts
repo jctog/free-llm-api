@@ -2,7 +2,7 @@
 //
 // Several free-tier models (GLM family prominently) emit NESTED JSON inside
 // tool arguments as a string: `{"plan": "[{\"step\":...}]"}` instead of
-// `{"plan": [{"step":...}]}`. Strict clients reject the call — observed in
+// `{"plan": [{"step":...}]}`. Strict clients reject the call - observed in
 // production as Codex `failed to parse function arguments: invalid type:
 // string ..., expected a sequence`, which killed the agent turn right at its
 // status-update call. The gateway has the request's tool schemas, so it can
@@ -33,7 +33,7 @@ interface JsonSchemaish {
 /**
  * Repair a tool call's `arguments` JSON string against the tool's parameter
  * schema. Returns the original string untouched whenever anything doesn't
- * parse or doesn't match — this must never corrupt a valid call.
+ * parse or doesn't match - this must never corrupt a valid call.
  */
 export function repairToolArguments(args: string, paramSchema?: JsonSchemaish): string {
   let parsed: unknown;
@@ -92,7 +92,7 @@ function decodeIfSchemaSays(value: string, schema: JsonSchemaish | undefined): u
       : inner !== null && typeof inner === 'object' && !Array.isArray(inner);
     return isMatch ? inner : undefined;
   } catch {
-    // Not actually JSON — leave the string alone.
+    // Not actually JSON - leave the string alone.
     return undefined;
   }
 }
@@ -107,7 +107,7 @@ function decodeIfSchemaSays(value: string, schema: JsonSchemaish | undefined): u
  * stringifies a nested one, and until now only the top level was repaired, so
  * `{"config": {"tags": "[\"a\"]"}}` reached the client still broken. Each
  * level re-applies the identical gate, so depth adds reach without loosening
- * the rule — a newly decoded value is itself walked, since a doubly-wrapped
+ * the rule - a newly decoded value is itself walked, since a doubly-wrapped
  * payload is exactly what the models that do this produce.
  */
 function repairInPlace(node: unknown, schema: JsonSchemaish | undefined): boolean {
@@ -142,7 +142,7 @@ function repairInPlace(node: unknown, schema: JsonSchemaish | undefined): boolea
   const obj = node as Record<string, unknown>;
   for (const [key, value] of Object.entries(obj)) {
     const child = props[key];
-    if (!child) continue; // Unknown key — no schema to justify a change.
+    if (!child) continue; // Unknown key - no schema to justify a change.
     if (typeof value === 'string') {
       const decoded = decodeIfSchemaSays(value, child);
       if (decoded !== undefined) {
@@ -161,7 +161,7 @@ function repairInPlace(node: unknown, schema: JsonSchemaish | undefined): boolea
 /**
  * Recursively remove the given keys from a JSON-Schema-ish value. Used to drop
  * fields a provider's tool-schema validator rejects with a 400 even though they
- * carry no meaning for the call — Cohere's compat endpoint, for instance, 400s
+ * carry no meaning for the call - Cohere's compat endpoint, for instance, 400s
  * on `additionalProperties` (and `$schema`), which strict clients like opencode
  * and continue.dev routinely emit. Returns a NEW value; never mutates the input
  * (tools are shared across the fallback chain, so an in-place strip on one

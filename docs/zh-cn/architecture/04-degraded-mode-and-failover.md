@@ -1,6 +1,6 @@
 [English](../../en/architecture/04-degraded-mode-and-failover.md) · **简体中文**
 
-# 降级模式与回退 —— 深度剖析
+# 降级模式与回退 -- 深度剖析
 
 > **源码：** `server/src/services/degradation.ts`、`server/src/lib/fallback-loop.ts`、`server/src/routes/proxy.ts`、`server/src/services/ratelimit.ts`
 
@@ -47,10 +47,10 @@ interface HealthSnapshot {
 
 | 方面 | 正常 | 降级 |
 |--------|--------|----------|
-| 老虎机探索 | 10% 底线（若开启） | **禁用** —— 只按剩余健康提供方的评分顺序 |
+| 老虎机探索 | 10% 底线（若开启） | **禁用** -- 只按剩余健康提供方的评分顺序 |
 | 路由器 | 路由时查 `isDegraded()` | 同 |
 | 健康端点 | 报 `state: 'normal'` | 报 `state: 'degraded', degradedAt: timestamp` |
-| 日志 | — | 进入时 `console.warn`，退出时 `console.log` |
+| 日志 | - | 进入时 `console.warn`，退出时 `console.log` |
 
 ### API
 
@@ -69,7 +69,7 @@ resetDegradationState()                  // 测试、启动后重探
 
 - **默认**：45 s（`FALLBACK_TIME_BUDGET_MS`、设置 `fallback_time_budget_ms`、0 = 关）。
 - **在每次重试**前检查（尝试 ≥ 1）。尝试 0 总跑；尝试 1 总跑（这样尝试 0 即使耗尽整个预算，回退在结构上也是可能的）。
-- **耗尽渲染**：`timedOut: true` + `budgetMs` 在 `ExhaustionContext` 里 → 消息含 "stopped early: retry time budget 45s exceeded — one failover hop is always allowed, and past that the budget stops starting further retries and cancels an attempt still waiting on its first byte"。
+- **耗尽渲染**：`timedOut: true` + `budgetMs` 在 `ExhaustionContext` 里 → 消息含 "stopped early: retry time budget 45s exceeded - one failover hop is always allowed, and past that the budget stops starting further retries and cancels an attempt still waiting on its first byte"。
 
 ### 对冲（中止在途）
 
@@ -84,7 +84,7 @@ abortInFlight: () => hedgeAbort.abort(newHedgeAbortError())
 
 - `HedgeAbortError` 是**非提供方健康** → 无冷却、无惩罚、无限额学习。
 - 渲染 `timedOut` 耗尽（不是提供方失败）。
-- 流式面在首字节/头部刷出时调 `ctx.disarmHedge()` —— 过了那点答案已经在路上了，杀掉它只会为了无回退收益而截断健康响应。
+- 流式面在首字节/头部刷出时调 `ctx.disarmHedge()` -- 过了那点答案已经在路上了，杀掉它只会为了无回退收益而截断健康响应。
 
 ### 断路器护栏
 
@@ -99,7 +99,7 @@ abortInFlight: () => hedgeAbort.abort(newHedgeAbortError())
 
 ### 目的
 
-`X-Fallback-Trail` 告诉**哪些跳烧了、为什么**。`X-Fallback-Detail` 加上**烧了多久**——这是智能体重构不出来的部分（一个 40s 响应：一家卡了 39s vs 四家快速失败）。
+`X-Fallback-Trail` 告诉**哪些跳烧了、为什么**。`X-Fallback-Detail` 加上**烧了多久**--这是智能体重构不出来的部分（一个 40s 响应：一家卡了 39s vs 四家快速失败）。
 
 ### 格式
 
@@ -203,9 +203,9 @@ interface FallbackHooks {
 | 429 瞬时 (rpm/tpm) | 密钥 | 90s / 阶梯 | 轻 (1) | 是 |
 | 5xx / 超时 / 传输 | **平台** (#788) | 90s / 阶梯 | 轻 (1) | 否 |
 | 空补全（推理） | 密钥 | 豁免（连击 ≤3） | 否 | 否 |
-| 上下文过大 | 模型 | — | 否 | 否 |
-| response_format 被忽略 | 模型 | — | 否 | 否 |
-| 无效工具参数 | 密钥 | — | 否 | 否 |
+| 上下文过大 | 模型 | - | 否 | 否 |
+| response_format 被忽略 | 模型 | - | 否 | 否 |
+| 无效工具参数 | 密钥 | - | 否 | 否 |
 
 ### 模型级失败停用 (#806)
 
@@ -220,20 +220,20 @@ interface FallbackHooks {
 ### 提供方级跳过 (#788)
 
 - 5xx / 超时 / 传输 / 降级 → `skipPlatforms.add(platform)`。
-- 整个提供方在本请求里排除——循环直接跳到下一提供方，而不是按密钥烧一跳。
+- 整个提供方在本请求里排除--循环直接跳到下一提供方，而不是按密钥烧一跳。
 
 ### 耗尽渲染 (exhaustedRetryError)
 
 **按尝试类最具体优先聚合：**
 
-1. **全 auth** → 502 `provider_error` (`provider_authentication_failed`) —— 区别于限流，从不怪客户端密钥。
+1. **全 auth** → 502 `provider_error` (`provider_authentication_failed`) -- 区别于限流，从不怪客户端密钥。
 2. **全 context_too_large** → 413 `invalid_request_error` (`context_length_exceeded`)。
 3. **全 model_not_found** → 404 `invalid_request_error` (`model_not_found`)。
 4. **末尾错误 = degraded 400**（NVIDIA NIM） → 503 `service_unavailable` (`provider_degraded`)。
-5. **全 provider_bad_request**（或无 trail 的旧形态且末尾错误 = 提供方坏请求） → 400 `invalid_request_error` (`provider_rejected_request`)。混合 trail 中仅部分为坏请求时落到第 8 条——末尾一跳的形态不再单独归咎于调用方请求（#1239）。
+5. **全 provider_bad_request**（或无 trail 的旧形态且末尾错误 = 提供方坏请求） → 400 `invalid_request_error` (`provider_rejected_request`)。混合 trail 中仅部分为坏请求时落到第 8 条--末尾一跳的形态不再单独归咎于调用方请求（#1239）。
 6. **断路器** → 503 `service_unavailable` (`upstream_unhealthy`)。
 7. **全 UNAVAILABLE_UNTIL_KNOWN_TIME**（rate_limited、daily_quota_exhausted、out_of_credits、forbidden） → 429 `rate_limit_error` 带 `retryAtMs` + `Retry-After`。
-8. **混合/其他** → 502 `provider_error` (`upstream_failed`) —— 绝不 500（那是我们的 bug）。
+8. **混合/其他** → 502 `provider_error` (`upstream_failed`) -- 绝不 500（那是我们的 bug）。
 
 **同步耗尽（零尝试）：** `routingExhaustionBody(routeErr)` 把 diagnostics 映射到同一分类：
 - 全配置（无密钥、无提供方） → 503 `no_providers_configured`

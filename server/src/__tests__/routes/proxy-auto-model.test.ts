@@ -120,7 +120,7 @@ describe('Virtual "auto" model', () => {
     expect(filteredModels.length).toBeGreaterThan(0);
     expect(filteredModels.every((m: any) => m.available === true)).toBe(true);
 
-    // The unfiltered list is strictly larger — the keyless models reappear.
+    // The unfiltered list is strictly larger - the keyless models reappear.
     const all = await request(app, 'GET', '/v1/models', undefined, authHeaders());
     const allModels = all.body.data.filter((m: any) => m.id !== 'auto');
     expect(allModels.length).toBeGreaterThan(filteredModels.length);

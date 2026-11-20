@@ -1,10 +1,10 @@
 **English** · [简体中文](../../zh-cn/glossary/OVERVIEW.md)
 
-# Glossary Domain — Overview & File Index
+# Glossary Domain - Overview & File Index
 
 ## Scope
 
-This domain holds the glossary of recurring terms used across the FreeLLMAPI documentation — routing headroom, quota windows, pool keys, bandit concepts, and product-specific identifiers. It is the single place to define terms that otherwise scatter across `architecture/`, `env/`, and `fallback/` deep-dives.
+This domain holds the glossary of recurring terms used across the FreeLLMAPI documentation - routing headroom, quota windows, pool keys, bandit concepts, and product-specific identifiers. It is the single place to define terms that otherwise scatter across `architecture/`, `env/`, and `fallback/` deep-dives.
 
 ## File Index
 

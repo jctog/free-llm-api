@@ -81,7 +81,7 @@ export function createProxyRateLimiter(rpmLimit?: number) {
 //
 // This is a flood guard, not the brute-force guard: dashboard login already has
 // its own per-email lockout (routes/auth.ts), and the one admin endpoint that
-// verifies a password — GET /api/keys/export — gets its own much tighter
+// verifies a password - GET /api/keys/export - gets its own much tighter
 // limiter mounted in app.ts. The broad cap therefore has to clear normal
 // dashboard traffic with room to spare. Opening the dashboard fans out across
 // keys, health, models, analytics, settings and profiles, and several of those

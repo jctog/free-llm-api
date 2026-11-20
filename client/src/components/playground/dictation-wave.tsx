@@ -5,7 +5,7 @@ import { barHeights, WAVE_BAR_COUNT } from '@/lib/waveform'
 // AnalyserNode on the recording stream, sampled once per frame onto a canvas
 // so 31 bars never touch React state. The canvas paints in currentColor, so
 // it follows the text colour in both themes. Everything is torn down on
-// unmount — the analyser, the context, the frame loop.
+// unmount - the analyser, the context, the frame loop.
 
 export function DictationWave({ stream, className }: { stream: MediaStream; className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)

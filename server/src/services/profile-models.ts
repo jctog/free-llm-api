@@ -10,7 +10,7 @@ export function getActiveProfileId(db: Db): number | null {
 }
 
 // Only chains that still opt in to the backfill (#895). A chain created with
-// `empty: true` — or one the operator later switched the flag off on — holds
+// `empty: true` - or one the operator later switched the flag off on - holds
 // exactly what was put in it, and a catalog sync must not quietly refill it.
 const AUTO_INCLUDING_PROFILES_SQL = `
   SELECT id FROM profiles WHERE auto_include_new_models = 1 ORDER BY id ASC

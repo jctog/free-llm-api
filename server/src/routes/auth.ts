@@ -35,7 +35,7 @@ const signupSchema = z.object({
 // Logging in is a lookup, not a registration, so the address is matched rather
 // than validated. The desktop app seeds its hidden account as
 // `desktop@localhost` (server-host.ts), which has no TLD and so could never
-// satisfy z.email() — every login attempt on a desktop install failed with
+// satisfy z.email() - every login attempt on a desktop install failed with
 // "A valid email is required" before the password was even checked, including
 // the reset-then-sign-in-from-a-browser route suggested in #807. Length rules
 // belong to signup too: an account created under an older policy must still be
@@ -119,7 +119,7 @@ function isLoopbackAddress(value: string | undefined): boolean {
 // docs/en/troubleshooting/01-common-issues.md on TRUST_PROXY) puts Caddy/nginx/
 // Traefik on the SAME host: every request then arrives from 127.0.0.1 and the
 // socket test is true for the entire internet. So a forwarded hop can never
-// grant locality, but it can withdraw it — exactly the treatment the Ollama
+// grant locality, but it can withdraw it - exactly the treatment the Ollama
 // open-loopback mode already applies in routes/ollama.ts:25-38.
 function isLoopbackRemote(req: Request): boolean {
   if (!isLoopbackAddress(req.socket.remoteAddress)) return false;
@@ -260,7 +260,7 @@ authRouter.post('/login', (req: Request, res: Response) => {
   const user = verifyCredentials(email, password);
   if (!user) {
     recordFailure(email);
-    // Same message whether the email exists or not — don't leak which.
+    // Same message whether the email exists or not - don't leak which.
     res.status(401).json({ error: { message: 'Invalid email or password', type: 'authentication_error' } });
     return;
   }

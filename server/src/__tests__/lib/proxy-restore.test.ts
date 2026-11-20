@@ -20,7 +20,7 @@ import {
 // fallback when neither the env nor the DB configures one. A developer
 // machine can genuinely have that set (macOS System Settings → Proxies),
 // which fails every "no proxy configured" case below for the same reason
-// clearProxyEnv() exists — the ambient system, not the code under test.
+// clearProxyEnv() exists - the ambient system, not the code under test.
 // '' parses as "no proxy" in every platform branch, so the suite sees a
 // clean machine regardless of the host's system settings.
 vi.mock('node:child_process', async (importOriginal) => ({
@@ -29,7 +29,7 @@ vi.mock('node:child_process', async (importOriginal) => ({
 }));
 
 // #949: the desktop embedder builds the app without server/src/index.ts, so
-// the proxy state it starts with is whatever the module defaults are — an
+// the proxy state it starts with is whatever the module defaults are - an
 // empty URL. The URL the user saved through PUT /api/settings/proxy sits in
 // the settings table, ignored until the next re-save. restoreProxySettings()
 // is the single hydration step both entry points now call after initDb; this
@@ -199,7 +199,7 @@ describe('restoreProxySettings + the standard env fallbacks (#353 x #949)', () =
     expect(getProxyUrl()).toBe('http://all:1');
   });
 
-  it('reads the lower-case spelling too — the one curl/git users actually export', () => {
+  it('reads the lower-case spelling too - the one curl/git users actually export', () => {
     freshDb();
     process.env.https_proxy = 'http://lower:8443';
 

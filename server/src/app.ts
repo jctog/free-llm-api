@@ -110,7 +110,7 @@ export function createApp(config?: Config) {
   // rejected before helmet, CORS, body parsing, auth or routing. Opt-in: off
   // until ALLOWED_HOSTS lists a hostname, then loopback + those names pass
   // ('*' keeps it off). Must sit
-  // above everything below — its whole value is answering before any state or
+  // above everything below - its whole value is answering before any state or
   // credential is touched.
   app.use(createHostGuard(cfg.allowedHosts));
   const allowedCorsOrigins = new Set([
@@ -134,7 +134,7 @@ export function createApp(config?: Config) {
   // way, for the same reason: both only apply to secure contexts, so on a
   // plain-HTTP LAN origin the browser discards them and logs a console error
   // instead (#734). They are re-added per request whenever the origin is one
-  // the browser trusts — HTTPS, or loopback, which covers desktop/localhost.
+  // the browser trusts - HTTPS, or loopback, which covers desktop/localhost.
   app.use(helmet({
     contentSecurityPolicy: {
       directives: {
@@ -142,7 +142,7 @@ export function createApp(config?: Config) {
         // index.html carries one inline <script>: the theme/direction bootstrap
         // that has to run before first paint, or every dark-mode user gets a
         // white flash. 'self' alone blocks it on every install, HTTPS included,
-        // so it is allowed by hash — nothing else inline is. INLINE_BOOTSTRAP_SHA
+        // so it is allowed by hash - nothing else inline is. INLINE_BOOTSTRAP_SHA
         // is asserted against the real index.html in csp-inline-bootstrap.test.ts,
         // so editing that script fails the suite instead of silently breaking it.
         scriptSrc: ["'self'", INLINE_BOOTSTRAP_SHA],
@@ -192,13 +192,13 @@ export function createApp(config?: Config) {
       callback(null, !origin || allowedCorsOrigins.has(origin));
     },
   }));
-  // Two-tier JSON body limits. The LLM wire surfaces carry vision payloads —
+  // Two-tier JSON body limits. The LLM wire surfaces carry vision payloads -
   // base64 images inline in the body (~33% inflation; google.ts forwards
-  // images up to 8MB apiece) — so a single-screenshot Codex turn can clear
+  // images up to 8MB apiece) - so a single-screenshot Codex turn can clear
   // 10MB and used to 413 HERE, before auth/routing: no fallback attempt, no
   // analytics row, just an opaque 'request entity too large'. Those surfaces
   // get the larger REQUEST_BODY_LIMIT_MB ceiling (default 25MB); everything
-  // else keeps the #200 limit — code agents (OpenCode, AionUI, Qwen Code)
+  // else keeps the #200 limit - code agents (OpenCode, AionUI, Qwen Code)
   // ship very large system prompts + tool schemas + repo context, and 1mb cut
   // their sessions off mid-conversation. body-parser skips requests whose
   // body was already parsed, so the second parser only sees what the first
@@ -226,7 +226,7 @@ export function createApp(config?: Config) {
   );
   app.use(ollamaRouter);
 
-  // Admin API — all routes share an IP-based rate limiter to throttle
+  // Admin API - all routes share an IP-based rate limiter to throttle
   // brute-force attempts (auth, key export, etc). The limiter is mounted
   // broadly on /api; requireAuth gates each sub-path individually so that
   // unauthenticated endpoints under /api (like /api/ping) are not blocked.
@@ -234,7 +234,7 @@ export function createApp(config?: Config) {
   // This MUST stay above the /api/auth mount below. Express runs middleware in
   // registration order, so while the limiter was registered after authRouter,
   // authRouter answered and ended /api/auth/login before the limiter was ever
-  // entered — leaving the password endpoint this comment names as the reason
+  // entered - leaving the password endpoint this comment names as the reason
   // for the limiter as the one /api path it did not cover. It still sits below
   // the Ollama /api/* mount above, which carries its own proxy limiter.
   const adminRateLimiter = createAdminRateLimiter();
@@ -253,14 +253,14 @@ export function createApp(config?: Config) {
 
   app.use('/api/keys', requireAuth, keysRouter);
   // Per-client key management (#411). Dashboard-session gated like the rest of
-  // /api — the profile keys it mints authenticate only the /v1 inference
+  // /api - the profile keys it mints authenticate only the /v1 inference
   // surface and are never valid here.
   app.use('/api/client-profiles', requireAuth, clientProfilesRouter);
   // Saved Playground transcripts (the chat sidebar). Dashboard-session gated
   // like every other admin route; the unified /v1 key does not open it.
   app.use('/api/conversations', requireAuth, conversationsRouter);
   // Server logs for the dashboard viewer. Dashboard-session gated like the rest
-  // of /api — these lines name providers, models and key ids, so the unified
+  // of /api - these lines name providers, models and key ids, so the unified
   // /v1 key must not open them.
   app.use('/api/logs', requireAuth, logsRouter);
   app.use('/api/models', requireAuth, modelsRouter);
@@ -283,7 +283,7 @@ export function createApp(config?: Config) {
   app.use('/api/compression', requireAuth, compressionRouter);
   app.use('/api/update', requireAuth, updateRouter);
 
-  // Health check — no auth required.
+  // Health check - no auth required.
   app.get('/api/ping', (_req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
   });
@@ -326,7 +326,7 @@ export function createApp(config?: Config) {
 
   // MCP server (Model Context Protocol over stateless Streamable HTTP):
   // gateway introspection tools for MCP-speaking agents. Unified-key auth,
-  // like /v1 — NOT behind the dashboard session gate. Same per-IP limiter as
+  // like /v1 - NOT behind the dashboard session gate. Same per-IP limiter as
   // /v1 (its own bucket): both surfaces guard the same unified key, so an
   // unauthenticated brute-force must not get a free throttle-less oracle here.
   app.use('/mcp', createProxyRateLimiter(cfg.proxyRateLimitRpm));
@@ -350,8 +350,8 @@ export function createApp(config?: Config) {
     const clientDist = cfg.clientDist
       ? path.resolve(cfg.clientDist)
       : path.resolve(__dirname, '../../client/dist');
-    // Gzip the dashboard bundle (1+ MB uncompressed). Mounted HERE — after
-    // every API/proxy router and the error handler — so it only wraps the
+    // Gzip the dashboard bundle (1+ MB uncompressed). Mounted HERE - after
+    // every API/proxy router and the error handler - so it only wraps the
     // static-file / SPA-fallback responses below it. The /v1 and /api handlers
     // end their responses upstream and never fall through to this middleware,
     // so nothing (crucially the /v1/chat/completions SSE streams) gets buffered
@@ -372,7 +372,7 @@ export function createApp(config?: Config) {
         );
       },
     }));
-    // SPA fallback — serve index.html for non-API routes
+    // SPA fallback - serve index.html for non-API routes
     app.use((req, res, next) => {
       if (req.path.startsWith('/api/') || req.path.startsWith('/v1/') || req.path.startsWith('/v1beta/')) {
         next();

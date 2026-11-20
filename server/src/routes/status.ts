@@ -16,7 +16,7 @@ import {
 import { openapiSpec } from '../docs/openapi.js';
 
 // Machine-readable operational endpoints for meta-gateways / orchestrators that
-// run this proxy as one upstream lane (LibreChat, LiteLLM Proxy, OmniRoute — see
+// run this proxy as one upstream lane (LibreChat, LiteLLM Proxy, OmniRoute - see
 // #433). `/livez` and `/readyz` are unauthenticated so a load balancer can probe
 // them; `/v1/providers` sits behind the same unified API key as the rest of /v1.
 
@@ -24,7 +24,7 @@ export const statusRouter = Router();
 export const providersRouter = Router();
 
 // Cheap "is the SQLite connection answering" probe. getDb() throws before initDb
-// has run, and prepare/get throws if the handle is closed — either way the
+// has run, and prepare/get throws if the handle is closed - either way the
 // server is not serviceable, which is exactly the /livez and /readyz 503 signal.
 function isDbReachable(): boolean {
   try {
@@ -35,7 +35,7 @@ function isDbReachable(): boolean {
   }
 }
 
-// GET /livez — liveness. 200 when the process can serve at all: the DB answers
+// GET /livez - liveness. 200 when the process can serve at all: the DB answers
 // and the encryption key is loaded (without it, stored provider keys can't be
 // decrypted, so no request can be routed). 503 otherwise.
 statusRouter.get('/livez', (_req: Request, res: Response) => {
@@ -57,7 +57,7 @@ statusRouter.get('/livez', (_req: Request, res: Response) => {
   res.json({ status: 'ok', version, uptime_s });
 });
 
-// GET /readyz — readiness. 200 when at least one upstream is serviceable right
+// GET /readyz - readiness. 200 when at least one upstream is serviceable right
 // now (an enabled key whose status is healthy or not-yet-probed). 503 with a
 // machine-readable reason otherwise, so a meta-gateway can skip this instance
 // instead of eating a failover on every call.
@@ -105,7 +105,7 @@ interface PlatformKeyRow {
   error_keys: number;
 }
 
-// GET /v1/providers — aggregate per-upstream state a smart router needs to
+// GET /v1/providers - aggregate per-upstream state a smart router needs to
 // decide "route here or skip", with no key material and no PII. Behind the
 // unified API key (like the rest of /v1); mounted before the proxy rate limiter
 // so status polling doesn't draw down a caller's request budget.
@@ -213,7 +213,7 @@ providersRouter.get('/providers', (req: Request, res: Response) => {
   res.json({ providers, counts });
 });
 
-// GET /quota-forecast — per-pool daily headroom + low-balance warning (#1104).
+// GET /quota-forecast - per-pool daily headroom + low-balance warning (#1104).
 // Machine-readable sibling of /v1/providers: same unified-key auth, no key
 // material, no PII. A meta-gateway can gate its own routing on `low_balance`
 // BEFORE spending a request that would 429, and know `seconds_until_reset` for

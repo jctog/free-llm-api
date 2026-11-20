@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Optional Claude Code hook. Off unless you wire it up yourself — see the
+// Optional Claude Code hook. Off unless you wire it up yourself - see the
 // "Commit checklist hook" section of CONTRIBUTING.md.
 //
 // When wired as a PreToolUse hook on Bash and the agent is about to run
@@ -8,7 +8,7 @@
 // instruction to verify them. It does not block the command.
 //
 // CONTRIBUTING.md is parsed at fire time, so the checklist is whatever the
-// file says right now — nothing to regenerate, nothing to go stale.
+// file says right now - nothing to regenerate, nothing to go stale.
 //
 // See what the agent would be told, without wiring anything up:
 //   node .claude/hooks/contributing-check.mjs --preview
@@ -35,7 +35,7 @@ export const EXCLUDED_SECTIONS = new Set([
 // A paragraph counts as a rule if it is phrased as one.
 const DIRECTIVE = /\b(must|should|do not|don't|never|always|before opening a pr|run\b.*\bbefore)\b/i;
 
-// Commands worth re-running before a commit — setup commands (`npm install`,
+// Commands worth re-running before a commit - setup commands (`npm install`,
 // `npm run dev`) are not.
 const VERIFICATION_COMMAND = /\b(test|build|check:|lint|migration)\b/;
 
@@ -62,7 +62,7 @@ export function watchedSubcommand(command) {
       }
       if (token.startsWith('-')) continue;
       if (WATCHED_SUBCOMMANDS.has(token)) return token;
-      break; // some other subcommand — not our business
+      break; // some other subcommand - not our business
     }
   }
   return null;
@@ -203,7 +203,7 @@ export function extract(markdown) {
 
 export function buildContext(action, { rules, commands }) {
   // Extraction yielding nothing means CONTRIBUTING.md was restructured past
-  // what this parser understands. Say so — silence would read as "all clear".
+  // what this parser understands. Say so - silence would read as "all clear".
   if (!rules.length) {
     return `Could not extract any rules from CONTRIBUTING.md before this \`git ${action}\`. Read CONTRIBUTING.md directly and verify the change against it, and mention that .claude/hooks/contributing-check.mjs needs its parser updated.`;
   }
@@ -216,7 +216,7 @@ export function buildContext(action, { rules, commands }) {
 
   const lines = [
     `Before this \`git ${action}\`, verify the repo's own contribution rules have been followed.`,
-    'These are extracted verbatim from CONTRIBUTING.md — treat each one as a check against the actual diff, not a formality.',
+    'These are extracted verbatim from CONTRIBUTING.md - treat each one as a check against the actual diff, not a formality.',
     '',
   ];
   for (const [section, texts] of bySection) {
@@ -230,7 +230,7 @@ export function buildContext(action, { rules, commands }) {
     lines.push('');
   }
   lines.push(
-    'Check the staged/committed diff against each rule. If a rule applies and is unmet — no test for a behavior change, unrelated reformatting in the diff, an unverified provider limit or model id, a translation key added to en.json only, an edit to an already-applied migration — fix it or say so explicitly before proceeding. If every applicable rule is satisfied, continue without comment.',
+    'Check the staged/committed diff against each rule. If a rule applies and is unmet - no test for a behavior change, unrelated reformatting in the diff, an unverified provider limit or model id, a translation key added to en.json only, an edit to an already-applied migration - fix it or say so explicitly before proceeding. If every applicable rule is satisfied, continue without comment.',
   );
   return lines.join('\n');
 }
@@ -265,7 +265,7 @@ function main(argv) {
   try {
     command = JSON.parse(readFileSync(0, 'utf8'))?.tool_input?.command ?? '';
   } catch {
-    command = ''; // not hook input, or no stdin — nothing to check
+    command = ''; // not hook input, or no stdin - nothing to check
   }
 
   const action = watchedSubcommand(command);

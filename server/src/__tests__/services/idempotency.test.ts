@@ -92,7 +92,7 @@ describe('idempotency', () => {
     storeIdempotencyResult(keyHash, fpB, 200, sampleBody('answer B'));
     // After a new successful completion with a DIFFERENT fingerprint, the old
     // claim is replaced: the new fingerprint replays, and the old fingerprint
-    // (same key, different content) is a conflict — not a silent wrong answer.
+    // (same key, different content) is a conflict - not a silent wrong answer.
     expect(lookupIdempotencyReplay(keyHash, fpB).kind).toBe('replay');
     expect(lookupIdempotencyReplay(keyHash, fpA).kind).toBe('conflict');
   });

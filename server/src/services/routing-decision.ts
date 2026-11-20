@@ -177,7 +177,7 @@ export async function chooseRoutingPreset(messages: readonly ChatMessage[], sign
   const settings = getDecisionRoutingSettings();
   // minProbability is part of the key: a pick cached under one threshold must
   // not answer a request judged under another (a low_confidence Balanced held
-  // for the TTL would silently undo a threshold lowering — the whole point of
+  // for the TTL would silently undo a threshold lowering - the whole point of
   // which is to let the model's own pick through).
   const key = createHash('sha256')
     .update(`${settings.model}\0${settings.minProbability}\0${state}`)

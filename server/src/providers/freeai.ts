@@ -16,7 +16,7 @@ export function freeAiAudioUrl(body: unknown): string | null {
 
 /** TTS-only until the mismatched chat aliases are resolved. Free accounts share
  * 30K tokens/day and 1K API requests/month (no card; verified 2026-10-11).
- * https://free.ai/api/ — model rows belong only in the signed catalog. */
+ * https://free.ai/api/ - model rows belong only in the signed catalog. */
 export class FreeAiProvider extends BaseProvider {
   readonly platform = 'freeai' as const;
   readonly name = 'Free.ai';

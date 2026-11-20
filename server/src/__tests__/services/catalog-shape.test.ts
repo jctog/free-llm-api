@@ -4,7 +4,7 @@ import { catalogShapeProblems } from '../../services/catalog-sync.js';
 // #1566: a rejected catalog payload used to fail as one opaque line
 // ("catalog payload has unexpected shape") with no indication of WHICH
 // section broke. catalogShapeProblems names the path. These tests lock the
-// diagnostics AND — via the differential pass below — that the new check
+// diagnostics AND - via the differential pass below - that the new check
 // accepts/rejects exactly what the original &&-chain did.
 
 // The original validator, verbatim from before #1566, kept here ONLY as the
@@ -159,7 +159,7 @@ describe('catalogShapeProblems (#1566 diagnostics)', () => {
   it('rejects non-object payloads', () => {
     expect(catalogShapeProblems(null).length).toBe(1);
     expect(catalogShapeProblems('html error page').length).toBe(1);
-    // [] passes `typeof === 'object'` but fails the required-field checks —
+    // [] passes `typeof === 'object'` but fails the required-field checks -
     // same verdict as the old chain (its version check rejected it).
     expect(catalogShapeProblems([]).length).toBeGreaterThan(0);
   });

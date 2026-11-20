@@ -8,7 +8,7 @@ import { mintDashboardToken, isGatedApiPath } from '../helpers/auth.js';
 
 // #488: a relay's model list changes weekly, so the endpoint's own /models
 // route is the source of truth for what the USER's key can reach. This is
-// discovery on the operator's OWN endpoint with the operator's OWN key — it
+// discovery on the operator's OWN endpoint with the operator's OWN key - it
 // never touches the published provider catalog.
 
 const ENDPOINT = 'http://127.0.0.1:18099/v1';
@@ -511,7 +511,7 @@ describe('median seeding for custom models (#488)', () => {
     const keyId = customKeyIds()[0]!;
     getDb().prepare("UPDATE models SET supports_tools = 0 WHERE platform = 'custom' AND model_id = 'relay-a'").run();
 
-    // All three probes answer plain text with finish_reason 'stop' — no tool
+    // All three probes answer plain text with finish_reason 'stop' - no tool
     // evidence anywhere, so supports_tools must stay 0 (only positive writes).
     const mock = vi.fn(async (url: string) => {
       if (String(url).endsWith('/models')) {
@@ -537,7 +537,7 @@ describe('median seeding for custom models (#488)', () => {
 
     // The ping answers instantly; both capability probes are deliberately slow.
     // `latencyMs` measures the endpoint's per-request speed and feeds the
-    // bandit's speed axis, so it must reflect the PING alone — timing it after
+    // bandit's speed axis, so it must reflect the PING alone - timing it after
     // the capability probes would report roughly three round trips.
     const SLOW_PROBE_MS = 300;
     const mock = vi.fn(async (url: string, init?: RequestInit) => {
@@ -566,7 +566,7 @@ describe('median seeding for custom models (#488)', () => {
   });
 
   it('scopes the supports_tools write-back to the probed endpoint key pool (#874)', async () => {
-    // Two unrelated custom endpoints that happen to serve the SAME model id —
+    // Two unrelated custom endpoints that happen to serve the SAME model id -
     // a very common case with OpenAI-compatible relays. Probing one must not
     // claim tool support for the other.
     const OTHER_ENDPOINT = 'http://127.0.0.1:18098/v1';
@@ -625,7 +625,7 @@ describe('median seeding for custom models (#488)', () => {
 
     const { status, body } = await post(app, '/api/keys/custom/probe', { keyId });
 
-    // The ping is still the sample-of-record — a broken capability probe never
+    // The ping is still the sample-of-record - a broken capability probe never
     // fails the probe as a whole.
     expect(status).toBe(200);
     expect(body.modelId).toBe('relay-a');

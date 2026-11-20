@@ -5,8 +5,8 @@ import { describe, expect, it } from 'vitest'
 
 // #891: the capability-tier tooltip claimed an unrecognized tier "scores 0" and
 // is "never auto-routed". tierValue does floor an unknown label at 0, but that
-// is one term of a weighted sum — combineScore gives intelligence 0.25 under
-// the default preset — so no model is ever excluded from routing, and custom
+// is one term of a weighted sum - combineScore gives intelligence 0.25 under
+// the default preset - so no model is ever excluded from routing, and custom
 // models are deliberately seeded at the catalog median tier so they route
 // (custom-model-seed.ts, #488). The reworded tooltip drops the score claim
 // entirely, which is also what makes a stale locale detectable here: every
@@ -62,8 +62,8 @@ describe('capability-tier hint', () => {
       for (const key of KEYS) {
         const value = strings[key]
         expect(value, `${locale}.${key}`).toBeTruthy()
-        // The tier names stay in Latin in every locale — they are the values
-        // the picker shows — so an untranslated string is not merely "contains
+        // The tier names stay in Latin in every locale - they are the values
+        // the picker shows - so an untranslated string is not merely "contains
         // English", it is byte-identical to en.json.
         if (locale !== 'en') {
           expect(value, `${locale}.${key} is still the English string`)

@@ -3,14 +3,14 @@
 // The release workflow already publishes what the updater reads: latest.yml,
 // latest-mac.yml and latest-linux.yml next to the installers, plus the mac
 // .zip (Squirrel.Mac installs from the zip, never the dmg). This module owns the
-// whole lifecycle — check, download, install — and hands one serialisable state
+// whole lifecycle - check, download, install - and hands one serialisable state
 // to every surface that shows it: the dashboard (through the preload bridge),
 // the tray menu and the native dialogs.
 //
 // Nothing is downloaded or installed without the user asking, with one
 // exception they opt into: when the dashboard's "Check for updates
 // automatically" setting is on, a found update is fetched in the background and
-// the app says it is ready. It still never restarts on its own — agents are
+// the app says it is ready. It still never restarts on its own - agents are
 // routed through this process, and a restart drops their in-flight requests.
 import { app, BrowserWindow, dialog, Notification, shell } from 'electron';
 import electronUpdater from 'electron-updater';
@@ -214,7 +214,7 @@ export async function downloadUpdate(): Promise<UpdateState> {
   setState({ phase: 'downloading', version: state.version, percent: 0 });
   try {
     // The proxy step gets the same bound as the check (it can stall the same
-    // way); the download itself is intentionally unbounded — a full installer
+    // way); the download itself is intentionally unbounded - a full installer
     // on a slow link legitimately takes minutes.
     await withCheckTimeout(useAppProxy(), 'applying the update proxy');
     await autoUpdater.downloadUpdate();

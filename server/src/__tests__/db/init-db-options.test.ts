@@ -32,7 +32,7 @@ describe('initDb ensureDir option', () => {
     vi.resetModules();
     const { initDb } = await import('../../db/index.js');
 
-    // A fake on-disk path — existsSync returns false so mkdirSync should be called.
+    // A fake on-disk path - existsSync returns false so mkdirSync should be called.
     const dir = path.join('/tmp', `freeapi-missing-${Date.now()}-${Math.random()}`);
     const dbPath = path.join(dir, 'freeapi.db');
     try { initDb(dbPath, { ensureDir: true }); } catch { /* DB open will fail */ }

@@ -51,7 +51,7 @@ function writeCodexConfig(home: string, toml: string): void {
 
 describe('managed settings locations', () => {
   // The reported paths are built with the TARGET platform's separator, but the
-  // test's own `path.join` uses the HOST's — on Windows the two disagree, so
+  // test's own `path.join` uses the HOST's - on Windows the two disagree, so
   // compare separator-normalized forms (#1392).
   function asPosix(p: string): string {
     return p.replaceAll('\\', '/');
@@ -73,7 +73,7 @@ describe('managed settings locations', () => {
     // The drop-in files are merged alphabetically ON TOP of the base, so the
     // alphabetically LAST one wins and the base loses to all of them. Getting
     // this order backwards would name the wrong layer as effective for a
-    // fleet-managed install — the exact confident-wrong answer doctor exists
+    // fleet-managed install - the exact confident-wrong answer doctor exists
     // to prevent.
     const dir = tempHome();
     fs.mkdirSync(path.join(dir, 'managed-settings.d'));
@@ -241,7 +241,7 @@ describe('verdicts', () => {
     expect(report.gateway?.version).toBe('0.7.0');
   });
 
-  it('elsewhere — not routed — when the tool reaches a different host that is alive', async () => {
+  it('elsewhere - not routed - when the tool reaches a different host that is alive', async () => {
     // The regression this guards: reporting `routed` for a Claude Code pinned
     // to api.anthropic.com, because it does reach what it is configured to
     // reach. That is a confident wrong answer to the question being asked.
@@ -276,14 +276,14 @@ describe('verdicts', () => {
     });
 
     expect(report.verdict).toBe('shadowed');
-    // The settings block is what wins, so it is what shadows — and the shell
+    // The settings block is what wins, so it is what shadows - and the shell
     // export the user probably set by hand is what got overridden.
     expect(report.shadowedBy).toContain('settings.json');
     expect(report.detail).toContain('process environment');
     expect(report.detail).toContain('https://api.anthropic.com');
   });
 
-  it('degraded — not routed, not elsewhere — when this gateway says it cannot serve', async () => {
+  it('degraded - not routed, not elsewhere - when this gateway says it cannot serve', async () => {
     // Routing is correct and the gateway is unmistakably this one; it is sick.
     // `routed` would send the user hunting through config that is already
     // right, and `elsewhere` would blame a service that is not there.

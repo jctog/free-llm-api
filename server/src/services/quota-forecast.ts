@@ -6,8 +6,8 @@ import type { Platform } from '@freellmapi/shared/types.js';
 // Daily free-tier balance forecast (#1104). Free tiers reset on a per-account
 // window (usually UTC midnight) and the only way to know how much headroom is
 // left before that reset is to read what the providers themselves reported.
-// This is a pure aggregation over `getQuotaStateForKeys()` — no new tables, no
-// extra probes — so it costs nothing beyond the query the health view already
+// This is a pure aggregation over `getQuotaStateForKeys()` - no new tables, no
+// extra probes - so it costs nothing beyond the query the health view already
 // runs.
 //
 // The value it adds over the raw rows: one number per platform that answers
@@ -45,8 +45,8 @@ export interface QuotaForecastEntry {
   remaining_pct: number | null;
   /** ISO timestamp of the window reset, or null when never observed. */
   reset_at: string | null;
-  /** True when less than LOW_BALANCE_THRESHOLD of the window remains, or —
-   *  on a window of at least LOW_BALANCE_ABSOLUTE_MIN_LIMIT — fewer than
+  /** True when less than LOW_BALANCE_THRESHOLD of the window remains, or -
+   *  on a window of at least LOW_BALANCE_ABSOLUTE_MIN_LIMIT - fewer than
    *  LOW_BALANCE_ABSOLUTE requests do. Always false when remaining is unknown. */
   low_balance: boolean;
   /** Seconds until reset_at, or null when reset_at is unknown/expired. */
@@ -109,7 +109,7 @@ export function estimateExhaustionAt(
   const ms = now + secondsFromNow * 1000;
   // Never project past the natural window reset: if the window expires first,
   // we have headroom even if the request count would otherwise exhaust the
-  // pool — the quota header tracks the remaining *before* reset, not absolute
+  // pool - the quota header tracks the remaining *before* reset, not absolute
   // spending.
   const resetMs = resetAt ? new Date(resetAt).getTime() : Infinity;
   if (!Number.isFinite(ms) || Number.isNaN(resetMs) || ms >= resetMs || ms <= now) return null;
@@ -120,7 +120,7 @@ function entryFor(row: QuotaObservationView, ratePerMin: number | null, now: num
   // Only request-based windows are predictable from quota headers; token pools
   // reset semantics vary too much across providers to forecast honestly.
   if (row.metric !== 'requests') return null;
-  // Without a known limit there is no window to forecast — nothing to warn on.
+  // Without a known limit there is no window to forecast - nothing to warn on.
   if (typeof row.limit !== 'number' || row.limit <= 0) return null;
 
   const limit = row.limit;
@@ -196,7 +196,7 @@ export function getQuotaForecast(
     }
   }
   return [...byKey.values()].sort((a, b) => {
-    // Low-balance pools first — the ones the caller most needs to see.
+    // Low-balance pools first - the ones the caller most needs to see.
     if (a.low_balance !== b.low_balance) return a.low_balance ? -1 : 1;
     return a.platform.localeCompare(b.platform);
   });

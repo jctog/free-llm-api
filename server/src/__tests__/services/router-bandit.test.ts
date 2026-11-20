@@ -127,7 +127,7 @@ describe('bandit router', () => {
     expect(counts['good'] ?? 0).toBeGreaterThan((counts['flaky'] ?? 0) * 3);
   });
 
-  it('explores unseen models — both get picked at least once', () => {
+  it('explores unseen models - both get picked at least once', () => {
     addModel({ platform: 'google', modelId: 'x', name: 'X', intelligenceRank: 3, sizeLabel: 'Large', budget: '~50M', priority: 1 });
     addModel({ platform: 'groq', modelId: 'y', name: 'Y', intelligenceRank: 3, sizeLabel: 'Large', budget: '~50M', priority: 2 });
     setRoutingStrategy('balanced');
@@ -142,7 +142,7 @@ describe('bandit router', () => {
     // vision-c are both unmeasured, but only vision-c can serve a vision
     // request. The pre-fix router put BOTH in the explore pool, so ~half the
     // explore draws promoted text-b, which the main loop's vision gate then
-    // skipped — a wasted draw. With the pool filtered, vision-c receives
+    // skipped - a wasted draw. With the pool filtered, vision-c receives
     // every explore draw (~10% of requests); unfixed it got only ~5%, far
     // below the 150/2000 bound asserted here.
     setExploreEnabled(true);
@@ -218,7 +218,7 @@ describe('bandit router', () => {
 
   it('getRoutingScores returns a per-axis breakdown ranked by score', () => {
     // The peak-hours adjustment (#760) is opt-in and off here, so the preset is
-    // returned verbatim — but the clock is still pinned to off-peak noon so this
+    // returned verbatim - but the clock is still pinned to off-peak noon so this
     // assertion can never depend on when CI happens to run.
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-01-15T12:00:00'));
@@ -259,7 +259,7 @@ describe('bandit router', () => {
 
   it('leaves preset weights alone while the peak adjustment is off (#760)', () => {
     vi.useFakeTimers();
-    // 20:00 UTC — squarely inside the default 18:00–06:00 window.
+    // 20:00 UTC - squarely inside the default 18:00–06:00 window.
     vi.setSystemTime(new Date('2026-01-15T20:00:00Z'));
     try {
       addModel({ platform: 'google', modelId: 'm1', name: 'M1', intelligenceRank: 1, sizeLabel: 'Frontier', budget: '~50M', priority: 1 });
@@ -289,7 +289,7 @@ describe('bandit router', () => {
       expect(inside.peakAdjusted).toBe(true);
       expect(inside.weights).toEqual({ reliability: 0.65, speed: 0.1, intelligence: 0.25 });
 
-      // Same instant, same flag — only the timezone moves it out of the window.
+      // Same instant, same flag - only the timezone moves it out of the window.
       setPeakHoursConfig({ timezone: 'UTC' });
       const outside = getRoutingScores();
       expect(outside.peakAdjusted).toBe(false);
@@ -359,7 +359,7 @@ describe('bandit router', () => {
 
   it('exploration never probes a model zeroed out via MODEL_ROUTING_OVERRIDES (#738)', () => {
     // A weight-0 model never wins a bandit draw, so it never accumulates the
-    // samples that would graduate it out of the unmeasured pool — without the
+    // samples that would graduate it out of the unmeasured pool - without the
     // probe exclusion it would receive explore traffic forever.
     addModel({ platform: 'google', modelId: 'old', name: 'Old', intelligenceRank: 1, sizeLabel: 'Frontier', budget: '~50M', priority: 1 });
     addModel({ platform: 'groq', modelId: 'new', name: 'New', intelligenceRank: 1, sizeLabel: 'Frontier', budget: '~50M', priority: 2 });
@@ -428,7 +428,7 @@ describe('bandit router', () => {
 
   it('local failures override a capped community prior (#685)', () => {
     // 5 local successes vs 95 failures: even with a glowing (capped) community
-    // record the displayed reliability must fall well below the prior's rate —
+    // record the displayed reliability must fall well below the prior's rate -
     // a huge upstream count can no longer pin a locally-broken model at ~0.98.
     addModel({ platform: 'google', modelId: 'g1', name: 'G1', intelligenceRank: 1, sizeLabel: 'Frontier', budget: '~50M', priority: 1 });
     addHistory('google', 'g1', { successes: 5, failures: 95 });
@@ -462,7 +462,7 @@ describe('bandit router', () => {
 
   it('a saved intelligence_rank override visibly moves the axis (#673)', () => {
     // Regression for #673. A realistic chain: a Frontier flagship on top, a
-    // Medium model at the bottom, and the Large model in between — the one the
+    // Medium model at the bottom, and the Large model in between - the one the
     // user re-ranks from 6 to 1 ("this is actually the best model I have").
     //
     // Under the old LINEAR rank term that edit shifted the Large model's
@@ -599,7 +599,7 @@ describe('reliability floor filter', () => {
     expect(survivors).toContain('fresh'); // under-observed → never dropped
   });
 
-  it('never empties the whole chain — falls back to the full chain when all fail the floor', () => {
+  it('never empties the whole chain - falls back to the full chain when all fail the floor', () => {
     addModel({ platform: 'google', modelId: 'a', name: 'A', intelligenceRank: 3, sizeLabel: 'Large', budget: '~50M', priority: 1 });
     addModel({ platform: 'groq', modelId: 'b', name: 'B', intelligenceRank: 3, sizeLabel: 'Large', budget: '~50M', priority: 2 });
     addHistory('google', 'a', { successes: 1, failures: 60 }); // below 0.99

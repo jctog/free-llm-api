@@ -251,8 +251,8 @@ settingsRouter.delete('/url-tokens/:id', (req: Request, res: Response) => {
 });
 
 // The unified output-token cap as the dashboard sees it. `mode` is exactly
-// what PUT accepts back — 'off', 'auto', or the integer itself, never a
-// stringified number — so a read/modify/write round trip can't 400 on its own
+// what PUT accepts back - 'off', 'auto', or the integer itself, never a
+// stringified number - so a read/modify/write round trip can't 400 on its own
 // output. A stored value that unifiedMaxTokensCap() doesn't understand is
 // reported as 'off', which is how it actually behaves (effectiveCap null).
 function outputLimitState(): { mode: 'off' | 'auto' | number; effectiveCap: number | null; autoValue: number } {
@@ -300,7 +300,7 @@ settingsRouter.get('/min-context-window', (_req: Request, res: Response) => {
   try {
     value = getSetting(MIN_CONTEXT_WINDOW_SETTING) || 'off';
   } catch {
-    // DB not ready — report the disabled default rather than failing.
+    // DB not ready - report the disabled default rather than failing.
   }
   res.json({ value, presets: MIN_CONTEXT_WINDOW_PRESETS });
 });
@@ -314,7 +314,7 @@ const minContextWindowPutSchema = z.object({
 
 // Update the min-context-window pool floor. Upward-compatible by construction:
 // '128k' keeps every model at or above 128k (including 512k and 1M). Takes
-// effect on the next routed request — no restart.
+// effect on the next routed request - no restart.
 settingsRouter.put('/min-context-window', (req: Request, res: Response) => {
   const parsed = minContextWindowPutSchema.safeParse(req.body);
   if (!parsed.success) {
@@ -353,7 +353,7 @@ const headroomPutSchema = z.object({
 });
 
 // Update the headroom guardrail thresholds. null clears a threshold back to the
-// scoring.ts default. Takes effect on the next request — no restart needed.
+// scoring.ts default. Takes effect on the next request - no restart needed.
 settingsRouter.put('/headroom', (req: Request, res: Response) => {
   const parsed = headroomPutSchema.safeParse(req.body);
   if (!parsed.success) {
@@ -385,7 +385,7 @@ const taskWeightSharePutSchema = z.object({
 });
 
 // Update the task-type weight share. null clears back to the default. Takes
-// effect on the next request — no restart needed.
+// effect on the next request - no restart needed.
 settingsRouter.put('/task-weight-share', (req: Request, res: Response) => {
   const parsed = taskWeightSharePutSchema.safeParse(req.body);
   if (!parsed.success || parsed.data.share === undefined) {
@@ -413,7 +413,7 @@ const minReliabilityFloorPutSchema = z.object({
 });
 
 // Update the minimum reliability floor. null clears back to disabled. Takes
-// effect on the next request — no restart needed.
+// effect on the next request - no restart needed.
 settingsRouter.put('/min-reliability-floor', (req: Request, res: Response) => {
   const parsed = minReliabilityFloorPutSchema.safeParse(req.body);
   if (!parsed.success || parsed.data.floor === undefined) {
@@ -440,7 +440,7 @@ const providerMomentAttributionPutSchema = z.object({
   enabled: z.boolean(),
 });
 
-// Update the failure-attribution toggle. Takes effect immediately — the
+// Update the failure-attribution toggle. Takes effect immediately - the
 // setter force-refreshes the stats cache that bakes the filter in.
 settingsRouter.put('/provider-moment-attribution', (req: Request, res: Response) => {
   const parsed = providerMomentAttributionPutSchema.safeParse(req.body);
@@ -453,7 +453,7 @@ settingsRouter.put('/provider-moment-attribution', (req: Request, res: Response)
 });
 
 // Update the guardrails. Partial: send just the knob you want to change.
-// Takes effect on the next request — no restart needed. 0 disables a knob.
+// Takes effect on the next request - no restart needed. 0 disables a knob.
 settingsRouter.put('/guardrails', (req: Request, res: Response) => {
   const parsed = guardrailsPutSchema.safeParse(req.body);
   if (!parsed.success) {
@@ -510,7 +510,7 @@ function proxyUrlError(proxyUrl: string, proxyMode: ProxyMode): string | undefin
       return 'Proxy URL must use http, https, socks5, socks5h, socks4, or socks4a scheme';
     }
   } catch {
-    return 'Invalid proxy URL — must be a valid URL like socks5://host:port';
+    return 'Invalid proxy URL - must be a valid URL like socks5://host:port';
   }
   return undefined;
 }
@@ -533,8 +533,8 @@ settingsRouter.put('/proxy', (req: Request, res: Response) => {
   }
 
   // Only validate the URL when this request actually decides it. A body that
-  // touches neither proxyUrl nor proxyMode — the enabled switch, the
-  // per-platform bypass list — must not 400 on an ambient ALL_PROXY value the
+  // touches neither proxyUrl nor proxyMode - the enabled switch, the
+  // per-platform bypass list - must not 400 on an ambient ALL_PROXY value the
   // dashboard never set and cannot fix (getProxyUrl may return exactly that).
   if (typeof proxyUrl === 'string' || proxyMode !== undefined) {
     const nextMode = proxyMode ?? getProxyMode();
@@ -593,14 +593,14 @@ settingsRouter.put('/proxy', (req: Request, res: Response) => {
 
 // Test proxy connectivity WITHOUT saving (#863). The dashboard's "Test" button
 // sends the DRAFT value; an empty body falls back to the saved proxy URL. The
-// probe never persists anything — it only builds a throwaway dispatcher and
+// probe never persists anything - it only builds a throwaway dispatcher and
 // measures a round trip through the (draft or saved) proxy.
 /**
  * What the proxy probe should call.
  *
  * The question the Test button answers is "can outbound traffic from THIS
  * install reach the upstreams it routes to", so the target is the /models
- * endpoint of a provider the operator actually holds an enabled key for —
+ * endpoint of a provider the operator actually holds an enabled key for -
  * preferring one that is not bypassing the proxy, since a bypassed platform
  * would not exercise the proxy at all. PROXY_TEST_URL overrides everything for
  * air-gapped or mirror-only deployments. With no keys at all there is no

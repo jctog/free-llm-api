@@ -5,7 +5,7 @@ import { initDb, getDb, getUnifiedApiKey } from '../../db/index.js';
 import { mintDashboardToken, isGatedApiPath } from '../helpers/auth.js';
 
 // #1102 follow-up: `execution_id` must be on EVERY JSON body the chat
-// completion route sends — success and error alike — or clients cannot rely on
+// completion route sends - success and error alike - or clients cannot rely on
 // it. A field that is present only when the call succeeds is worse than no
 // field: the failing case is exactly the one you need the id for. It always
 // carries the same value as the X-Request-ID header. Streamed frames are
@@ -131,7 +131,7 @@ describe('execution_id on chat completion bodies (#1102)', () => {
     expect(body.execution_id).toBe(headers.get('x-request-id'));
   });
 
-  it('streamed frames stay clean — the id rides the header, not every chunk', async () => {
+  it('streamed frames stay clean - the id rides the header, not every chunk', async () => {
     mockUpstream({ stream: true });
     const r = await request(app, 'POST', '/v1/chat/completions', {
       model: 'groq/compound-mini', stream: true, messages: [{ role: 'user', content: 'hello' }],

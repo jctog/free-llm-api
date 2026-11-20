@@ -180,7 +180,7 @@ describe('Analytics API', () => {
     const summary = await request(app, '/api/analytics/summary?range=24h');
     expect(summary.status).toBe(200);
     expect(summary.body.totalRequests).toBe(3); // the canceled request happened
-    expect(summary.body.successRate).toBe(50);  // 1 of 2 decided — not 1 of 3
+    expect(summary.body.successRate).toBe(50);  // 1 of 2 decided - not 1 of 3
 
     const byModel = await request(app, '/api/analytics/by-model?range=24h');
     expect(byModel.body[0].requests).toBe(3);
@@ -393,7 +393,7 @@ describe('Analytics API', () => {
       insertRaw({ keyId: 1, status: 'success', inputTokens: 10, outputTokens: 5, latencyMs: 100, createdAt: '2026-05-29 11:00:00' });
       insertRaw({ keyId: 1, status: 'success', inputTokens: 20, outputTokens: 7, latencyMs: 200, createdAt: '2026-05-29 11:01:00' });
       insertRaw({ keyId: 1, status: 'error', inputTokens: 0, outputTokens: 0, latencyMs: 300, error: 'boom', createdAt: '2026-05-29 11:02:00' });
-      // key 99 (deleted — no api_keys row): 2 rows.
+      // key 99 (deleted - no api_keys row): 2 rows.
       insertRaw({ keyId: 99, status: 'success', latencyMs: 50, createdAt: '2026-05-29 11:03:00' });
       insertRaw({ keyId: 99, status: 'success', latencyMs: 50, createdAt: '2026-05-29 11:04:00' });
       // key_id NULL row must be excluded entirely.
@@ -456,9 +456,9 @@ describe('Analytics API', () => {
 
   describe('90d range', () => {
     it('accepts range=90d across the analytics endpoints', async () => {
-      insertRequest('2026-02-01 12:00:00'); // ~117 days ago — outside 90d
-      insertRequest('2026-03-15 12:00:00'); // ~75 days ago — inside 90d
-      insertRequest('2026-05-29 11:00:00'); // today — inside 90d
+      insertRequest('2026-02-01 12:00:00'); // ~117 days ago - outside 90d
+      insertRequest('2026-03-15 12:00:00'); // ~75 days ago - inside 90d
+      insertRequest('2026-05-29 11:00:00'); // today - inside 90d
 
       const summary = await request(app, '/api/analytics/summary?range=90d');
       expect(summary.status).toBe(200);
@@ -478,7 +478,7 @@ describe('Analytics API', () => {
     });
   });
 
-  // #889 — custom endpoints all share the platform id 'custom', so the
+  // #889 - custom endpoints all share the platform id 'custom', so the
   // provider breakdown must split them by the serving key's base_url (the
   // canonical endpoint identity) instead of collapsing every relay into one
   // "custom" row. These tests seed two distinct custom endpoints (plus a
@@ -522,7 +522,7 @@ describe('Analytics API', () => {
       const { status, body } = await request(app, '/api/analytics/by-platform?range=24h');
       expect(status).toBe(200);
 
-      // Two distinct custom rows — NOT a single collapsed "custom" row.
+      // Two distinct custom rows - NOT a single collapsed "custom" row.
       const customRows = body.filter((r: any) => r.platform === 'custom');
       expect(customRows).toHaveLength(2);
 
@@ -541,7 +541,7 @@ describe('Analytics API', () => {
     });
 
     it('groups a pooled endpoint (several keys, one base_url) into a single row', async () => {
-      // Two credentials for the SAME relay — the pooling case (#619). They
+      // Two credentials for the SAME relay - the pooling case (#619). They
       // share a base_url, so they must read as ONE endpoint, not two rows.
       insertCustomKey(1, 'https://relay-a.example.com/v1', 'Relay A key 1');
       insertCustomKey(2, 'https://relay-a.example.com/v1', 'Relay A key 2');
@@ -626,7 +626,7 @@ describe('Analytics API', () => {
     it('tells two endpoints on the same host apart', async () => {
       // One gateway, two tenants. Host alone is the same string for both, so a
       // host-only display name would show two identical rows the operator
-      // cannot match to an endpoint — the #889 collision one level down.
+      // cannot match to an endpoint - the #889 collision one level down.
       insertCustomKey(1, 'https://gw.example.com/tenant-a/v1', 'Tenant A');
       insertCustomKey(2, 'https://gw.example.com/tenant-b/v1', 'Tenant B');
 
@@ -640,7 +640,7 @@ describe('Analytics API', () => {
       expect(rows).toHaveLength(2);
       const names = rows.map((r: any) => r.endpoint).sort();
       expect(names).toEqual(['gw.example.com/tenant-a/v1', 'gw.example.com/tenant-b/v1']);
-      // Distinct names, one per endpoint — not 'gw.example.com' twice.
+      // Distinct names, one per endpoint - not 'gw.example.com' twice.
       expect(new Set(names).size).toBe(2);
     });
 
@@ -756,7 +756,7 @@ describe('Analytics API', () => {
       expect(status).toBe(200);
 
       const custom = body.byPlatform.filter((r: any) => r.platform === 'custom');
-      // Two bars, one per relay — not one 'custom' bar of 3 that names no
+      // Two bars, one per relay - not one 'custom' bar of 3 that names no
       // endpoint the operator could go and fix.
       expect(custom).toHaveLength(2);
       const a = custom.find((r: any) => r.providerId === 'custom:https://relay-a.example.com/v1');
@@ -795,7 +795,7 @@ describe('Analytics API', () => {
 
     it('filters recent calls by the bare "custom" id to the orphaned rows only', async () => {
       // The bare id is what /by-platform emits for rows whose endpoint is
-      // unknown. Selecting it must return exactly the rows that row counted —
+      // unknown. Selecting it must return exactly the rows that row counted -
       // not every relay's traffic, which would contradict the count clicked.
       insertCustomKey(1, 'https://relay-a.example.com/v1', 'Relay A');
 
@@ -835,7 +835,7 @@ describe('Analytics API', () => {
 
       // A 'custom:' id carries an arbitrary base_url, but it is applied as a
       // BOUND parameter (never interpolated), so a hostile-looking value is
-      // safe — it simply matches nothing.
+      // safe - it simply matches nothing.
       const customNoMatch = await request(app, '/api/analytics/requests?range=24h&provider=' + encodeURIComponent('custom:https://relay-a.example.com/v1; DROP TABLE requests'));
       expect(customNoMatch.status).toBe(200);
       expect(customNoMatch.body.total).toBe(0);
@@ -849,8 +849,8 @@ describe('Analytics API', () => {
 
     it('takes the FIRST value of a repeated provider/status param instead of crashing', async () => {
       // Express hands back an ARRAY for a repeated query param. The provider
-      // shape check then dies on `provider.startsWith(...)` — arrays have no
-      // such method — and the dashboard's recent-calls panel shows a 500 for
+      // shape check then dies on `provider.startsWith(...)` - arrays have no
+      // such method - and the dashboard's recent-calls panel shows a 500 for
       // what is at worst a client bug. Same contract as routes/logs.ts:
       // first value wins, repeated params are not two filters.
       const dup = await request(app, '/api/analytics/requests?range=24h&provider=groq&provider=openrouter');

@@ -639,7 +639,7 @@ describe('response cache', () => {
       const keys = ['p1', 'p2', 'p3'].map(t =>
         computeCacheKey({ model: 'auto', messages: [msg('user', t)] }));
       // Stored with the cap raised so all three reach the table, then reloaded
-      // under the cap — the load path has its own bound, separate from the LRU.
+      // under the cap - the load path has its own bound, separate from the LRU.
       process.env.RESPONSE_CACHE_MAX_ENTRIES = '10';
       keys.forEach((k, i) => store(k, `v${i}`, base + i));
       __flushPersistenceForTests();

@@ -48,13 +48,13 @@ describe('runRerank', () => {
   it('never picks a key scoped to a different model (#657)', async () => {
     const fetch = vi.spyOn(global, 'fetch').mockResolvedValue(ok([{ index: 0, relevance_score: 1 }]));
     mockRows = [
-      // scoped to a chat model — must be skipped for the default rerank model
+      // scoped to a chat model - must be skipped for the default rerank model
       { id: 4, platform: 'cohere', base_url: null, encrypted_key: 'e', iv: 'i', auth_tag: 'a', model_scope_json: '["llama-3.1-8b"]' },
       { id: 5, platform: 'cohere', base_url: null, encrypted_key: 'e', iv: 'i', auth_tag: 'a' },
     ];
     const out = await runRerank(undefined, 'q', ['a']);
     expect(out.platform).toBe('cohere');
-    // Only the unscoped key may be called — one attempt, not two.
+    // Only the unscoped key may be called - one attempt, not two.
     expect(fetch).toHaveBeenCalledTimes(1);
   });
 

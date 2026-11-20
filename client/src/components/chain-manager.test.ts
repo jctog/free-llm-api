@@ -7,7 +7,7 @@ import { describe, expect, it } from 'vitest'
 // (#960/#895). Two things about it are easy to break by accident and are
 // pinned here: every string it renders has to exist in all 60 locales, and it
 // has to stay a secondary panel on the Fallback page rather than growing into
-// its own nav entry — one chain is all most installs ever use.
+// its own nav entry - one chain is all most installs ever use.
 const here = path.dirname(fileURLToPath(import.meta.url))
 const localeDir = path.join(here, '../i18n/locales')
 const source = readFileSync(path.join(here, 'chain-manager.tsx'), 'utf8')
@@ -60,7 +60,7 @@ describe('chain manager', () => {
     expect(fallbackPage).toContain("import { ChainManager } from '@/components/chain-manager'")
     expect(fallbackPage).toContain('<ChainManager />')
     // Collapsed by default and remembered per browser, like the penalty
-    // inspector next to it — the routing table is what the page is for.
+    // inspector next to it - the routing table is what the page is for.
     expect(source).toContain('aria-expanded')
     expect(source).toMatch(/stored === null \? true : stored === '1'/)
     // No route or nav destination of its own.
@@ -77,8 +77,8 @@ describe('chain manager', () => {
 
   it('renames a chain through the profile update endpoint, with a confirm (#1179)', () => {
     // A chain's name is the address clients route with (auto:<name>), so the
-    // rename goes through PUT /api/profiles/:id — where the creation rules
-    // are enforced and protected chains get a real 403 — and must warn about
+    // rename goes through PUT /api/profiles/:id - where the creation rules
+    // are enforced and protected chains get a real 403 - and must warn about
     // in-flight auto:<old-name> callers before committing.
     expect(source).toMatch(/api\/profiles\/\$\{profileId\}`, \{ method: 'PUT'/)
     expect(source).not.toContain('/rename')

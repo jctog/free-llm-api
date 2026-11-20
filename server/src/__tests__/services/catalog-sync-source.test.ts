@@ -9,7 +9,7 @@ import { mintDashboardToken, isGatedApiPath } from '../helpers/auth.js';
 // models.source is the provenance column that lets catalog-sync tell its own
 // rows apart from rows the user created. These tests pin the whole contract:
 // every write path stamps source honestly, sync still prunes stale catalog
-// rows, and sync never deletes or clobbers a source='user' row — including on
+// rows, and sync never deletes or clobbers a source='user' row - including on
 // a platform:model_id collision, where the user row wins and the catalog
 // entry is skipped.
 

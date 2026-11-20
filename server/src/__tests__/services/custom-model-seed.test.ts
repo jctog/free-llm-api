@@ -3,7 +3,7 @@ import { initDb, getDb } from '../../db/index.js';
 import { customModelSeed, FALLBACK_CUSTOM_SEED } from '../../services/custom-model-seed.js';
 
 // #488: a freshly registered custom model used to land at size_label 'Custom'
-// (tier 0 — below every catalog tier) and rank 50, so the bandit's intelligence
+// (tier 0 - below every catalog tier) and rank 50, so the bandit's intelligence
 // axis scored it 0 and it lost every auto-route. Seed at the catalog MEDIAN
 // instead: we know nothing about the model, so start it in the middle.
 

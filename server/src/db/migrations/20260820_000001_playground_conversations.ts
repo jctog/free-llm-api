@@ -5,7 +5,7 @@
 //
 // The Playground transcript used to live only in React state: a reload, a
 // navigation away, or the "Clear" button threw the whole conversation away.
-// This table gives it a home. One row per conversation, no user scoping —
+// This table gives it a home. One row per conversation, no user scoping -
 // this is a single-user dashboard, and the existing `sessions` table is the
 // dashboard LOGIN session (token_hash -> user), nothing to do with chats.
 //

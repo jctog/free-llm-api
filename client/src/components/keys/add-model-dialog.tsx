@@ -22,12 +22,12 @@ export interface AddModelDialogProps {
   initialKeyId?: number
 }
 
-// Register a model by typing its id — for a relay whose /models list is
+// Register a model by typing its id - for a relay whose /models list is
 // incomplete, or a native provider row the catalog does not carry yet. Moved
 // here from the Providers page when that page was folded into Keys.
 export function AddModelDialog(props: AddModelDialogProps) {
   // Remount the form whenever the dialog (re)opens or its target changes, so
-  // every field starts from the props — no effect-driven reset needed.
+  // every field starts from the props - no effect-driven reset needed.
   const formKey = `${props.open ? 'open' : 'closed'}:${props.initialPlatform ?? ''}:${props.initialKeyId ?? ''}`
   return <AddModelForm key={formKey} {...props} />
 }

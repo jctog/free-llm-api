@@ -47,7 +47,7 @@ export const RING_CAPACITY = 1000;
 export const PRELOAD_LIMIT = 200;
 
 /** A single log line is a diagnostic, not a document. Long provider bodies and
- *  multi-frame stacks are truncated rather than dropped — the head is where the
+ *  multi-frame stacks are truncated rather than dropped - the head is where the
  *  information is. */
 export const MAX_MESSAGE_LENGTH = 6000;
 
@@ -58,7 +58,7 @@ const TRUNCATION_SUFFIX = '… [truncated]';
  * the request path, so an idle server has no retention at all; a log storm (a
  * dead stdout feeding the safety net, a provider erroring in a tight loop) must
  * not be able to grow it without bound. Lines over the cap still reach the live
- * ring — only the row is skipped — and the next line after the window rolls
+ * ring - only the row is skipped - and the next line after the window rolls
  * writes one summary row saying how many were dropped.
  */
 export const PERSIST_MAX_PER_SECOND = 50;
@@ -69,7 +69,7 @@ const PERSIST_WINDOW_MS = 1000;
  * front of us emits access-log lines, those polls would be the loudest thing in
  * the buffer and every poll would manufacture the content of the next one.
  *
- * NOTE (verified in this tree): this server installs NO access-log middleware —
+ * NOTE (verified in this tree): this server installs NO access-log middleware -
  * there is no morgan/pino/winston dependency and no request-logging middleware
  * in app.ts or src/middleware/. So today nothing matches this filter. It stays
  * because the cost is one regex test at ingest and the failure mode it prevents
@@ -103,15 +103,15 @@ let seeded = false;
 
 /**
  * Set while providerLog() mirrors its message to stdout. The console it calls
- * is the WRAPPED one (that is the point — the redaction wrapper must still see
+ * is the WRAPPED one (that is the point - the redaction wrapper must still see
  * it), and the wrapper taps back into this module, so without this flag every
  * structured event would land in the ring twice.
  */
 let mirroring = false;
 
 /**
- * Set while a persist is in flight. The DB layer can log — a busy-timeout
- * warning, a permissions warning from db/index.ts — and that log would come
+ * Set while a persist is in flight. The DB layer can log - a busy-timeout
+ * warning, a permissions warning from db/index.ts - and that log would come
  * straight back here and try to insert again. The ring still accepts the line;
  * only the write is skipped.
  */
@@ -178,8 +178,8 @@ export interface RecordLogOptions extends ServerLogMeta {
 }
 
 /**
- * The single ingest point. Everything — the console tap, providerLog, the boot
- * preload's live siblings — arrives here, which is what makes the noise filter,
+ * The single ingest point. Everything - the console tap, providerLog, the boot
+ * preload's live siblings - arrives here, which is what makes the noise filter,
  * the length cap and the id counter impossible to bypass.
  *
  * Returns the stored entry, or null when the line was filtered out.
@@ -258,7 +258,7 @@ export function recordConsoleLine(level: ServerLogLevel, args: readonly unknown[
   try {
     recordLogEntry({ level, message: formatLogArgs(args) });
   } catch {
-    // Swallowed on purpose — see above.
+    // Swallowed on purpose - see above.
   }
 }
 
@@ -270,7 +270,7 @@ export function recordConsoleLine(level: ServerLogLevel, args: readonly unknown[
  * The message is passed through redactSecrets() here because the recording
  * bypasses the console wrapper; the stdout mirror goes through the wrapped
  * console (already-redacted text is idempotent under a second pass) so that a
- * restored console — tests, an embedder — still sees the line.
+ * restored console - tests, an embedder - still sees the line.
  */
 export function providerLog(
   level: ServerLogLevel,
@@ -356,7 +356,7 @@ function persist(entry: ServerLogEntry): void {
   } catch {
     // Best effort by design: the table may not exist yet (a boot line racing
     // the migration), the DB may be locked, the disk may be full. None of that
-    // is worth losing the live line — or crashing the caller — over.
+    // is worth losing the live line - or crashing the caller - over.
   } finally {
     persisting = false;
   }
@@ -381,7 +381,7 @@ function rowToEntry(row: ServerLogRow): ServerLogEntry {
 
 /**
  * Seed the id counter and preload recent history. Idempotent, and safe to call
- * before the database exists — it simply stays unseeded and tries again on the
+ * before the database exists - it simply stays unseeded and tries again on the
  * next line, which is what covers the handful of boot logs emitted between
  * installLogRedaction() and initDb().
  *
@@ -455,7 +455,7 @@ export interface LogQuery {
   levels?: ServerLogLevel[];
   q?: string;
   provider?: string;
-  /** Exact structured event name (e.g. 'key_invalid') — same contract as
+  /** Exact structured event name (e.g. 'key_invalid') - same contract as
    *  provider: case-sensitive equality against entry.event. */
   event?: string;
   sinceId?: number;
@@ -471,7 +471,7 @@ export function clampLimit(raw: number | undefined): number {
   return Math.min(MAX_LIMIT, Math.max(MIN_LIMIT, Math.trunc(raw)));
 }
 
-/** Highest id handed out so far — what the client sends back as sinceId, even
+/** Highest id handed out so far - what the client sends back as sinceId, even
  *  when every entry it would have matched was filtered away. */
 export function currentMaxId(): number {
   ensureSeeded();

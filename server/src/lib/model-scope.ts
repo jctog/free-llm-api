@@ -1,7 +1,7 @@
 // Per-key model scope (#657). api_keys.model_scope_json is an optional JSON
 // array of model_id strings: relay stations hand out keys that only serve one
-// model group, so a scoped key must never be picked — or counted as a usable
-// sibling — for a model outside its list. NULL means "unscoped": the key
+// model group, so a scoped key must never be picked - or counted as a usable
+// sibling - for a model outside its list. NULL means "unscoped": the key
 // serves every model of its platform, which is the pre-#657 behavior.
 
 /**

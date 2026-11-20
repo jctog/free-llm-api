@@ -3,7 +3,7 @@
 // The form holds every numeric field as a string (that is what an <input>
 // gives us), so parsing, validation and the PATCH body are pure functions
 // here instead of being spread through the component. The bounds mirror the
-// Zod schema on PATCH /api/models/:id — the server stays the authority, this
+// Zod schema on PATCH /api/models/:id - the server stays the authority, this
 // just keeps the Save button honest.
 
 // The fields the model page can override, in the order they are rendered.
@@ -19,7 +19,7 @@ export const RANK_MIN = 1
 export const RANK_MAX = 1000
 
 // The catalog capability tiers the router scores intelligence with. Anything
-// outside these ('' or a custom label) scores as tier 0 — "unknown", not worse
+// outside these ('' or a custom label) scores as tier 0 - "unknown", not worse
 // than the real tiers. Kept in sync with server/src/services/scoring.ts.
 export const SIZE_LABELS = ['Frontier', 'Large', 'Medium', 'Small'] as const
 export type SizeLabel = typeof SIZE_LABELS[number]
@@ -41,7 +41,7 @@ export type ModelSettingsForm = {
   fallbackEnabled: boolean
 }
 
-// The PATCH body — only the fields the user actually changed. Every field the
+// The PATCH body - only the fields the user actually changed. Every field the
 // server receives for a catalog model is recorded as a durable override, so
 // sending untouched fields would silently freeze them at today's catalog value.
 // The limits and the context window accept null ("no limit"), which is stored
@@ -155,7 +155,7 @@ export function reviewModelSettings(
   }
 
   // Only the changed fields go on the wire. An unparseable field reads as
-  // `undefined`, which never equals the stored value — so a typo leaves the row
+  // `undefined`, which never equals the stored value - so a typo leaves the row
   // dirty with Save disabled, rather than silently looking saved.
   const changes: ModelSettingsPatch = {}
   if (displayName !== model.displayName) changes.displayName = displayName

@@ -1,12 +1,12 @@
 **English** · [简体中文](../../zh-cn/architecture/01-routing-and-bandit-scoring.md)
 
-# Routing & Bandit Scoring — Deep Dive
+# Routing & Bandit Scoring - Deep Dive
 
 > **Source:** `server/src/services/router.ts`, `server/src/services/scoring.ts`
 
 ## 1. Overview
 
-The router picks one `(platform, model, key)` tuple per request. It is **not** a round-robin load balancer — it is a contextual bandit that continuously learns from live traffic and composes a score from five normalized axes:
+The router picks one `(platform, model, key)` tuple per request. It is **not** a round-robin load balancer - it is a contextual bandit that continuously learns from live traffic and composes a score from five normalized axes:
 
 ```
 base = w_rel·reliability + w_speed·speed + w_intel·intelligence   (convex, weights sum to 1)
@@ -23,20 +23,20 @@ Key selection within a model is driven by a separate `KeySelectionStrategy` (`au
 
 The enabled fallback chain is sourced from (in priority order):
 
-1. **Active profile** (`profile_models` table) — named chains like "coding", "long-context"
-2. **Global fallback_config** — the legacy single chain
-3. **Global sort alias** — `auto:smart`, `auto:fast`, `auto:cheap`, `auto:reliable`, `auto:balanced`
-4. **Profile by name** — `auto:my-profile`
+1. **Active profile** (`profile_models` table) - named chains like "coding", "long-context"
+2. **Global fallback_config** - the legacy single chain
+3. **Global sort alias** - `auto:smart`, `auto:fast`, `auto:cheap`, `auto:reliable`, `auto:balanced`
+4. **Profile by name** - `auto:my-profile`
 
 Each chain row (`ChainRow`) carries the model's static metadata (`intelligence_rank`, `size_label`, `monthly_token_budget`, rate limits, capabilities) plus the **endpoint scope** (`''` for catalog models, `'custom:<base_url_hash>'` for relay models) so two relays serving the same `model_id` are scored and rate-limited independently.
 
 ### Match Tier
 
-`match_tier` (default 0) is an **outer sort key** that dominates score. It is set only when a unified group resolves a slug (e.g. `glm-4.7`) to a provider-specific model (`z-ai/glm-4.5`) — the matched member gets `match_tier = 1` so it never outranks a direct `model_id` request, no matter how good its live numbers are.
+`match_tier` (default 0) is an **outer sort key** that dominates score. It is set only when a unified group resolves a slug (e.g. `glm-4.7`) to a provider-specific model (`z-ai/glm-4.5`) - the matched member gets `match_tier = 1` so it never outranks a direct `model_id` request, no matter how good its live numbers are.
 
 ---
 
-## 3. Reliability — Thompson Sampling with Beta Posteriors
+## 3. Reliability - Thompson Sampling with Beta Posteriors
 
 ### Decay-Weighted Samples
 
@@ -55,8 +55,8 @@ Each request bucket (grouped by `platform, model_id, key_id, age_days`) contribu
 β = failures  + community_failures  + 1
 ```
 
-- **Routing (live)**: `reliability = sampleBeta(α, β)` — Thompson sampling. Exploration is automatic and proportional to uncertainty.
-- **Dashboard (display)**: `reliability = α / (α + β)` — expected value, stable for sorting.
+- **Routing (live)**: `reliability = sampleBeta(α, β)` - Thompson sampling. Exploration is automatic and proportional to uncertainty.
+- **Dashboard (display)**: `reliability = α / (α + β)` - expected value, stable for sorting.
 
 ### Community Prior (opt-in)
 
@@ -68,7 +68,7 @@ When `routing_explore_enabled = 1` (off by default), an unmeasured model (decay-
 
 ---
 
-## 4. Speed Axis — Throughput + TTFB Blended
+## 4. Speed Axis - Throughput + TTFB Blended
 
 ```
 throughputScore(tok/s) = 1 - exp(-tok/s / 60)          # saturating, 60 tok/s ≈ 0.63
@@ -88,7 +88,7 @@ Every 10 minutes, models with ≥20 decay-weighted speed-bearing samples (succes
 
 ---
 
-## 5. Intelligence Axis — Tier-First, √-Compressed Rank
+## 5. Intelligence Axis - Tier-First, √-Compressed Rank
 
 ```
 tierValue: Frontier=4, Large=3, Medium=2, Small=1, unknown=0
@@ -103,7 +103,7 @@ Custom models are seeded at the catalog median tier ("unknown" = no opinion, not
 
 ---
 
-## 6. Guardrails — Multiplicative, Never Reordering Good Models
+## 6. Guardrails - Multiplicative, Never Reordering Good Models
 
 ### Headroom Factor (quota protection)
 
@@ -113,7 +113,7 @@ if remaining >= rampStart:  factor = 1.0
 else:                       factor = floor + (1 - floor) * (remaining / rampStart)
 ```
 
-- `budgetTokens` = `monthly_token_budget` × `usableKeyCount(platform)` — pools N keys' free tiers.
+- `budgetTokens` = `monthly_token_budget` × `usableKeyCount(platform)` - pools N keys' free tiers.
 - Unknown budget (0 or NULL) → factor = 1 (no opinion).
 
 ### Tunable Headroom Thresholds (env / settings: `routing_headroom_ramp_start`, `routing_headroom_floor`)
@@ -125,7 +125,7 @@ The ramp is now operator-tunable via `GET/PUT /api/settings/headroom` (#989, #89
 | `rampStart` (`HEADROOM_RAMP_START`) | 0.2 (20% remaining) | Fraction at which demotion begins |
 | `floor` (`HEADROOM_FLOOR`) | 0.1 (10% of score) | Score floor at 0 remaining budget |
 
-Out-of-range / non-finite operator input falls back to the default rather than silently clamping to a legal-but-unintended value. The **same** ramp and thresholds also drive the rate-window headroom guardrail (see #8) — a single pair of operator-tuned thresholds governs both.
+Out-of-range / non-finite operator input falls back to the default rather than silently clamping to a legal-but-unintended value. The **same** ramp and thresholds also drive the rate-window headroom guardrail (see #8) - a single pair of operator-tuned thresholds governs both.
 
 ### Rate-Limit Factor (live penalty)
 
@@ -134,7 +134,7 @@ penalty ∈ [0, 10]   (from 429 escalation ladder, decays 1 per 2 min)
 factor = 1 - (penalty / 10) * 0.6   # at max penalty, keeps 40% of score
 ```
 
-- Demotes hard but never excludes — model recovers as penalty decays.
+- Demotes hard but never excludes - model recovers as penalty decays.
 
 ### Rate-Window Headroom Factor (RPD/TPD/RPM/TPM demotion, #899)
 
@@ -143,15 +143,15 @@ The monthly-budget guardrail only has an opinion about models that declare a `mo
 The fix: the same tunable ramp, driven by **live window utilization** instead of monthly tokens:
 
 ```
-usedFraction = consumed / limit   (0 = idle, 1 = exhausted)  — worst of the four windows
-factor = headroomRamp(1 - usedFraction, opts)                — same tunable thresholds
+usedFraction = consumed / limit   (0 = idle, 1 = exhausted)  - worst of the four windows
+factor = headroomRamp(1 - usedFraction, opts)                - same tunable thresholds
 ```
 
-- `usedFraction` is memoized inside `ratelimit.ts` as a **5-second snapshot** (`WINDOW_USAGE_TTL_MS = 5000`) — one grouped scan of `rate_limit_usage` plus one read of `api_keys`, shared by every entry of every chain. The hard gates are unaffected — they still read live counts.
-- `null` means the model declares no window limits, or has no routable key to measure — factor = 1 (no opinion).
-- **Combined headroom**: the router takes `Math.min(monthlyHeadroom, windowHeadroom)` — the **worse** of the two, never their product (which would push a model low on both to floor², below the operator-configured floor).
+- `usedFraction` is memoized inside `ratelimit.ts` as a **5-second snapshot** (`WINDOW_USAGE_TTL_MS = 5000`) - one grouped scan of `rate_limit_usage` plus one read of `api_keys`, shared by every entry of every chain. The hard gates are unaffected - they still read live counts.
+- `null` means the model declares no window limits, or has no routable key to measure - factor = 1 (no opinion).
+- **Combined headroom**: the router takes `Math.min(monthlyHeadroom, windowHeadroom)` - the **worse** of the two, never their product (which would push a model low on both to floor², below the operator-configured floor).
 
-The chosen key is the **eligible key with the most headroom** (the one the router would pick NEXT), not the worst key — a platform with one exhausted key and one idle key routes perfectly well (#921).
+The chosen key is the **eligible key with the most headroom** (the one the router would pick NEXT), not the worst key - a platform with one exhausted key and one idle key routes perfectly well (#921).
 
 ### Peak-Hours Adjustment (opt-in, #760, #909)
 
@@ -159,15 +159,15 @@ During an operator-declared peak window, free relays are congested, so a model's
 
 | Parameter | Default | Purpose |
 |-----------|---------|---------|
-| `enabled` | `false` | Opt-in by design — routing that silently changes with the wall clock is impossible to reason about |
+| `enabled` | `false` | Opt-in by design - routing that silently changes with the wall clock is impossible to reason about |
 | `startHour` / `endHour` | 18 / 6 (spans midnight) | Window in the operator's IANA timezone |
 | `timezone` | `UTC` | IANA name; read via `Intl` (never `Date#getHours`, since the host is frequently UTC while the traffic it serves is not) |
 
 - **Shift amount**: `PEAK_SPEED_TO_RELIABILITY = 0.6` (60% of the speed weight moves onto reliability).
-- **Exempt strategies** (`PEAK_EXEMPT_STRATEGIES`): `fastest` and `reliable` are **exempt** — they are the two ends of the speed↔reliability axis, and an operator who picked one has already decided which end they want. `priority` and `custom` are also never rewritten (the operator's explicit choice).
+- **Exempt strategies** (`PEAK_EXEMPT_STRATEGIES`): `fastest` and `reliable` are **exempt** - they are the two ends of the speed↔reliability axis, and an operator who picked one has already decided which end they want. `priority` and `custom` are also never rewritten (the operator's explicit choice).
 - The adjustment applies only to the mixed presets (`balanced`, `smartest`), where trading some speed for reliability stays inside the span the presets already describe.
-- `peakAdjustedWeights()` returns `{ weights, adjusted }` — the dashboard labels the weight summary from the `adjusted` flag.
-- `startHour === endHour` is an **empty** window (not 24-hour) — an operator who drags both ends to the same value means "nothing".
+- `peakAdjustedWeights()` returns `{ weights, adjusted }` - the dashboard labels the weight summary from the `adjusted` flag.
+- `startHour === endHour` is an **empty** window (not 24-hour) - an operator who drags both ends to the same value means "nothing".
 
 ---
 
@@ -217,8 +217,8 @@ The shared loop (`lib/fallback-loop.ts`) drives every surface (`/v1/chat/complet
 | 429 transient (rpm/tpm) | key only | 90s / escalation ladder | light (1) | yes |
 | 5xx / timeout / transport | **platform** (#788) | 90s / ladder | light (1) | no |
 | empty completion (reasoning) | key only | **exempt** (streak ≤3) | no | no |
-| context too large | model | — | no | no |
-| response_format ignored | model | — | no | no |
+| context too large | model | - | no | no |
+| response_format ignored | model | - | no | no |
 
 - **Model-level failure benching** (#806): 3 retryable failures across keys within 15 min → bench model on **all its keys** for 10 min (heuristic, probe-eligible).
 - **Empty-completion streak limit** (#751): 3 consecutive reasoning-truncated completions on same model+key lifts the exemption.
@@ -235,7 +235,7 @@ The shared loop (`lib/fallback-loop.ts`) drives every surface (`/v1/chat/complet
 
 ## 11. Unified Model Groups (Unify)
 
-When enabled, logical models (e.g. `glm-4.7`) collapse multiple providers into one `/v1/models` entry. Routing **strictly fails over within the group** — never to a different model. `match_tier = 1` on slug-resolved members prevents silent substitution.
+When enabled, logical models (e.g. `glm-4.7`) collapse multiple providers into one `/v1/models` entry. Routing **strictly fails over within the group** - never to a different model. `match_tier = 1` on slug-resolved members prevents silent substitution.
 
 ---
 
@@ -263,17 +263,17 @@ With `decision` selected, a decision model (Models → Decision: Clef on Cloudfl
 
 ### Key Selection Strategy (#919, #930)
 
-Independent of the routing strategy on purpose — model ranking and key selection are independent choices, and folding this into the strategy enum would make switching key policy also switch (or disable) the model bandit.
+Independent of the routing strategy on purpose - model ranking and key selection are independent choices, and folding this into the strategy enum would make switching key policy also switch (or disable) the model bandit.
 
 | Strategy | Behavior |
 |----------|----------|
 | `auto` (default) | Per-key bandit score when ≥2 keys have recorded data, else round-robin |
-| `least-remaining` | Additionally rank by observed remaining quota — roomiest key first, so the key nearest its cap is held back instead of being the next to 429 |
+| `least-remaining` | Additionally rank by observed remaining quota - roomiest key first, so the key nearest its cap is held back instead of being the next to 429 |
 
-- `least-remaining` layers **on top** of the existing order (bandit ranking when there's data, else the round-robin rotation) — ties fall back to that order instead of rowid.
+- `least-remaining` layers **on top** of the existing order (bandit ranking when there's data, else the round-robin rotation) - ties fall back to that order instead of rowid.
 - Account-scoped pools (`<platform>::account`) are **skipped** for remaining-quota weighting, since every key reports the same shared number and reordering would only churn the rotation (#919).
 - Reads quota headroom through the cached platform-filtered `getKeyQuotaHeadroom()` query.
-- A key the quota tracker has never seen gets a neutral `UNKNOWN_QUOTA_HEADROOM = 0.5` — no opinion, not a reason to prefer or avoid.
+- A key the quota tracker has never seen gets a neutral `UNKNOWN_QUOTA_HEADROOM = 0.5` - no opinion, not a reason to prefer or avoid.
 
 ---
 
@@ -318,4 +318,4 @@ Independent of the routing strategy on purpose — model ranking and key selecti
 
 ## 15. Cache Key v4 (#901)
 
-The exact-match response cache key is now at **version 4**. Default-valued sampling params (`top_p: 1`, `n: 1`, `presence_penalty: 0`, `frequency_penalty: 0`) are normalized down to `undefined` so a client that always serializes the full param set shares a cache entry with one that omits the defaults. `reasoning_effort` and `compression` were also added to the key. Bump version when changing the key shape — `v: 4` is embedded in the canonical JSON.
+The exact-match response cache key is now at **version 4**. Default-valued sampling params (`top_p: 1`, `n: 1`, `presence_penalty: 0`, `frequency_penalty: 0`) are normalized down to `undefined` so a client that always serializes the full param set shares a cache entry with one that omits the defaults. `reasoning_effort` and `compression` were also added to the key. Bump version when changing the key shape - `v: 4` is embedded in the canonical JSON.

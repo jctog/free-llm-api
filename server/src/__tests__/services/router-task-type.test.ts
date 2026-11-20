@@ -79,7 +79,7 @@ const TASK_RUNS = 400;
 
 // Fixture: A ("smart") is the smarter but much slower model, B ("fast") the
 // weaker but blazing-fast one. Equal reliability (all successes) and equal
-// budgets, so the only differing axes are intelligence (A > B — rank 1 is the
+// budgets, so the only differing axes are intelligence (A > B - rank 1 is the
 // catalog's best) and speed (B >> A). The speed gap is intentionally extreme:
 // intelligenceScore is min-max normalized across the chain, so with two models
 // it is always 1 vs 0, and the speed axis must out-weigh that for the chat

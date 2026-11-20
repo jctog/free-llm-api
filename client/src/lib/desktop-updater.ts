@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-/** Mirrors desktop/src/update-support.ts — the main process's updater state. */
+/** Mirrors desktop/src/update-support.ts - the main process's updater state. */
 export type DesktopUpdateState =
   | { phase: 'unsupported'; reason: 'dev' | 'package' }
   | { phase: 'idle' }
@@ -36,7 +36,7 @@ export function checkDesktopUpdates(): Promise<DesktopUpdateState> | null {
 
 /**
  * The desktop shell's in-app updater, or null in a browser and in a desktop
- * build that cannot replace itself (deb/rpm, the portable zip, a dev build) —
+ * build that cannot replace itself (deb/rpm, the portable zip, a dev build) -
  * callers then keep their "open the releases page" fallback.
  */
 export function useDesktopUpdater() {

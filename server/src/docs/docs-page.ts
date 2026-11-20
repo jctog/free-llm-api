@@ -4,7 +4,7 @@
 // the whole viewer is inline and fetches the spec from `openapi.json` (relative
 // to `/v1/docs`, which resolves to `/v1/openapi.json`). This is deliberate. The
 // server ships as a `tsc` build, a `tsx` dev process, and an esbuild single-file
-// bundle for the desktop app that carries no server `node_modules` — so pulling
+// bundle for the desktop app that carries no server `node_modules` - so pulling
 // Swagger UI from `node_modules` at runtime would 404 in the desktop build, and
 // vendoring its ~1.5 MB of assets into the repo would be bloat. A compact
 // hand-rolled renderer keeps the docs offline-capable and identical across all

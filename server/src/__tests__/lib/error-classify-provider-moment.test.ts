@@ -6,7 +6,7 @@ import {
 
 // #1347 (PR 1): the "provider had a bad minute" class. These failures steer
 // the key (existing cooldowns) but, when attribution is enabled, must NOT be
-// counted against the model's reliability — so the boundary of the class is
+// counted against the model's reliability - so the boundary of the class is
 // load-bearing and gets its own unit coverage.
 describe('isProviderMomentFailure (#1347 PR 1)', () => {
   it('classifies a structured 429', () => {

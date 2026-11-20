@@ -11,7 +11,7 @@
 //     '1K calls/mo shared'. These count requests, not tokens. The old parse
 //     read 'free · 14.4K rpd' as a 14,400-TOKEN monthly budget, so
 //     headroomFactor reported the model spent after a handful of requests and
-//     pinned it to the score floor for the rest of the month — the same class
+//     pinned it to the score floor for the rest of the month - the same class
 //     of bug the "40 RPM" guard below already kills, just with the unit letter
 //     glued to the number instead of inside an acronym.
 //   - daily token caps: 'free · 500K tokens/day', 'free · 1M tokens/24h',
@@ -27,8 +27,8 @@ export function parseBudget(s: string): number {
   // states, and their unit letters are what a naive scan misreads.
   const head = label.replace(/\([^)]*\)/g, '').trim();
   // Require a magnitude unit (M/K, either case). A bare number with no unit is
-  // a rate limit or placeholder, not a monthly token budget — "free · 40 RPM",
-  // "free · 200/hr per IP", "promo (trial)", "~? (anon)" — so treat those as
+  // a rate limit or placeholder, not a monthly token budget - "free · 40 RPM",
+  // "free · 200/hr per IP", "promo (trial)", "~? (anon)" - so treat those as
   // "no budget info" (0), per this function's contract. Without the required
   // unit the old regex parsed "free · 40 RPM" as 40 tokens, which showed a
   // bogus budget and made the headroom guardrail penalize the model after one

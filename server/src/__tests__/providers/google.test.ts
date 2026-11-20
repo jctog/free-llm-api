@@ -140,7 +140,7 @@ describe('GoogleProvider', () => {
 
   // #268: a permission/region/restriction 403 (e.g. API not enabled on the project,
   // or an IP/API-key restriction on the proxy host) must NOT auto-disable a key that
-  // may still work for generateContent elsewhere — validateKey throws so health.ts
+  // may still work for generateContent elsewhere - validateKey throws so health.ts
   // records status='error' instead of incrementing the disable counter.
   it('validateKey throws (does not return false) on a permission/region 403', async () => {
     vi.spyOn(global, 'fetch').mockResolvedValueOnce({
@@ -186,7 +186,7 @@ describe('GoogleProvider', () => {
   });
 
   // #500: older Gemma on the Gemini API 400s with "Developer instruction is not
-  // enabled" — system prompts must keep folding into the first user turn.
+  // enabled" - system prompts must keep folding into the first user turn.
   // #582: tools must NOT be stripped anymore (Gemma 4 has native function
   // calling); the fold and tool pass-through coexist on the same request.
   it('folds system prompts into user content for Gemma models while passing tools through (#500, #582)', async () => {
@@ -637,7 +637,7 @@ describe('GoogleProvider', () => {
   });
 
   it('falls back to Google\'s documented dummy sentinel when no signature exists', async () => {
-    // Signature-less replay — history this proxy never produced (another
+    // Signature-less replay - history this proxy never produced (another
     // provider, a restart, TTL expiry). Gemini 3 400s on a MISSING signature
     // and only accepts its two documented sentinel strings as a substitute;
     // a fabricated value (e.g. a hash) is not one of them.
@@ -719,7 +719,7 @@ describe('GoogleProvider', () => {
     expect(chunks[chunks.length - 1].choices[0].finish_reason).toBe('stop');
   });
 
-  // An abrupt EOF — no `[DONE]`, no `finishReason` — is a truncated generation,
+  // An abrupt EOF - no `[DONE]`, no `finishReason` - is a truncated generation,
   // not a completion (providers/base.ts:392-397). This adapter used to
   // synthesize `finish_reason: 'stop'` for it, so the client was told a
   // half-written answer was complete, the request was logged 'success', and the
@@ -821,7 +821,7 @@ describe('GoogleProvider', () => {
   // We don't read the timeout value from the provider directly (it's a
   // private implementation detail of base.ts:fetchWithTimeout); instead we
   // assert that the spy on fetch is called with a signal derived from the
-  // expected timeout — which is what carries the abort.
+  // expected timeout - which is what carries the abort.
 
   function fetchWithAbort(): { signal: AbortSignal; restored: () => void } {
     const origFetch = global.fetch;

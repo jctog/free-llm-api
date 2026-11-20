@@ -48,7 +48,7 @@ function positiveEnv(raw: string | undefined, fallback: number): number {
 
 // Fraction of providers that must remain healthy to stay out of degraded mode.
 const DEGRADED_HEALTHY_RATIO = positiveEnv(process.env.DEGRADED_HEALTHY_RATIO, 0.5);
-// Only meaningful when there are at least this many enabled providers — a
+// Only meaningful when there are at least this many enabled providers - a
 // single-provider deployment shouldn't flap degraded mode every outage.
 const DEGRADED_MIN_PROVIDERS = positiveEnv(process.env.DEGRADED_MIN_PROVIDERS, 3);
 // How long the ratio must stay below the threshold before entering degraded

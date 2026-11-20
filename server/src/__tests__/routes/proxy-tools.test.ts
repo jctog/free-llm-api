@@ -186,7 +186,7 @@ describe('Proxy tool-calling support', () => {
     expect(body.choices[0].message.content).toContain('30C');
   });
 
-  it('round-trips assistant reasoning_content on follow-up turns (DeepSeek thinking — #255)', async () => {
+  it('round-trips assistant reasoning_content on follow-up turns (DeepSeek thinking - #255)', async () => {
     const origFetch = global.fetch;
     let providerBody: any = null;
 
@@ -325,7 +325,7 @@ describe('Proxy tool-calling support', () => {
       if (urlStr.includes('api.groq.com/openai/v1/chat/completions')) {
         calls.push(JSON.parse((init as any).body));
         // Call 1 is turn 1 (records the trace). Call 2 is turn 2's first
-        // attempt — rate-limited so the request fails over to another model.
+        // attempt - rate-limited so the request fails over to another model.
         if (calls.length === 2) {
           return new Response(JSON.stringify({ error: { message: 'rate limited' } }), { status: 429 }) as any;
         }
@@ -366,10 +366,10 @@ describe('Proxy tool-calling support', () => {
     expect(second.status).toBe(200);
     expect(calls).toHaveLength(3);
 
-    // Attempt 1 goes to the model that produced the trace — restored.
+    // Attempt 1 goes to the model that produced the trace - restored.
     expect(calls[1].messages[1].reasoning_content).toBeUndefined();
     // Attempt 2 is a different model. The restore lived on the outbound copy
-    // only, so this hop carries exactly what the client sent — no leaked
+    // only, so this hop carries exactly what the client sent - no leaked
     // reasoning_content from the mutated request body.
     expect(calls[2].model).not.toBe(calls[1].model);
     expect(calls[2].messages[1].reasoning_content).toBeUndefined();

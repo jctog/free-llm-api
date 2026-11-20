@@ -19,7 +19,7 @@ const { generateResetCode } = await import('../../../server/src/lib/reset-code.j
 
 afterAll(() => {
   // The tee keeps its file handle open until process exit, and Windows refuses
-  // to unlink an open file — cleanup is a courtesy, not an assertion.
+  // to unlink an open file - cleanup is a courtesy, not an assertion.
   try {
     fs.rmSync(userData, { recursive: true, force: true });
   } catch {

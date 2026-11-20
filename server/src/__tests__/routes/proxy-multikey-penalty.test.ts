@@ -46,7 +46,7 @@ const err429 = () => Object.assign(new Error('Groq API error 429: rate limit'), 
 interface Setup { modelDbId: number; modelId: string; keyA: number; keyB: number }
 
 // Each test uses a DISTINCT groq model so the module-global in-memory rate-limit
-// state (cooldowns, round-robin, penalties — keyed by model) can't leak between
+// state (cooldowns, round-robin, penalties - keyed by model) can't leak between
 // tests, mirroring how ratelimit.test.ts uses unique identifiers per case.
 function setup(rank: number, onlyModel = false): Setup {
   const db = getDb();
@@ -130,7 +130,7 @@ describe('one key\'s 429 must not demote the whole model (#454)', () => {
 
     expect(status).toBe(200);
     expect(chatCompletion).toHaveBeenCalledTimes(2);
-    // The model must NOT be penalized — only one key hit the limit.
+    // The model must NOT be penalized - only one key hit the limit.
     expect(getAllPenalties().some(p => p.modelDbId === s.modelDbId)).toBe(false);
   });
 

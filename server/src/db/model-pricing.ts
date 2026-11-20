@@ -8,7 +8,7 @@ import type { Db } from './types.js';
  *
  * Source: OpenRouter public pricing API (paid, non-:free variants),
  * snapshot 2026-06-05; closed models use their official API prices.
- * `null` = no paid equivalent exists (stealth/preview models) — analytics
+ * `null` = no paid equivalent exists (stealth/preview models) - analytics
  * falls back to a modest default.
  *
  * Format: [platform, model_id, $/M input, $/M output]
@@ -56,7 +56,7 @@ export const MODEL_PRICING: PricingRow[] = [
   ['google', 'gemma-4-26b-a4b-it', 0.06, 0.33],
   ['google', 'gemma-4-31b-it', 0.12, 0.37],
 
-  // Groq (compound is an agentic pipeline — estimated at its underlying
+  // Groq (compound is an agentic pipeline - estimated at its underlying
   // gpt-oss models' prices)
   ['groq', 'groq/compound', 0.039, 0.18],
   ['groq', 'groq/compound-mini', 0.029, 0.14],
@@ -75,7 +75,7 @@ export const MODEL_PRICING: PricingRow[] = [
   ['huggingface', 'moonshotai/Kimi-K2.6', 0.684, 3.42],
   ['huggingface', 'accounts/fireworks/models/llama-v3p3-70b-instruct', 0.10, 0.32], // legacy
 
-  // Kilo (Poolside Laguna is stealth — no paid equivalent)
+  // Kilo (Poolside Laguna is stealth - no paid equivalent)
   ['kilo', 'nvidia/nemotron-3-super-120b-a12b:free', 0.09, 0.45],
   ['kilo', 'poolside/laguna-m.1:free', null, null],
   ['kilo', 'poolside/laguna-xs.2:free', null, null],
@@ -112,7 +112,7 @@ export const MODEL_PRICING: PricingRow[] = [
   ['nvidia', 'qwen/qwen3-coder-480b-a35b-instruct', 0.22, 1.80],
   ['nvidia', 'z-ai/glm-5.1', 0.98, 3.08],
 
-  // Ollama (local models priced at their cloud-API equivalents — that's
+  // Ollama (local models priced at their cloud-API equivalents - that's
   // what running them elsewhere would cost)
   ['ollama', 'cogito-2.1:671b', 1.25, 1.25],
   ['ollama', 'deepseek-v3.2', 0.229, 0.343],
@@ -125,14 +125,14 @@ export const MODEL_PRICING: PricingRow[] = [
   ['ollama', 'mistral-large-3:675b', 0.50, 1.50],
   ['ollama', 'qwen3-coder-next', 0.11, 0.80],
   ['ollama', 'qwen3-coder:480b', 0.22, 1.80],
-  // Ollama Cloud free additions (#767) — priced at the same model's paid
+  // Ollama Cloud free additions (#767) - priced at the same model's paid
   // variant where one exists (mirrors the OpenCode Zen rows below).
   ['ollama', 'minimax-m3', 0.30, 1.20],
   ['ollama', 'nemotron-3-nano:30b', 0.03, 0.15],
   ['ollama', 'nemotron-3-super', 0.09, 0.45],
   ['ollama', 'nemotron-3-ultra', 0.50, 2.50],
 
-  // OpenCode Zen (big-pickle is stealth — no equivalent; V24 rows priced at
+  // OpenCode Zen (big-pickle is stealth - no equivalent; V24 rows priced at
   // the OpenRouter paid variants, snapshot 2026-06-07)
   ['opencode', 'big-pickle', null, null],
   ['opencode', 'deepseek-v4-flash-free', 0.098, 0.197],
@@ -178,9 +178,9 @@ export const MODEL_PRICING: PricingRow[] = [
   ['reka', 'reka-flash-3', 0.10, 0.20],
   ['reka', 'reka-edge-2603', 0.10, 0.10],
 
-  // SambaNova rows were removed in V23 (platform dropped — free tier retired).
+  // SambaNova rows were removed in V23 (platform dropped - free tier retired).
 
-  // Zhipu (4.5-flash estimated at the 4.7-flash rate — no paid 4.5-flash;
+  // Zhipu (4.5-flash estimated at the 4.7-flash rate - no paid 4.5-flash;
   // 4.6v-flash priced at OpenRouter's paid z-ai/glm-4.6v)
   ['zhipu', 'glm-4.5-flash', 0.06, 0.40],
   ['zhipu', 'glm-4.6v-flash', 0.30, 0.90],
@@ -193,7 +193,7 @@ export const FALLBACK_OUTPUT_PER_M = 0.80;
 
 /**
  * Adds the pricing columns (idempotent) and refreshes prices for every
- * known model. Runs on every boot — it's ~100 UPDATEs in one transaction
+ * known model. Runs on every boot - it's ~100 UPDATEs in one transaction
  * and keeps prices current when this map is updated in a release.
  */
 export function applyModelPricing(db: Db): void {

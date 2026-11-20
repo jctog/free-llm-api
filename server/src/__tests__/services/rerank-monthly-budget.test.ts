@@ -7,7 +7,7 @@ import { getMonthlyUsage } from '../../services/key-budget.js';
 // POST /v1/rerank spends real provider quota, so a key at its monthly cap
 // (#1158) must not serve one. Chat (router), embeddings, media, search and
 // moderation all gate on the caps before dispatch; rerank read api_keys
-// directly and skipped the gate — while rerankRetryAfterSec already answered
+// directly and skipped the gate - while rerankRetryAfterSec already answered
 // a `quota_exceeded` code that nothing could ever set.
 
 const realFetch = globalThis.fetch;

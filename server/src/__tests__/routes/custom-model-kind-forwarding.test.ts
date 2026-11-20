@@ -105,7 +105,7 @@ describe('custom model modality forwarded from discovery (#1506)', () => {
   });
 
   // End-to-end: the dashboard discovers a metadata-only audio model, forwards
-  // its kind, and the server registers it in the right table — reproducing the
+  // its kind, and the server registers it in the right table - reproducing the
   // full round trip the previous (discovery-only) change was missing.
   it('discovery -> forwarded-kind registration round-trip (#1506)', async () => {
     const fetchMock = vi.fn(async (input: RequestInfo) => {

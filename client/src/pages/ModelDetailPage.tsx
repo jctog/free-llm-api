@@ -80,7 +80,7 @@ export default function ModelDetailPage() {
     queryFn: () => apiFetch('/api/settings/unify'),
   })
   // Time-window rate-limit usage (#876), the same shared query the Models table
-  // uses — one poll for the page, read per row from a map.
+  // uses - one poll for the page, read per row from a map.
   const { data: rateLimitUsage } = useQuery<RateLimitUsageData>({
     queryKey: ['fallback', 'rate-limit-usage'],
     queryFn: () => apiFetch('/api/fallback/rate-limit-usage'),
@@ -159,7 +159,7 @@ export default function ModelDetailPage() {
   // New splits are written against ONE row: an unqualified "platform:modelId"
   // matches every relay that serves the id, so splitting one relay's card used
   // to move both (#651). Reading accepts the plain form too, so a split saved
-  // before that is still recognised — and still undoable.
+  // before that is still recognised - and still undoable.
   function splitActionFor(m: Row, memberCount: number): SplitAction | undefined {
     if (!unify) return undefined
     // Checked before the member-count guard on purpose: a split row is usually
@@ -189,7 +189,7 @@ export default function ModelDetailPage() {
     .map(e => ({ ...(scoreById.get(e.modelDbId) ?? {}), ...e }))
     .sort((a, b) => (isManual ? a.priority - b.priority : (b.score ?? 0) - (a.score ?? 0)))
   // Endpoint disambiguation keys on (platform, model_id) across EVERY configured
-  // row — a relay whose copy was renamed sits in a DIFFERENT display group, so
+  // row - a relay whose copy was renamed sits in a DIFFERENT display group, so
   // `members` is not a complete sibling set and scoping to it would hide the
   // endpoint exactly when two relays collide (#651).
   const siblings: Row[] = entries as Row[]
@@ -208,7 +208,7 @@ export default function ModelDetailPage() {
   const tools = members.some(m => m.supportsTools)
 
   // #790: the aliases merged INTO this group. Every edit is expressed against
-  // the full overrides list (see lib/alias-merge) — the visible rows are only
+  // the full overrides list (see lib/alias-merge) - the visible rows are only
   // this group's slice, so editing by row position would hit other groups.
   const merges = useMemo(() => unify?.overrides.merges ?? [], [unify])
   const groupAliases = useMemo(() => aliasesFor(merges, label), [merges, label])
@@ -399,7 +399,7 @@ function ProviderSettingsRow({
 }) {
   const { t } = useI18n()
   // `members` is rebuilt on every render, so depend on the model's own values
-  // rather than the object identity — otherwise the form resets mid-edit.
+  // rather than the object identity - otherwise the form resets mid-edit.
   const {
     modelDbId, displayName, contextWindow, intelligenceRank, speedRank, sizeLabel,
     rpmLimit, rpdLimit, tpmLimit, tpdLimit, supportsVision, supportsTools, enabled,
@@ -515,7 +515,7 @@ function ProviderSettingsRow({
       {/* Router inputs: the two ranks feed the scoring axes, the four limits
           feed rate-limit accounting. Editable because the catalog can be wrong
           for a given account, or silent about a brand-new model (#551). The
-          capability tier sets the intelligence axis — a custom model without
+          capability tier sets the intelligence axis - a custom model without
           a recognized tier sits at the floor of it, so it gets a picker here
           (#685). */}
       <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-7">
@@ -593,7 +593,7 @@ function ProviderSettingsRow({
 }
 
 // A field label that says whether the value below it is still the catalog's or
-// has been replaced locally — the same emerald the row-level badge uses.
+// has been replaced locally - the same emerald the row-level badge uses.
 function FieldLabel({ text, overridden }: { text: string; overridden: boolean }) {
   const { t } = useI18n()
   return (

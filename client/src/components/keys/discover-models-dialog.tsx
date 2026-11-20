@@ -25,7 +25,7 @@ export interface DiscoveredModel {
   contextWindow?: number
   /** Human-readable price hint ("free", "$1.25/M in $2/M out") when present (#685). */
   priceNote?: string
-  /** The server's verdict on whether the note means free — the only thing this
+  /** The server's verdict on whether the note means free - the only thing this
    *  picker badges green, so "$10/M in" can never read as free. */
   isFree?: boolean
   /** True when the upstream advertises image input. */

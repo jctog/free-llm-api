@@ -3,7 +3,7 @@
 // The unify overrides store merges as `{ into, keys[] }` entries over the WHOLE
 // catalog, while the model detail page only ever shows the entries pointing at
 // the group it is rendering. Every edit therefore has to be expressed against
-// the full list, not the visible slice — doing it by visible-row index deletes
+// the full list, not the visible slice - doing it by visible-row index deletes
 // whatever unrelated entry happens to sit at that position. Pure functions so
 // that mapping is unit-testable away from the page.
 

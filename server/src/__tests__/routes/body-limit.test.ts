@@ -20,7 +20,7 @@ async function post(app: Express, path: string, body: unknown, key: string) {
   return { status: res.status, body: json };
 }
 
-// ~11.5MB base64 payload — the shape that used to die at the global 10mb
+// ~11.5MB base64 payload - the shape that used to die at the global 10mb
 // express.json limit BEFORE routing (opaque 413, no fallback, no analytics
 // row). Sized past 10MB on purpose: the regression only reproduces above it.
 const BIG_IMAGE = `data:image/png;base64,${'A'.repeat(11_500_000)}`;

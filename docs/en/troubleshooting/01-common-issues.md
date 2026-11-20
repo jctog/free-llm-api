@@ -16,7 +16,7 @@
 
 **Symptom:** `POST /v1/chat/completions` returns `400 active chain is empty` (or fallback ladder empty).
 
-**Cause:** The active fallback chain exists but has no models enabled since `e852ff1`/`b3bf20f` — empty chains are now authoritative, not silently falling back to the catalog.
+**Cause:** The active fallback chain exists but has no models enabled since `e852ff1`/`b3bf20f` - empty chains are now authoritative, not silently falling back to the catalog.
 
 **Fix:** Open `Fallback` page → enable models in the active chain, or set `profiles.auto_include_new_models=1`, or switch active profile. See `fallback/01-named-chains.md`.
 
@@ -34,7 +34,7 @@
 
 **Cause:** The same `Idempotency-Key` was sent with a different fingerprint (`model`/`messages`/`temperature`/`top_p`/`max_tokens`/`tools`/`tool_choice` differ). See `api/02-idempotency.md`.
 
-**Fix:** Use a fresh UUID per distinct request, or replay the identical body. In-flight window is NOT deduped (`95bc46f`) — a concurrent retry with the same key may still race.
+**Fix:** Use a fresh UUID per distinct request, or replay the identical body. In-flight window is NOT deduped (`95bc46f`) - a concurrent retry with the same key may still race.
 
 ## Quota panels show stale or ranking delay
 
@@ -68,6 +68,6 @@
 
 ## Related
 
-- [Desktop](../desktop/OVERVIEW.md) — `freeapi.log` rotation.
-- [Proxy transports](../proxy/OVERVIEW.md) — fetch-relay protocol.
-- [Env vars](../env/01-variables.md) — all knobs.
+- [Desktop](../desktop/OVERVIEW.md) - `freeapi.log` rotation.
+- [Proxy transports](../proxy/OVERVIEW.md) - fetch-relay protocol.
+- [Env vars](../env/01-variables.md) - all knobs.

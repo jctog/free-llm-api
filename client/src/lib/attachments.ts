@@ -12,7 +12,7 @@
 // The caps below exist because every request leaves through a FREE-TIER
 // provider: base64 images inflate the prompt ~33%, and free tiers have small
 // per-request body limits and tight token budgets. They are intentionally
-// conservative — a 1024px edge is enough for a model to read a screenshot.
+// conservative - a 1024px edge is enough for a model to read a screenshot.
 
 /** Longest edge, in pixels, an attached image is downscaled to. */
 export const MAX_IMAGE_EDGE = 1024
@@ -28,7 +28,7 @@ export const MAX_ATTACHMENTS = 5
 export const IMAGE_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif']
 export const TEXT_EXTENSIONS = ['txt', 'md', 'markdown', 'csv', 'tsv', 'json', 'log']
 
-/** `accept` for the file input — mirrors what classifyFile() lets through. */
+/** `accept` for the file input - mirrors what classifyFile() lets through. */
 export const ACCEPT_ATTRIBUTE = [...IMAGE_MIME_TYPES, ...TEXT_EXTENSIONS.map(e => `.${e}`)].join(',')
 
 export type AttachmentKind = 'image' | 'text'
@@ -37,9 +37,9 @@ export interface Attachment {
   id: string
   kind: AttachmentKind
   name: string
-  /** Downscaled data URI — images only. */
+  /** Downscaled data URI - images only. */
   dataUrl?: string
-  /** Decoded UTF-8 contents — text-like files only. */
+  /** Decoded UTF-8 contents - text-like files only. */
   text?: string
 }
 
@@ -116,7 +116,7 @@ export function attachmentImages(attachments: Attachment[] = []): string[] {
 /**
  * Build the `content` field for a message. Stays a plain string when there are
  * no images (the shape the Playground has always sent); becomes the OpenAI
- * multimodal array as soon as one image is attached — which is exactly what
+ * multimodal array as soon as one image is attached - which is exactly what
  * server/src/lib/content.ts normalizes and what the vision router keys on.
  */
 export function toMessageContent(text: string, images: string[] = []): string | ContentPart[] {

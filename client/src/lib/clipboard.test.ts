@@ -2,7 +2,7 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import { copyText } from './clipboard'
 
 // The tests run in the default node environment (no jsdom), so `document` and
-// `navigator` are stubbed by hand — enough of each for the two copy paths.
+// `navigator` are stubbed by hand - enough of each for the two copy paths.
 function stubDocument(execCommandResult: boolean | (() => boolean)) {
   const selected: string[] = []
   const appended: unknown[] = []
@@ -73,7 +73,7 @@ describe('copyText', () => {
     expect(removed).toHaveLength(1)
   })
 
-  it('reports failure — and still cleans up — when execCommand throws', async () => {
+  it('reports failure - and still cleans up - when execCommand throws', async () => {
     vi.stubGlobal('navigator', {})
     const { removed } = stubDocument(() => { throw new Error('unsupported') })
 

@@ -168,7 +168,7 @@ describe('Custom Provider Endpoints', () => {
     const { status } = await del(app, `/api/keys/${key.id}`);
     expect(status).toBe(200);
 
-    // Custom models and their fallback entries are gone — not orphaned.
+    // Custom models and their fallback entries are gone - not orphaned.
     expect((db.prepare("SELECT COUNT(*) AS n FROM models WHERE platform = 'custom'").get() as { n: number }).n).toBe(0);
     const placeholders = customModelIds.map(() => '?').join(',');
     expect((db.prepare(`SELECT COUNT(*) AS n FROM fallback_config WHERE model_db_id IN (${placeholders})`).get(...customModelIds) as { n: number }).n).toBe(0);
@@ -204,7 +204,7 @@ describe('Custom Provider Endpoints', () => {
 
   it('surfaces a clear error when the custom endpoint speaks NDJSON, not OpenAI (#189)', async () => {
     // Real upstream that answers like Ollama's native /api/chat: HTTP 200,
-    // newline-delimited JSON documents — res.json() in the provider would die
+    // newline-delimited JSON documents - res.json() in the provider would die
     // with "Unexpected non-whitespace character after JSON at position …".
     const upstream = http.createServer((_req, res) => {
       res.writeHead(200, { 'Content-Type': 'application/x-ndjson' });
@@ -243,7 +243,7 @@ describe('Custom Provider Endpoints', () => {
   });
 
   // #212: adding a second custom provider used to overwrite the first one's
-  // endpoint — one shared key row held THE base_url. Now each endpoint gets
+  // endpoint - one shared key row held THE base_url. Now each endpoint gets
   // its own key row and models bind to their endpoint via models.key_id.
   describe('multiple custom providers (#212)', () => {
     beforeAll(async () => {
@@ -424,7 +424,7 @@ describe('Custom Provider Endpoints', () => {
 
     // "Fetch models" (#488) re-posts bare ids for everything the endpoint
     // serves, including models already registered. Leaving the name out must
-    // mean "no opinion", not "reset it" — the same rule the capability flags
+    // mean "no opinion", not "reset it" - the same rule the capability flags
     // already follow.
     it('keeps a name already on the model when a later submit omits one', async () => {
       await post(app, '/api/keys/custom', {
@@ -524,7 +524,7 @@ describe('Custom Provider Endpoints', () => {
       });
       expect(toolsVision('preserve-model')).toEqual({ supports_tools: 0, supports_vision: 0 });
 
-      // Re-submit the same endpoint/model without capability flags — the earlier
+      // Re-submit the same endpoint/model without capability flags - the earlier
       // tools = 0 the user chose must survive, not snap back to the default.
       const { status } = await post(app, '/api/keys/custom', {
         baseUrl: 'http://127.0.0.1:5004/v1',

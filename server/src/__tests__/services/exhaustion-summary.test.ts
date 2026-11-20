@@ -33,8 +33,8 @@ describe('summarizeExhaustion', () => {
 
   it('buckets rate-limit and cooldown reasons together', () => {
     const diag = [
-      'groq/llama-3.3-70b: 2 key(s) — cooldown:1, rpm/rpd-limit:1',
-      'google/gemini-1.5-flash: 1 key(s) — tpm/tpd-limit:1',
+      'groq/llama-3.3-70b: 2 key(s) - cooldown:1, rpm/rpd-limit:1',
+      'google/gemini-1.5-flash: 1 key(s) - tpm/tpd-limit:1',
     ];
     const msg = summarizeExhaustion(diag, null, now);
     expect(msg).toContain('2 routes checked');
@@ -44,7 +44,7 @@ describe('summarizeExhaustion', () => {
   it('distinguishes "no usable key" from rate limits', () => {
     const diag = [
       'cohere/command-r: no enabled+healthy key for platform',
-      'groq/llama: 1 key(s) — cooldown:1',
+      'groq/llama: 1 key(s) - cooldown:1',
     ];
     const msg = summarizeExhaustion(diag, null, now);
     expect(msg).toContain('1 no usable key configured');
@@ -100,7 +100,7 @@ describe('summarizeExhaustion', () => {
   });
 
   it('appends the soonest-reset ETA when a cooldown is active', () => {
-    const diag = ['groq/llama: 1 key(s) — cooldown:1'];
+    const diag = ['groq/llama: 1 key(s) - cooldown:1'];
     const msg = summarizeExhaustion(diag, now + 3 * 60_000, now);
     expect(msg).toContain('Soonest reset ~3m.');
   });

@@ -23,7 +23,7 @@ interface ProvidersChecklist {
 
 // One-line coverage strip above the key manager (#543): "22 of 31 providers
 // configured", expandable to compact chips for the providers still missing a
-// key. Deliberately slim — a single line of secondary text, not a card — so
+// key. Deliberately slim - a single line of secondary text, not a card - so
 // the key manager stays the first thing on the page. Clicking a chip opens
 // the Add key dialog preselected to that provider.
 export function ProviderChecklistSection({ onAddKey }: { onAddKey: (platform: string) => void }) {
@@ -64,7 +64,7 @@ export function ProviderChecklistSection({ onAddKey }: { onAddKey: (platform: st
         <div className="mt-2 flex flex-wrap gap-1.5">
           {unconfigured.map(p => {
             // #1225: the checklist knew *which* providers were missing, but the
-            // signup page was still one manual search away — and only surfaced
+            // signup page was still one manual search away - and only surfaced
             // after opening the dialog and picking the provider. The chip gets
             // a direct link to the same URL the add-key form shows. Anchor is
             // a sibling of the chip button (nesting an <a> in a <button> is
@@ -88,7 +88,7 @@ export function ProviderChecklistSection({ onAddKey }: { onAddKey: (platform: st
                         <span className="sr-only">{t('keys.checklistKeyless')}</span>
                       </span>
                     ) : (
-                      // Needs a key but none added yet — the actionable case. Amber
+                      // Needs a key but none added yet - the actionable case. Amber
                       // so the "add this" providers stand out from anonymous ones.
                       <span className="inline-flex text-amber-600 dark:text-amber-400">
                         <KeyRound className="size-3.5" aria-hidden="true" />

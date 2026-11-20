@@ -31,7 +31,7 @@ import {
 // fallback when neither the env nor the DB configures one. A developer
 // machine can genuinely have that set (macOS System Settings → Proxies),
 // which fails every "no proxy configured" case below for the same reason
-// clearProxyEnv() exists — the ambient system, not the code under test.
+// clearProxyEnv() exists - the ambient system, not the code under test.
 // '' parses as "no proxy" in every platform branch, so the suite sees a
 // clean machine regardless of the host's system settings.
 vi.mock('node:child_process', async (importOriginal) => ({
@@ -44,7 +44,7 @@ vi.mock('node:child_process', async (importOriginal) => ({
 // machine that genuinely sits behind a corporate proxy doesn't fail the suite.
 // FREEAPI_BLOCK_PRIVATE_PROVIDER_URLS is not a proxy knob, but the local/LAN
 // cases below call proxyFetch with platform 'custom', which re-runs the SSRF
-// guard — an operator machine that exports it would fail them for the wrong
+// guard - an operator machine that exports it would fail them for the wrong
 // reason.
 const PROXY_ENV_VARS = [
   'PROXY_URL',
@@ -138,8 +138,8 @@ describe('proxy config accessors', () => {
 // #630: `socks5h://` (and its SOCKS4 sibling `socks4a://`) ask the proxy to
 // resolve DNS, which is the whole point for users on DNS-poisoned networks.
 // Scheme detection used to be `startsWith('socks5:') || startsWith('socks4:')`,
-// so socks5h fell through to the undici ProxyAgent — which has no idea what
-// SOCKS is — and every request failed. socks-proxy-agent has understood both
+// so socks5h fell through to the undici ProxyAgent - which has no idea what
+// SOCKS is - and every request failed. socks-proxy-agent has understood both
 // schemes natively all along.
 describe('SOCKS scheme detection (#630)', () => {
   it('recognises every SOCKS scheme socks-proxy-agent supports', () => {
@@ -166,7 +166,7 @@ describe('SOCKS scheme detection (#630)', () => {
   });
 });
 
-// SOCKS requests never go through global fetch() — they ride http/https.request
+// SOCKS requests never go through global fetch() - they ride http/https.request
 // with a SocksProxyAgent. Stubbing https.request lets us assert *which* agent
 // the dispatcher picked (and that socks5h parsed into a real SOCKS5 agent)
 // without opening a socket.
@@ -190,7 +190,7 @@ function stubHttpsRequest() {
   return vi.spyOn(https, 'request').mockImplementation(fakeRequest);
 }
 
-// A plain `http://` destination rides http.request, not https.request — the
+// A plain `http://` destination rides http.request, not https.request - the
 // local-endpoint cases (#951) are all http, so both transports need stubbing
 // before a test can claim nothing reached the wire.
 function stubHttpRequest() {
@@ -224,7 +224,7 @@ describe('proxyFetch dispatcher selection for SOCKS schemes (#630)', () => {
 
 // #666: the SOCKS fallback hardcoded a 120s socket timeout, so a user with
 // PROVIDER_TIMEOUT_CUSTOM=600000 still lost the request at 120s. The fix only
-// ever RAISES that guard — it never lowers it to the caller's timeout, because
+// ever RAISES that guard - it never lowers it to the caller's timeout, because
 // http.request's `timeout` is a socket inactivity timer armed across the whole
 // streaming body while timeoutMs is a header deadline disarmed at headers
 // (#553/#584 hand mid-stream time to the stall watchdog).
@@ -300,7 +300,7 @@ describe('SOCKS destination hostname reaches the proxy unresolved', () => {
 
   it('never performs a real DNS resolution', () => {
     // A hostname that cannot resolve anywhere still comes straight back out,
-    // synchronously — proof the override short-circuits dns.lookup entirely.
+    // synchronously - proof the override short-circuits dns.lookup entirely.
     let address: string | undefined;
     socksHostnameLookup('this-host-does-not-exist.invalid', {}, (_e, addr) => { address = addr; });
     expect(address).toBe('this-host-does-not-exist.invalid');
@@ -323,7 +323,7 @@ describe('SOCKS destination hostname reaches the proxy unresolved', () => {
 
 // #353: HTTPS_PROXY / HTTP_PROXY / ALL_PROXY / NO_PROXY are the de-facto
 // standard for every other CLI on the box. Honouring them means a user who
-// already exported them for curl/git gets a working app with no extra config —
+// already exported them for curl/git gets a working app with no extra config -
 // but an explicitly configured dashboard proxy must still win over ambient env.
 describe('standard proxy env vars (#353)', () => {
   it('PROXY_URL wins over everything, including the dashboard value', () => {
@@ -405,7 +405,7 @@ describe('proxy source logging (#353)', () => {
   it('redacts credentials in the dispatcher-failure log too', async () => {
     const err = vi.spyOn(console, 'error').mockImplementation(() => {});
     vi.spyOn(console, 'log').mockImplementation(() => {});
-    // A failed dispatcher falls back to a direct fetch — stub it so the test
+    // A failed dispatcher falls back to a direct fetch - stub it so the test
     // never touches the network.
     vi.spyOn(global, 'fetch').mockResolvedValue(okResponse());
     // A port outside the valid range makes SocksProxyAgent throw on construction.
@@ -631,8 +631,8 @@ describe('opt-in required proxy transport (fail closed)', () => {
   });
 });
 
-// #951: a local destination — Ollama/llama.cpp/LM Studio on 127.0.0.1, or on
-// the LAN at 192.168.1.20 — is unreachable through a remote proxy, and because
+// #951: a local destination - Ollama/llama.cpp/LM Studio on 127.0.0.1, or on
+// the LAN at 192.168.1.20 - is unreachable through a remote proxy, and because
 // an IP literal must go on the wire as ATYP 0x01 (an IP) regardless of the
 // `socks5h` suffix, it is exactly what makes Tor log "giving Tor only an IP
 // address" and may get the connection refused. Loopback and private/LAN
@@ -738,7 +738,7 @@ describe('local and LAN destinations bypass the proxy (#951)', () => {
 
 // SSRF guard, request-time half (#440). The save-time check validates the
 // literal base_url, but fetch()'s default redirect: 'follow' would re-request
-// a 3xx Location target with no re-validation — a public base_url answering
+// a 3xx Location target with no re-validation - a public base_url answering
 // 302 → http://169.254.169.254/ used to defeat the guard entirely. Custom
 // providers therefore never follow redirects; the 3xx becomes an explicit
 // error naming the target so the operator can fix base_url.
@@ -794,7 +794,7 @@ describe('proxyFetch custom-provider redirect guard', () => {
 
 // Compact abort-error triage tag formatting. The string written to
 // `requests.error` is `The operation was aborted (<platform>, <type>, <N>s)`
-// — round-trip what's already on the row so an operator can read the abort
+// - round-trip what's already on the row so an operator can read the abort
 // cause without joining against the columns.
 describe('describeAbort', () => {
   it('formats platform + type + timeout-in-seconds', () => {
@@ -825,7 +825,7 @@ describe('describeAbort', () => {
 // string "The operation was aborted" with no upstream URL or platform context.
 // The fix wraps proxyFetch's catch with an enrichAbort() that rewrites the
 // DOMException message to `The operation was aborted (<platform>, <type>, <N>s)`
-// — no URL, no credentials — so an operator reading the requests.error column
+// - no URL, no credentials - so an operator reading the requests.error column
 // gets the same triage info as the requests row columns (platform, request_type,
 // latency_ms / timeout). The `name: 'AbortError'` is preserved so
 // isRetryableError() (which matches the substring "aborted") keeps
@@ -1011,7 +1011,7 @@ describe('per-key proxy override (#590)', () => {
 
 // #863: the dashboard "Test" button for the outbound proxy. probeProxyUrl must
 // report reachability of a DRAFT proxy URL without persisting anything, fall
-// back to the saved URL when the input is empty, and never throw — network
+// back to the saved URL when the input is empty, and never throw - network
 // failures and unbuildable agents come back as structured { ok: false, error }.
 describe('probeProxyUrl (#863)', () => {
   it('runs direct and reports ok when no proxy URL is configured', async () => {
@@ -1075,7 +1075,7 @@ describe('probeProxyUrl (#863)', () => {
   it('returns a structured failure when the proxy agent cannot be built', async () => {
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-    // ftp:// is not an accepted proxy scheme — the agent constructor throws.
+    // ftp:// is not an accepted proxy scheme - the agent constructor throws.
     const result = await probeProxyUrl('ftp://127.0.0.1:21');
 
     expect(result.ok).toBe(false);

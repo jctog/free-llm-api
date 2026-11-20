@@ -1,4 +1,4 @@
-// cooldown-probe — probe-based early recovery for benched keys.
+// cooldown-probe - probe-based early recovery for benched keys.
 //
 // Cooldowns are deliberately pessimistic: a transient 429 benches a model+key
 // for 90s, the escalation ladder for up to a day, and an upstream 401 for the
@@ -10,7 +10,7 @@
 //
 // What it will never do:
 //   - probe a cooldown backed by an authoritative retry time (explicit
-//     Retry-After, daily-quota reset) or a credit/tier bench — those are
+//     Retry-After, daily-quota reset) or a credit/tier bench - those are
 //     provider-stated facts, filtered out at the query (getProbeableCooldowns);
 //   - extend a cooldown: a failed probe only schedules the next probe further
 //     out (exponential backoff), the bench itself is untouched;
@@ -47,12 +47,12 @@ const SCAN_INTERVAL_MS = 60 * 1000;
 // clear, and long escalated benches still recover hours early.
 const MIN_ELAPSED_FRACTION = 0.5;
 
-// Not worth probing a cooldown that is about to expire on its own — the probe
+// Not worth probing a cooldown that is about to expire on its own - the probe
 // would cost a validate call to save less than a scan interval of idle time.
 const MIN_REMAINING_MS = 60 * 1000;
 
 // Failed-probe backoff per key: 2m, 4m, 8m, capped at 15m. Keys that stay bad
-// converge to one validate call per 15 minutes — a third of what the 5-minute
+// converge to one validate call per 15 minutes - a third of what the 5-minute
 // health pass already sends them.
 const PROBE_BACKOFF_BASE_MS = 2 * 60 * 1000;
 const PROBE_BACKOFF_MAX_MS = 15 * 60 * 1000;
@@ -145,7 +145,7 @@ export async function runCooldownProbePass(opts: ProbePassOptions = {}): Promise
 
     let state = keyState.get(keyId);
     if (!state) {
-      // First sighting: schedule, don't probe. This is the restart stagger —
+      // First sighting: schedule, don't probe. This is the restart stagger -
       // a boot with dozens of persisted cooldowns spreads its first probes
       // across the jitter window instead of validating everything at once.
       state = { failures: 0, nextProbeAtMs: now + Math.floor(jitter() * FIRST_PROBE_STAGGER_MS) };
@@ -167,13 +167,13 @@ export async function runCooldownProbePass(opts: ProbePassOptions = {}): Promise
       // provider; providerLog still writes the same line to stdout.
       providerLog(
         'info',
-        `[CooldownProbe] key ${keyId} validated — cleared ${cooldownsForKey.length} cooldown(s) early ` +
+        `[CooldownProbe] key ${keyId} validated - cleared ${cooldownsForKey.length} cooldown(s) early ` +
         `(${cooldownsForKey.map(c => `${c.platform}/${c.modelId}`).join(', ')})`,
         { provider: cooldownsForKey[0]?.platform, event: 'cooldown_recovered' },
       );
     } else {
-      // Failed or inconclusive: the bench stays EXACTLY as it was — a probe
-      // must never extend a cooldown — and this key backs off before the next
+      // Failed or inconclusive: the bench stays EXACTLY as it was - a probe
+      // must never extend a cooldown - and this key backs off before the next
       // attempt so probes cannot burn quota against a provider that is down.
       state.failures++;
       const backoff = Math.min(PROBE_BACKOFF_BASE_MS * 2 ** (state.failures - 1), PROBE_BACKOFF_MAX_MS);

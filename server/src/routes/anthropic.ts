@@ -38,7 +38,7 @@ import { applyDecisionRouting, routingStrategyHeader } from '../services/routing
 
 // Anthropic-compatible Messages API (`POST /v1/messages`). This is a thin
 // translation layer over the SAME router/fallback/analytics machinery the
-// OpenAI `/v1/chat/completions` route uses — it converts the Anthropic wire
+// OpenAI `/v1/chat/completions` route uses - it converts the Anthropic wire
 // format to our internal (OpenAI-shaped) ChatMessage form on the way in, runs
 // the normal routing loop, and converts the result back to Anthropic shape on
 // the way out. The OpenAI route is left untouched.
@@ -68,14 +68,14 @@ const IMAGE_TOKEN_ESTIMATE = 1000;
 // Permissive on purpose: the Anthropic content-block vocabulary grows over
 // time (thinking, document, server-tool blocks…) and Claude Code sends blocks
 // with extra fields like `cache_control`. We validate the envelope and handle
-// the block types we understand by `type`, ignoring the rest — same tolerance
+// the block types we understand by `type`, ignoring the rest - same tolerance
 // philosophy as the OpenAI route (#200).
 const contentBlockSchema = z.object({ type: z.string() }).passthrough();
 
 const anthropicMessageSchema = z.object({
   // Anthropic's own API only allows user/assistant here, but real clients
   // (Claude Code, routers) sometimes inline a `system` turn in the messages
-  // array. Accept it and fold it into the system context rather than 400-ing —
+  // array. Accept it and fold it into the system context rather than 400-ing -
   // same tolerance philosophy as the OpenAI route's developer/function roles.
   role: z.enum(['user', 'assistant', 'system']),
   content: z.union([z.string(), z.array(contentBlockSchema)]),
@@ -101,7 +101,7 @@ const messagesSchema = z.object({
   system: z.union([z.string(), z.array(contentBlockSchema)]).optional(),
   temperature: z.number().min(0).max(2).optional(),
   top_p: z.number().min(0).max(1).optional(),
-  // Anthropic's native top_k — forwarded to providers that support it via the
+  // Anthropic's native top_k - forwarded to providers that support it via the
   // platform policy in lib/sampling-params.ts.
   top_k: z.number().int().min(1).nullable().optional(),
   stream: z.boolean().optional(),
@@ -134,7 +134,7 @@ export function effortFromAnthropicThinking(
   if (type === 'disabled' || type === 'off' || type === 'none') return 'none';
   const budget = thinking.budget_tokens;
   // Model-managed modes ('adaptive', 'auto') without an explicit budget mean
-  // "you decide how much" — forward no knob at all and let the provider
+  // "you decide how much" - forward no knob at all and let the provider
   // default stand, same as a -1 Gemini thinking budget.
   if (budget == null && (type === 'adaptive' || type === 'auto')) return undefined;
   if (budget == null) return 'medium';
@@ -275,7 +275,7 @@ interface ConvertedRequest {
   hasImage: boolean;
   wantsTools: boolean;
   /** Reasons the request carried documents we cannot convert. Non-empty means
-   *  the caller must be told, not served — see the rejection below. */
+   *  the caller must be told, not served - see the rejection below. */
   documentRejections: string[];
 }
 
@@ -442,7 +442,7 @@ function writeSse(res: Response, event: string, data: unknown): void {
 
 // Convert rescued inline tool calls (parsed out of a model that serialized its
 // tool call as TEXT) into OpenAI-shaped tool_calls, so toAnthropicContent /
-// the streaming tool_use emitter render them as Anthropic tool_use blocks —
+// the streaming tool_use emitter render them as Anthropic tool_use blocks -
 // the same rescue /chat/completions and /v1/responses already apply (#231).
 function rescuedToToolCalls(
   calls: Array<{ name: string; arguments: string }>,
@@ -507,7 +507,7 @@ export async function handleMessages(req: Request, res: Response): Promise<void>
   // the budget, routing, and upstream transfer all see the shrunk bytes
   // (see lib/image-normalize.ts). The cache-control detection below reads the
   // RAW wire body, and normalization mutates urls in place keeping the blocks
-  // (and any cache_control on them) intact — neither is disturbed.
+  // (and any cache_control on them) intact - neither is disturbed.
   await normalizeMessageImages(messages);
   const systemHasCacheControl = Array.isArray(body.system)
     && body.system.some(block => block && typeof block === 'object' && 'cache_control' in block);
@@ -599,7 +599,7 @@ export async function handleMessages(req: Request, res: Response): Promise<void>
   // its provider failed, the loop walked the rest of the catalog and answered
   // with a completely different model. The OpenAI, Responses and inbound-chat
   // surfaces already avoid that by routing a pinned id over its unified model
-  // group as a STRICT chain (#335) — every provider serving the same logical
+  // group as a STRICT chain (#335) - every provider serving the same logical
   // model, and nothing else. Build the identical chain here so /v1/messages
   // behaves the same.
   //
@@ -608,7 +608,7 @@ export async function handleMessages(req: Request, res: Response): Promise<void>
   // keeps auto-routing over the full chain exactly as before. A tier selector
   // (`tier:pro|mid|normal`) resolves to the tier's whole enabled pool and
   // routes over it as a chain, so the tier acts as a capability band the
-  // router scores inside — failover stays within the band instead of falling
+  // router scores inside - failover stays within the band instead of falling
   // off to an unrelated model.
   let groupChain: ChainRow[] | undefined;
   // Sticky scope for a group-pinned request: bucket by the pinned catalog id so
@@ -635,7 +635,7 @@ export async function handleMessages(req: Request, res: Response): Promise<void>
       // Scoped per tier, not per model: a session on tier:sonnet keeps its
       // provider affinity when the operator re-points the family at another
       // tier selector only if the scope follows the tier. Use the family's
-      // first tier id — stable per tier selector, distinct from any model id.
+      // first tier id - stable per tier selector, distinct from any model id.
       stickyScope = `tier:${resolved.tierDbIds[0]}`;
     }
   }
@@ -668,7 +668,7 @@ export async function handleMessages(req: Request, res: Response): Promise<void>
   // attempt; the AbortController (threaded to the provider as
   // CompletionOptions.signal) additionally cancels the IN-FLIGHT upstream
   // fetch and any body/stream read, so tokens stop burning and the in-flight
-  // lease frees immediately. 'close' also fires on normal completion —
+  // lease frees immediately. 'close' also fires on normal completion -
   // writableEnded distinguishes a real disconnect.
   let clientGone = false;
   const clientAbort = new AbortController();
@@ -740,7 +740,7 @@ export async function handleMessages(req: Request, res: Response): Promise<void>
         );
       }
       // #809: bare "safe"/"unsafe" classification output from a relay is an
-      // upstream filter, not the requested model — fail over like an empty
+      // upstream filter, not the requested model - fail over like an empty
       // completion.
       if (isUpstreamClassificationOutput(respText, route.platform) && respToolCalls.length === 0) {
         throw Object.assign(
@@ -863,7 +863,7 @@ interface StreamCtx {
 //   message_start → (content_block_start → content_block_delta* →
 //   content_block_stop)* → message_delta → message_stop
 // Text is streamed incrementally as text_delta; tool calls are buffered across
-// deltas and emitted as tool_use blocks (input_json_delta) once complete — the
+// deltas and emitted as tool_use blocks (input_json_delta) once complete - the
 // same buffering the OpenAI route does, since partial tool-call JSON isn't
 // safely forwardable mid-flight.
 async function streamCompletion(
@@ -884,7 +884,7 @@ async function streamCompletion(
   // Inline-dialect hold window (#231): the first text is held until it either
   // matches a tool-call dialect marker (held to the end and rescued into
   // tool_use blocks) or provably cannot (flushed and streamed normally). This is
-  // also the commit point convergence — message_start is not sent until the
+  // also the commit point convergence - message_start is not sent until the
   // first MEANINGFUL content, so a stream that opens with a dialect marker and
   // then turns out unparseable fails over invisibly (previously this surface
   // committed on the first non-empty text and had no dialect rescue at all).
@@ -926,7 +926,7 @@ async function streamCompletion(
   // #1642: optional heartbeat for the silent reasoning window. The Anthropic
   // streaming protocol carries a native ping event, so no fake frame is
   // needed. Once it fires the attempt is committed to the wire and can no
-  // longer fail over invisibly — that is the trade STREAM_KEEPALIVE_MS opts
+  // longer fail over invisibly - that is the trade STREAM_KEEPALIVE_MS opts
   // into (off by default).
   let streamSettled = false;
   const keepaliveStop = startStreamKeepalive(streamKeepaliveMs(),
@@ -1034,7 +1034,7 @@ async function streamCompletion(
             heldText = '';
           }
         }
-        // else: still a strict prefix of a marker — keep holding.
+        // else: still a strict prefix of a marker - keep holding.
       }
     }
 
@@ -1093,17 +1093,17 @@ async function streamCompletion(
       if (invalid.length > 0) throw invalidToolArgumentsError(route.displayName, invalid);
     }
 
-    // Nothing usable came out — fail over (normally message_start was never sent,
+    // Nothing usable came out - fail over (normally message_start was never sent,
     // so the client never saw this attempt; after a #1642 early commit the
     // catch below turns this into the mid-stream error event).
     if (!textBlockOpen && completedCalls.length === 0) {
       // Disconnect before the commit point: the pump loop broke with nothing
-      // accumulated because the CLIENT left, not because the provider failed —
+      // accumulated because the CLIENT left, not because the provider failed -
       // benching a healthy model+key for it was wrong. StreamAlreadyStarted
       // maps to 'committed' in the dispatcher: stop, no failover, no
       // exhaustion render (the socket is gone anyway).
       if (ctx.clientGone()) {
-        console.log(`[Anthropic] client disconnected before first token from ${route.displayName} — dropping attempt without benching`);
+        console.log(`[Anthropic] client disconnected before first token from ${route.displayName} - dropping attempt without benching`);
         throw new StreamAlreadyStarted();
       }
       // finish_reason 'length' = the model spent the whole output budget on
@@ -1152,7 +1152,7 @@ async function streamCompletion(
     if (err instanceof StreamAlreadyStarted) throw err;
     // Client abort mid-stream: the pump's own `if (ctx.clientGone()) break`
     // can lose the race against the fetch-signal rejection, so the abort may
-    // surface here instead. Rethrow — the shared loop's client-abort branch
+    // surface here instead. Rethrow - the shared loop's client-abort branch
     // stops the ladder without benching or an error log row (the socket is
     // gone; nothing to render).
     if (isClientAbortError(err)) throw err;
@@ -1160,17 +1160,17 @@ async function streamCompletion(
     // #1642 keep-alive ping flushed the SSE headers, so this attempt is on the
     // wire and can no longer fail over invisibly.
     if (messageStarted || headersSentEarly) {
-      // Real payload already reached the client — finish the SSE response
+      // Real payload already reached the client - finish the SSE response
       // honestly instead of leaving Claude Code hanging, and stop the retry loop.
       writeSse(res, 'error', { type: 'error', error: { type: 'api_error', message: `Provider error (${route.displayName}): stream interrupted` } });
       try { res.end(); } catch { /* socket gone */ }
       logRequest(route.platform, route.modelId, route.keyId, 'error', ctx.estimatedInputTokens, outputChars, Date.now() - ctx.start, sanitizeProviderErrorMessage(err.message), null, ctx.pinnedModelId, null, 'http', failureAttributionFor(err));
       throw new StreamAlreadyStarted();
     }
-    // Headers never sent — bubble to the outer loop for failover.
+    // Headers never sent - bubble to the outer loop for failover.
     throw err;
   } finally {
-    // #1642: this attempt is over whichever path it left by — the keep-alive
+    // #1642: this attempt is over whichever path it left by - the keep-alive
     // interval must not outlive it.
     streamSettled = true;
     keepaliveStop();
@@ -1206,7 +1206,7 @@ anthropicRouter.post('/messages/count_tokens', (req: Request, res: Response) => 
 
 // Anthropic-compatible GET /v1/models. Content-negotiated: only answers when
 // the caller speaks Anthropic (sends an `anthropic-version` header, as Claude
-// Code does) — otherwise it calls next() and the OpenAI-shaped handler in
+// Code does) - otherwise it calls next() and the OpenAI-shaped handler in
 // proxyRouter serves the same path. Lists the SAME catalog as the OpenAI
 // endpoint (real free models that can serve a request right now, plus "auto").
 // Nothing here is hosted Claude, and no entry claims to be.

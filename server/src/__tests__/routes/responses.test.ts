@@ -167,7 +167,7 @@ describe('POST /v1/responses (#96)', () => {
     mockRouteRequest.mockClear();
     // The lenient schema accepts this body; without the pre-check the image
     // part would translate to nothing and the request would route as plain
-    // text — answering blind to an image the client believes was sent.
+    // text - answering blind to an image the client believes was sent.
     const { status, text } = await post(app, '/v1/responses', {
       input: [{
         role: 'user',
@@ -507,8 +507,8 @@ describe('POST /v1/responses (#96)', () => {
   });
 });
 
-// #579 gave this endpoint the same model resolution /v1/chat/completions has —
-// explicit model > sticky session > auto — but shipped without a regression
+// #579 gave this endpoint the same model resolution /v1/chat/completions has -
+// explicit model > sticky session > auto - but shipped without a regression
 // test. This is it. routeRequest is mocked, so the assertions read the routing
 // DECISION off its arguments: [2] is the preferred (pinned/sticky) model db id
 // and [6] is the strict chain an explicit model resolves to.
@@ -570,7 +570,7 @@ describe('POST /v1/responses model routing priority (#579)', () => {
   });
 
   // With a session header the sticky key is the header itself, so the message
-  // list here is irrelevant — but the REQUEST must carry an assistant turn for
+  // list here is irrelevant - but the REQUEST must carry an assistant turn for
   // getStickyModel to read the map at all.
   const followUp = [
     { role: 'user', content: 'hello' },

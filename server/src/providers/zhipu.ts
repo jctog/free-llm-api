@@ -2,7 +2,7 @@ import { OpenAICompatProvider } from './openai-compat.js';
 import type { KeyValidationResult, ProviderFetchOptions } from './base.js';
 import type { QuotaObservationContext } from '../services/provider-quota.js';
 
-/** Domestic console (bigmodel.cn) — the historical registration default. */
+/** Domestic console (bigmodel.cn) - the historical registration default. */
 const DOMESTIC_BASE_URL = 'https://open.bigmodel.cn/api/paas/v4';
 /** Global console (z.ai). Same OpenAI-compatible surface, different key namespace. */
 const GLOBAL_BASE_URL = 'https://api.z.ai/api/paas/v4';
@@ -14,8 +14,8 @@ const GLOBAL_BASE_URL = 'https://api.z.ai/api/paas/v4';
  * key look like a bad key, with a 401 that says nothing about which host it
  * came from.
  *
- * So the domestic host stays the default — an existing bigmodel.cn deployment
- * behaves exactly as before, one request, same URL — and only a key the
+ * So the domestic host stays the default - an existing bigmodel.cn deployment
+ * behaves exactly as before, one request, same URL - and only a key the
  * domestic host actually REJECTS is re-probed against the global host during
  * validation. The verdict is remembered per key so the key's chat, streaming
  * and catalog traffic follows it.
@@ -54,8 +54,8 @@ export class ZhipuProvider extends OpenAICompatProvider {
 
   /**
    * Swap the pinned domestic host for the global one when this key validated
-   * there. A URL that already names a host explicitly — the validateKey probes
-   * below — is left alone, which keeps validation free of its own cache.
+   * there. A URL that already names a host explicitly - the validateKey probes
+   * below - is left alone, which keeps validation free of its own cache.
    */
   private resolveUrl(url: string, init: RequestInit): string {
     if (!url.startsWith(DOMESTIC_BASE_URL)) return url;
@@ -84,7 +84,7 @@ export class ZhipuProvider extends OpenAICompatProvider {
       return this.validationResult(domesticRes);
     }
 
-    // Only reached when the domestic host said "not my key" — which is exactly
+    // Only reached when the domestic host said "not my key" - which is exactly
     // what it says about a valid global-console key. Ask the global host before
     // calling the key invalid.
     let globalRes: Response;

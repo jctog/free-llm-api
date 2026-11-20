@@ -7,7 +7,7 @@ import { mintDashboardToken, isGatedApiPath } from '../helpers/auth.js';
 
 // Served-model drift guard (#534 follow-up): the proxy overwrites the
 // upstream `model` field with the routed id before the caller sees it (the
-// gateway contract — unchanged here). These tests assert the raw upstream
+// gateway contract - unchanged here). These tests assert the raw upstream
 // value is captured BEFORE that overwrite, compared against the routed id,
 // warn-logged once per tuple, and persisted to requests.served_model when it
 // genuinely differs (NULL otherwise), on both the non-streaming and the
@@ -119,7 +119,7 @@ describe('served-model drift guard (#534)', () => {
     vi.restoreAllMocks();
   });
 
-  it('non-streaming: captures, logs, and persists a genuinely different served model — contract unchanged', async () => {
+  it('non-streaming: captures, logs, and persists a genuinely different served model - contract unchanged', async () => {
     mockUpstream({ upstreamModel: 'gemma-3-27b-it' });
     const { status, body } = await request(app, 'POST', '/v1/chat/completions', {
       model: groqModelId, messages: [{ role: 'user', content: 'drift test' }],
@@ -175,7 +175,7 @@ describe('served-model drift guard (#534)', () => {
     expect(servedModelWarns()).toHaveLength(0);
   });
 
-  it('streaming: captures, logs, and persists drift — streamed frames still show the routed model', async () => {
+  it('streaming: captures, logs, and persists drift - streamed frames still show the routed model', async () => {
     mockUpstream({ upstreamModel: 'mystery-substitute-model', stream: true });
     const r = await request(app, 'POST', '/v1/chat/completions', {
       model: groqModelId, stream: true, messages: [{ role: 'user', content: 'stream drift test' }],

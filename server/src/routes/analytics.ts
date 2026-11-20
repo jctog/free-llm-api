@@ -12,7 +12,7 @@ export const analyticsRouter = Router();
 // when the key is gone or carries none (every catalog key). Custom endpoints
 // all share the platform id 'custom' (services/custom-endpoint.ts), so any
 // view that groups by `platform` alone collapses every relay into one row and
-// the operator cannot tell which endpoint did what (#889) — this expression is
+// the operator cannot tell which endpoint did what (#889) - this expression is
 // the second half of the grouping key everywhere that matters.
 //
 // rtrim/trim mirror lib/endpoint-scope.normalizeBaseUrl so the SQL side agrees
@@ -25,7 +25,7 @@ const ENDPOINT_ID_SQL = "COALESCE(rtrim(trim(k.base_url), '/'), '')";
 const toSqliteDateTime = (timestamp: number) =>
     new Date(timestamp).toISOString().slice(0, 19).replace('T', ' ');
 
-// First value only — Express hands back an array for a repeated query param,
+// First value only - Express hands back an array for a repeated query param,
 // and a repeated filter is a client bug, not two filters. Same contract as
 // routes/logs.ts.
 function firstParam(value: unknown): string | undefined {
@@ -59,7 +59,7 @@ function readAggregateSince(since: string) {
   const db = getDb();
   // Hour keys are created_at truncated to the hour, so they share SQLite's
   // canonical 'YYYY-MM-DD HH:00:00' text (space separator). The range cutoff is
-  // already in that format — floor it to the hour and compare the strings
+  // already in that format - floor it to the hour and compare the strings
   // directly. No separator conversion: the writer (logRequest) and the timeline
   // reader both compare on the space form, so this must too.
   const aggregateSince = since.slice(0, 13) + ':00:00';
@@ -117,7 +117,7 @@ analyticsRouter.get('/summary', (req: Request, res: Response) => {
   // is the source of truth for headline numbers.
   const aggregate = readAggregateSince(since);
   const totalRequests = aggregate.total_requests ?? 0;
-  // Success rate over success+error only: a 'canceled' request (#752 — client
+  // Success rate over success+error only: a 'canceled' request (#752 - client
   // hung up) still counts in the totals but is neither a success nor a
   // failure, so it must not dilute the rate.
   const decidedRequests = (aggregate.success_count ?? 0) + (aggregate.error_count ?? 0);
@@ -223,7 +223,7 @@ analyticsRouter.get('/summary', (req: Request, res: Response) => {
     // First-ever request timestamp (lifetime, never pruned). Falls back to
     // the oldest hour in the current window when lifetime is not yet seeded.
     firstRequestAt: lifetimeFirst ?? aggregate.first_request_at ?? null,
-    // Lifetime total since install — useful when the user wants to see "all
+    // Lifetime total since install - useful when the user wants to see "all
     // time" alongside the selected range window. Sourced from settings so it
     // survives the raw-row prune entirely.
     lifetimeTotalRequests: Number((db.prepare(`SELECT value FROM settings WHERE key='total_requests'`).get() as { value?: string } | undefined)?.value ?? 0) || 0,
@@ -234,7 +234,7 @@ analyticsRouter.get('/summary', (req: Request, res: Response) => {
 //
 // The grouping key is (platform, endpoint, model_id), not (platform, model_id):
 // the same model id served by two different custom relays is two different
-// things — different latency, different failure modes — and merging them into
+// things - different latency, different failure modes - and merging them into
 // one row labelled "custom" is the #889 collision in its most misleading form,
 // because the merged row's numbers describe neither endpoint.
 //
@@ -243,7 +243,7 @@ analyticsRouter.get('/summary', (req: Request, res: Response) => {
 // (platform, model_id) alone matches ONE row per relay that registered the
 // model and multiplies every request row by that count. Adding endpoint_scope
 // to the ON clause picks the row belonging to the endpoint that actually served
-// the request — the only one whose display name and pricing apply.
+// the request - the only one whose display name and pricing apply.
 analyticsRouter.get('/by-model', (req: Request, res: Response) => {
   const range = (req.query.range as string) ?? '7d';
   const since = getSinceTimestamp(range);
@@ -301,7 +301,7 @@ analyticsRouter.get('/by-model', (req: Request, res: Response) => {
 // Custom endpoints all share the platform id 'custom' (services/custom-
 // endpoint.ts), so grouping by `platform` alone would collapse every custom
 // relay into one row and the operator could not tell which endpoint did what
-// (#889). We therefore also group by the serving key's base_url — the canonical
+// (#889). We therefore also group by the serving key's base_url - the canonical
 // endpoint identity (custom-endpoint.ts pools credentials by base_url, and the
 // router treats every key sharing a base_url as one endpoint). Non-custom keys
 // carry no base_url, so COALESCE(base_url,'') keeps each of them in a single
@@ -336,8 +336,8 @@ analyticsRouter.get('/by-platform', (req: Request, res: Response) => {
   // aggregate, so we take the nearest-rank value per group with a small
   // ORDER BY/OFFSET query. The group count is tiny (one row per provider /
   // custom endpoint), so the extra round-trips are negligible and keep the SQL
-  // readable. The WHERE must match the grouping exactly — platform AND the
-  // endpoint's base_url — or a custom endpoint's p95 would bleed in latency
+  // readable. The WHERE must match the grouping exactly - platform AND the
+  // endpoint's base_url - or a custom endpoint's p95 would bleed in latency
   // from every other custom endpoint.
   const p95Stmt = db.prepare(`
     SELECT r.latency_ms FROM requests r
@@ -412,7 +412,7 @@ analyticsRouter.get('/by-client', (req: Request, res: Response) => {
 
 // Stats grouped by API key. Raw-row scoped (the hourly aggregate has no key
 // dimension), LEFT JOINed to api_keys so a request whose key was later deleted
-// still shows up with a null label — the keyId is always returned.
+// still shows up with a null label - the keyId is always returned.
 analyticsRouter.get('/by-key', (req: Request, res: Response) => {
   const range = (req.query.range as string) ?? '7d';
   const since = getSinceTimestamp(range);
@@ -457,7 +457,7 @@ analyticsRouter.get('/timeline', (req: Request, res: Response) => {
   const since = getSinceTimestamp(range);
   const db = getDb();
 
-  // dateFormat is a hardcoded whitelist — never user-controlled.
+  // dateFormat is a hardcoded whitelist - never user-controlled.
   const dateFormat = interval === 'hour' ? '%Y-%m-%dT%H:00:00' : '%Y-%m-%d';
 
   // tzOffset: viewer's local offset from UTC in minutes (480 = UTC+8), sent by
@@ -551,7 +551,7 @@ analyticsRouter.get('/error-distribution', (req: Request, res: Response) => {
   `).all(since) as any[];
 
   // Errors by provider. Endpoint-scoped like /by-platform: one bar per custom
-  // relay, not one bar pooling every relay's failures under "custom" (#889) —
+  // relay, not one bar pooling every relay's failures under "custom" (#889) -
   // a bar the operator cannot act on, because it never says which endpoint is
   // the one failing.
   const byPlatformRows = db.prepare(`
@@ -615,7 +615,7 @@ analyticsRouter.get('/errors', (req: Request, res: Response) => {
   }));
 });
 
-// Recent calls — one row per proxied request, newest first, with the caller's
+// Recent calls - one row per proxied request, newest first, with the caller's
 // IP and User-Agent (all local clients share the unified key, so client_ip is
 // the only per-caller discriminator; UA disambiguates tunneled loopback calls).
 // Reads the raw `requests` table, so history is bounded by the retention prune.
@@ -627,7 +627,7 @@ analyticsRouter.get('/requests', (req: Request, res: Response) => {
 
   // First value only, like routes/logs.ts: Express hands back an ARRAY for a
   // repeated query param, and the provider shape check below dies on
-  // `provider.startsWith(...)` — arrays have no such method — turning a client
+  // `provider.startsWith(...)` - arrays have no such method - turning a client
   // bug into a 500 on the dashboard's recent-calls panel.
   const status = firstParam(req.query.status);
   if (status !== undefined && status !== 'success' && status !== 'error' && status !== 'canceled') {
@@ -636,7 +636,7 @@ analyticsRouter.get('/requests', (req: Request, res: Response) => {
   }
   // Provider filter. The `provider` param carries the stable row id returned by
   // /by-platform: a platform slug ('groq') or 'custom:<base_url>' for a custom
-  // endpoint (#889 — every custom relay shares the 'custom' platform id, so the
+  // endpoint (#889 - every custom relay shares the 'custom' platform id, so the
   // endpoint's base_url is what actually selects one). The legacy `platform`
   // param still works for old clients. Both are bound parameters, never
   // interpolated, so the only validation needed is shape.
@@ -654,7 +654,7 @@ analyticsRouter.get('/requests', (req: Request, res: Response) => {
       // /by-platform emits it only for rows whose endpoint is unknown (the key
       // was deleted, or never carried a base_url). Falling through to the slug
       // branch below would filter on `platform = 'custom'` and return every
-      // relay's traffic — a list that contradicts the very row the user
+      // relay's traffic - a list that contradicts the very row the user
       // clicked, which counted the orphans alone. Match what that row counted.
       providerFilterSql = ` AND r.platform = 'custom' AND ${ENDPOINT_ID_SQL} = ''`;
     } else if (provider.startsWith('custom:')) {
@@ -740,10 +740,10 @@ analyticsRouter.get('/requests', (req: Request, res: Response) => {
   });
 });
 
-// Per-request detail: the row plus its durable failover ladder — one entry per
+// Per-request detail: the row plus its durable failover ladder - one entry per
 // dispatched attempt (including the successful final one), ordinal-ordered,
 // with the failure class and timing of each hop. keyOrdinal is the per-request
-// key ordinal (key1, key2…), same anonymization as X-Fallback-Trail — internal
+// key ordinal (key1, key2…), same anonymization as X-Fallback-Trail - internal
 // key ids are never exposed. Attempts are keyed to the ladder's terminal row
 // (the success row, or the last failure row when it exhausted), so mid-ladder
 // error rows legitimately return an empty attempts array.

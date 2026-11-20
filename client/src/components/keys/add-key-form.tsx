@@ -16,7 +16,7 @@ import { SEARCH_PROVIDERS } from '@/lib/search'
 import { GetKeyLink, LISTED_PLATFORMS, PLATFORMS } from './shared'
 
 /** A key that just landed, plus the models the picker should offer for it.
- *  Only produced when the picker is actually worth showing (#657) — otherwise
+ *  Only produced when the picker is actually worth showing (#657) - otherwise
  *  the add stays as silent as it has always been. */
 export interface AddedKeyScopeOffer {
   keyId: number
@@ -51,8 +51,8 @@ export function AddKeyForm({ onSuccess, initialPlatform }: { onSuccess: (offer?:
   // #707: the platform dropdown had no search and no way to skip providers that
   // already have keys, which is painful at thirty-odd entries. The shared
   // ModelCombobox already does search + arrow keys, so this reuses it and only
-  // supplies the options. PLATFORMS keeps its curated order — it is sorted by
-  // recommendation, not alphabetically — and the search box handles "find it
+  // supplies the options. PLATFORMS keeps its curated order - it is sorted by
+  // recommendation, not alphabetically - and the search box handles "find it
   // fast". The added/not-added split reads the same ['keys'] query the
   // Providers tab owns, so it costs no extra request.
   const { data: keys = [] } = useQuery<ApiKey[]>({
@@ -64,7 +64,7 @@ export function AddKeyForm({ onSuccess, initialPlatform }: { onSuccess: (offer?:
 
   // #657 post-add scope picker: the platform's model list. This is the same
   // ['fallback'] query the Models page, the fallback chain and the command
-  // palette already run — react-query dedupes it, so opening this pane costs at
+  // palette already run - react-query dedupes it, so opening this pane costs at
   // most one GET that the rest of the dashboard was going to make anyway. That
   // is why the picker needs no new endpoint and no widening of POST /api/keys
   // (whose response only carries a model COUNT, not the ids). An empty or
@@ -75,8 +75,8 @@ export function AddKeyForm({ onSuccess, initialPlatform }: { onSuccess: (offer?:
   })
 
   // Whether the key that just landed is worth offering the picker for, and the
-  // rows to offer. Anything missing — no id back, a keyless sentinel, a catalog
-  // too small or not loaded — returns undefined, and the add stays silent.
+  // rows to offer. Anything missing - no id back, a keyless sentinel, a catalog
+  // too small or not loaded - returns undefined, and the add stays silent.
   function scopeOffer(keyId: number | undefined, added: string, key: string): AddedKeyScopeOffer | undefined {
     if (typeof keyId !== 'number') return undefined
     const provider = PLATFORMS.find(p => p.value === added)
@@ -120,7 +120,7 @@ export function AddKeyForm({ onSuccess, initialPlatform }: { onSuccess: (offer?:
       queryClient.invalidateQueries({ queryKey: ['keys-providers'] })
       toast.success(t('keys.keyAdded'))
       // Server notice when the key is for a platform with no models in the
-      // current catalog tier yet (#438) — surfaced as a toast now that the
+      // current catalog tier yet (#438) - surfaced as a toast now that the
       // dialog closes on success.
       if (data?.notice) toast.info(data.notice)
       onSuccess(scopeOffer(data?.id, variables.platform, variables.key))

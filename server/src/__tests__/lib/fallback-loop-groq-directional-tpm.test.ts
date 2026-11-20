@@ -4,7 +4,7 @@ import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest';
 // OTPM (expected completion tokens) separately from the combined TPM. Live
 // failure: one OTPM 1000 rejection was learned as tpm_limit = 1000 on a
 // 7000-ITPM model, and from then on the router sized out every request over
-// 1000 tokens on that model — permanently, since learned limits never rise.
+// 1000 tokens on that model - permanently, since learned limits never rise.
 
 vi.mock('../../services/health.js', () => ({
   checkKeyHealth: vi.fn(),
@@ -82,7 +82,7 @@ describe('Groq OTPM rejection', () => {
     expect(tpmLimit()).toBe(7000);
   });
 
-  it('skips the model for this request only — no cooldown, so the next request can use it', () => {
+  it('skips the model for this request only - no cooldown, so the next request can use it', () => {
     const state = newFallbackState();
     recordRetryableFailure(route(), Object.assign(new Error(OTPM_BODY), { status: 429 }), state);
     expect(state.skipModels.has(model.id)).toBe(true);

@@ -23,7 +23,7 @@ const ORIGINAL_PARK_AFTER = process.env.HEALTH_TRANSPORT_PARK_AFTER;
 /**
  * #1510: transport errors (DNS/timeout/TLS) never accumulated, so a key whose
  * provider has been unreachable for days kept status='healthy' and stayed a
- * first-class routing candidate — a real install logged 264 failures vs 8
+ * first-class routing candidate - a real install logged 264 failures vs 8
  * successes in a day with zero keys ever showing 'error'. The fix counts
  * consecutive transport errors per key and parks the key at 'error' once the
  * streak passes the threshold. 'error' is deliberately NOT auto-disable: the

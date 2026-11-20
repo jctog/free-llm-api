@@ -18,7 +18,7 @@ export interface ToastItem {
 const MAX_VISIBLE_TOASTS = 4
 
 // Per-severity auto-dismiss defaults (#586). Success/info give the user a
-// comfortable read; errors are sticky — they carry information the user may
+// comfortable read; errors are sticky - they carry information the user may
 // need to act on (and copy), every toast has a dismiss button, identical
 // messages are deduped in push, and the cap below still bounds the stack, so
 // stickiness cannot pile up unbounded. An explicit per-call duration wins.

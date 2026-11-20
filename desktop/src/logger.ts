@@ -1,6 +1,6 @@
 // A file log for the desktop app (#824).
 //
-// The embedded server writes operational output to the console — including the
+// The embedded server writes operational output to the console - including the
 // one-time password-reset code, which POST /api/auth/forgot-password prints and
 // nothing else ever shows. A server operator reads it from `docker logs` or the
 // terminal; a Finder/Explorer-launched Electron app has no attached stdout, so
@@ -64,7 +64,7 @@ export function createFileSink(dir: string, maxBytes: number = MAX_LOG_BYTES): F
         if (fd === null) open();
         const buf = Buffer.from(line.endsWith('\n') ? line : `${line}\n`, 'utf8');
         // Rotate before the write that would cross the limit, never on an empty
-        // file — a single line longer than maxBytes must not loop.
+        // file - a single line longer than maxBytes must not loop.
         if (size > 0 && size + buf.length > maxBytes) rotate();
         fs.writeSync(fd as number, buf);
         size += buf.length;
@@ -126,7 +126,7 @@ export function openLogsFolder(): void {
 
 // Tray → "Open Backups Folder". The server writes dumps to <db dir>/backups
 // (server/src/services/backups.ts dataDir()) and main.ts puts the DB at
-// <userData>/freeapi.db, so this is where they land — the dashboard's Backups
+// <userData>/freeapi.db, so this is where they land - the dashboard's Backups
 // panel only ever shows paths relative to that directory, which a desktop
 // user has no other way to locate.
 export function openBackupsFolder(): void {

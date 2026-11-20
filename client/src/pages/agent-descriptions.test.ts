@@ -7,8 +7,8 @@ import { describe, expect, it } from 'vitest'
 // which says nothing about what any of these tools actually is. The cards now
 // read `agents.descriptions.<id>` and fall back to the old protocol line when
 // the key is absent, so the thing worth holding here is that no catalog entry
-// relies on that fallback and that the four tools people confuse — Cline, Roo,
-// Kilo and Crush — are described differently from one another.
+// relies on that fallback and that the four tools people confuse - Cline, Roo,
+// Kilo and Crush - are described differently from one another.
 const here = path.dirname(fileURLToPath(import.meta.url))
 const localeDir = path.join(here, '../i18n/locales')
 const catalog: { id: string }[] = JSON.parse(

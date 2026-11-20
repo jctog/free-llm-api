@@ -2,7 +2,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import { catalogFetch, setCatalogFallbackFetch, validateLicenseKey } from '../../services/catalog-sync.js';
 
 // Node's fetch failing the TLS handshake surfaces as TypeError('fetch failed')
-// with the real reason on .cause — what Windows desktop users hit.
+// with the real reason on .cause - what Windows desktop users hit.
 function tlsFailure(): TypeError {
   const err = new TypeError('fetch failed');
   (err as { cause?: unknown }).cause = Object.assign(new Error('unable to get local issuer certificate'), {
